@@ -1,29 +1,132 @@
-# vibekit — AGENTS.md
+# AGENTS.md
 
-This file is read by Codex, Gemini CLI, and other AGENTS.md-aware tools. It is a thin pointer into the plugin's canonical instructions.
+Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in this repository. Read this file before making any change.
 
-## Plugin purpose
+## What this repo is
 
-`vibekit` is a 10-skill pipeline that turns a short user intent into a verified, user-approved feature. The orchestrator skill is `vibe`; the rest compose beneath it.
+`vibekit` is a 10-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it.
 
-## Where to read
+## Repository layout
 
-- **`CLAUDE.md`** (root) — project conventions and compression policy. Also applies to non-Claude agents working in this repo.
-- **`skills/vibe/SKILL.md`** — orchestrator. Start here if you are running the pipeline.
-- **`skills/*/SKILL.md`** — each skill is self-contained; no external references.
-- **`docs/evals/`** — eval reports. The live eval documents the halt-and-report discipline that is the plugin's core guarantee.
+```
+vibekit/
+├── .claude-plugin/            # plugin manifest and marketplace metadata
+├── agents/                    # (reserved for agent definitions)
+├── commands/                  # slash commands; commands/vibe.md triggers the pipeline
+├── docs/
+│   ├── evals/                 # static and live eval reports — update after skill changes
+│   ├── specs/                 # design docs produced by brainstorm-lean
+│   ├── plans/                 # implementation plans produced by plan-write
+│   ├── reviews/               # review docs produced by review-pack
+│   └── verifications/         # verification reports produced by verify-gate
+├── hooks/                     # (reserved; no hooks yet)
+├── skills/
+│   ├── _authoring/            # local-only authoring references (not shipped)
+│   ├── vibe/                  # orchestrator
+│   └── <nine other skills>/   # each with SKILL.md, self-contained
+├── tests/
+│   └── eval/                  # throwaway test repos for live evals
+├── .gitignore
+├── AGENTS.md                  # this file
+└── README.md                  # product front door
+```
 
-## Non-Claude runtime notes
+## The skills
 
-- **Codex:** skills under `skills/` are portable as prompt fragments. A `.codex/` adapter is planned; until it lands, Codex users invoke skills by reading their `SKILL.md` into context.
-- **Gemini CLI:** `gemini-extension.json` + `GEMINI.md` scaffolding is planned. Until it lands, Gemini users read `CLAUDE.md` and the relevant `SKILL.md` files directly.
-- **Cursor / Windsurf / Cline / Copilot:** rule-file adapters are deferred. Same manual route for now.
+Every skill is **self-contained**. Do not reference external plugins (superpowers, caveman, oh-my-claudecode, etc.) in any shipped skill. If a skill needs a concept from elsewhere, inline the relevant discipline.
 
-## Conventions
+| Skill | Responsibility |
+|-------|----------------|
+| `vibe` | 7-stage orchestrator. |
+| `brainstorm-lean` | Socratic design gate with HARD-GATE and frontmatter-based status. |
+| `plan-write` | TDD-shaped, bite-sized plan with exact commands and verified predictions. |
+| `brief-compiler` | RTCO brief template for subagent dispatch. |
+| `exec-dispatch` | One fresh subagent per task, two-stage review. |
+| `report-filter` | Syntactic schema validation of subagent returns. |
+| `verify-gate` | Evidence-based completion, three independent verdict dispatches per requirement. |
+| `review-pack` | Reflexion-style self-critique + user sign-off. |
+| `finish-branch` | Integration endpoint — merge / PR / keep / abandon, never auto. |
+| `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
 
-- Never edit anything under `external/` — reference only. It is excluded from the plugin via `.gitignore`.
-- Never compress guardrail content (constraints, test output, file:line refs). Compress framing only.
-- Halt and report on any "Expected" mismatch; do not improvise.
+Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
+
+## Compression policy (load-bearing)
+
+**Compress:** agent status chatter, subagent briefs, subagent reports (capped), wiki/memory entries, progress logs, commit messages, review comments, orchestrator-level stage announcements.
+
+**Never compress — verbatim or drop, never rewrite:**
+
+- Questions asked to the user, and the user's answers when quoted.
+- Plan files, spec files, design-doc templates.
+- TDD step markers (red / green / refactor).
+- Verification evidence (test output, error messages, stack traces).
+- Destructive-operation warnings.
+- Commit SHAs, file paths, line numbers, code snippets.
+- PR / merge / commit final text.
+
+If a compression would reduce guardrail clarity by any amount, do not compress.
+
+## Guardrails (non-negotiable)
+
+These are the plugin's reason to exist. None of them can be bypassed by a flag.
+
+- No implementation without an approved spec (`status: approved` in frontmatter).
+- No dispatch without a plan whose commands and expected outputs have been validated.
+- No commit without the task's exact test command running and passing.
+- No "done" claim without evidence quoted verbatim.
+- No merge / PR / push without explicit user sign-off in this invocation.
+- On any "Expected" mismatch: **halt and report**. Never improvise a fix.
+
+## How to work on this repo
+
+### Read before you write
+- Read `AGENTS.md` (this file) and `README.md`.
+- For skill work, read the relevant `SKILL.md` in full.
+- For pipeline work, read `skills/vibe/SKILL.md` and the skill it most immediately affects.
+
+### Edit only the canonical source
+- Each skill is its own `SKILL.md`. There is no auto-sync yet.
+- Do not copy a skill's content into another file; reference by skill name instead.
+
+### Keep skills self-contained
+- A shipped skill must not reference `external/`, `superpowers/`, `caveman/`, `oh-my-*/`, or any local-only path.
+- If you need a concept from elsewhere, inline it.
+
+### Default paths
+- Specs: `docs/specs/YYYY-MM-DD-<topic>-design.md`
+- Plans: `docs/plans/YYYY-MM-DD-<feature>.md`
+- Reviews: `docs/reviews/YYYY-MM-DD-<feature>-review.md`
+- Verifications: `docs/verifications/YYYY-MM-DD-<feature>-verify.md`
+
+User settings can override these; honor the user's paths when they are set.
+
+### Commits
+- Conventional Commits. Short subject, body only when the "why" is non-obvious.
+- One logical change per commit.
+- Do not use `--no-verify`, `--amend`, or `--force` unless the user explicitly asks.
+- Never add Co-Authored-By trailers unless the user asks.
+
+### Evals
+- After any substantive skill change, update or add an eval report in `docs/evals/`.
+- Static eval: walk the skill as if executing it; log ambiguities and guardrail leaks.
+- Live eval: set up a throwaway repo under `tests/eval/<run-id>/`, actually dispatch subagents, capture the output verbatim.
+- Tests/eval sub-repos are git-ignored; they are not part of the plugin.
+
+### Things that do not belong in shipped code
+- Project-specific configuration, domain-specific logic, local paths.
+- References to external plugins by name.
+- "For future use" code with no current caller.
+- Fabricated benchmarks or evals. Real runs only.
+
+## Non-Claude runtime specifics
+
+All agents read this file the same way. There is no runtime-specific guidance that belongs here today. As cross-CLI adapters (Codex, Gemini CLI, Cursor, Windsurf, Cline, Copilot) land, any adapter-specific notes will be added here in a dedicated section — not duplicated into runtime-specific files.
+
+## If in doubt
+
+- Prefer halting and asking the user over improvising.
+- Prefer files over prose summaries for stage-to-stage handoffs.
+- Prefer a specific, citable piece of evidence over a confident claim.
 
 ## License
 
