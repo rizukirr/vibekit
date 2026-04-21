@@ -1,4 +1,5 @@
 external/
 /.omc
 tests/eval/*/
+CLAUDE.md
 
