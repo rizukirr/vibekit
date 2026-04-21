@@ -1,6 +1,6 @@
 # vibekit
 
-One-command vibe-coding for Claude Code. Type a short intent; the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
+All you need to vibe coding with claude code (yet). Type a short intent, the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
 
 Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
 
@@ -23,7 +23,8 @@ Requires Claude Code with plugin support.
 From a marketplace that hosts this plugin:
 
 ```
-/plugin install vibekit
+/plugin marketplace add rizukirr/vibekit
+/plugin install vibekit@vibekit
 ```
 
 From a local clone:
