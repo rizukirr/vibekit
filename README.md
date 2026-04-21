@@ -1,0 +1,130 @@
+# vibekit
+
+One-command vibe-coding for Claude Code. Type a short intent; the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
+
+Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
+
+---
+
+## What you get
+
+- **`/vibe <intent>`** — the full 7-stage pipeline in one command.
+- **Ten self-contained skills** that also work standalone.
+- **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
+- **Halt-and-report discipline.** Real live eval caught two plan defects cleanly; neither reached a commit.
+- **Token-efficient by design.** Compression is applied to agent framing; every guardrail stays verbatim.
+
+---
+
+## Install
+
+Requires Claude Code with plugin support.
+
+From a marketplace that hosts this plugin:
+
+```
+/plugin install vibekit
+```
+
+From a local clone:
+
+```bash
+git clone <this repo>
+cd vibekit
+# then add the repo path as a plugin source in Claude Code settings
+```
+
+After installation, restart Claude Code. The `/vibe` command and all skills become available.
+
+---
+
+## Quick start
+
+```
+/vibe add a toKebabCase utility with tests
+```
+
+What happens:
+
+1. **Brainstorm.** The pipeline asks a few clarifying questions (edge cases, scope, testing approach), proposes 2–3 approaches with trade-offs, and writes a short design doc you sign off on.
+2. **Plan.** It produces a TDD-shaped implementation plan — every step is bite-sized, every command is exact, every commit is named.
+3. **Isolate.** A git worktree gets created so your main branch is untouched.
+4. **Execute.** Each task runs in a fresh subagent with a tight brief. On any "Expected" mismatch, the agent halts and reports — no improvised fixes.
+5. **Verify.** Every spec requirement is checked against the actual evidence. Three independent verdict passes per requirement.
+6. **Review.** A self-critique surfaces blocks / warns / nits. You see the full diff.
+7. **Integrate.** You pick: merge locally, open a PR, keep the branch, or abandon. Nothing ships without your explicit choice.
+
+You only talk to the pipeline during brainstorm and at each gate. The rest is autonomous.
+
+---
+
+## The skills
+
+All 10 skills live in `skills/` and can be invoked independently.
+
+| Skill | Role |
+|-------|------|
+| `vibe` | Orchestrator for the 7-stage pipeline. |
+| `brainstorm-lean` | Disciplined Socratic design gate with a HARD-GATE before implementation. |
+| `plan-write` | TDD-shaped, bite-sized implementation plan with exact commands. |
+| `brief-compiler` | Turns verbose intents into tight RTCO subagent briefs. |
+| `exec-dispatch` | One fresh subagent per task, with two-stage review. |
+| `report-filter` | Validates subagent returns against the declared schema; rejects drift. |
+| `verify-gate` | Evidence-based completion check, three independent verdict dispatches per requirement. |
+| `review-pack` | Reflexion-style self-critique + user sign-off on the diff. |
+| `finish-branch` | Integration endpoint — merge / PR / keep / abandon, no auto-actions. |
+| `isolate` | Dedicated worktree or branch per run; rollback is cheap. |
+
+---
+
+## The guardrails
+
+Non-negotiable. None of them can be bypassed by a flag.
+
+- No implementation without an approved spec.
+- No dispatch without a plan.
+- No commit without the task's exact test command running and passing.
+- No "done" claim without evidence quoted verbatim.
+- No merge / PR / push without explicit user sign-off.
+- On any "Expected" mismatch: **halt and report**, never improvise a fix.
+
+This is what keeps vibe-coding from turning into vibe-disasters.
+
+---
+
+## Token budget
+
+Measured in live eval on a small feature (toKebabCase utility, 2-task plan, 1 verification pass):
+
+- Total subagent tokens: ~118k across 4 dispatches.
+- Wall clock: minutes per dispatch; dominated by test-runner I/O.
+- Compression concentrated in agent briefs + reports; guardrails stay full prose.
+
+Large features scale linearly with task count. Verification cost scales with requirement count × 3 (self-consistency). For large specs the `verify-gate` skill offers a critical-only mode.
+
+---
+
+## Philosophy
+
+- **Form compresses, guardrails don't.** Agent framing is fragmented; evidence and constraints are verbatim.
+- **Halt is a feature.** The pipeline would rather stop and surface a defect than improvise.
+- **One thing per run.** No mega-runs. One feature, one spec, one plan, one integration choice.
+- **Files over summaries.** Stages hand off via committed files, never prose summaries.
+
+---
+
+## Evals
+
+Three evals are on record under `docs/evals/`:
+
+- `2026-04-21-static-eval-run-01.md` — initial static walkthrough; found 3 blocking defects, 7 warns, 4 nits.
+- `2026-04-21-static-eval-run-02.md` — post-fix re-walk; all blockers resolved, no regressions.
+- `2026-04-21-live-eval-run-03.md` — live dispatch on a throwaway repo; the halt-and-report discipline was proven twice under real subagents.
+
+Re-running the evals after substantive skill changes is recommended. A packaged harness will come in a later release.
+
+---
+
+## License
+
+MIT.
