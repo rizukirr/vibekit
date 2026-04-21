@@ -30,7 +30,7 @@ user intent
   └─ 2. plan-write             (no user interaction)
           └─ plan file: docs/plans/YYYY-MM-DD-<feature>.md, self-reviewed
   └─ 3. confirm execution      (user picks mode: subagent-driven | inline)
-  └─ 4. isolate (worktree or branch, per user config)
+  └─ 4. isolate (via isolate skill; worktree preferred, branch fallback)
   └─ 5. exec-dispatch          (no user interaction except on REJECTs / gate failures)
           └─ plan file has all checkboxes marked
   └─ 6. verify-gate            (no user interaction)
@@ -107,11 +107,8 @@ announce "[3/7] confirm execution mode"
   ask user: "subagent-driven (recommended) | inline"
   record choice
 announce "[4/7] isolate"
-  if user config says worktree:
-    create worktree <vibe_run_id>
-  else:
-    create or confirm branch
-  gate: clean working state
+  invoke isolate(spec_path, base_branch = current branch)
+  gate: isolate returned a record; subsequent stages use record.path as cwd
 announce "[5/7] exec"
   invoke exec-dispatch(plan_path, mode)
   gate: all tasks checked off AND no open REJECTs
