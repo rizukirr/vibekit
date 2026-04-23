@@ -62,10 +62,10 @@ Manual installation is also documented in `docs/README.codex.md`.
 Tell Gemini CLI:
 
 ```bash
-gemini extensions install https://github.com/rizukirr/vibekit
+Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/INSTALL.gemini.md
 ```
 
-Detailed Gemini docs: `docs/README.gemini.md`.
+Detailed Gemini docs: `INSTALL.gemini.md` and `docs/README.gemini.md`.
 
 ---
 
