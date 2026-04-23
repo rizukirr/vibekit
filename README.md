@@ -1,6 +1,6 @@
 # vibekit
 
-All you need to vibe coding with claude code (yet). Type a short intent, the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
+All you need to vibe coding with Claude Code and OpenCode. Type a short intent, the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
 
 Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
 
@@ -18,7 +18,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 ## Install
 
-Requires Claude Code with plugin support.
+### Claude Code
 
 From a marketplace that hosts this plugin:
 
@@ -36,6 +36,16 @@ cd vibekit
 ```
 
 After installation, restart Claude Code. The `/vibe` command and all skills become available.
+
+### OpenCode
+
+Tell the agent:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.opencode/INSTALL.md
+```
+
+That keeps installation instructions centralized in one file and avoids README drift.
 
 ---
 
