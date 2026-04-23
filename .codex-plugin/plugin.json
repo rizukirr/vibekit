@@ -1,0 +1,41 @@
+{
+  "name": "vibekit",
+  "version": "0.1.0",
+  "description": "Token-efficient vibe-coding pipeline with hard guardrails: brainstorm, plan, isolate, execute, verify, review, and integrate.",
+  "author": {
+    "name": "rizukirr",
+    "url": "https://github.com/rizukirr"
+  },
+  "homepage": "https://github.com/rizukirr/vibekit",
+  "repository": "https://github.com/rizukirr/vibekit",
+  "license": "MIT",
+  "keywords": [
+    "vibe-coding",
+    "tdd",
+    "verification",
+    "subagent-orchestration",
+    "token-efficiency"
+  ],
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "interface": {
+    "displayName": "vibekit",
+    "shortDescription": "Guardrailed vibe-coding pipeline for Codex.",
+    "longDescription": "vibekit turns a short intent into a verified, user-approved feature through a disciplined pipeline: brainstorm, plan, isolate, execute, verify, review, and integrate.",
+    "developerName": "rizukirr",
+    "category": "Productivity",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/rizukirr/vibekit",
+    "privacyPolicyURL": "https://github.com/rizukirr/vibekit/blob/main/README.md",
+    "termsOfServiceURL": "https://github.com/rizukirr/vibekit/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Use vibe to add a utility with tests.",
+      "Run vibe for a small bugfix with verification evidence.",
+      "Use vibe to implement one scoped feature end-to-end."
+    ],
+    "brandColor": "#0F766E",
+    "screenshots": []
+  }
+}
