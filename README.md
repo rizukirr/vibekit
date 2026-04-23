@@ -1,6 +1,6 @@
 # vibekit
 
-All you need to vibe coding with Claude Code and OpenCode. Type a short intent, the pipeline brainstorms it with you, plans it, builds it in an isolated workspace, verifies it, and hands you a reviewed diff to integrate.
+Vibekit is a token-efficient plugin for Claude Code and OpenCode, built for vibe coding.
 
 Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
 
