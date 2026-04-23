@@ -1,6 +1,6 @@
 # vibekit
 
-Vibekit is a token-efficient plugin for Claude Code, OpenAI Codex, and OpenCode, built for vibe coding.
+Vibekit is a token-efficient plugin for Claude Code, OpenAI Codex, OpenCode, and Gemini CLI, built for vibe coding.
 
 Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
 
@@ -56,6 +56,16 @@ Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vi
 ```
 
 Manual installation is also documented in `docs/README.codex.md`.
+
+### Gemini CLI
+
+Tell Gemini CLI:
+
+```bash
+gemini extensions install https://github.com/rizukirr/vibekit
+```
+
+Detailed Gemini docs: `docs/README.gemini.md`.
 
 ---
 
