@@ -27,12 +27,13 @@ Create a task for each item. Complete in order:
 
 1. **Explore project context** — files, docs, recent commits.
 2. **Ask clarifying questions** — one at a time; purpose, constraints, success criteria.
-3. **Propose 2-3 approaches** — with trade-offs and your recommendation.
-4. **Present design** — in sections scaled to complexity; approval after each section.
-5. **Write design doc** — `docs/specs/YYYY-MM-DD-<topic>-design.md`, then commit.
-6. **Spec self-review** — placeholders, contradictions, ambiguity, scope.
-7. **User reviews written spec** — wait for explicit approval.
-8. **Transition** — invoke the implementation-plan skill. This is the only terminal handoff.
+3. **Pushback turn** — before proposing approaches, challenge the framing if a simpler path exists.
+4. **Propose 2-3 approaches** — with trade-offs and your recommendation.
+5. **Present design** — in sections scaled to complexity; approval after each section.
+6. **Write design doc** — `docs/specs/YYYY-MM-DD-<topic>-design.md`, then commit.
+7. **Spec self-review** — placeholders, contradictions, ambiguity, scope.
+8. **User reviews written spec** — wait for explicit approval.
+9. **Transition** — invoke the implementation-plan skill. This is the only terminal handoff.
 
 ## Process flow
 
@@ -40,6 +41,7 @@ Create a task for each item. Complete in order:
 Explore context
   └─ Clarifying questions (one at a time, Socratic)
        └─ loop until purpose / constraints / success criteria are explicit
+  └─ Pushback turn (challenge framing — does a simpler path exist?)
   └─ 2-3 approaches + trade-offs + recommendation (full prose)
   └─ Present design in sections (approval after each)
   └─ Write design doc → docs/specs/YYYY-MM-DD-<topic>-design.md → commit
@@ -76,6 +78,7 @@ This skill compresses *only* assistant narration. Everything else is verbatim.
 - **The design itself**, at every section. Full prose, scaled to complexity.
 - **The written design doc.** Normal prose. The implementation-plan skill parses this.
 - **The user-review-gate message** (see below).
+- **The pushback turn** (see §Pushback turn).
 - **Any destructive-operation warning, scope flag, or ambiguity alert.**
 
 ### Auto-clarity override
@@ -95,6 +98,26 @@ Resume normal compression after the clear passage.
 - If the project is too large for a single spec, help the user decompose into sub-projects: independent pieces, relationships, build order. Then brainstorm the first sub-project through the normal flow. Each sub-project gets its own spec → plan → implementation cycle.
 - For appropriately-scoped projects, ask questions one at a time to refine the idea.
 - Focus on: purpose, constraints, success criteria.
+
+## Pushback turn (Karpathy principle 1: Think Before Coding)
+
+Before generating approaches, run exactly one pushback turn. The skill is *required* to challenge the user's framing if a simpler path exists. Silently accepting the framing is a failure mode.
+
+Output verbatim, in this shape:
+
+> **Pushback:** Before I sketch approaches, one challenge — `<one-sentence simpler framing or hidden assumption>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
+
+Examples:
+- "Before I sketch approaches, one challenge — could this be a single CSS variable swap instead of themed component variants? Is the smaller version what you want, or do you need the larger framing?"
+- "Before I sketch approaches, one challenge — the request says 'add caching layer', but the bottleneck so far is one slow query. Is per-request memoization enough, or do you need a real cache?"
+
+If no simpler framing exists, state that explicitly:
+
+> **Pushback:** No simpler framing — the requirement is already minimal. Proceeding to approaches.
+
+The user's response (or absence of pushback) is recorded in the spec's `## Approach` section.
+
+This turn is **never compressed**. It joins the verbatim list.
 
 ## Exploring approaches
 

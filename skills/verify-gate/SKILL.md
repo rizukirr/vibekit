@@ -115,6 +115,39 @@ The three passes are dispatched with no shared context, no awareness of each oth
 
 Disagreement means the evidence is ambiguous or the requirement is under-specified. Both are user-actionable problems.
 
+### Step 3b — surgical-diff pass (Karpathy principle 3)
+
+After the three per-requirement passes, run **one** additional self-consistency pass on blast radius. Dispatch a separate fresh subagent with this brief:
+
+```
+ROLE: Surgical-diff auditor, read-only.
+TASK: For every changed file and hunk between <base sha> and HEAD, verify that the change traces to a specific plan task or spec requirement.
+CONSTRAINTS:
+  - Read-only. No edits.
+  - For each changed file, name the plan task whose "Files" section lists it, OR the spec requirement that authorizes it.
+  - For each hunk with no traceable origin, report it as an orphan with file:line range.
+  - Pre-existing dead code that was deleted without explicit user request is an orphan.
+  - Formatting / comment changes unrelated to a task are orphans.
+CONTEXT:
+  Plan path: <path>
+  Spec path: <path>
+  Diff command: git diff <base sha>..HEAD
+  Files changed: <list from git diff --name-only>
+OUTPUT:
+  {
+    "verdict": "clean | orphans-found",
+    "orphans": [
+      {"file": "<path>", "lines": "<range>", "reason": "<why no plan/spec match>"}
+    ]
+  }
+```
+
+**Verdict rule:**
+- `clean` and zero orphans → recorded as repo-level pass.
+- `orphans-found` → hard fail. The overall verdict cannot be `ready`. Orphans are listed in the report's Blockers section verbatim.
+
+This pass is non-optional and is **not** subject to the critical-requirements cost-control opt-out.
+
 ### Step 4 — run the repo-level checks
 
 Independent of per-requirement verification, run and record:
@@ -155,6 +188,9 @@ Save to `docs/verifications/YYYY-MM-DD-<feature>-verify.md`. Structure:
   ```
   <verbatim>
   ```
+- Surgical-diff pass: <clean | orphans-found>
+  <if orphans-found, list each orphan verbatim>
+  - `<file>:<line range>` — <reason>
 
 ## Requirements
 
@@ -183,8 +219,8 @@ For each requirement where the three passes disagreed:
 
 ## Overall verdict
 
-- **ready** — all requirements satisfied, all repo-level checks pass, no disagreements.
-- **not ready** — one or more `not satisfied`, `partial`, or `disagreement`. See list below.
+- **ready** — all requirements satisfied, all repo-level checks pass, no disagreements, surgical-diff pass returned `clean`.
+- **not ready** — one or more `not satisfied`, `partial`, `disagreement`, or any orphan from the surgical-diff pass. See list below.
 
 If not ready, list the exact blockers.
 ```
@@ -201,7 +237,7 @@ Verification report: <path>. Verdict: <ready|not ready>.
   Suggested next step: <re-plan | re-run specific task | amend spec>
 ```
 
-Do not claim `ready` if any repo-level check failed, any requirement is `not satisfied` or `partial`, or any disagreement exists.
+Do not claim `ready` if any repo-level check failed, any requirement is `not satisfied` or `partial`, any disagreement exists, or the surgical-diff pass returned `orphans-found`.
 
 ## Anti-patterns
 

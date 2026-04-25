@@ -33,6 +33,7 @@ If any prerequisite fails, stop and report what is missing.
 For each task in the plan, in order:
 
 1. **Select the task.** Read the plan file. Take the next unchecked task. Copy its full content (files list + all steps) verbatim. Do not paraphrase.
+1a. **Verify-clause gate.** The selected task header MUST end with `→ verify: <criterion>`. If absent, vague ("works", "looks right"), or non-checkable, **REJECT the task**: stop the loop, surface the gap to the user, and route back to `plan-write` to repair the plan. Do not dispatch tasks lacking a verify clause.
 2. **Compile the brief.** Use the RTCO template (see §RTCO brief template). The TASK line names the specific task number and title. The CONSTRAINTS block preserves all TDD discipline. The CONTEXT block includes the plan excerpt and any file:line references the task names. The OUTPUT block declares the exact schema the agent must return.
 3. **Dispatch a fresh subagent.** Pass only the compiled brief. No conversation history. No extra instructions.
 4. **Receive the return.** Apply the report filter (see §Return-side filter). If validation fails, REJECT and ask the subagent to re-format (never re-run). Three rejections in a row on the same task → escalate to user.
@@ -53,8 +54,11 @@ CONSTRAINTS:
   - TDD: write the failing test first and run it to confirm it fails before any implementation.
   - After each code change, run the test command shown in the task and include the last 20 lines of output in your report.
   - Make exactly one commit per logical change, using the commit message shown in the task.
-  - Do not modify files outside the ones the task's "Files" section names.
+  - Edit ONLY files named in the task's "Files" section. No adjacent edits, no drive-by refactors.
+  - Match existing code style; do not "improve" formatting or comments unrelated to the task.
+  - Do not delete pre-existing dead code; if you notice some, mention it in OUTPUT.unexpected.
   - Do not install new dependencies or modify package manifests unless the task explicitly says so.
+  - The task header's `→ verify:` clause is the success criterion; the task is not done until that criterion is observably met.
   - If any step fails or produces output that does not match the task's "Expected" value, stop and report the failure. Do not improvise a fix.
 CONTEXT:
   Plan path: <path>
@@ -103,6 +107,7 @@ Two reviews run after the filter accepts the report. Both must pass before the t
 
 Check, by reading the report and the actual repo state:
 
+- [ ] The task's `→ verify:` criterion is observably met (cite the evidence — passing test name, command output, etc.).
 - [ ] Every step listed in the plan task has been performed.
 - [ ] Every file named in the plan task's "Files" section appears in `files_created` or `files_modified`.
 - [ ] No files outside the task's "Files" section were modified (run `git diff --name-only` against the pre-task state and cross-check).

@@ -98,10 +98,10 @@ Every plan starts with this header, exactly:
 
 ## Task structure
 
-Every task follows this shape exactly:
+Every task follows this shape exactly. The `→ verify:` clause on the task header is **mandatory** — it names the checkable success criterion for the whole task. `exec-dispatch` will reject any task missing it.
 
 ````markdown
-### Task N: [Component Name]
+### Task N: [Component Name] → verify: [observable success criterion]
 
 **Files:**
 - Create: `exact/path/to/file.ts`
@@ -143,6 +143,16 @@ git commit -m "feat: add specific behavior"
 ```
 ````
 
+## Mandatory `→ verify:` clause
+
+Every task header ends with `→ verify: <observable success criterion>`. The criterion must be checkable without judgment — a passing test name, a command exit code, a file existing, an HTTP status. "It works" is not a verify clause.
+
+Examples:
+- `### Task 3: ThemeToggle component → verify: ThemeToggle.test.tsx passes; clicking toggle flips data-theme on <html>`
+- `### Task 5: /healthz endpoint → verify: curl localhost:8080/healthz returns 200 with body {"ok":true}`
+
+If a task cannot be expressed with a verify clause, it is not bite-sized — split it.
+
 ## No placeholders
 
 Every step must contain the actual content an engineer needs. These are plan failures — never write them:
@@ -172,9 +182,10 @@ Look at the spec with fresh eyes and check the plan against it. This is a checkl
 4. **File-structure alignment.** Does every file touched by a task appear in the "File structure" section at the top? Does every file in the structure get touched by at least one task?
 5. **Commit boundaries.** Does each task end with a commit? Are commit messages specific and action-oriented?
 6. **Command runnability.** Every shell command that appears in the plan (test runs, build commands, linters, `git` invocations) must actually work in the target repo's toolchain as written. If the command's expected output is a behavior of the runtime (not just the code under test), dry-run the command once before finalizing the plan.
-7. **Predicted-output accuracy.** Every "Expected: ..." line in a step that describes runtime behavior (test failures, error messages, output samples) must be validated before the plan is approved. Predicted failure modes in TDD steps are a frequent source of wrong predictions — the author guesses what the current code will do and is occasionally wrong. For TDD steps where the plan predicts *which* tests will fail, either (a) actually run the new tests against the current code before writing the prediction, or (b) soften the prediction to the checkable minimum, e.g., "at least one of the new tests fails with an assertion error". Wrong predictions cause the executing agent to halt on an "Expected" mismatch even though the implementation is on track — a wasted dispatch.
+7. **Verify clause present.** Every `### Task N` header ends with `→ verify: <criterion>`. Missing or vague clause = fix it now; `exec-dispatch` will refuse to dispatch otherwise.
+8. **Predicted-output accuracy.** Every "Expected: ..." line in a step that describes runtime behavior (test failures, error messages, output samples) must be validated before the plan is approved. Predicted failure modes in TDD steps are a frequent source of wrong predictions — the author guesses what the current code will do and is occasionally wrong. For TDD steps where the plan predicts *which* tests will fail, either (a) actually run the new tests against the current code before writing the prediction, or (b) soften the prediction to the checkable minimum, e.g., "at least one of the new tests fails with an assertion error". Wrong predictions cause the executing agent to halt on an "Expected" mismatch even though the implementation is on track — a wasted dispatch.
 
-Items 6 and 7 together: do not specify output the plan author has not observed or cannot derive with certainty. Ambiguity and guessing here cascade directly into failed dispatches.
+Items 6 and 8 together: do not specify output the plan author has not observed or cannot derive with certainty. Ambiguity and guessing here cascade directly into failed dispatches.
 
 Fix issues inline. No re-review — just fix and move on. If a spec requirement has no task, add the task.
 

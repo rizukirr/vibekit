@@ -23,8 +23,11 @@ Every compiled brief must have exactly these five sections, in this order:
 ROLE: <one line. Specific identity. "Go test author for package X", not "helpful assistant">
 TASK: <one imperative sentence. What must be true when done>
 CONSTRAINTS:
-  - <rule, one per line>
-  - <rule>
+  - Edit ONLY files named in TASK or CONTEXT. No adjacent edits.
+  - Match existing style; do not refactor unrelated code.
+  - Do not delete pre-existing dead code; mention it in OUTPUT instead.
+  - <task-specific rule, one per line>
+  - <task-specific rule>
 CONTEXT:
   <only what the agent cannot derive. File paths with line numbers, exact snippets,
    relevant facts the agent does not have. Nothing else>

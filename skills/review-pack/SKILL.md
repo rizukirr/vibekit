@@ -76,7 +76,36 @@ Finding severity:
 - `warn` — clear duplication or speculative feature; ambiguous tests.
 - `nit` — local naming nits, minor comments.
 
-### Pass 4 — self-critique (Reflexion)
+### Pass 4 — simplicity (Karpathy principle 2)
+
+Run the senior-engineer test on the diff:
+
+- Total LOC added (count from `git diff --shortstat`).
+- Identify the single largest new construct (function / class / module / file).
+- Ask: "Could a senior engineer halve this without losing required behavior?"
+- If yes, quote the bloat candidate **verbatim** (file:line range + the code) and name what could be cut.
+
+Finding severity:
+- `block` — a new abstraction has a single caller and could be inlined; speculative configurability with no spec requirement; new code paths/exports with no caller and no test.
+- `warn` — code that is twice the natural length but functionally correct.
+- `nit` — micro-bloat (extra wrapper, unused parameter).
+
+A `block` here halts the handoff just like a spec violation.
+
+### Pass 5 — surgical-diff (Karpathy principle 3)
+
+For every changed file in the diff:
+- Does it appear in at least one plan task's "Files" section?
+- Does every changed *hunk* trace to a specific plan task or spec requirement?
+
+Finding severity:
+- `block` — a file was modified that no plan task names; or a hunk has no traceable origin.
+- `warn` — pre-existing dead code was deleted without explicit user request; formatting or comment changes unrelated to the task.
+- `nit` — touched lines that did not need to change to satisfy the task.
+
+Quote the orphan file:line ranges verbatim.
+
+### Pass 6 — self-critique (Reflexion)
 
 Ask explicitly: "What are three ways this implementation could be wrong that the tests would not catch?" Write down the three answers. For each:
 - Is there evidence in the diff that the risk is mitigated?

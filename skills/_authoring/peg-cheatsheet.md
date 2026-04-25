@@ -10,7 +10,7 @@
 4. **Example/structure** — few-shot exemplar or meta-structural template
 5. **Output format** — exact shape the response must take
 
-Caveman compresses *style*. PEG structures *substance*. Both compound. Neither substitutes for the other.
+Caveman compresses *style*. PEG structures *substance*. Karpathy (`./karpathy-principles.md`) governs *behavior*. Three orthogonal axes; all three apply to every code-mutating skill. None substitutes for another.
 
 ---
 
