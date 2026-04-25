@@ -1,6 +1,6 @@
 # Karpathy Principles — Vibekit Behavioral Standard
 
-**Purpose.** Authoring-only contract. Every vibekit skill that mutates code must be written to obey these four principles. Sibling to `peg-cheatsheet.md`: PEG structures *substance*, Karpathy governs *behavior*. Caveman compresses *style*. Three orthogonal axes; none substitutes for another.
+**Purpose.** Authoring-only contract. Every vibekit skill that mutates code must be written to obey these four principles. Sibling to `peg-cheatsheet.md` and `quad-adapter.md`: PEG structures *substance*, Karpathy governs *behavior*, Caveman compresses *style*, Quad-Adapter governs *cross-runtime portability*. Four orthogonal axes; none substitutes for another.
 
 Derived from Andrej Karpathy's observations on LLM coding pitfalls (forrestchang/andrej-karpathy-skills). Distilled to fit vibekit's pipeline.
 

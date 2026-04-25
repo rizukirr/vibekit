@@ -10,7 +10,7 @@
 4. **Example/structure** — few-shot exemplar or meta-structural template
 5. **Output format** — exact shape the response must take
 
-Caveman compresses *style*. PEG structures *substance*. Karpathy (`./karpathy-principles.md`) governs *behavior*. Three orthogonal axes; all three apply to every code-mutating skill. None substitutes for another.
+Caveman compresses *style*. PEG structures *substance*. Karpathy (`./karpathy-principles.md`) governs *behavior*. Quad-Adapter (`./quad-adapter.md`) governs *cross-runtime portability* for runtime-coupled skills. Four orthogonal axes; PEG + Karpathy apply to every code-mutating skill, Quad-Adapter applies whenever a skill needs a primitive beyond file I/O. None substitutes for another.
 
 ---
 
