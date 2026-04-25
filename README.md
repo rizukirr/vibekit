@@ -9,10 +9,14 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 ## What you get
 
 - **`/vibe <intent>`** — the full 7-stage pipeline in one command.
-- **Ten self-contained skills** that also work standalone.
+- **`/ralph-loop <intent>`** — autonomous bounded re-run of `/vibe` with a blocker classifier and thrashing critic. Same gates, never bypasses sign-off.
+- **Thirteen self-contained skills** that also work standalone.
 - **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
 - **Halt-and-report discipline.** Real live eval caught two plan defects cleanly; neither reached a commit.
 - **Token-efficient by design.** Compression is applied to agent framing; every guardrail stays verbatim.
+- **Karpathy-aligned discipline.** Four-axis authoring contract: PEG (substance), Karpathy (behavior), Caveman (style), Quad-Adapter (cross-runtime portability).
+- **Parallel-group dispatch** when a plan marks tasks as independent, with honest sequential fallback on runtimes that lack parallel subagents.
+- **Cross-session knowledge.** `memory-dual` captures durable project knowledge — atomic facts, compound documents, and a working notepad — under one file-backed convention.
 
 ---
 
@@ -91,20 +95,30 @@ You only talk to the pipeline during brainstorm and at each gate. The rest is au
 
 ## The skills
 
-All 10 skills live in `skills/` and can be invoked independently.
+All 13 skills live in `skills/` and can be invoked independently.
+
+**Pipeline:**
 
 | Skill | Role |
 |-------|------|
 | `vibe` | Orchestrator for the 7-stage pipeline. |
-| `brainstorm-lean` | Disciplined Socratic design gate with a HARD-GATE before implementation. |
-| `plan-write` | TDD-shaped, bite-sized implementation plan with exact commands. |
-| `brief-compiler` | Turns verbose intents into tight RTCO subagent briefs. |
-| `exec-dispatch` | One fresh subagent per task, with two-stage review. |
+| `brainstorm-lean` | Disciplined Socratic design gate with a HARD-GATE before implementation; pushback turn challenges framing before approaches are proposed. |
+| `plan-write` | TDD-shaped, bite-sized implementation plan with exact commands; mandatory `→ verify:` clause per task; optional `parallel-group` markers. |
+| `brief-compiler` | Turns verbose intents into tight RTCO subagent briefs with surgical-change constraints baked in. |
+| `exec-dispatch` | One fresh subagent per task, two-stage review, parallel-group fan-out where the runtime supports it. |
 | `report-filter` | Validates subagent returns against the declared schema; rejects drift. |
-| `verify-gate` | Evidence-based completion check, three independent verdict dispatches per requirement. |
-| `review-pack` | Reflexion-style self-critique + user sign-off on the diff. |
+| `verify-gate` | Evidence-based completion check, three independent verdict dispatches per requirement, plus a fail-closed surgical-diff pass. |
+| `review-pack` | Reflexion-style self-critique with simplicity + surgical-diff passes, then user sign-off on the diff. |
 | `finish-branch` | Integration endpoint — merge / PR / keep / abandon, no auto-actions. |
 | `isolate` | Dedicated worktree or branch per run; rollback is cheap. |
+
+**Cross-cutting:**
+
+| Skill | Role |
+|-------|------|
+| `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus a working notepad. Keyword + tag + type search; `[[key]]` cross-links; audit pass. |
+| `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
+| `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic. Same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
 
 ---
 
@@ -141,6 +155,7 @@ Large features scale linearly with task count. Verification cost scales with req
 - **Halt is a feature.** The pipeline would rather stop and surface a defect than improvise.
 - **One thing per run.** No mega-runs. One feature, one spec, one plan, one integration choice.
 - **Files over summaries.** Stages hand off via committed files, never prose summaries.
+- **Cross-runtime portability is a contract, not a hope.** Every runtime-coupled skill declares its required capabilities and ships a documented fallback for runtimes that lack them — with a verbatim degradation warning, never a silent skip.
 
 ---
 
