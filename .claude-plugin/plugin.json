@@ -1,7 +1,7 @@
 {
   "name": "vibekit",
   "description": "Token-efficient vibe-coding pipeline — brainstorm, plan, exec, verify, review, integrate — with guardrails that halt on 'Expected' mismatches instead of committing bad work.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "rizukirr"
   },
