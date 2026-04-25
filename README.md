@@ -176,3 +176,13 @@ Re-running the evals after substantive skill changes is recommended. A packaged 
 ## License
 
 MIT.
+
+## Acknowledgements
+
+Thanks to all plugins that inspired this one, especially:
+
+- [superpowers](https://github.com/obra/superpowers)
+- [omc](https://github.com/Yeachan-Heo/oh-my-claudecode)
+- [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)
+- [caveman](https://github.com/JuliusBrussee/caveman)
+- [Prompt-Engineering-Guide](https://github.com/dair-ai/Prompt-Engineering-Guide)
