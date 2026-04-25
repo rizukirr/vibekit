@@ -1,6 +1,8 @@
 # vibekit
 
-Vibekit is a token-efficient plugin for Claude Code, OpenAI Codex, OpenCode, and Gemini CLI, built for vibe coding.
+Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, and Gemini CLI. One command — `/vibe <intent>` — drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
+
+Token-efficient per feature: subagent briefs are RTCO-compressed and reports are schema-stripped, while every guardrail — evidence quotes, plans, constraints, degradation warnings — stays verbatim.
 
 Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly** — it does not silently commit the wrong thing.
 
