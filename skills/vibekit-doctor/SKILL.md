@@ -30,16 +30,17 @@ Run every check below in order. Output a single YAML report. **Read-only.**
 verdict: ok | warn | critical
 checks:
   - name: <check name>
-    status: ok | warn | critical
+    status: ok | info | warn | critical
     detail: <one-line, verbatim>
     evidence: <path / line / command output, optional>
 summary:
   ok: <int>
+  info: <int>
   warn: <int>
   critical: <int>
 ```
 
-`verdict` is the worst status across all checks. Any `critical` → `critical`. Any `warn` and no `critical` → `warn`. Otherwise `ok`.
+`verdict` is the worst status across all checks. Any `critical` → `critical`. Any `warn` and no `critical` → `warn`. Otherwise `ok`. `info` rows are recorded but never escalate the verdict — they exist for optional/gitignored files (CLAUDE.md, GEMINI.md) that may legitimately be absent.
 
 ### `check --fix`
 
@@ -76,26 +77,31 @@ For each directory under `skills/` (excluding `_authoring/`):
 
 For every skill directory under `skills/` (excluding `_authoring/`):
 - **AGENTS.md** lists the skill in the skill table.
-- **GEMINI.md** has an `@./skills/<name>/SKILL.md` line.
+- **GEMINI.md** has an `@./skills/<name>/SKILL.md` line — **only if `GEMINI.md` exists**. GEMINI.md is gitignored as a per-user local context file (parity with `CLAUDE.md`); a missing GEMINI.md is not a defect.
 
-Reverse: every skill referenced in AGENTS.md / GEMINI.md exists on disk.
+Reverse: every skill referenced in AGENTS.md (and GEMINI.md when present) exists on disk.
 
 Claude Code (`.claude-plugin/plugin.json`) and Codex (`.codex-plugin/plugin.json`) declare `"skills": "./skills/"` directory globs; they auto-discover by scan and need no per-skill row. opencode (`.opencode/plugins/vibekit.js`) adds the skills directory to `config.skills.paths`; same auto-discovery.
 
-`warn` on any one-sided registration; `critical` if a runtime entry doc itself is missing.
+`warn` on any one-sided registration; `critical` if a *required* runtime entry doc is missing (see C3).
 
 ### C3 — Plugin manifest presence
 
-Existence check:
+Existence check.
+
+**Required (committed to the repo):**
 - `.claude-plugin/plugin.json`
 - `.claude-plugin/marketplace.json`
 - `.codex-plugin/plugin.json`
 - `gemini-extension.json`
-- `GEMINI.md`
 - `AGENTS.md`
 - `.opencode/plugins/vibekit.js`
 
-`critical` for any missing file. The doctor does not parse contents beyond what C2 needs; deeper schema validation is the runtime's job.
+**Optional (gitignored, per-user local context):**
+- `CLAUDE.md` — Claude Code project-level context.
+- `GEMINI.md` — Gemini CLI context file (declared as `contextFileName` in `gemini-extension.json`). Users running on Gemini author this locally; the C2 GEMINI.md parity check only fires when this file exists.
+
+`critical` for any missing **required** file. `info` (not warn) when an optional file is absent. The doctor does not parse contents beyond what C2 needs; deeper schema validation is the runtime's job.
 
 ### C4 — `docs/` subdirectory presence
 
