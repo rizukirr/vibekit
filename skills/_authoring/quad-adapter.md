@@ -125,7 +125,8 @@ Copy this block into the SKILL.md, fill in the capabilities and fallbacks, and k
 |---|---|---|---|
 | `memory-dual` | shipped | none beyond file I/O | n/a — pure portable |
 | `vibekit-doctor` | shipped | git shell-out | n/a — git is universal |
-| `exec-dispatch` (parallel mode, planned) | not yet shipped | parallel subagent dispatch | sequential dispatch on Gemini, with verbatim degradation warning |
+| `exec-dispatch` (parallel mode) | shipped | parallel subagent dispatch | sequential dispatch on Gemini + opencode (when provider lacks parallel agents), with verbatim degradation warning |
+| `ralph-loop` | shipped | native loop primitive + background tasks | degraded checkpoint mode on Gemini + opencode — manual `--resume` between iterations, state preserved, verbatim warning |
 | `ralph-loop` (planned) | not yet shipped | native loop primitive | manual re-invoke prompt on Gemini + opencode |
 | `hud` (planned) | not yet shipped | runtime UI surface (varies) | log-only mode where UI absent |
 | `visual-verdict` (planned) | not yet shipped | vision input | refuse (not silently skip) where absent |

@@ -21,3 +21,6 @@ For durable project knowledge — atomic facts, compound documents, working note
 
 For diagnosing vibekit installation health (skill files, registrations, `.vibekit/` health):
 @./skills/vibekit-doctor/SKILL.md
+
+For autonomous bounded re-runs of `/vibe` until verify-gate is ready (degraded to manual `--resume` checkpoints on Gemini):
+@./skills/ralph-loop/SKILL.md

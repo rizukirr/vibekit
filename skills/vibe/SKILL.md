@@ -20,6 +20,7 @@ Do not invoke when:
 - The request is a pure question or read-only exploration.
 - The user has explicitly asked for a different workflow (inline execution, manual planning).
 - There is already an uncompleted vibe run in flight — resume the existing run instead.
+- The user wants autonomous bounded re-runs across multiple iterations (verify → fix → re-verify until ready). Use `ralph-loop` instead — it wraps `vibe` with a blocker classifier, thrashing critic, and budgets, and never bypasses review-pack sign-off.
 
 ## The pipeline
 

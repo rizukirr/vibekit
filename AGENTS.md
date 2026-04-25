@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 
 ## What this repo is
 
-`vibekit` is a 12-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. Future Phase 3 work fuses parallel dispatch into `exec-dispatch` and adds long-running iteration, observability, and visual-review skills.
+`vibekit` is a 13-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility.
 
 ## Repository layout
 
@@ -23,7 +23,7 @@ vibekit/
 ├── skills/
 │   ├── _authoring/            # local-only authoring references (not shipped)
 │   ├── vibe/                  # orchestrator
-│   └── <eleven other skills>/ # each with SKILL.md, self-contained
+│   └── <twelve other skills>/ # each with SKILL.md, self-contained
 ├── tests/
 │   └── eval/                  # throwaway test repos for live evals
 ├── .gitignore
@@ -49,6 +49,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
+| `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic; same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 
