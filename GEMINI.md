@@ -16,11 +16,8 @@ For implementation planning and execution:
 @./skills/review-pack/SKILL.md
 @./skills/finish-branch/SKILL.md
 
-For durable project memory and working notepad (cross-runtime, file-backed):
+For durable project knowledge — atomic facts, compound documents, working notepad:
 @./skills/memory-dual/SKILL.md
-
-For compound project knowledge — architecture notes, decisions, patterns, debugging playbooks:
-@./skills/wiki-dual/SKILL.md
 
 For diagnosing vibekit installation health (skill files, registrations, `.vibekit/` health):
 @./skills/vibekit-doctor/SKILL.md
