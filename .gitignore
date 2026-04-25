@@ -2,5 +2,6 @@ external/
 /.omc
 tests/eval/*/
 CLAUDE.md
+GEMINI.md
 .no-vibe/
 
