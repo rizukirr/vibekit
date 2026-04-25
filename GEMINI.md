@@ -18,3 +18,6 @@ For implementation planning and execution:
 
 For durable project memory and working notepad (cross-runtime, file-backed):
 @./skills/memory-dual/SKILL.md
+
+For compound project knowledge — architecture notes, decisions, patterns, debugging playbooks:
+@./skills/wiki-dual/SKILL.md
