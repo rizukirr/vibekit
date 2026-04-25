@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 
 ## What this repo is
 
-`vibekit` is a 10-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it.
+`vibekit` is an 11-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `memory-dual` is the first cross-cutting durable-state skill; future Phase 3 skills (`wiki-dual`, `team-dispatch`, etc.) will follow.
 
 ## Repository layout
 
@@ -23,7 +23,7 @@ vibekit/
 ├── skills/
 │   ├── _authoring/            # local-only authoring references (not shipped)
 │   ├── vibe/                  # orchestrator
-│   └── <nine other skills>/   # each with SKILL.md, self-contained
+│   └── <ten other skills>/    # each with SKILL.md, self-contained
 ├── tests/
 │   └── eval/                  # throwaway test repos for live evals
 ├── .gitignore
@@ -47,6 +47,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `review-pack` | Reflexion-style self-critique + user sign-off. |
 | `finish-branch` | Integration endpoint — merge / PR / keep / abandon, never auto. |
 | `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
+| `memory-dual` | Durable project memory + working notepad under `.vibekit/`; cross-runtime portable. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 

@@ -15,3 +15,6 @@ For implementation planning and execution:
 @./skills/verify-gate/SKILL.md
 @./skills/review-pack/SKILL.md
 @./skills/finish-branch/SKILL.md
+
+For durable project memory and working notepad (cross-runtime, file-backed):
+@./skills/memory-dual/SKILL.md
