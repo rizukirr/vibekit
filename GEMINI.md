@@ -11,7 +11,9 @@ If a request is broad or underspecified, start with:
 For implementation planning and execution:
 @./skills/plan-write/SKILL.md
 @./skills/isolate/SKILL.md
+@./skills/brief-compiler/SKILL.md
 @./skills/exec-dispatch/SKILL.md
+@./skills/report-filter/SKILL.md
 @./skills/verify-gate/SKILL.md
 @./skills/review-pack/SKILL.md
 @./skills/finish-branch/SKILL.md

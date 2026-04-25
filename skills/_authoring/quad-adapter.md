@@ -4,7 +4,7 @@
 
 This file is **never loaded at runtime**. It is read by the human or agent authoring a runtime-coupled skill. Enforcement lives inside the skill's own capability-gate block (template below).
 
-For skills that do nothing but file I/O (`memory-dual`, `wiki-dual`, `vibekit-doctor`), this contract is unnecessary — pure file ops are universally portable. Quad-adapter applies only when a skill needs a primitive that may be absent on one of the four runtimes.
+For skills that do nothing but file I/O (`memory-dual`, `vibekit-doctor`), this contract is unnecessary — pure file ops are universally portable. Quad-adapter applies only when a skill needs a primitive that may be absent on one of the four runtimes.
 
 ---
 

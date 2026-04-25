@@ -27,7 +27,7 @@ Caveman compresses *style*. PEG structures *substance*. Karpathy (`./karpathy-pr
 | verify-gate                | Self-Consistency                         | `consistency.en.mdx`              |
 | debug-trace-lean           | Tree-of-Thought (competing hypotheses)   | `tot.en.mdx`                      |
 | review-pack                | Reflexion                                | `reflexion.en.mdx`                |
-| wiki-dual / memory-dual    | Meta Prompting + caveman compression     | `meta-prompting.en.mdx`           |
+| memory-dual                | Structured output + delimiters           | `fewshot.en.mdx` (§format tips)   |
 | vibe (orchestrator)        | Prompt Chaining                          | `prompt_chaining.en.mdx`          |
 
 ---
