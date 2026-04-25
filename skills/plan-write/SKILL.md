@@ -143,6 +143,37 @@ git commit -m "feat: add specific behavior"
 ```
 ````
 
+## Optional parallel-group markers
+
+Sequential is the default. When and only when a contiguous block of tasks is genuinely independent — disjoint "Files" sections, no ordering dependencies, no shared package-manifest edits — the plan author MAY wrap them in a parallel-group:
+
+```markdown
+<!-- parallel-group: <kebab-case-name>
+     rationale: <one-line justification — why these tasks are independent> -->
+### Task K: ... → verify: ...
+**Files:** ...
+- [ ] Step 1: ...
+...
+
+### Task K+1: ... → verify: ...
+**Files:** ...
+- [ ] Step 1: ...
+...
+<!-- /parallel-group -->
+```
+
+Constraints on every parallel-group:
+
+- **Files-disjoint.** No file appears in two wrapped tasks' "Files" sections. `exec-dispatch` re-checks this and rejects the group otherwise.
+- **No ordering dependencies.** No wrapped task's CONTEXT references another wrapped task's output.
+- **No shared installs.** No wrapped task touches package manifests, lockfiles, or shared global config.
+- **All wrapped tasks have `→ verify:` clauses** (already globally mandatory).
+- **No setup/teardown inside a group.** Setup runs as a sequential task before the opening marker; teardown after the closing marker.
+
+The opening marker's `rationale:` line is non-optional — the plan author justifies independence in writing so reviewers (and future you) can see why these specific tasks were considered safe to fan out. Empty or vague rationales ("they look independent") are caught in self-review.
+
+Default is sequential. Reach for parallel-group only when the wall-clock saving justifies the analysis cost; for plans of <5 tasks, almost always skip it.
+
 ## Mandatory `→ verify:` clause
 
 Every task header ends with `→ verify: <observable success criterion>`. The criterion must be checkable without judgment — a passing test name, a command exit code, a file existing, an HTTP status. "It works" is not a verify clause.
@@ -183,6 +214,7 @@ Look at the spec with fresh eyes and check the plan against it. This is a checkl
 5. **Commit boundaries.** Does each task end with a commit? Are commit messages specific and action-oriented?
 6. **Command runnability.** Every shell command that appears in the plan (test runs, build commands, linters, `git` invocations) must actually work in the target repo's toolchain as written. If the command's expected output is a behavior of the runtime (not just the code under test), dry-run the command once before finalizing the plan.
 7. **Verify clause present.** Every `### Task N` header ends with `→ verify: <criterion>`. Missing or vague clause = fix it now; `exec-dispatch` will refuse to dispatch otherwise.
+7a. **Parallel-group integrity.** For every `<!-- parallel-group: ... -->` block: rationale present and concrete; wrapped tasks' "Files" sections fully disjoint (do the union, look for collisions); no wrapped task references another's output in CONTEXT; no wrapped task touches package manifests. If any check fails, either fix the plan or unwrap the group. `exec-dispatch` will re-check and halt on any violation.
 8. **Predicted-output accuracy.** Every "Expected: ..." line in a step that describes runtime behavior (test failures, error messages, output samples) must be validated before the plan is approved. Predicted failure modes in TDD steps are a frequent source of wrong predictions — the author guesses what the current code will do and is occasionally wrong. For TDD steps where the plan predicts *which* tests will fail, either (a) actually run the new tests against the current code before writing the prediction, or (b) soften the prediction to the checkable minimum, e.g., "at least one of the new tests fails with an assertion error". Wrong predictions cause the executing agent to halt on an "Expected" mismatch even though the implementation is on track — a wasted dispatch.
 
 Items 6 and 8 together: do not specify output the plan author has not observed or cannot derive with certainty. Ambiguity and guessing here cascade directly into failed dispatches.

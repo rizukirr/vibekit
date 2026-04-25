@@ -153,15 +153,81 @@ OUTPUT:
 
 Do not silently retry. Do not silently accept a failing verdict.
 
-## Parallelism
+## Parallelism (parallel-group dispatch)
 
-Dispatch in parallel ONLY when the plan explicitly marks tasks as independent (no shared files, no ordering dependency). Default is strictly sequential.
+Default is strictly sequential. Parallelism is **opt-in per group**, signaled by HTML-comment markers in the plan file. Tasks outside any group remain sequential.
 
-When parallel is safe:
-- Each agent gets its own RTCO brief.
-- Each agent's CONSTRAINTS block lists the specific files it is permitted to touch, and the files of the other parallel agents as forbidden.
-- Reports are filtered independently.
-- Gate 2 runs once per completed task, not batched.
+### Plan grammar
+
+```markdown
+<!-- parallel-group: <name>
+     rationale: <one-line justification — why these tasks are independent> -->
+### Task K: ... → verify: ...
+### Task K+1: ... → verify: ...
+### Task K+M: ... → verify: ...
+<!-- /parallel-group -->
+```
+
+`<name>` is kebab-case. The opening marker carries a `rationale:` line — plan authors must justify why the wrapped tasks are actually independent. `plan-write` is the source of truth for the grammar; `exec-dispatch` parses the markers.
+
+### Parallel-group invariants (enforced before dispatch)
+
+For every parallel group, before fanning out:
+
+1. **Files-disjoint.** Union the "Files" sections of every task in the group. Any file appearing in two tasks' Files lists → REJECT the group, surface to user, halt the loop. Independence is a property of file ownership, not of phrasing.
+2. **Verify-clauses present.** Every task in the group has its `→ verify:` clause (already mandatory globally — re-check here).
+3. **No ordering dependencies.** Each task's CONTEXT must not reference the output of another task in the same group. If Task B says "after Task A produces X, do Y", they are not parallel.
+4. **No shared dependency installs.** No task in the group may modify package manifests (already a per-task constraint; reaffirm here because parallel installs corrupt lockfiles).
+
+If any invariant fails, do not "best-effort" the group. Halt and surface the specific violation; user re-plans.
+
+### Capability-gate (per `_authoring/quad-adapter.md`)
+
+This skill's parallel mode requires: parallel subagent dispatch + per-subagent tool allowlist.
+
+| Runtime | Parallel dispatch | Per-agent allowlist | Behavior on parallel-group |
+|---|---|---|---|
+| Claude Code | yes (`Task` fan-out) | yes | Native parallel; each task gets its own subagent. |
+| Codex | yes (worker panes) | partial | Native parallel; allowlist enforced via brief CONSTRAINTS where per-agent tooling is unavailable. |
+| Gemini CLI | **no** | no | **Sequential fallback** in declared task order, with verbatim degradation warning emitted before dispatch (see below). |
+| opencode | provider-dependent | yes | Detect at dispatch time; sequential fallback if provider lacks parallel agents, with the same warning. |
+
+When the runtime cannot dispatch in parallel, emit this warning **verbatim** before running the group:
+
+> **Capability degraded.** Running on `<runtime>` which lacks parallel subagent dispatch. Parallel-group `<name>` will execute sequentially in declared task order. Result is functionally equivalent; wall-clock will be longer. To opt out of this group entirely on this runtime, remove the `parallel-group` markers in the plan and re-run.
+
+This warning joins the never-compress list. Never paraphrase, trim, or hide it.
+
+### Parallel dispatch procedure (capable runtimes)
+
+For every task in the group, in parallel:
+
+1. **Compile a brief.** Same RTCO template as sequential dispatch. Two additions to CONSTRAINTS:
+   - "Tasks running in parallel-group `<name>`: <list of other task numbers in the group>. The files those tasks own are forbidden to this brief."
+   - "Do not modify package manifests, lockfiles, or shared global config."
+2. **Dispatch a fresh subagent** per task. Each in isolation; no shared scratch space; no awareness of siblings beyond the forbidden-files list.
+3. **Receive returns concurrently.** Apply `report-filter` to each return independently. A REJECT on one task does not block the others — they continue.
+4. **Two-stage review per task.** Self-review (Gate 1) + plan-compliance review (Gate 2) run independently per task. No batching.
+5. **Commit per task.** One task → one or more commits named by the plan. Parallel does NOT compress to one commit — the history stays linear-readable, ordered by completion time.
+6. **Group fail-closed.** If any task in the group fails its gates, the whole group is treated as failed. Surface every failed task verbatim to the user; user decides per task: retry, abandon, re-plan. Never silently accept partial group success.
+7. **Plan checkbox update.** Mark each task's checkboxes as it lands (independently, as it completes). After all tasks land, commit the plan update with message `chore: complete parallel-group <name>`.
+
+### Sequential fallback procedure (incapable runtimes)
+
+If the capability gate selected sequential fallback:
+
+1. Emit the verbatim degradation warning.
+2. Iterate the group's tasks in declared order, each through the standard sequential dispatch loop above (steps 1-7 of the main "Dispatch loop").
+3. The "files-disjoint" invariant still holds (and is still checked) — a sequential run of a parallel-group is still semantically the same group; only the wall-clock changes.
+4. After the last task lands, commit the plan update with message `chore: complete parallel-group <name> (sequential fallback)`.
+
+### Anti-patterns specific to parallel-group
+
+- Marking tasks as parallel because they "feel independent" without checking Files-disjoint.
+- Including a setup/teardown task in a parallel-group. Setup runs *before* the group; teardown runs *after*.
+- Letting one task's failure auto-trigger retries on others. Each task's retry is a user decision.
+- Hiding the degradation warning to "keep the output clean" on Gemini. The warning is the contract.
+- Mixing files in two tasks' "Files" sections and resolving the conflict by editing the brief's CONSTRAINTS to allow it. The plan is wrong; fix the plan.
 
 ## Commit discipline
 

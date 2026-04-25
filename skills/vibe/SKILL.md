@@ -43,7 +43,7 @@ user intent
 Between each stage, the orchestrator checks a precondition. Any failure stops the pipeline and surfaces to the user. No silent retries.
 
 - **After brainstorm-lean:** spec file exists, frontmatter key `status: approved`, user approval captured in conversation.
-- **After plan-write:** plan file exists, self-review checklist passed, no `TODO` / `TBD` strings in the plan, every plan task has a file list and code blocks, every `### Task N` header ends with `→ verify: <criterion>`.
+- **After plan-write:** plan file exists, self-review checklist passed, no `TODO` / `TBD` strings in the plan, every plan task has a file list and code blocks, every `### Task N` header ends with `→ verify: <criterion>`, every `<!-- parallel-group -->` has a non-empty rationale and disjoint "Files" sections across its wrapped tasks.
 - **Before exec-dispatch:** user has chosen an execution mode; repo is clean or the user has explicitly authorized the pending changes; isolation (worktree / branch) is in place.
 - **After exec-dispatch:** every task in the plan is checked off; every commit referenced in reports resolves; no tasks remain with REJECTs.
 - **After verify-gate:** verdict = `ready`. Any other verdict → halt, show blockers.
