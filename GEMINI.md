@@ -21,3 +21,6 @@ For durable project memory and working notepad (cross-runtime, file-backed):
 
 For compound project knowledge — architecture notes, decisions, patterns, debugging playbooks:
 @./skills/wiki-dual/SKILL.md
+
+For diagnosing vibekit installation health (skill files, registrations, `.vibekit/` health):
+@./skills/vibekit-doctor/SKILL.md

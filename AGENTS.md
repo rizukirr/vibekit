@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 
 ## What this repo is
 
-`vibekit` is a 12-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `memory-dual` and `wiki-dual` are cross-cutting durable-state skills shared by the pipeline; future Phase 3 skills (`team-dispatch`, `ralph-loop`, etc.) will follow.
+`vibekit` is a 13-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `memory-dual` and `wiki-dual` are cross-cutting durable-state skills shared by the pipeline; `vibekit-doctor` is a diagnostic utility. Future Phase 3 skills (`team-dispatch`, `ralph-loop`, etc.) will follow.
 
 ## Repository layout
 
@@ -23,7 +23,7 @@ vibekit/
 ├── skills/
 │   ├── _authoring/            # local-only authoring references (not shipped)
 │   ├── vibe/                  # orchestrator
-│   └── <eleven other skills>/ # each with SKILL.md, self-contained
+│   └── <twelve other skills>/ # each with SKILL.md, self-contained
 ├── tests/
 │   └── eval/                  # throwaway test repos for live evals
 ├── .gitignore
@@ -49,6 +49,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
 | `memory-dual` | Durable project memory + working notepad under `.vibekit/`; cross-runtime portable. |
 | `wiki-dual` | Compound project knowledge under `.vibekit/wiki/` — architecture, decisions, patterns; keyword + tag search, `[[slug]]` cross-links, lint pass. |
+| `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 
