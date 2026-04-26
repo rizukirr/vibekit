@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 
 ## What this repo is
 
-`vibekit` is a 13-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility.
+`vibekit` is a 14-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. `using-vibekit` is the auto-trigger priming layer — auto-loaded by every supported runtime so the trigger map for the rest of the pipeline is always in context.
 
 ## Repository layout
 
@@ -19,7 +19,7 @@ vibekit/
 │   ├── plans/                 # implementation plans produced by plan-write
 │   ├── reviews/               # review docs produced by review-pack
 │   └── verifications/         # verification reports produced by verify-gate
-├── hooks/                     # (reserved; no hooks yet)
+├── hooks/                     # SessionStart hook injects using-vibekit on startup|clear|compact
 ├── skills/
 │   ├── _authoring/            # local-only authoring references (not shipped)
 │   ├── vibe/                  # orchestrator
@@ -50,6 +50,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
 | `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic; same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
+| `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), and message transform (opencode) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 
