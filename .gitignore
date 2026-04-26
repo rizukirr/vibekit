@@ -1,7 +1,6 @@
 external/
 /.omc
 tests/eval/*/
-CLAUDE.md
 .no-vibe/
 
 /.omx
