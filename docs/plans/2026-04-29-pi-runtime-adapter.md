@@ -38,7 +38,7 @@
 **Files:**
 - Modify: `skills/vibekit-doctor/SKILL.md` (C3 required list, and new C11/C12/C13 sections)
 
-- [ ] **Step 1: Add `.pi-plugin/plugin.json` to C3 required list**
+- [x] **Step 1: Add `.pi-plugin/plugin.json` to C3 required list**
 
 In `skills/vibekit-doctor/SKILL.md`, locate the `### C3 — Plugin manifest presence` section. Insert `.pi-plugin/plugin.json` into the **Required (committed to the repo)** bullet list, between `.codex-plugin/plugin.json` and `gemini-extension.json`:
 
@@ -53,7 +53,7 @@ In `skills/vibekit-doctor/SKILL.md`, locate the `### C3 — Plugin manifest pres
 - `.opencode/plugins/vibekit.js`
 ```
 
-- [ ] **Step 2: Add three new checks C11, C12, C13**
+- [x] **Step 2: Add three new checks C11, C12, C13**
 
 In `skills/vibekit-doctor/SKILL.md`, after the `### C10 — Git state` section and before the `## Discipline rules` heading, insert exactly:
 
@@ -84,7 +84,7 @@ Stage-list parity between the Claude/OpenCode `/vibe` command and the pi `/vibe`
 `critical` if either file is missing. `warn` on any set mismatch (drift in pipeline-stage labeling between runtimes).
 ````
 
-- [ ] **Step 3: Verify the edit landed**
+- [x] **Step 3: Verify the edit landed**
 
 Run:
 ```bash
@@ -98,7 +98,7 @@ grep -c "\.pi-plugin/plugin\.json" skills/vibekit-doctor/SKILL.md
 ```
 Expected: `>= 1` (the C3 list entry; C11 also references it, so likely `2`).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/vibekit-doctor/SKILL.md
