@@ -308,7 +308,7 @@ git commit -m "pi: add /vibe prompt template"
 **Files:**
 - Modify: `package.json`
 
-- [ ] **Step 1: Read current package.json**
+- [x] **Step 1: Read current package.json**
 
 Run:
 ```bash
@@ -324,7 +324,7 @@ Expected current content:
 }
 ```
 
-- [ ] **Step 2: Rewrite `package.json` with the new keys**
+- [x] **Step 2: Rewrite `package.json` with the new keys**
 
 Write `package.json` with exactly:
 
@@ -343,7 +343,7 @@ Write `package.json` with exactly:
 }
 ```
 
-- [ ] **Step 3: Verify shape**
+- [x] **Step 3: Verify shape**
 
 Run:
 ```bash
@@ -375,7 +375,7 @@ Expected:
 "0.2.1"
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add package.json
