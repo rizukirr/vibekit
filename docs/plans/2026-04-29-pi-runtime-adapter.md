@@ -112,7 +112,7 @@ git commit -m "doctor: add C11-C13 pi-parity checks"
 **Files:**
 - Create: `.pi-plugin/plugin.json`
 
-- [ ] **Step 1: Confirm canonical description from `.claude-plugin/plugin.json`**
+- [x] **Step 1: Confirm canonical description from `.claude-plugin/plugin.json`**
 
 Run:
 ```bash
@@ -126,7 +126,7 @@ jq -r '.description' .opencode/plugin.json
 ```
 Expected: `Token-efficient vibe-coding pipeline with hard guardrails: brainstorm, plan, isolate, exec, verify, review, integrate.`
 
-- [ ] **Step 2: Create the file**
+- [x] **Step 2: Create the file**
 
 Write `.pi-plugin/plugin.json` with exactly:
 
@@ -138,7 +138,7 @@ Write `.pi-plugin/plugin.json` with exactly:
 }
 ```
 
-- [ ] **Step 3: Verify shape**
+- [x] **Step 3: Verify shape**
 
 Run:
 ```bash
@@ -157,7 +157,7 @@ diff <(jq -r '.description' .pi-plugin/plugin.json) <(jq -r '.description' .open
 ```
 Expected: no output (descriptions identical to opencode's).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .pi-plugin/plugin.json
