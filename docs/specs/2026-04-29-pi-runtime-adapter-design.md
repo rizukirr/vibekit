@@ -1,7 +1,7 @@
 ---
 title: pi-runtime-adapter
 date: 2026-04-29
-status: draft
+status: approved
 ---
 
 # pi-runtime-adapter — Design
