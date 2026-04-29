@@ -93,6 +93,7 @@ Existence check.
 - `.claude-plugin/plugin.json`
 - `.claude-plugin/marketplace.json`
 - `.codex-plugin/plugin.json`
+- `.pi-plugin/plugin.json`
 - `gemini-extension.json`
 - `AGENTS.md`
 - `.opencode/plugins/vibekit.js`
@@ -153,6 +154,31 @@ If `hooks/` directory contains any files, they exist as committed code (not stra
 
 - The repo is a git repo. `critical` if not (vibekit assumes git for `isolate`, `finish-branch`, commit-based plan resolution).
 - The current branch and worktree state are reported as informational, not graded.
+
+### C11 — pi-manifest-present
+
+Existence and shape:
+- `.pi-plugin/plugin.json` exists, parses as JSON, and contains keys `name`, `description`, `version`.
+- `package.json` contains a top-level `pi` key (an object with at least `skills`, `prompts`, `extensions` arrays).
+
+`critical` if either file is missing or malformed. `warn` if `package.json`'s `pi` key is missing required sub-keys.
+
+### C12 — pi-extension-canonical-source
+
+Drift guard for the pi priming extension:
+- `.pi-plugin/extensions/vibekit-prime.ts` exists.
+- The file contains the literal string `skills/using-vibekit/SKILL.md` (the canonical priming source path).
+
+`critical` if the file is missing. `warn` if the file exists but the literal is absent — a sign the extension has been refactored to read from a different (potentially stale) source.
+
+### C13 — pi-prompt-stages-match
+
+Stage-list parity between the Claude/OpenCode `/vibe` command and the pi `/vibe` prompt:
+- Extract every `[N/7]` token (e.g., `[1/7]`, `[2/7]` … `[7/7]`) from `commands/vibe.md`.
+- Extract every `[N/7]` token from `.pi-plugin/prompts/vibe.md`.
+- Both files must produce the identical set `{[1/7], [2/7], [3/7], [4/7], [5/7], [6/7], [7/7]}`.
+
+`critical` if either file is missing. `warn` on any set mismatch (drift in pipeline-stage labeling between runtimes).
 
 ## Discipline rules
 
