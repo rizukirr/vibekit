@@ -422,7 +422,7 @@ If clean, no commit needed. Move to Task 7.
 **Files:**
 - Create: `docs/INSTALL.pi.md`
 
-- [ ] **Step 1: Read existing install docs as templates**
+- [x] **Step 1: Read existing install docs as templates**
 
 Run:
 ```bash
@@ -431,7 +431,7 @@ cat .opencode/INSTALL.md
 
 Use the structure (numbered steps, verify section, troubleshooting) as the template.
 
-- [ ] **Step 2: Create the install doc**
+- [x] **Step 2: Create the install doc**
 
 Write `docs/INSTALL.pi.md` with exactly:
 
@@ -526,7 +526,7 @@ pi remove git:github.com/rizukirr/vibekit
 ```
 ```
 
-- [ ] **Step 3: Verify required content tokens**
+- [x] **Step 3: Verify required content tokens**
 
 Run:
 ```bash
@@ -534,7 +534,7 @@ grep -c "pi install\|git:github.com/rizukirr/vibekit\|pi list\|/vibe\|Troublesho
 ```
 Expected: `>= 5` (each token appears at least once).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/INSTALL.pi.md
