@@ -1,0 +1,24 @@
+---
+description: Run the full vibe pipeline on a short intent — brainstorm, plan, exec, verify, review, integrate.
+argument-hint: "<intent, e.g. \"add a dark mode toggle\">"
+---
+
+Invoke the `vibe` skill with the user's intent as input.
+
+**User intent:** $ARGUMENTS
+
+Follow the vibe skill's 7-stage pipeline exactly:
+
+1. `[1/7] brainstorm` — invoke `brainstorm-lean` with the intent above. Wait for the user to answer clarifying questions and approve the spec.
+2. `[2/7] plan` — invoke `plan-write` against the approved spec.
+3. `[3/7] confirm execution mode` — ask the user: subagent-driven (recommended) or inline.
+4. `[4/7] isolate` — invoke `isolate` to create a dedicated worktree or branch.
+5. `[5/7] exec` — invoke `exec-dispatch` to run the plan task-by-task.
+6. `[6/7] verify` — invoke `verify-gate` to confirm the work satisfies the spec.
+7. `[7/7] result` — surface the final message from `vibe`.
+
+Between stages, check the hard gates described in the `vibe` skill. Halt on any gate failure and offer the user concrete remedies. Do not auto-retry.
+
+Never auto-merge, auto-push, or auto-PR. After `vibe: ready`, the user decides whether to run `review-pack` + `finish-branch`.
+
+If the user's intent is missing or empty, do not start the pipeline. Ask for the intent in one sentence.
