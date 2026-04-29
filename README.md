@@ -1,6 +1,6 @@
 # vibekit
 
-Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, and Gemini CLI. One command — `/vibe <intent>` — drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
+Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, Gemini CLI, and Pi. One command — `/vibe <intent>` — drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
 
 Token-efficient per feature: subagent briefs are RTCO-compressed and reports are schema-stripped, while every guardrail — evidence quotes, plans, constraints, degradation warnings — stays verbatim.
 
@@ -73,6 +73,19 @@ Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vi
 ```
 
 Detailed Gemini docs: `INSTALL.gemini.md` and `docs/README.gemini.md`.
+
+### Pi
+
+Tell Pi:
+
+> Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/docs/INSTALL.pi.md
+
+Manual installation is also documented in `docs/INSTALL.pi.md`. Quick path:
+
+```bash
+npm install -g @mariozechner/pi-coding-agent
+pi install git:github.com/rizukirr/vibekit
+```
 
 ---
 
