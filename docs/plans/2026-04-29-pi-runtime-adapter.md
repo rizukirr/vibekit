@@ -621,7 +621,7 @@ git commit -m "docs(readme): add Pi install section, bump runtime count to five"
 **Files:**
 - Modify: `AGENTS.md`
 
-- [ ] **Step 1: Locate the cross-runtime trigger context**
+- [x] **Step 1: Locate the cross-runtime trigger context**
 
 Run:
 ```bash
@@ -630,11 +630,11 @@ grep -n -E "cross-runtime|\.opencode|\.codex-plugin|\.claude-plugin|hooks/|GEMIN
 
 Note the section that lists the directories whose edits trigger cross-runtime verification (this exists in the `## Cross-runtime changes` discussion or equivalent — adapt to whatever AGENTS.md actually reads; do not invent a section name).
 
-- [ ] **Step 2: Add `.pi-plugin/` to the trigger list**
+- [x] **Step 2: Add `.pi-plugin/` to the trigger list**
 
 In the section that enumerates the runtime-adapter directories whose changes require multi-runtime verification, add `.pi-plugin/` alongside the existing entries (`.claude-plugin/`, `.codex-plugin/`, `.opencode/`, `gemini-extension.json`, `hooks/`). Maintain alphabetical or grouped order as the existing list dictates.
 
-- [ ] **Step 3: Verify skill count language is unchanged**
+- [x] **Step 3: Verify skill count language is unchanged**
 
 The skill count in AGENTS.md (`vibekit is an N-skill plugin`) MUST stay accurate. Run:
 ```bash
@@ -646,7 +646,7 @@ grep -oE "[0-9]+-skill plugin|skill plugin" AGENTS.md
 ```
 If the count differs, halt — that is a separate defect, not part of this task. Otherwise no edit needed.
 
-- [ ] **Step 4: Verify edit landed**
+- [x] **Step 4: Verify edit landed**
 
 Run:
 ```bash
@@ -654,7 +654,7 @@ grep -c "\.pi-plugin/" AGENTS.md
 ```
 Expected: `>= 1`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add AGENTS.md
