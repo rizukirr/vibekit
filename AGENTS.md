@@ -11,6 +11,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 ```
 vibekit/
 ├── .claude-plugin/            # plugin manifest and marketplace metadata
+├── .pi-plugin/                # pi runtime adapter (manifest, prompts, extensions)
 ├── agents/                    # (reserved for agent definitions)
 ├── commands/                  # slash commands; commands/vibe.md triggers the pipeline
 ├── docs/
