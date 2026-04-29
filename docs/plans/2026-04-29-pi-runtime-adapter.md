@@ -668,13 +668,13 @@ git commit -m "docs(agents): add .pi-plugin/ to cross-runtime trigger list"
 **Files:**
 - Read-only: all of the above.
 
-- [ ] **Step 1: Run vibekit-doctor in strict mode**
+- [x] **Step 1: Run vibekit-doctor in strict mode**
 
 Invoke the `vibekit:vibekit-doctor` skill with `check --strict`. Strict mode escalates `warn` to `critical` for verdict purposes. Capture the YAML report verbatim into `docs/verifications/2026-04-29-pi-runtime-adapter.md` (create the file).
 
 Expected: `verdict: ok` OR `verdict: critical` strictly limited to C4 (`docs/reviews/` only — `docs/verifications/` will exist after this step writes the report) and C7 (`external/` absent in worktree — environmental, see Task 6 verify clause). Any other `critical`, or any non-`ok` on C11/C12/C13, halts.
 
-- [ ] **Step 2: Spec-coverage cross-check**
+- [x] **Step 2: Spec-coverage cross-check**
 
 Open `docs/specs/2026-04-29-pi-runtime-adapter-design.md`. For each bullet under `## Goals`, list the artifact(s) that satisfy it:
 
@@ -692,7 +692,7 @@ git diff --name-only main -- skills/ | grep -v 'skills/vibekit-doctor'
 ```
 Expected: no output (only `vibekit-doctor` SKILL.md was edited; the 14 functional skills are untouched).
 
-- [ ] **Step 3: Append verification report**
+- [x] **Step 3: Append verification report**
 
 Write the doctor's full YAML report and the spec-coverage table to `docs/verifications/2026-04-29-pi-runtime-adapter.md` with frontmatter:
 
@@ -722,7 +722,7 @@ verdict: <fill from doctor>
 `git diff --name-only main -- skills/` returned only `skills/vibekit-doctor/SKILL.md`. All 14 functional skills unchanged.
 ```
 
-- [ ] **Step 4: Commit verification**
+- [x] **Step 4: Commit verification**
 
 ```bash
 git add docs/verifications/2026-04-29-pi-runtime-adapter.md
