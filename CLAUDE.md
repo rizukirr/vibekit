@@ -40,13 +40,13 @@ When you need a real repo to dispatch into for live evals, create it under `test
 
 ## Cross-runtime changes
 
-If your change touches anything in `hooks/`, `.codex/`, `.opencode/`, `GEMINI.md`, `gemini-extension.json`, or the `<runtime>` section of `using-vibekit/SKILL.md`, verify all four runtimes are still consistent:
+If your change touches anything in `hooks/`, `.codex/`, `.opencode/`, `.pi-plugin/`, `GEMINI.md`, `gemini-extension.json`, or the `<runtime>` section of `using-vibekit/SKILL.md`, verify all five runtimes are still consistent:
 
 - The same `using-vibekit` body is delivered by every runtime.
-- Manifest descriptions in `.claude-plugin/plugin.json`, `gemini-extension.json`, and `.opencode/plugin.json` agree on `name`, `version`, and pipeline-stage list.
-- `vibekit-doctor` returns clean.
+- Manifest descriptions in `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.pi-plugin/plugin.json`, `gemini-extension.json`, and `.opencode/plugin.json` agree on `name`, `version`, and pipeline-stage list.
+- `vibekit-doctor` returns clean (C11/C12/C13 cover pi parity).
 
-A consistency drift in one runtime adapter will surface as "the skill works on Claude Code but not Codex" reports from users — exactly the failure mode this plugin's portability layer exists to prevent.
+A consistency drift in one runtime adapter will surface as "the skill works on Claude Code but not Pi" reports from users — exactly the failure mode this plugin's portability layer exists to prevent.
 
 ## Things that are not yet supported
 
