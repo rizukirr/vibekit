@@ -12,16 +12,16 @@ Add vibekit to the `plugin` array in your `opencode.json` (global or project-lev
 
 This enables plugin hooks (bootstrap injection and skill path registration).
 
-## 2) Install command
+## 2) Install commands
 
-OpenCode plugins and slash commands are loaded separately. To use `/vibe` globally, copy the command file into your global commands directory:
+OpenCode plugins and slash commands are loaded separately. To use vibekit slash commands globally, copy the command files into your global commands directory:
 
 ```bash
 mkdir -p ~/.config/opencode/commands
-cp .opencode/commands/vibe.md ~/.config/opencode/commands/vibe.md
+cp .opencode/commands/*.md ~/.config/opencode/commands/
 ```
 
-If you prefer project-local commands instead, copy this file into `<project>/.opencode/commands/`.
+If you prefer project-local commands instead, copy these files into `<project>/.opencode/commands/`.
 
 ## 3) Restart OpenCode
 
@@ -31,18 +31,19 @@ Restart OpenCode so plugins and commands reload.
 
 - Use the `skill` tool to list skills.
 - Confirm you can see `vibe`, `brainstorm-lean`, `plan-write`, and other vibekit skills.
-- Confirm the slash command works:
+- Confirm slash commands work:
 
 ```bash
 opencode run --command vibe "add a hello endpoint"
+opencode run --command vibekit-doctor
 ```
 
 ## Troubleshooting
 
-If `/vibe` does not appear in autocomplete or returns unknown command:
+If vibekit slash commands do not appear in autocomplete or return unknown command:
 
 1. Confirm the plugin line exists in `opencode.json`.
-2. Confirm command file exists at `~/.config/opencode/commands/vibe.md` (or project-local `.opencode/commands/vibe.md`).
+2. Confirm command files exist at `~/.config/opencode/commands/` (or project-local `.opencode/commands/`).
 3. Restart OpenCode after config changes.
 4. If needed, clear vibekit package cache and restart OpenCode:
 
