@@ -239,11 +239,11 @@ git commit -m "pi: add vibekit-prime extension for using-vibekit injection"
 **Files:**
 - Create: `.pi-plugin/prompts/vibe.md`
 
-- [ ] **Step 1: Confirm pi accepts the same `$ARGUMENTS` syntax**
+- [x] **Step 1: Confirm pi accepts the same `$ARGUMENTS` syntax**
 
 Already confirmed against `external/pi-mono/packages/coding-agent/docs/prompt-templates.md`: pi supports `$ARGUMENTS`, `$@`, `$1` … `$N`. The Claude Code body in `commands/vibe.md` uses `$ARGUMENTS`, which works in pi unchanged.
 
-- [ ] **Step 2: Create the prompt file**
+- [x] **Step 2: Create the prompt file**
 
 Write `.pi-plugin/prompts/vibe.md` with exactly:
 
@@ -274,7 +274,7 @@ Never auto-merge, auto-push, or auto-PR. After `vibe: ready`, the user decides w
 If the user's intent is missing or empty, do not start the pipeline. Ask for the intent in one sentence.
 ```
 
-- [ ] **Step 3: Verify stage-list parity with `commands/vibe.md`**
+- [x] **Step 3: Verify stage-list parity with `commands/vibe.md`**
 
 Run:
 ```bash
@@ -294,7 +294,7 @@ grep -c '\$ARGUMENTS' .pi-plugin/prompts/vibe.md
 ```
 Expected: `1`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .pi-plugin/prompts/vibe.md
