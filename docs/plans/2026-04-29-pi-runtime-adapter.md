@@ -171,7 +171,7 @@ git commit -m "pi: add internal plugin manifest"
 **Files:**
 - Create: `.pi-plugin/extensions/vibekit-prime.ts`
 
-- [ ] **Step 1: Create the extension file**
+- [x] **Step 1: Create the extension file**
 
 Write `.pi-plugin/extensions/vibekit-prime.ts` with exactly:
 
@@ -196,7 +196,7 @@ export default async function (pi: ExtensionAPI) {
 }
 ```
 
-- [ ] **Step 2: Verify the canonical-source literal is present**
+- [x] **Step 2: Verify the canonical-source literal is present**
 
 Run:
 ```bash
@@ -216,7 +216,7 @@ grep -c "export default async function" .pi-plugin/extensions/vibekit-prime.ts
 ```
 Expected: `1`.
 
-- [ ] **Step 3: Verify the path resolution would land on the canonical file**
+- [x] **Step 3: Verify the path resolution would land on the canonical file**
 
 The extension lives at `.pi-plugin/extensions/vibekit-prime.ts`. Resolution: `dirname(import.meta.url)` → `<repo>/.pi-plugin/extensions/`, `../../skills/using-vibekit/SKILL.md` → `<repo>/skills/using-vibekit/SKILL.md`. Confirm the target exists:
 
@@ -225,7 +225,7 @@ ls -la skills/using-vibekit/SKILL.md
 ```
 Expected: file exists, non-empty.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .pi-plugin/extensions/vibekit-prime.ts
