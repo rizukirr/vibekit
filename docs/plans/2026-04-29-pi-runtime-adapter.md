@@ -548,7 +548,7 @@ git commit -m "pi: add install docs"
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Locate the runtimes line and existing install sections**
+- [x] **Step 1: Locate the runtimes line and existing install sections**
 
 Run:
 ```bash
@@ -556,7 +556,7 @@ grep -n -E "Claude Code, OpenAI Codex|### OpenCode|### OpenAI Codex|### Gemini C
 ```
 Note line numbers for the supported-runtimes sentence and the install-section anchors.
 
-- [ ] **Step 2: Bump the supported-runtimes sentence**
+- [x] **Step 2: Bump the supported-runtimes sentence**
 
 Find the line near the top of `README.md` that reads:
 ```
@@ -568,7 +568,7 @@ Replace it with:
 Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, Gemini CLI, and Pi.
 ```
 
-- [ ] **Step 3: Add a Pi install subsection**
+- [x] **Step 3: Add a Pi install subsection**
 
 After the existing `### Gemini CLI` install subsection (the one pointing at `INSTALL.gemini.md`), add a new subsection `### Pi` with content:
 
@@ -587,7 +587,7 @@ pi install git:github.com/rizukirr/vibekit
 ```
 ```
 
-- [ ] **Step 4: Verify the edits landed**
+- [x] **Step 4: Verify the edits landed**
 
 Run:
 ```bash
@@ -607,7 +607,7 @@ grep -c "docs/INSTALL.pi.md" README.md
 ```
 Expected: `>= 1`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add README.md
