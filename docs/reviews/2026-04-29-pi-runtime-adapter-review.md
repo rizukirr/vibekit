@@ -61,8 +61,29 @@ git -C /home/rizki/Projects/vibekit/.vibe-worktrees/2026-04-29-pi-runtime-adapte
   skills/vibekit-doctor/SKILL.md docs/INSTALL.pi.md
 ```
 
+## Consistency sweep (post-`fix`)
+
+User chose `fix` at first sign-off. Eight prose locations were drifting on runtime count after the original 10 tasks landed — pre-existing in five places, pi-induced in three. One follow-up sweep task addressed all eight in 8 commits across 6 files.
+
+| Location | Pre-edit | Post-edit |
+|---|---|---|
+| `CLAUDE.md:23` | "four delivery paths" | "five delivery paths", `.pi-plugin` extension named alongside hook/@-import/bootstrap |
+| `AGENTS.md:3` | "Claude, Codex, Gemini, or otherwise" | "Claude, Codex, Gemini, OpenCode, Pi, or otherwise" |
+| `AGENTS.md:54` (using-vibekit row) | 4 delivery paths | 5 delivery paths, Pi `before_agent_start` named |
+| `AGENTS.md:128` | future-tense adapter list | acknowledges Codex/Gemini/OpenCode/Pi as shipped |
+| `README.md:16` | 3 priming adapters listed | 4 listed (Pi added) |
+| `skills/using-vibekit/SKILL.md` (How to access skills) | 4 entries | 5 entries (Pi added in same shape) |
+| `skills/ralph-loop/SKILL.md:270` + capability table | "four runtimes" | "five runtimes"; Pi row added (no native loop, degraded checkpoint mode) |
+| `skills/_authoring/quad-adapter.md` | "four runtimes" | "five runtimes"; Pi rows added to runtime table, capability matrix, detection signals; affected-skills rows include Pi |
+
+Sweep commits: `5dc1cdb..8012cb0` (8 commits). Filename `quad-adapter.md` retained for backlink stability — body updated only.
+
+Skill-body edits (using-vibekit + ralph-loop) were enumeration-only. No decision logic, trigger conditions, guardrails, or compression policy altered. Per AGENTS.md eval workflow: static eval applies, live eval not required.
+
+Doctor checks unaffected: C1 (frontmatter), C2 (registration parity), C8 (skill count = 14) all still pass — none of the touched lines are inputs to those checks. Re-running the strict doctor pass would produce the same verdict as Task 10.
+
 ## Sign-off
 
 - [ ] User reviewed findings.
-- [ ] User reviewed diff.
+- [ ] User reviewed diff (now `+450 / -68` across 17 files in 29 commits).
 - [ ] User approves proceeding to finish-branch.
