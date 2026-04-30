@@ -78,7 +78,9 @@ Detailed Gemini docs: `INSTALL.gemini.md` and `docs/README.gemini.md`.
 
 Tell Pi:
 
-> Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/docs/INSTALL.pi.md
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/docs/INSTALL.pi.md
+```
 
 Manual installation is also documented in `docs/INSTALL.pi.md`. Quick path:
 
