@@ -191,6 +191,7 @@ This skill's parallel mode requires: parallel subagent dispatch + per-subagent t
 | Codex | yes (worker panes) | partial | Native parallel; allowlist enforced via brief CONSTRAINTS where per-agent tooling is unavailable. |
 | Gemini CLI | **no** | no | **Sequential fallback** in declared task order, with verbatim degradation warning emitted before dispatch (see below). |
 | opencode | provider-dependent | yes | Detect at dispatch time; sequential fallback if provider lacks parallel agents, with the same warning. |
+| Pi | **no** | no | **Sequential fallback** in declared task order, with verbatim degradation warning emitted before dispatch. |
 
 When the runtime cannot dispatch in parallel, emit this warning **verbatim** before running the group:
 

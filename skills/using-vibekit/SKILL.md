@@ -52,6 +52,7 @@ If the user says "skip the brainstorm" or "just write the code," follow the user
 - **Codex:** skills are referenced from `AGENTS.md`; invoke by following the named workflow.
 - **Gemini CLI:** `activate_skill` tool.
 - **opencode:** see the per-runtime adapter shim.
+- **Pi:** `prompts/vibe.md` is registered via the `pi` key in package.json; skills auto-discovered from `skills/` and primed by the .pi-plugin extension. Invoke via `/skill:<name>` or by following the auto-trigger map.
 
 ## Compression policy reminder
 

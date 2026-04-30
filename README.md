@@ -1,6 +1,6 @@
 # vibekit
 
-Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, and Gemini CLI. One command — `/vibe <intent>` — drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
+Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, Gemini CLI, and Pi. One command — `/vibe <intent>` — drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
 
 Token-efficient per feature: subagent briefs are RTCO-compressed and reports are schema-stripped, while every guardrail — evidence quotes, plans, constraints, degradation warnings — stays verbatim.
 
@@ -13,7 +13,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 - **`/vibe <intent>`** — the full 7-stage pipeline in one command.
 - **`/ralph-loop <intent>`** — autonomous bounded re-run of `/vibe` with a blocker classifier and thrashing critic. Same gates, never bypasses sign-off.
 - **Thirteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
-- **Auto-trigger discipline.** A SessionStart hook (Claude Code) and equivalent adapters (Codex native discovery, Gemini `@`-import, opencode plugin) load `using-vibekit` into every session so pipeline skills cannot be silently skipped.
+- **Auto-trigger discipline.** A SessionStart hook (Claude Code) and equivalent adapters (Codex native discovery, Gemini `@`-import, opencode plugin, Pi `before_agent_start` extension) load `using-vibekit` into every session so pipeline skills cannot be silently skipped.
 - **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
 - **Halt-and-report discipline.** Real live eval caught two plan defects cleanly; neither reached a commit.
 - **Token-efficient by design.** Compression is applied to agent framing; every guardrail stays verbatim.
@@ -73,6 +73,19 @@ Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vi
 ```
 
 Detailed Gemini docs: `INSTALL.gemini.md` and `docs/README.gemini.md`.
+
+### Pi
+
+Tell Pi:
+
+> Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/docs/INSTALL.pi.md
+
+Manual installation is also documented in `docs/INSTALL.pi.md`. Quick path:
+
+```bash
+npm install -g @mariozechner/pi-coding-agent
+pi install git:github.com/rizukirr/vibekit
+```
 
 ---
 

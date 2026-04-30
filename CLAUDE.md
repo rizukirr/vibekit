@@ -20,7 +20,7 @@ The auto-trigger map (which skill fires when) is in `skills/using-vibekit/SKILL.
 
 Vibekit's skills are themselves the product. Editing one changes agent behavior for every downstream user. Because of that, the contribution workflow has stricter rules than ordinary code changes:
 
-- **Edit only the canonical source.** Each skill is `skills/<name>/SKILL.md`. Do not copy a skill's content into another file. Cross-runtime adapters (`GEMINI.md` `@`-imports, the opencode plugin's bootstrap injection, the Claude Code SessionStart hook) all read from the canonical `SKILL.md` — there is one source, four delivery paths.
+- **Edit only the canonical source.** Each skill is `skills/<name>/SKILL.md`. Do not copy a skill's content into another file. Cross-runtime adapters (`GEMINI.md` `@`-imports, the opencode plugin's bootstrap injection, the Claude Code SessionStart hook, and the .pi-plugin extension) all read from the canonical `SKILL.md` — there is one source, five delivery paths.
 - **Read the skill in full before editing it.** Skills are behavior-shaping prompts. A small wording change can cascade into a different decision tree at runtime.
 - **Keep skills self-contained.** A shipped skill must not reference `external/`, third-party plugin names, local paths, or any non-vibekit identifier. If you need a concept from elsewhere, inline the relevant text.
 - **Verify before claiming done.** Any change that could affect runtime behavior routes through `verify-gate` with evidence quoted verbatim. "Looks right" is not evidence.
@@ -40,13 +40,13 @@ When you need a real repo to dispatch into for live evals, create it under `test
 
 ## Cross-runtime changes
 
-If your change touches anything in `hooks/`, `.codex/`, `.opencode/`, `GEMINI.md`, `gemini-extension.json`, or the `<runtime>` section of `using-vibekit/SKILL.md`, verify all four runtimes are still consistent:
+If your change touches anything in `hooks/`, `.codex/`, `.opencode/`, `.pi-plugin/`, `GEMINI.md`, `gemini-extension.json`, or the `<runtime>` section of `using-vibekit/SKILL.md`, verify all five runtimes are still consistent:
 
 - The same `using-vibekit` body is delivered by every runtime.
-- Manifest descriptions in `.claude-plugin/plugin.json`, `gemini-extension.json`, and `.opencode/plugin.json` agree on `name`, `version`, and pipeline-stage list.
-- `vibekit-doctor` returns clean.
+- Manifest descriptions in `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `.pi-plugin/plugin.json`, `gemini-extension.json`, and `.opencode/plugin.json` agree on `name`, `version`, and pipeline-stage list.
+- `vibekit-doctor` returns clean (C11/C12/C13 cover pi parity).
 
-A consistency drift in one runtime adapter will surface as "the skill works on Claude Code but not Codex" reports from users — exactly the failure mode this plugin's portability layer exists to prevent.
+A consistency drift in one runtime adapter will surface as "the skill works on Claude Code but not Pi" reports from users — exactly the failure mode this plugin's portability layer exists to prevent.
 
 ## Things that are not yet supported
 

@@ -1,0 +1,107 @@
+# Review — pi-runtime-adapter
+
+**Date:** 2026-04-29
+**Spec:** docs/specs/2026-04-29-pi-runtime-adapter-design.md (status: approved)
+**Plan:** docs/plans/2026-04-29-pi-runtime-adapter.md
+**Verify report:** docs/verifications/2026-04-29-pi-runtime-adapter.md
+**Commits under review:** 4e0fc69 (main, base) .. HEAD on `vibe/pi-runtime-adapter` — 20 commits
+
+## Diff summary
+
+- Files changed: 11 (9 substantive + plan checkpointing + verification report)
+- Lines added: 406, removed: 50 (net +356)
+- Substantive-only (excluding plan/verification meta-docs): +187 lines across 9 files
+- Commits: 20 (10 implementer + 7 plan-checkpoint + 1 plan amendment + 1 CLAUDE.md follow-up + 1 .gitignore prep)
+
+Substantive files:
+- `.pi-plugin/extensions/vibekit-prime.ts` (+18, new)
+- `.pi-plugin/plugin.json` (+5, new)
+- `.pi-plugin/prompts/vibe.md` (+24, new)
+- `docs/INSTALL.pi.md` (+88, new)
+- `package.json` (+7, modified)
+- `skills/vibekit-doctor/SKILL.md` (+26, modified — new C11/C12/C13 + C3 entry)
+- `README.md` (+14, modified — runtime sentence + Pi subsection)
+- `AGENTS.md` (+1, modified — Repository layout entry)
+- `CLAUDE.md` (+4/-4, modified — Cross-runtime trigger list)
+
+## Findings
+
+### Block
+
+None.
+
+### Warn
+
+- **Task 5 commit subject deviation.** Plan specified `pi: register vibekit as a pi package via package.json pi key`; implementer used `chore(pi): add pi key and pi-package keyword to package.json`. Cosmetic conventional-commits scope difference; content correct. Evidence: commit `a29af5b`. Already accepted during exec-dispatch Gate 2.
+- **CLAUDE.md edit not listed in plan's File structure.** Plan's File structure named only `package.json`, `README.md`, `AGENTS.md`, `skills/vibekit-doctor/SKILL.md` as modified files. Task 9 ("update cross-runtime trigger list") originally targeted AGENTS.md, but the canonical "Cross-runtime changes" section lives in `CLAUDE.md`. The CLAUDE.md edit was added in-scope-by-spirit. Evidence: commit `260f656`. Could be flagged as a plan defect rather than an implementation defect — the plan's verify clause was based on a wrong assumption about which file holds the trigger list.
+- **Plan verify-clause mid-run amendment for Task 6 / Task 10.** Original verify clauses said "no warn"; amended to accept C4 (`docs/reviews/`-only) and C7 (`external/` absent in worktree) as environmental. Acceptable, but the amendment was made by the orchestrator under user direction during a halt, not by re-routing through plan-write. Evidence: commit `fa99b2f`. Documented in plan; not a defect in the work, but a reminder that plan guesses about doctor strictness need to be load-bearing-tested.
+
+### Nit
+
+- **Frame-string duplication.** The `<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\n…\n</EXTREMELY_IMPORTANT>` framing in `.pi-plugin/extensions/vibekit-prime.ts:14` mirrors the construction in `hooks/session-start` (the Claude Code SessionStart hook). Two source-of-truth-for-framing locations now exist; if the framing is reworded for one runtime it can drift on the other. Out of scope to extract a shared template in this run, but worth noting for a future cross-runtime parity sweep.
+- **Plan's File structure didn't predict `docs/verifications/2026-04-29-pi-runtime-adapter.md` originally.** Already fixed inline during plan-write self-review; plan now lists it. Evidence: plan line 20.
+
+## Self-critique (three risks the tests would not catch)
+
+1. **Pi extension API contract drift.** The `before_agent_start` event signature, `event.systemPrompt` field, and `{ systemPrompt }` return shape are taken from `external/pi-mono/packages/coding-agent/docs/extensions.md` at the time of writing. If pi releases an API change, `vibekit-prime.ts` breaks silently — `vibekit-doctor` C12 catches missing literals (path-string-drift) but does not type-check against pi. **Follow-up:** add a CI step that runs `npx tsc --noEmit -p .pi-plugin/extensions/` after `npm install --save-dev @mariozechner/pi-coding-agent` to type-check against the real types. Or live-install evals on each pi minor.
+2. **`import.meta.url` path resolution from `.pi-plugin/extensions/` to `skills/using-vibekit/SKILL.md` is brittle.** Hardcoded `..`/`..` traversal assumes pi installs the package tree intact. Pi's git-install model copies the tree, so this holds today; if pi adopts npm-style flattening or workspace hoisting, the resolution breaks at runtime with a `readFile` error visible only in the priming-handler's catch path. **Follow-up:** prefer `ctx.packageDir` if pi exposes it (current docs show no such API; revisit on each pi release). Otherwise add a defensive fallback that searches up the tree until it finds `skills/using-vibekit/SKILL.md`.
+3. **No live install verification.** All verification is static — doctor C1–C13 + spec-coverage. The actual end-to-end (`pi install git:…` → `pi list` → `/vibe` autocompletes → priming reaches `ctx.getSystemPrompt()`) is documented as out-of-scope manual ship-readiness in the spec's `## Testing` section. **Follow-up:** the human reviewer must perform a live install in a throwaway repo under `tests/eval/` before merging or shipping. The Troubleshooting section in `docs/INSTALL.pi.md` predicts the most likely failure modes; if any of them fire on the live install, the diff goes back through `fix`, not forward to `finish-branch`.
+
+## Diff
+
+Run locally:
+```bash
+git -C /home/rizki/Projects/vibekit/.vibe-worktrees/2026-04-29-pi-runtime-adapter diff main..HEAD
+```
+
+Or per-file (substantive only, excluding plan/verification meta-docs):
+```bash
+git -C /home/rizki/Projects/vibekit/.vibe-worktrees/2026-04-29-pi-runtime-adapter diff main..HEAD -- \
+  .pi-plugin/ AGENTS.md CLAUDE.md README.md package.json \
+  skills/vibekit-doctor/SKILL.md docs/INSTALL.pi.md
+```
+
+## Consistency sweep (post-`fix`)
+
+User chose `fix` at first sign-off. Eight prose locations were drifting on runtime count after the original 10 tasks landed — pre-existing in five places, pi-induced in three. One follow-up sweep task addressed all eight in 8 commits across 6 files.
+
+| Location | Pre-edit | Post-edit |
+|---|---|---|
+| `CLAUDE.md:23` | "four delivery paths" | "five delivery paths", `.pi-plugin` extension named alongside hook/@-import/bootstrap |
+| `AGENTS.md:3` | "Claude, Codex, Gemini, or otherwise" | "Claude, Codex, Gemini, OpenCode, Pi, or otherwise" |
+| `AGENTS.md:54` (using-vibekit row) | 4 delivery paths | 5 delivery paths, Pi `before_agent_start` named |
+| `AGENTS.md:128` | future-tense adapter list | acknowledges Codex/Gemini/OpenCode/Pi as shipped |
+| `README.md:16` | 3 priming adapters listed | 4 listed (Pi added) |
+| `skills/using-vibekit/SKILL.md` (How to access skills) | 4 entries | 5 entries (Pi added in same shape) |
+| `skills/ralph-loop/SKILL.md:270` + capability table | "four runtimes" | "five runtimes"; Pi row added (no native loop, degraded checkpoint mode) |
+| `skills/_authoring/quad-adapter.md` | "four runtimes" | "five runtimes"; Pi rows added to runtime table, capability matrix, detection signals; affected-skills rows include Pi |
+
+Sweep commits: `5dc1cdb..8012cb0` (8 commits). Filename `quad-adapter.md` retained for backlink stability — body updated only.
+
+Skill-body edits (using-vibekit + ralph-loop) were enumeration-only. No decision logic, trigger conditions, guardrails, or compression policy altered. Per AGENTS.md eval workflow: static eval applies, live eval not required.
+
+Doctor checks unaffected: C1 (frontmatter), C2 (registration parity), C8 (skill count = 14) all still pass — none of the touched lines are inputs to those checks. Re-running the strict doctor pass would produce the same verdict as Task 10.
+
+## Re-audit deltas (post-sweep)
+
+After the consistency sweep (commits `5dc1cdb..8012cb0`), the user requested two more re-audits. Each surfaced previously-missed runtime-row gaps that the sweep's name-based grep didn't catch:
+
+| Audit pass | Gap found | Fix landed |
+|---|---|---|
+| 2nd | `skills/exec-dispatch/SKILL.md` parallel-group capability table missing Pi row | `2fc831b` — Pi row added (no parallel dispatch, sequential fallback) |
+| 2nd | `skills/vibekit-doctor/SKILL.md` "Cross-runtime portability" bullet list missing Pi | `06b4c6b` — Pi bullet added |
+| 3rd | `skills/memory-dual/SKILL.md:15` "All four CLIs" claim | `5ba4c92` — bumped to "All five CLIs" with Pi |
+
+Pre-existing drift confirmed out of scope:
+- `.codex-plugin/plugin.json` version `0.2.0` (others `0.2.1`)
+- `.claude-plugin/marketplace.json` plugin version `0.2.0` (mismatch with sibling plugin.json `0.2.1`)
+- Codex description uses `"execute"` and `"and integrate"` instead of `"exec"`
+- Install-doc location pattern split four ways (`.gemini.md` at root, `.codex/INSTALL.md`, `.opencode/INSTALL.md`, `docs/INSTALL.pi.md`)
+
+These four pre-existing drifts are recommended for a separate "manifest-version-and-description-parity sweep" with its own spec.
+
+## Sign-off
+
+- [x] User reviewed findings.
+- [x] User reviewed diff (final state: ~+523 / -71 across 17 files in 33 commits).
+- [x] User approves proceeding to finish-branch.

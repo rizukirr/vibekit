@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in this repository. Read this file before making any change.
+Guidance for any AI agent — Claude, Codex, Gemini, OpenCode, Pi, or otherwise — working in this repository. Read this file before making any change.
 
 ## What this repo is
 
@@ -11,6 +11,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in
 ```
 vibekit/
 ├── .claude-plugin/            # plugin manifest and marketplace metadata
+├── .pi-plugin/                # pi runtime adapter (manifest, prompts, extensions)
 ├── agents/                    # (reserved for agent definitions)
 ├── commands/                  # slash commands; commands/vibe.md triggers the pipeline
 ├── docs/
@@ -50,7 +51,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
 | `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic; same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
-| `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), and message transform (opencode) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
+| `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), message transform (opencode), and `before_agent_start` extension (Pi) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 
@@ -124,7 +125,7 @@ User settings can override these; honor the user's paths when they are set.
 
 ## Non-Claude runtime specifics
 
-All agents read this file the same way. There is no runtime-specific guidance that belongs here today. As cross-CLI adapters (Codex, Gemini CLI, Cursor, Windsurf, Cline, Copilot) land, any adapter-specific notes will be added here in a dedicated section — not duplicated into runtime-specific files.
+All agents read this file the same way. There is no runtime-specific guidance that belongs here today. Codex, Gemini CLI, OpenCode, and Pi adapters are present today; future runtimes (Cursor, Windsurf, Cline, Copilot) will be added in a dedicated section as they land.
 
 ## If in doubt
 
