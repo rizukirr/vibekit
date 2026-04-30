@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guidance for any AI agent — Claude, Codex, Gemini, or otherwise — working in this repository. Read this file before making any change.
+Guidance for any AI agent — Claude, Codex, Gemini, OpenCode, Pi, or otherwise — working in this repository. Read this file before making any change.
 
 ## What this repo is
 
