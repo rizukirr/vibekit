@@ -82,8 +82,26 @@ Skill-body edits (using-vibekit + ralph-loop) were enumeration-only. No decision
 
 Doctor checks unaffected: C1 (frontmatter), C2 (registration parity), C8 (skill count = 14) all still pass — none of the touched lines are inputs to those checks. Re-running the strict doctor pass would produce the same verdict as Task 10.
 
+## Re-audit deltas (post-sweep)
+
+After the consistency sweep (commits `5dc1cdb..8012cb0`), the user requested two more re-audits. Each surfaced previously-missed runtime-row gaps that the sweep's name-based grep didn't catch:
+
+| Audit pass | Gap found | Fix landed |
+|---|---|---|
+| 2nd | `skills/exec-dispatch/SKILL.md` parallel-group capability table missing Pi row | `2fc831b` — Pi row added (no parallel dispatch, sequential fallback) |
+| 2nd | `skills/vibekit-doctor/SKILL.md` "Cross-runtime portability" bullet list missing Pi | `06b4c6b` — Pi bullet added |
+| 3rd | `skills/memory-dual/SKILL.md:15` "All four CLIs" claim | `5ba4c92` — bumped to "All five CLIs" with Pi |
+
+Pre-existing drift confirmed out of scope:
+- `.codex-plugin/plugin.json` version `0.2.0` (others `0.2.1`)
+- `.claude-plugin/marketplace.json` plugin version `0.2.0` (mismatch with sibling plugin.json `0.2.1`)
+- Codex description uses `"execute"` and `"and integrate"` instead of `"exec"`
+- Install-doc location pattern split four ways (`.gemini.md` at root, `.codex/INSTALL.md`, `.opencode/INSTALL.md`, `docs/INSTALL.pi.md`)
+
+These four pre-existing drifts are recommended for a separate "manifest-version-and-description-parity sweep" with its own spec.
+
 ## Sign-off
 
-- [ ] User reviewed findings.
-- [ ] User reviewed diff (now `+450 / -68` across 17 files in 29 commits).
-- [ ] User approves proceeding to finish-branch.
+- [x] User reviewed findings.
+- [x] User reviewed diff (final state: ~+523 / -71 across 17 files in 33 commits).
+- [x] User approves proceeding to finish-branch.
