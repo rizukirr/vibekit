@@ -224,6 +224,7 @@ All operations are file I/O and `git` shell-outs. Verified portable to:
 - **Codex** — auto-discovers via `.codex-plugin/plugin.json`.
 - **Gemini CLI** — referenced from `GEMINI.md` via `@./skills/vibekit-doctor/SKILL.md`.
 - **opencode** — auto-discovers via `.opencode/plugins/vibekit.js` (skills directory scan).
+- **Pi** — auto-discovers via `.pi-plugin/plugin.json` and the `pi` key in `package.json`.
 
 No runtime-specific logic. The doctor does not introspect the runtime it is running under.
 
