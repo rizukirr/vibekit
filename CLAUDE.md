@@ -20,7 +20,7 @@ The auto-trigger map (which skill fires when) is in `skills/using-vibekit/SKILL.
 
 Vibekit's skills are themselves the product. Editing one changes agent behavior for every downstream user. Because of that, the contribution workflow has stricter rules than ordinary code changes:
 
-- **Edit only the canonical source.** Each skill is `skills/<name>/SKILL.md`. Do not copy a skill's content into another file. Cross-runtime adapters (`GEMINI.md` `@`-imports, the opencode plugin's bootstrap injection, the Claude Code SessionStart hook) all read from the canonical `SKILL.md` — there is one source, four delivery paths.
+- **Edit only the canonical source.** Each skill is `skills/<name>/SKILL.md`. Do not copy a skill's content into another file. Cross-runtime adapters (`GEMINI.md` `@`-imports, the opencode plugin's bootstrap injection, the Claude Code SessionStart hook, and the .pi-plugin extension) all read from the canonical `SKILL.md` — there is one source, five delivery paths.
 - **Read the skill in full before editing it.** Skills are behavior-shaping prompts. A small wording change can cascade into a different decision tree at runtime.
 - **Keep skills self-contained.** A shipped skill must not reference `external/`, third-party plugin names, local paths, or any non-vibekit identifier. If you need a concept from elsewhere, inline the relevant text.
 - **Verify before claiming done.** Any change that could affect runtime behavior routes through `verify-gate` with evidence quoted verbatim. "Looks right" is not evidence.
