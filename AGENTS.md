@@ -51,7 +51,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
 | `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic; same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
-| `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), and message transform (opencode) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
+| `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), message transform (opencode), and `before_agent_start` extension (Pi) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
 
 Before editing any skill, read its current `SKILL.md` in full. Skills are behavior-shaping prompts; small edits change agent behavior.
 
