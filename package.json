@@ -1,6 +1,6 @@
 {
   "name": "vibekit",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "type": "module",
   "main": ".opencode/plugins/vibekit.js",
   "keywords": ["pi-package"],

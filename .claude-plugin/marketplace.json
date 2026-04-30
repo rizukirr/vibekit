@@ -9,7 +9,7 @@
     {
       "name": "vibekit",
       "description": "One-command vibe-coding pipeline for Claude Code. Disciplined brainstorm + plan + dispatch + verify + review + integrate. Token-efficient by design; guardrails non-negotiable.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "source": "./",
       "category": "productivity"
     }
