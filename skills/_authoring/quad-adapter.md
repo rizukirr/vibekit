@@ -4,13 +4,13 @@
 
 This file is **never loaded at runtime**. It is read by the human or agent authoring a runtime-coupled skill. Enforcement lives inside the skill's own capability-gate block (template below).
 
-For skills that do nothing but file I/O (`memory-dual`, `vibekit-doctor`), this contract is unnecessary — pure file ops are universally portable. Quad-adapter applies only when a skill needs a primitive that may be absent on one of the four runtimes.
+For skills that do nothing but file I/O (`memory-dual`, `vibekit-doctor`), this contract is unnecessary — pure file ops are universally portable. Quad-adapter applies only when a skill needs a primitive that may be absent on one of the five runtimes.
 
 ---
 
-## The four runtimes
+## The five runtimes
 
-vibekit supports four hosts. Skills must work — or honestly degrade — on each.
+vibekit supports five hosts. Skills must work — or honestly degrade — on each.
 
 | Runtime | Entry doc | Manifest / shim | Auto-discovers `skills/`? |
 |---|---|---|---|
@@ -18,8 +18,9 @@ vibekit supports four hosts. Skills must work — or honestly degrade — on eac
 | Codex | `AGENTS.md` | `.codex-plugin/plugin.json` | yes (directory glob) |
 | Gemini CLI | `GEMINI.md` (uses `@./skills/<name>/SKILL.md` includes) | `gemini-extension.json` | no (explicit per-skill includes) |
 | opencode | n/a — JS shim | `.opencode/plugins/vibekit.js` | yes (skills directory scan) |
+| Pi | `AGENTS.md` (primed via `before_agent_start` extension) | `.pi-plugin/plugin.json` | yes (skills directory scan) |
 
-Three of four auto-discover skills from `skills/`. Gemini requires an explicit `@./skills/<name>/SKILL.md` line per skill in `GEMINI.md`. **Every new skill must add that line.**
+Four of five auto-discover skills from `skills/`. Gemini requires an explicit `@./skills/<name>/SKILL.md` line per skill in `GEMINI.md`. **Every new skill must add that line.**
 
 ---
 
@@ -27,14 +28,14 @@ Three of four auto-discover skills from `skills/`. Gemini requires an explicit `
 
 Each runtime exposes different primitives. Skills that depend on these must know what is missing.
 
-| Capability | Claude Code | Codex | Gemini CLI | opencode |
-|---|---|---|---|---|
-| Parallel subagent dispatch | yes (`Task` tool, fan-out) | yes (`codex exec` + tmux panes per OMC pattern) | **no** | provider-dependent |
-| Native loop primitive | yes (`/loop` skill) | yes (`ralph` skill via OMC-codex) | **no** | **no** |
-| Per-subagent tool allowlist | yes | partial | no | yes |
-| Vision input | yes | yes | yes | provider-dependent |
-| Background tasks | yes (`run_in_background`) | yes | no | yes |
-| Cross-CLI handoff | via `oh-my-claudecode:ask-codex` etc. | same | possible | possible |
+| Capability | Claude Code | Codex | Gemini CLI | opencode | Pi |
+|---|---|---|---|---|---|
+| Parallel subagent dispatch | yes (`Task` tool, fan-out) | yes (`codex exec` + tmux panes per OMC pattern) | **no** | provider-dependent | **no** |
+| Native loop primitive | yes (`/loop` skill) | yes (`ralph` skill via OMC-codex) | **no** | **no** | **no** |
+| Per-subagent tool allowlist | yes | partial | no | yes | **no** |
+| Vision input | yes | yes | yes | provider-dependent | provider-dependent |
+| Background tasks | yes (`run_in_background`) | yes | no | yes | no |
+| Cross-CLI handoff | via `oh-my-claudecode:ask-codex` etc. | same | possible | possible | possible |
 
 Cells marked **no** are the portability hazards. A runtime-coupled skill that ignores them silently breaks on those hosts.
 
@@ -53,6 +54,7 @@ When a skill genuinely needs to detect its host runtime (most do not — they de
    - `.codex-plugin/` present → Codex is plausible
    - `GEMINI.md` present and is the entry doc → Gemini
    - `.opencode/` present → opencode is plausible
+   - `.pi-plugin/` present → Pi is plausible
 3. **Tool availability** (last resort): if a tool name is callable, that's the host.
 
 Detection is heuristic. Always allow a `--runtime` override flag so the user can correct a misdetection without arguing with the skill.
@@ -125,8 +127,8 @@ Copy this block into the SKILL.md, fill in the capabilities and fallbacks, and k
 |---|---|---|---|
 | `memory-dual` | shipped | none beyond file I/O | n/a — pure portable |
 | `vibekit-doctor` | shipped | git shell-out | n/a — git is universal |
-| `exec-dispatch` (parallel mode) | shipped | parallel subagent dispatch | sequential dispatch on Gemini + opencode (when provider lacks parallel agents), with verbatim degradation warning |
-| `ralph-loop` | shipped | native loop primitive + background tasks | degraded checkpoint mode on Gemini + opencode — manual `--resume` between iterations, state preserved, verbatim warning |
+| `exec-dispatch` (parallel mode) | shipped | parallel subagent dispatch | sequential dispatch on Gemini + opencode + Pi (when provider lacks parallel agents), with verbatim degradation warning |
+| `ralph-loop` | shipped | native loop primitive + background tasks | degraded checkpoint mode on Gemini + opencode + Pi — manual `--resume` between iterations, state preserved, verbatim warning |
 | `hud` (planned) | not yet shipped | runtime UI surface (varies) | log-only mode where UI absent |
 | `visual-verdict` (planned) | not yet shipped | vision input | refuse (not silently skip) where absent |
 
