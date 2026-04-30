@@ -89,6 +89,14 @@ npm install -g @mariozechner/pi-coding-agent
 pi install git:github.com/rizukirr/vibekit
 ```
 
+> **Heads-up — possible conflict if vibekit is already installed.** Pi reads skills from `~/.agents/skills/` as well as its own package directory. If you previously installed vibekit for another runtime (most commonly Codex, which symlinks `~/.agents/skills/vibekit/`), pi will already see every vibekit skill from that path, and running `pi install …` on top of it produces benign-but-noisy "skill collision" warnings on every pi startup (pi's precedence ranks `~/.agents/`-auto above `pi install` packages, so the auto copy wins). **Check first:**
+>
+> ```bash
+> ls ~/.agents/skills/vibekit/ 2>/dev/null
+> ```
+>
+> If that lists 14 skill directories, vibekit is already reachable on pi via `/skill:<name>` — skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `docs/INSTALL.pi.md`.
+
 ---
 
 ## Quick start
