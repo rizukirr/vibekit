@@ -37,6 +37,7 @@ Required capabilities: native loop primitive + background tasks. Per `_authoring
 | Codex | yes (`ralph` via OMC-codex) | yes | Native autonomous loop. |
 | Gemini CLI | **no** | **no** | **Degraded checkpoint mode**: at every iteration boundary the skill prints a verbatim resume prompt and halts. User runs `/ralph-loop --resume <run-id>` to continue. State persists; only the autonomy degrades. |
 | opencode | **no** | varies | Same degraded checkpoint mode as Gemini. |
+| Pi | **no** | **no** | Same degraded checkpoint mode as Gemini. |
 
 When degraded, emit this warning **verbatim** before the first iteration:
 
@@ -267,12 +268,13 @@ These join the never-compress list. Compress narration around them; never the ru
 
 ## Cross-runtime portability
 
-Capability-gate block above documents the four runtimes. State file is universal JSON; resume mechanics are identical across runtimes; only the autonomy axis differs (native loop vs manual `--resume`).
+Capability-gate block above documents the five runtimes. State file is universal JSON; resume mechanics are identical across runtimes; only the autonomy axis differs (native loop vs manual `--resume`).
 
 - **Claude Code** — auto-discovers via `.claude-plugin/plugin.json`.
 - **Codex** — auto-discovers via `.codex-plugin/plugin.json`.
 - **Gemini CLI** — referenced from `GEMINI.md` via `@./skills/ralph-loop/SKILL.md`. Degraded checkpoint mode.
 - **opencode** — auto-discovers via `.opencode/plugins/vibekit.js`. Degraded checkpoint mode unless provider supports background loops.
+- **Pi** — auto-discovers via `.pi-plugin/plugin.json`. Degraded checkpoint mode.
 
 ## Anti-patterns
 
