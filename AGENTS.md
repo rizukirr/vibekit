@@ -125,7 +125,7 @@ User settings can override these; honor the user's paths when they are set.
 
 ## Non-Claude runtime specifics
 
-All agents read this file the same way. There is no runtime-specific guidance that belongs here today. As cross-CLI adapters (Codex, Gemini CLI, Cursor, Windsurf, Cline, Copilot) land, any adapter-specific notes will be added here in a dedicated section — not duplicated into runtime-specific files.
+All agents read this file the same way. There is no runtime-specific guidance that belongs here today. Codex, Gemini CLI, OpenCode, and Pi adapters are present today; future runtimes (Cursor, Windsurf, Cline, Copilot) will be added in a dedicated section as they land.
 
 ## If in doubt
 
