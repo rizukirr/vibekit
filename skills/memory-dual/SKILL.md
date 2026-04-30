@@ -12,7 +12,7 @@ The single durable-knowledge surface for vibekit. Two file-backed regions under 
 
 A single append-only `log.md` chronicles all writes. An auto-maintained `INDEX.md` catalogs every entry.
 
-All four CLIs (Claude Code, Codex, Gemini, opencode) read and write the same files identically. No database, no daemon, no runtime API.
+All five CLIs (Claude Code, Codex, Gemini, opencode, Pi) read and write the same files identically. No database, no daemon, no runtime API.
 
 ## When to invoke
 
