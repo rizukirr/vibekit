@@ -185,7 +185,7 @@ git commit -m "feat(plan-write): add premortem step with four-category adversari
 - Modify: `gemini-extension.json:4`
 - Modify: `.opencode/plugin.json:4`
 
-- [ ] **Step 1: Confirm all five manifests currently read `0.3.0`**
+- [x] **Step 1: Confirm all five manifests currently read `0.3.0`**
 
 Run:
 
@@ -197,7 +197,7 @@ Expected: five lines, each containing `"version": "0.3.0"` (the `.pi-plugin/plug
 
 If any manifest reports a different version, halt and ask the user — the spec assumed all-five-at-0.3.0.
 
-- [ ] **Step 2: Edit each manifest to bump 0.3.0 → 0.3.1**
+- [x] **Step 2: Edit each manifest to bump 0.3.0 → 0.3.1**
 
 For each of the five files, change exactly the one line containing `"version": "0.3.0"` to `"version": "0.3.1"`. Preserve trailing comma or its absence per the existing line:
 - `.claude-plugin/plugin.json` line 4 — has trailing comma
@@ -206,7 +206,7 @@ For each of the five files, change exactly the one line containing `"version": "
 - `gemini-extension.json` line 4 — has trailing comma
 - `.pi-plugin/plugin.json` line 4 — no trailing comma (preserve)
 
-- [ ] **Step 3: Verify all five manifests now read `0.3.1`**
+- [x] **Step 3: Verify all five manifests now read `0.3.1`**
 
 Run:
 
@@ -224,7 +224,7 @@ grep -h '"version"' .claude-plugin/plugin.json .codex-plugin/plugin.json .pi-plu
 
 Expected: `0`.
 
-- [ ] **Step 4: Confirm each manifest is still valid JSON**
+- [x] **Step 4: Confirm each manifest is still valid JSON**
 
 Run:
 
@@ -236,7 +236,7 @@ done
 
 Expected: five `OK:` lines. If any reports `FAIL:`, the JSON was corrupted by the edit — re-do the relevant manifest edit.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add .claude-plugin/plugin.json .codex-plugin/plugin.json .pi-plugin/plugin.json gemini-extension.json .opencode/plugin.json
