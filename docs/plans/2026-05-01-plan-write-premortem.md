@@ -42,7 +42,7 @@ No new files. No file deletions.
 
 ---
 
-### Task 1: Add `## Premortem` section, header-template stub, and self-review closing line to `skills/plan-write/SKILL.md` → verify: `grep -c "^## Premortem" skills/plan-write/SKILL.md` returns `2` (one in the header template, one as the new top-level section); all four category labels present; `BLOCKING RISK` keyword present; the line `After self-review fixes are applied, run the premortem (next section).` present.
+### Task 1: Add `## Premortem` section, header-template stub, and self-review closing line to `skills/plan-write/SKILL.md` → verify: `grep -c "^## Premortem" skills/plan-write/SKILL.md` returns `3` (one in the header-template stub's example block, one as the new top-level section heading, one inside the new section's own "Output format" example block); all four category labels present; `BLOCKING RISK` keyword present; the line `After self-review fixes are applied, run the premortem (next section).` present.
 
 **Files:**
 - Modify: `skills/plan-write/SKILL.md`
@@ -163,7 +163,7 @@ grep -c "BLOCKING RISK" skills/plan-write/SKILL.md
 grep -c "After self-review fixes are applied, run the premortem" skills/plan-write/SKILL.md
 ```
 
-Expected: at least one match for each (the first line should produce `2` — one in the header-template stub, one as the new top-level section heading; the others should produce `≥2` because each label appears both in the new section's category headings and in the output-format block, and `≥1` for the closing line).
+Expected: the first line should produce `3` — one in the header-template stub's example block, one as the new top-level section heading, one inside the new section's own "Output format" example block; each of the four category labels should produce `≥2` (each label appears both in the new section's category headings and in the output-format example blocks); `BLOCKING RISK` should produce `≥1`; the closing line should produce `1`.
 
 If any expected count is 0, the corresponding insertion is missing — re-do the relevant step before committing.
 
