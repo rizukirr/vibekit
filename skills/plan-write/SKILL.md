@@ -96,6 +96,24 @@ Every plan starts with this header, exactly:
 ---
 ```
 
+After the header, every plan doc includes a `## Premortem` section in this exact shape (filled in during the premortem step, not at header-writing time):
+
+```markdown
+## Premortem
+
+**Hidden assumptions:**
+- [risk] — [mitigation], or `none — <specific reason>`
+
+**Irreversible / risky steps:**
+- [risk] — [mitigation], or `none — <specific reason>`
+
+**Spec-misalignment:**
+- [risk] — [mitigation], or `none — <specific reason>`
+
+**Verify-clause weakness:**
+- [risk] — [mitigation], or `none — <specific reason>`
+```
+
 ## Task structure
 
 Every task follows this shape exactly. The `→ verify:` clause on the task header is **mandatory** — it names the checkable success criterion for the whole task. `exec-dispatch` will reject any task missing it.
@@ -220,6 +238,67 @@ Look at the spec with fresh eyes and check the plan against it. This is a checkl
 Items 6 and 8 together: do not specify output the plan author has not observed or cannot derive with certainty. Ambiguity and guessing here cascade directly into failed dispatches.
 
 Fix issues inline. No re-review — just fix and move on. If a spec requirement has no task, add the task.
+
+After self-review fixes are applied, run the premortem (next section).
+
+## Premortem (after self-review, before user review gate)
+
+After self-review fixes are applied, run an adversarial four-category sweep against the plan. The premortem is a distinct cognitive mode from self-review: self-review catches tactical defects (placeholders, type consistency, command runnability); the premortem catches strategic flaws (hidden assumptions, irreversibility, spec-misinterpretation, weak verify clauses). Run both, in order.
+
+Append a `## Premortem` section to the plan doc, immediately after the plan-document header and before `## File structure`. The section uses bulleted per-category format. For each category, write either one or more risk bullets in the form `<risk> — <mitigation>`, or a single `none — <specific reason>` bullet. No category is skipped.
+
+### The four categories
+
+**1. Hidden assumptions** — *Does this plan trust something it shouldn't?*
+The plan assumes some file, function, API, library behavior, environment variable, runtime invariant, or data shape exists or behaves a certain way. List each load-bearing assumption the plan does not verify itself. For each, state how the plan handles the assumption being wrong (a verify clause that catches it, an early task that confirms it, or "we accept the risk because <reason>").
+`none — <reason>` valid when: the plan only touches code created within the plan, OR every external dependency has been read by the author and the relevant assumption verified inline.
+
+**2. Irreversible / risky steps** — *What's expensive to undo?*
+Migrations, deletions, schema changes, mass renames, edits to files outside the feature area, package-manifest changes, lockfile updates, anything production-affecting, anything touching shared state across tasks. For each, state the rollback path (a revert commit, a down-migration, a backup) and whether the plan exercises it before the destructive step.
+`none — <reason>` valid when: every task can be reverted by `git revert <commit>` without follow-up work.
+
+**3. Spec-misalignment** — *Where could the user say "that's not what I asked for"?*
+For each spec requirement that has more than one reasonable interpretation, state which interpretation the plan picked and surface it. Verify clauses that lock in the interpretation count as mitigation. Cases where the plan's interpretation diverges from the most-literal reading of the spec are BLOCKING RISK candidates.
+`none — <reason>` valid when: every spec requirement has exactly one reasonable interpretation, AND every task's verify clause matches that interpretation observably.
+
+**4. Verify-clause weakness** — *Where does success and failure look the same?*
+For each task, ask: could broken code pass this verify clause? Could correct code fail it? Examples of weak clauses: "test file passes" (passes on empty file), "no errors in console" (passes if the feature didn't load), "endpoint returns 200" (passes on a stub). For each weak clause, tighten it inline before the user-review gate.
+`none — <reason>` valid when: every verify clause names a specific assertion, exit code, file content, or HTTP response that distinguishes correct from broken.
+
+### Output format (in the plan doc)
+
+```markdown
+## Premortem
+
+**Hidden assumptions:**
+- <risk> — <mitigation>
+- <or> none — <specific reason>
+
+**Irreversible / risky steps:**
+- <risk> — <mitigation>
+- <or> none — <specific reason>
+
+**Spec-misalignment:**
+- <risk> — <mitigation>
+- <or> none — <specific reason>
+
+**Verify-clause weakness:**
+- <risk> — <mitigation>
+- <or> none — <specific reason>
+```
+
+### BLOCKING RISK label
+
+If any category surfaces a risk the author cannot mitigate inline by editing the plan (typically a category-3 spec-misalignment that goes deep, or a category-2 irreversibility with no rollback), the bullet is prefixed `**BLOCKING RISK:**` and the mitigation field reads `requires user decision — recommend revising spec or accepting risk`.
+
+The premortem itself never halts the skill. It produces the section and proceeds to the user-review gate. The user reads the labeled bullet there and decides whether to approve, revise the spec, or bounce back to brainstorm.
+
+### Premortem anti-patterns
+
+- Writing `none — N/A` or `none — no risks` for every category. If the categorical sweep produces four `none` lines, the author did not actually do the sweep. `none` reasons must be specific (e.g., `none — only touches new files in src/components/ThemeToggle/`, not `none — N/A`).
+- Stating a risk without a mitigation. Every fixable bullet has the form `<risk> — <mitigation>`. Risks without mitigations are either BLOCKING RISKs (label them) or unfinished work.
+- Treating the premortem as documentation of risks already addressed during drafting. The premortem is adversarial *new* analysis. If every bullet is something the author already had in mind while writing tasks, the sweep wasn't adversarial.
+- Removing or watering down a `BLOCKING RISK:` label to make the plan look approvable. The label is for the user, not for the author's comfort.
 
 ## Anti-patterns
 
