@@ -47,12 +47,12 @@ No new files. No file deletions.
 **Files:**
 - Modify: `skills/plan-write/SKILL.md`
 
-- [ ] **Step 1: Confirm the existing self-review section heading is exactly `## Self-review (after writing the plan)`**
+- [x] **Step 1: Confirm the existing self-review section heading is exactly `## Self-review (after writing the plan)`**
 
 Run: `grep -n "^## Self-review" skills/plan-write/SKILL.md`
 Expected: one match, line 206, text `## Self-review (after writing the plan)`. If the match line differs, halt and ask the user — the spec assumed this heading.
 
-- [ ] **Step 2: Append the closing line to the self-review section**
+- [x] **Step 2: Append the closing line to the self-review section**
 
 Insert immediately after the existing line `Fix issues inline. No re-review — just fix and move on. If a spec requirement has no task, add the task.` — add a blank line then this exact line:
 
@@ -60,7 +60,7 @@ Insert immediately after the existing line `Fix issues inline. No re-review — 
 After self-review fixes are applied, run the premortem (next section).
 ```
 
-- [ ] **Step 3: Insert the new `## Premortem` section between the existing `## Self-review` section and the existing `## Anti-patterns` section**
+- [x] **Step 3: Insert the new `## Premortem` section between the existing `## Self-review` section and the existing `## Anti-patterns` section**
 
 Insert this exact content as a new section (it sits between `## Self-review` and `## Anti-patterns`; existing `## Anti-patterns` heading is unchanged):
 
@@ -125,7 +125,7 @@ The premortem itself never halts the skill. It produces the section and proceeds
 - Removing or watering down a `BLOCKING RISK:` label to make the plan look approvable. The label is for the user, not for the author's comfort.
 ````
 
-- [ ] **Step 4: Update the plan-document-header template (existing `## Plan document header` section in `skills/plan-write/SKILL.md`)**
+- [x] **Step 4: Update the plan-document-header template (existing `## Plan document header` section in `skills/plan-write/SKILL.md`)**
 
 The current template ends with a `---` separator line. Insert the following block immediately after that `---` and before the next existing `## Task structure` section heading. The template now shows authors what the `## Premortem` placeholder looks like in the rendered plan:
 
@@ -149,7 +149,7 @@ After the header, every plan doc includes a `## Premortem` section in this exact
 ```
 ````
 
-- [ ] **Step 5: Verify the four required markers are present**
+- [x] **Step 5: Verify the four required markers are present**
 
 Run:
 
@@ -167,7 +167,7 @@ Expected: the first line should produce `3` — one in the header-template stub'
 
 If any expected count is 0, the corresponding insertion is missing — re-do the relevant step before committing.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/plan-write/SKILL.md
