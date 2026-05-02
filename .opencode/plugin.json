@@ -1,6 +1,6 @@
 {
   "name": "vibekit",
   "description": "Token-efficient vibe-coding pipeline with hard guardrails: brainstorm, plan, isolate, exec, verify, review, integrate.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "plugins/vibekit.js"
 }
