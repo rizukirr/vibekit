@@ -206,12 +206,12 @@ git commit -m "feat(report-filter): add discriminated-union routing and NEEDS_IN
 
 ---
 
-### Task 3: Edit `skills/exec-dispatch/SKILL.md` → verify: `grep -cF '## NEEDS_INPUT halt-and-resume protocol' skills/exec-dispatch/SKILL.md` returns 1, AND `grep -cF 'Task <N> halted — needs input' skills/exec-dispatch/SKILL.md` returns 1, AND `grep -cF 'NEEDS_INPUT budget exhausted' skills/exec-dispatch/SKILL.md` returns 2 (one in the protocol section, one in failure-modes)
+### Task 3: ✓ Edit `skills/exec-dispatch/SKILL.md` → verify: `grep -cF '## NEEDS_INPUT halt-and-resume protocol' skills/exec-dispatch/SKILL.md` returns 1, AND `grep -cF 'Task <N> halted — needs input' skills/exec-dispatch/SKILL.md` returns 1, AND `grep -cF 'NEEDS_INPUT budget exhausted' skills/exec-dispatch/SKILL.md` returns 2 (one in the protocol section, one in failure-modes)
 
 **Files:**
 - Modify: `skills/exec-dispatch/SKILL.md` (dispatch-loop step 4 at line 39; insert protocol section between line 100 and 102; failure-modes at lines 239-245; anti-patterns at lines 247-254; parallelism section ending at line 231)
 
-- [ ] **Step 1: Pre-edit grep — confirm content does not yet exist**
+- [x] **Step 1: Pre-edit grep — confirm content does not yet exist**
 
 Run:
 ```bash
@@ -221,7 +221,7 @@ grep -cF 'NEEDS_INPUT budget exhausted' skills/exec-dispatch/SKILL.md
 ```
 Expected: all three return `0`.
 
-- [ ] **Step 2: Modify dispatch-loop step 4 to split on `status`**
+- [x] **Step 2: Modify dispatch-loop step 4 to split on `status`**
 
 Locate line 39 (`4. **Receive the return.** Apply the report filter (see §Return-side filter). If validation fails, REJECT and ask the subagent to re-format (never re-run). Three rejections in a row on the same task → escalate to user.`). Replace that line with:
 
@@ -229,7 +229,7 @@ Locate line 39 (`4. **Receive the return.** Apply the report filter (see §Retur
 4. **Receive the return.** Apply the report filter (see §Return-side filter). If validation fails, REJECT and ask the subagent to re-format (never re-run). Three rejections in a row on the same task → escalate to user. On accept, route by the `status` discriminator: `complete` → step 5; `needs_input` → enter the **NEEDS_INPUT halt-and-resume protocol** (see §NEEDS_INPUT halt-and-resume protocol), then return to step 4 with the new return.
 ```
 
-- [ ] **Step 3: Insert `## NEEDS_INPUT halt-and-resume protocol` section between `## Return-side filter` and `## Review gates`**
+- [x] **Step 3: Insert `## NEEDS_INPUT halt-and-resume protocol` section between `## Return-side filter` and `## Review gates`**
 
 Locate line 100 (the last line of `## Return-side filter`, which is `5. **On accept:** pass to the review gates.`). After that line, insert one blank line, then the following section verbatim, then one blank line before the existing `## Review gates` heading at line 102:
 
@@ -310,7 +310,7 @@ Return to step 4 of the main dispatch loop. The new return goes through `report-
 
 ````
 
-- [ ] **Step 4: Add two bullets to `## Failure modes and recovery`**
+- [x] **Step 4: Add two bullets to `## Failure modes and recovery`**
 
 Locate the `## Failure modes and recovery` block ending at line 245 (last bullet: "Plan file has drifted during execution..."). After that bullet, append two new bullets:
 
@@ -319,7 +319,7 @@ Locate the `## Failure modes and recovery` block ending at line 245 (last bullet
 - **User answers a NEEDS_INPUT with "the plan is wrong" or equivalent.** Exit the dispatch loop. Route back to `plan-write` with the halt question and user response as new context. Do not attempt to re-dispatch.
 ```
 
-- [ ] **Step 5: Add two bullets to `## Anti-patterns`**
+- [x] **Step 5: Add two bullets to `## Anti-patterns`**
 
 Locate the `## Anti-patterns` block ending at line 254 (last bullet: "Editing the plan mid-run..."). After that bullet, append two new bullets:
 
@@ -328,7 +328,7 @@ Locate the `## Anti-patterns` block ending at line 254 (last bullet: "Editing th
 - Carrying partial commits across a NEEDS_INPUT halt to "save work." Rollback is mandatory. The augmented re-dispatch is a fresh start, not a continuation.
 ```
 
-- [ ] **Step 6: Add parallel-group interaction paragraph to `## Parallelism`**
+- [x] **Step 6: Add parallel-group interaction paragraph to `## Parallelism`**
 
 Locate the end of the `### Anti-patterns specific to parallel-group` subsection at line 231 (last bullet: "Mixing files in two tasks' Files sections..."). After that bullet, insert one blank line, then this paragraph verbatim:
 
@@ -338,7 +338,7 @@ Locate the end of the `### Anti-patterns specific to parallel-group` subsection 
 A NEEDS_INPUT halt inside a parallel-group does NOT halt the group. Sibling tasks continue executing. The halted task waits for the user's answer; on resume, it rejoins the group's completion-tracking. Group-fail-closed semantics still apply: if the halted task ultimately fails (budget exhausted, user routes to replan), the whole group is treated as failed and surfaced to the user per §Parallel dispatch procedure step 6.
 ```
 
-- [ ] **Step 7: Post-edit grep — confirm content present**
+- [x] **Step 7: Post-edit grep — confirm content present**
 
 Run:
 ```bash
@@ -348,7 +348,7 @@ grep -cF 'NEEDS_INPUT budget exhausted' skills/exec-dispatch/SKILL.md
 ```
 Expected: first two return `1`, third returns `2` (one occurrence in the verbatim escalation message inside the protocol section, one in the failure-modes bullet).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add skills/exec-dispatch/SKILL.md
