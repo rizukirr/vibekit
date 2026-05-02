@@ -71,6 +71,27 @@ Redispatch with corrected output. Do not re-run the work; only re-format.
 
 Three rejections in a row on the same dispatch → escalate to user. Do not enter an infinite loop.
 
+## Discriminated-union schemas
+
+Some briefs (notably implementation briefs from `exec-dispatch`) declare two valid return shapes distinguished by a top-level `status` field. The filter routes before validating:
+
+1. **Read the discriminator first.** Parse the top-level `status` field.
+   - **Absent** → for backwards compatibility during one minor version, treat as `status: "complete"` and route to the existing single-schema validation. Drop this fallback at the next major.
+   - **`status: "complete"`** → existing variant A validation rules (unchanged).
+   - **`status: "needs_input"`** → variant B validation rules (below).
+   - **Any other value** → REJECT with `status discriminator missing or invalid: declare 'complete' or 'needs_input'`.
+
+2. **Variant B (`needs_input`) validation rules.** In addition to the standard key/type checks:
+   - `blocking_step` non-empty and not whitespace. Empty → REJECT (`blocking_step required: quote the verbatim plan step you halted at`).
+   - `ambiguity_type` is exactly `spec-ambiguity` or `missing-context`. Anything else → REJECT.
+   - `tried` non-empty AND not a placeholder. Strings matching `/^(n\/a|nothing|none|tbd)$/i` after trim → REJECT (`tried required: state what you attempted to resolve from the brief alone — 'n/a' is not a valid answer`).
+   - `question` non-empty AND ends with `?`. A NEEDS_INPUT halt without a question is malformed.
+   - `options` array length ≥ 2. Each entry has non-empty `label` and `summary`. Single-option "questions" → REJECT.
+   - `recommendation` non-empty. Either references one of the option labels OR is exactly the string `none — no clear preference`. Other "no recommendation" wording → REJECT.
+   - `rolled_back` is bool, no string coercion.
+
+3. **Caveat.** Syntactic validation only. The filter cannot judge whether a NEEDS_INPUT question is *substantively* genuine — that judgment belongs to the orchestrator (`exec-dispatch`), which decides whether a syntactically-valid halt is worth surfacing to the user.
+
 ## Worked examples
 
 ### Example A — research subagent return
@@ -180,6 +201,7 @@ Redispatch with corrected output. Do not re-run the work; only re-format.
 - Keeping pleasantries because "the user might like the warm tone". The plugin is configured for signal, not warmth.
 - Compressing test output or stack traces. These are evidence. Verbatim or drop, never rewrite.
 - Accepting a report that *looks* right but violates the schema. Schema is the contract.
+- Accepting a NEEDS_INPUT return with `tried: "n/a"` or a single-option `options` array because "the question seems reasonable." The filter's job is schema enforcement; reasonableness is the orchestrator's call after the schema passes. Reject and let the subagent re-format.
 
 ## Output of this skill
 
