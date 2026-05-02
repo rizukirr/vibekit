@@ -357,7 +357,7 @@ git commit -m "feat(exec-dispatch): add NEEDS_INPUT halt-and-resume protocol wit
 
 ---
 
-### Task 4: Bump plugin manifest versions 0.3.1 → 0.3.2 across all five runtime adapters → verify: `grep -h '"version"' .claude-plugin/plugin.json .codex-plugin/plugin.json .opencode/plugin.json .pi-plugin/plugin.json gemini-extension.json | grep -c '0.3.2'` returns 5
+### Task 4: ✓ Bump plugin manifest versions 0.3.1 → 0.3.2 across all five runtime adapters → verify: `grep -h '"version"' .claude-plugin/plugin.json .codex-plugin/plugin.json .opencode/plugin.json .pi-plugin/plugin.json gemini-extension.json | grep -c '0.3.2'` returns 5
 
 **Files:**
 - Modify: `.claude-plugin/plugin.json:4`
@@ -366,7 +366,7 @@ git commit -m "feat(exec-dispatch): add NEEDS_INPUT halt-and-resume protocol wit
 - Modify: `.pi-plugin/plugin.json:4` (preserve absence of trailing comma)
 - Modify: `gemini-extension.json:4`
 
-- [ ] **Step 1: Pre-edit grep — confirm all five at 0.3.1**
+- [x] **Step 1: Pre-edit grep — confirm all five at 0.3.1**
 
 Run:
 ```bash
@@ -374,27 +374,27 @@ grep -h '"version"' .claude-plugin/plugin.json .codex-plugin/plugin.json .openco
 ```
 Expected: `5`.
 
-- [ ] **Step 2: Bump `.claude-plugin/plugin.json` line 4**
+- [x] **Step 2: Bump `.claude-plugin/plugin.json` line 4**
 
 Change `"version": "0.3.1",` to `"version": "0.3.2",` (preserve trailing comma).
 
-- [ ] **Step 3: Bump `.codex-plugin/plugin.json` line 3**
+- [x] **Step 3: Bump `.codex-plugin/plugin.json` line 3**
 
 Change `"version": "0.3.1",` to `"version": "0.3.2",` (preserve trailing comma).
 
-- [ ] **Step 4: Bump `.opencode/plugin.json` line 4**
+- [x] **Step 4: Bump `.opencode/plugin.json` line 4**
 
 Change `"version": "0.3.1",` to `"version": "0.3.2",` (preserve trailing comma).
 
-- [ ] **Step 5: Bump `.pi-plugin/plugin.json` line 4 (NO trailing comma — confirmed by pre-edit grep)**
+- [x] **Step 5: Bump `.pi-plugin/plugin.json` line 4 (NO trailing comma — confirmed by pre-edit grep)**
 
 Change `"version": "0.3.1"` to `"version": "0.3.2"` (no comma; this manifest's version is the last key so the line must remain comma-less).
 
-- [ ] **Step 6: Bump `gemini-extension.json` line 4**
+- [x] **Step 6: Bump `gemini-extension.json` line 4**
 
 Change `"version": "0.3.1",` to `"version": "0.3.2",` (preserve trailing comma).
 
-- [ ] **Step 7: Post-edit grep — confirm all five at 0.3.2**
+- [x] **Step 7: Post-edit grep — confirm all five at 0.3.2**
 
 Run:
 ```bash
@@ -402,7 +402,7 @@ grep -h '"version"' .claude-plugin/plugin.json .codex-plugin/plugin.json .openco
 ```
 Expected: `5`.
 
-- [ ] **Step 8: JSON validity check**
+- [x] **Step 8: JSON validity check**
 
 Run:
 ```bash
@@ -410,7 +410,7 @@ for f in .claude-plugin/plugin.json .codex-plugin/plugin.json .opencode/plugin.j
 ```
 Expected: five `OK:` lines, no Python tracebacks.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add .claude-plugin/plugin.json .codex-plugin/plugin.json .opencode/plugin.json .pi-plugin/plugin.json gemini-extension.json
