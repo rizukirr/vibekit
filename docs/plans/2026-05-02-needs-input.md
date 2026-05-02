@@ -44,12 +44,12 @@ Modified:
 
 ---
 
-### Task 1: Edit `skills/brief-compiler/SKILL.md` → verify: `grep -cF 'You MAY halt with a NEEDS_INPUT return' skills/brief-compiler/SKILL.md` returns 1, AND `grep -cF '"status": "needs_input"' skills/brief-compiler/SKILL.md` returns 1, AND `grep -cF 'Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block' skills/brief-compiler/SKILL.md` returns 1
+### Task 1: ✓ Edit `skills/brief-compiler/SKILL.md` → verify: `grep -cF 'You MAY halt with a NEEDS_INPUT return' skills/brief-compiler/SKILL.md` returns 1, AND `grep -cF '"status": "needs_input"' skills/brief-compiler/SKILL.md` returns 1, AND `grep -cF 'Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block' skills/brief-compiler/SKILL.md` returns 1
 
 **Files:**
 - Modify: `skills/brief-compiler/SKILL.md` (RTCO template at lines 18-39, worked example B at lines 91-122, anti-patterns at lines 126-133)
 
-- [ ] **Step 1: Pre-edit grep — confirm content does not yet exist (TDD failing-test phase)**
+- [x] **Step 1: Pre-edit grep — confirm content does not yet exist (TDD failing-test phase)**
 
 Run:
 ```bash
@@ -59,7 +59,7 @@ grep -cF 'Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block' skills/
 ```
 Expected: all three return `0`.
 
-- [ ] **Step 2: Add four NEEDS_INPUT CONSTRAINTS bullets to the RTCO template**
+- [x] **Step 2: Add four NEEDS_INPUT CONSTRAINTS bullets to the RTCO template**
 
 Locate the CONSTRAINTS block in the RTCO template at line 25-30. After the existing bullet `- Do not delete pre-existing dead code; mention it in OUTPUT instead.` (line 28) and before the `<task-specific rule>` placeholder lines, insert these four bullets verbatim (preserve the two-space indent that matches the surrounding YAML-ish layout):
 
@@ -70,7 +70,7 @@ Locate the CONSTRAINTS block in the RTCO template at line 25-30. After the exist
   - Budget cap: at most TWO NEEDS_INPUT signals on the same task across re-dispatches. A third halt is a task failure, not a question.
 ```
 
-- [ ] **Step 3: Replace OUTPUT schema in worked example B with discriminated union**
+- [x] **Step 3: Replace OUTPUT schema in worked example B with discriminated union**
 
 Locate worked example B's OUTPUT block at lines 112-122. Replace the entire fenced JSON block (the lines beginning ` ```json` through ` ``` `) with this discriminated-union declaration:
 
@@ -109,7 +109,7 @@ OUTPUT (discriminated union — return EXACTLY ONE variant):
   ```
 ````
 
-- [ ] **Step 4: Add anti-pattern bullet**
+- [x] **Step 4: Add anti-pattern bullet**
 
 Locate the anti-patterns block at lines 126-133. After the last existing bullet (line 133, `- Hidden state...`), append one new bullet on a new line:
 
@@ -117,7 +117,7 @@ Locate the anti-patterns block at lines 126-133. After the last existing bullet 
 - Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block. The four bullets are guardrail-critical and the contract that makes the halt path honest. Verbatim or the brief is invalid.
 ```
 
-- [ ] **Step 5: Post-edit grep — confirm three required strings present**
+- [x] **Step 5: Post-edit grep — confirm three required strings present**
 
 Run:
 ```bash
@@ -127,7 +127,7 @@ grep -cF 'Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block' skills/
 ```
 Expected: all three return `1`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/brief-compiler/SKILL.md
