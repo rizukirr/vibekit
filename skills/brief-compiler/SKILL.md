@@ -26,6 +26,10 @@ CONSTRAINTS:
   - Edit ONLY files named in TASK or CONTEXT. No adjacent edits.
   - Match existing style; do not refactor unrelated code.
   - Do not delete pre-existing dead code; mention it in OUTPUT instead.
+  - You MAY halt with a NEEDS_INPUT return ONLY on spec-ambiguity (a spec/plan detail with two reasonable interpretations) OR missing-context (a file/API/library reference the brief did not provide). You MAY NOT use NEEDS_INPUT for environment, tooling, test, or dependency failures — those are task failures and go in `unexpected`.
+  - A NEEDS_INPUT return MUST include: `blocking_step` (verbatim quote of the plan step you halted at), `tried` (what you attempted to resolve from the brief alone — `n/a` is invalid), 2+ `options` with non-empty `label` and `summary`, and a `recommendation` (option label + reason, or exactly `none — no clear preference`). Vague returns are REJECTED by report-filter.
+  - Before halting with NEEDS_INPUT, roll back any uncommitted partial work (`git restore .`) and any commits made during this task attempt (`git reset --hard <pre-task-sha>`). Set `rolled_back: true` in the return.
+  - Budget cap: at most TWO NEEDS_INPUT signals on the same task across re-dispatches. A third halt is a task failure, not a question.
   - <task-specific rule, one per line>
   - <task-specific rule>
 CONTEXT:
@@ -109,14 +113,36 @@ CONTEXT:
   Plan: ./plan.md §3 (dark-mode toggle).
   Design tokens: src/theme/tokens.ts:12-48.
   Existing toggle pattern: src/components/Switch/Switch.tsx:1-80.
-OUTPUT:
+OUTPUT (discriminated union — return EXACTLY ONE variant):
+
+  Variant A — task complete:
   ```json
   {
+    "status": "complete",
     "tests_added": ["path:line"],
     "files_changed": ["path"],
     "test_command": "string",
     "test_output_tail": "string (last 20 lines of test runner output)",
     "commits": ["sha — subject"]
+  }
+  ```
+
+  Variant B — needs input (spec-ambiguity OR missing-context only):
+  ```json
+  {
+    "status": "needs_input",
+    "task_number": 0,
+    "task_title": "string",
+    "blocking_step": "verbatim plan step quote",
+    "ambiguity_type": "spec-ambiguity | missing-context",
+    "question": "string ending with ?",
+    "tried": "what you attempted from the brief alone",
+    "options": [
+      {"label": "A", "summary": "string"},
+      {"label": "B", "summary": "string"}
+    ],
+    "recommendation": "option label + reason, or 'none — no clear preference'",
+    "rolled_back": true
   }
   ```
 ```
@@ -131,6 +157,7 @@ Every CONSTRAINT bullet is verbatim. Test-first discipline preserved. No compres
 - OUTPUT specified as "a summary" or "let me know what you find" — replace with schema.
 - Multiple tasks in one brief — split into multiple briefs, dispatch in parallel.
 - Hidden state: "remember what we discussed earlier" — if the agent needs it, put it in CONTEXT.
+- Compressing or paraphrasing the NEEDS_INPUT CONSTRAINTS block. The four bullets are guardrail-critical and the contract that makes the halt path honest. Verbatim or the brief is invalid.
 
 ## Algorithm
 
