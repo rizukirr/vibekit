@@ -3,5 +3,5 @@ external/
 tests/eval/*/
 .no-vibe/
 .vibe-worktrees/
-
+docs/
 /.omx
