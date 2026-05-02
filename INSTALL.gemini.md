@@ -72,9 +72,17 @@ gemini extensions update vibekit
 gemini extensions uninstall vibekit
 ```
 
+## Local development (link mode)
+
+For local development, link the working tree directly so edits are reflected immediately without reinstalling:
+
+```bash
+gemini extensions link .
+```
+
 ## Local fallback
 
-If GitHub installation fails, install from local path:
+If GitHub installation fails, install from a local path:
 
 ```bash
 gemini extensions install /home/rizki/Projects/vibekit --consent
