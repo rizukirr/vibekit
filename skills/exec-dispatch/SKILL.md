@@ -36,7 +36,7 @@ For each task in the plan, in order:
 1a. **Verify-clause gate.** The selected task header MUST end with `→ verify: <criterion>`. If absent, vague ("works", "looks right"), or non-checkable, **REJECT the task**: stop the loop, surface the gap to the user, and route back to `plan-write` to repair the plan. Do not dispatch tasks lacking a verify clause.
 2. **Compile the brief.** Use the RTCO template (see §RTCO brief template). The TASK line names the specific task number and title. The CONSTRAINTS block preserves all TDD discipline. The CONTEXT block includes the plan excerpt and any file:line references the task names. The OUTPUT block declares the exact schema the agent must return.
 3. **Dispatch a fresh subagent.** Pass only the compiled brief. No conversation history. No extra instructions.
-4. **Receive the return.** Apply the report filter (see §Return-side filter). If validation fails, REJECT and ask the subagent to re-format (never re-run). Three rejections in a row on the same task → escalate to user.
+4. **Receive the return.** Apply the report filter (see §Return-side filter). If validation fails, REJECT and ask the subagent to re-format (never re-run). Three rejections in a row on the same task → escalate to user. On accept, route by the `status` discriminator: `complete` → step 5; `needs_input` → enter the **NEEDS_INPUT halt-and-resume protocol** (see §NEEDS_INPUT halt-and-resume protocol), then return to step 4 with the new return.
 5. **Two-stage review** (see §Review gates).
 6. **Mark task complete in the plan** (check the task's boxes) and commit the plan update.
 7. **Loop to the next task.**
@@ -98,6 +98,80 @@ On receiving the subagent's output:
    - `unexpected` is a string (empty if nothing unexpected). Never null.
 4. **On REJECT:** send a rejection message naming the specific deltas. Ask the subagent to re-format. Do NOT ask it to re-run the work. Three rejections in a row on the same task → escalate.
 5. **On accept:** pass to the review gates.
+
+## NEEDS_INPUT halt-and-resume protocol
+
+When `report-filter` returns an accepted variant B (`status: "needs_input"`) result, the dispatch loop enters this protocol instead of proceeding to the review gates. The protocol is bounded, verbatim-surfaced, and resumes via fresh re-dispatch.
+
+### Step 1 — Verify rollback
+
+The return claims `rolled_back: true`. Cross-check with the actual repo state:
+
+```bash
+git status --porcelain
+git log --oneline <pre-task-sha>..HEAD
+```
+
+If `git status` shows uncommitted changes OR `git log` shows commits made during this task attempt that were not reverted, REJECT with delta: `rolled_back claimed but <evidence> shows uncommitted/unreverted state`. The subagent must roll back fully or the halt is rejected as malformed.
+
+### Step 2 — Budget check
+
+Each task starts with a NEEDS_INPUT budget of **2**. Each accepted halt decrements the budget. If the current return is the **third** halt on this task (budget would go negative), do NOT surface to the user — escalate as a task failure with this verbatim message:
+
+> **Task <N> escalated — NEEDS_INPUT budget exhausted.** Two prior halts have not produced a path forward. The plan or brief is likely structurally broken. Options: (1) roll back the task and route back to plan-write to repair the plan; (2) accept the unresolved ambiguity as a known-risk and continue with explicit user direction.
+
+### Step 3 — Surface to user (verbatim wrapper template)
+
+Print exactly this block, with field values quoted verbatim from the return — do not paraphrase, do not "clean up" the question:
+
+```
+> **Task <N> halted — needs input.**
+>
+> **Blocking step:** <blocking_step>
+> **Ambiguity type:** <ambiguity_type>
+> **Question:** <question>
+>
+> **What the subagent already tried:** <tried>
+>
+> **Options:**
+> - **A.** <options[0].summary>
+> - **B.** <options[1].summary>
+> <... additional options if present ...>
+>
+> **Subagent recommendation:** <recommendation>
+>
+> Reply with an option label or your own answer. Halts remaining on this task: <budget_remaining>.
+```
+
+This wrapper joins the never-compress list. Never paraphrase, trim, or hide it.
+
+### Step 4 — Receive user answer
+
+Free-form. The user MAY reply with:
+- An option label (`A`, `B`, …) → fold the corresponding `options[].summary` into the augmented brief as the resolution.
+- Free-text answer → fold verbatim into the augmented brief.
+- A routing instruction (e.g. "stop, the plan is wrong") → exit the dispatch loop, route back to `plan-write` with the question and user response as new context. Do not attempt to re-dispatch.
+
+### Step 5 — Compile augmented brief
+
+Re-run `brief-compiler` for the same task with one addition to the CONTEXT block:
+
+```
+Prior NEEDS_INPUT halt:
+  Question: "<question verbatim>"
+  User answer: "<answer verbatim>"
+  Halts remaining: <budget_remaining>
+```
+
+CONSTRAINTS unchanged from the original brief — the four NEEDS_INPUT bullets remain, since the subagent may halt again up to budget. OUTPUT schema unchanged — still the discriminated union.
+
+### Step 6 — Dispatch a fresh subagent
+
+Same procedure as the original step 3 of the dispatch loop. Fresh agent, no history of the prior attempt. The augmented CONTEXT is the only carryover.
+
+### Step 7 — Loop
+
+Return to step 4 of the main dispatch loop. The new return goes through `report-filter`, gets routed by `status`, and either completes the task or triggers another NEEDS_INPUT cycle (up to budget).
 
 ## Review gates
 
@@ -230,6 +304,10 @@ If the capability gate selected sequential fallback:
 - Hiding the degradation warning to "keep the output clean" on Gemini. The warning is the contract.
 - Mixing files in two tasks' "Files" sections and resolving the conflict by editing the brief's CONSTRAINTS to allow it. The plan is wrong; fix the plan.
 
+### NEEDS_INPUT inside a parallel-group
+
+A NEEDS_INPUT halt inside a parallel-group does NOT halt the group. Sibling tasks continue executing. The halted task waits for the user's answer; on resume, it rejoins the group's completion-tracking. Group-fail-closed semantics still apply: if the halted task ultimately fails (budget exhausted, user routes to replan), the whole group is treated as failed and surfaced to the user per §Parallel dispatch procedure step 6.
+
 ## Commit discipline
 
 - One task → one or more commits named by the plan → one plan-update commit marking the task complete.
@@ -243,6 +321,8 @@ If the capability gate selected sequential fallback:
 - **Filter rejects 3 times.** Escalate to user. The likely cause is an ambiguous OUTPUT schema or a confused agent — fix the root cause, do not loop.
 - **Gate 2 fails.** Offer the three options above. User decides.
 - **Plan file has drifted during execution (external edits).** Stop. Ask the user whether to reload the plan.
+- **NEEDS_INPUT budget exhausted on a task.** Escalate per §NEEDS_INPUT halt-and-resume protocol Step 2 with the verbatim escalation message. Do not silently grant a third halt; do not silently fail the task either — present the two options explicitly.
+- **User answers a NEEDS_INPUT with "the plan is wrong" or equivalent.** Exit the dispatch loop. Route back to `plan-write` with the halt question and user response as new context. Do not attempt to re-dispatch.
 
 ## Anti-patterns
 
@@ -252,6 +332,8 @@ If the capability gate selected sequential fallback:
 - Summarizing test output in the report. Output is verbatim or dropped — never rewritten.
 - Skipping Gate 2 because the agent "seemed to do fine". Gates are non-optional.
 - Editing the plan mid-run to retroactively match what the agent did. Plan is the contract; changes require going back to plan-write.
+- Treating NEEDS_INPUT as a synonym for "task failed." It is a deliberate halt for ambiguity; failures still go through the existing `unexpected` field + escalation path.
+- Carrying partial commits across a NEEDS_INPUT halt to "save work." Rollback is mandatory. The augmented re-dispatch is a fresh start, not a continuation.
 
 ## Output of this skill
 
