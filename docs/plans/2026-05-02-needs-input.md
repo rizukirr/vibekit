@@ -419,19 +419,19 @@ git commit -m "release: bump all manifests to v0.3.2 (NEEDS_INPUT halt-and-resum
 
 ---
 
-### Task 5: Cross-skill consistency audit (manual checklist) → verify: a single audit document at `docs/verifications/2026-05-02-needs-input-cross-skill-audit.md` exists with five PASS lines, one per checklist item
+### Task 5: ✓ Cross-skill consistency audit (manual checklist) → verify: a single audit document at `docs/verifications/2026-05-02-needs-input-cross-skill-audit.md` exists with five PASS lines, one per checklist item
 
 **Files:**
 - Create: `docs/verifications/2026-05-02-needs-input-cross-skill-audit.md`
 
-- [ ] **Step 1: Read all three edited SKILL.md files in one pass**
+- [x] **Step 1: Read all three edited SKILL.md files in one pass**
 
 Open in order, skim end-to-end:
 - `skills/brief-compiler/SKILL.md`
 - `skills/report-filter/SKILL.md`
 - `skills/exec-dispatch/SKILL.md`
 
-- [ ] **Step 2: Field-name parity check**
+- [x] **Step 2: Field-name parity check**
 
 Confirm these eight field names appear byte-identical wherever referenced across the three files:
 `status`, `blocking_step`, `ambiguity_type`, `question`, `tried`, `options`, `recommendation`, `rolled_back`.
@@ -445,14 +445,14 @@ done
 ```
 Expected: every field appears in at least two of the three files (some appear in all three; none appear in zero or one).
 
-- [ ] **Step 3: CONSTRAINTS-vs-protocol consistency check**
+- [x] **Step 3: CONSTRAINTS-vs-protocol consistency check**
 
 Confirm:
 - `brief-compiler`'s budget bullet says "TWO" / "third" — same as `exec-dispatch`'s Step 2 ("budget of 2", "third halt").
 - `brief-compiler`'s rollback bullet matches `exec-dispatch`'s Step 1 (both reference `git restore .` + `git reset --hard <pre-task-sha>` + `rolled_back: true`).
 - `brief-compiler`'s eligibility bullet (spec-ambiguity OR missing-context, NOT environment/tooling/test) matches `report-filter`'s `ambiguity_type` enum (`spec-ambiguity | missing-context`).
 
-- [ ] **Step 4: REJECT-message field-name parity**
+- [x] **Step 4: REJECT-message field-name parity**
 
 Confirm `report-filter`'s NEEDS_INPUT REJECT messages reference only field names that `brief-compiler`'s OUTPUT schema declares. No phantom fields.
 
@@ -462,11 +462,11 @@ grep -F 'REJECT' skills/report-filter/SKILL.md | grep -iE 'blocking_step|ambigui
 ```
 Expected: every match references one of the eight known field names; no other field names appear.
 
-- [ ] **Step 5: Wrapper-template field-set check**
+- [x] **Step 5: Wrapper-template field-set check**
 
 Confirm `exec-dispatch`'s wrapper template references only fields present in variant B of the schema. The wrapper uses: `<N>` (task_number), `<blocking_step>`, `<ambiguity_type>`, `<question>`, `<tried>`, `<options[0].summary>`, `<options[1].summary>`, `<recommendation>`, `<budget_remaining>` (orchestrator-tracked, not a field). All schema-fields here exist in variant B.
 
-- [ ] **Step 6: Budget-cap-value parity**
+- [x] **Step 6: Budget-cap-value parity**
 
 Confirm the value `2` (or "TWO") appears identically as the budget cap in all three places:
 - `brief-compiler` CONSTRAINTS bullet: "at most TWO"
@@ -481,7 +481,7 @@ grep -F 'Two prior halts' skills/exec-dispatch/SKILL.md
 ```
 Expected: each grep returns exactly one line.
 
-- [ ] **Step 7: Write the audit document**
+- [x] **Step 7: Write the audit document**
 
 Create `docs/verifications/2026-05-02-needs-input-cross-skill-audit.md` with this content:
 
@@ -506,7 +506,7 @@ Create `docs/verifications/2026-05-02-needs-input-cross-skill-audit.md` with thi
 **clean** — no cross-skill drift detected. The discriminated-union schema, four CONSTRAINTS bullets, REJECT messages, wrapper template, and budget cap value are byte-identically aligned across the three skills.
 ```
 
-- [ ] **Step 8: Verify the audit document exists with five PASS lines**
+- [x] **Step 8: Verify the audit document exists with five PASS lines**
 
 Run:
 ```bash
@@ -514,7 +514,7 @@ test -f docs/verifications/2026-05-02-needs-input-cross-skill-audit.md && grep -
 ```
 Expected: `5`.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add docs/verifications/2026-05-02-needs-input-cross-skill-audit.md
