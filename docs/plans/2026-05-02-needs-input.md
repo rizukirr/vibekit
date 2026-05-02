@@ -136,12 +136,12 @@ git commit -m "feat(brief-compiler): declare NEEDS_INPUT discriminated-union sch
 
 ---
 
-### Task 2: Edit `skills/report-filter/SKILL.md` → verify: `grep -cF '## Discriminated-union schemas' skills/report-filter/SKILL.md` returns 1, AND `grep -cF 'status discriminator missing' skills/report-filter/SKILL.md` returns 1, AND `grep -cF 'Accepting a NEEDS_INPUT return with' skills/report-filter/SKILL.md` returns 1
+### Task 2: ✓ Edit `skills/report-filter/SKILL.md` → verify: `grep -cF '## Discriminated-union schemas' skills/report-filter/SKILL.md` returns 1, AND `grep -cF 'status discriminator missing' skills/report-filter/SKILL.md` returns 1, AND `grep -cF 'Accepting a NEEDS_INPUT return with' skills/report-filter/SKILL.md` returns 1
 
 **Files:**
 - Modify: `skills/report-filter/SKILL.md` (insert new section after line 73; add anti-pattern bullet after line 182)
 
-- [ ] **Step 1: Pre-edit grep — confirm content does not yet exist**
+- [x] **Step 1: Pre-edit grep — confirm content does not yet exist**
 
 Run:
 ```bash
@@ -151,7 +151,7 @@ grep -cF 'Accepting a NEEDS_INPUT return with' skills/report-filter/SKILL.md
 ```
 Expected: all three return `0`.
 
-- [ ] **Step 2: Insert `## Discriminated-union schemas` section between `## Schema validation` (ends line 73) and `## Worked examples` (line 74)**
+- [x] **Step 2: Insert `## Discriminated-union schemas` section between `## Schema validation` (ends line 73) and `## Worked examples` (line 74)**
 
 Locate line 73 (the last line of the Schema validation section, ending with "Three rejections in a row on the same dispatch → escalate to user. Do not enter an infinite loop."). Immediately after that line, insert one blank line, then the following section verbatim, then one blank line before the existing `## Worked examples` heading:
 
@@ -179,7 +179,7 @@ Some briefs (notably implementation briefs from `exec-dispatch`) declare two val
 
 ```
 
-- [ ] **Step 3: Add anti-pattern bullet at end of `## Anti-patterns` block**
+- [x] **Step 3: Add anti-pattern bullet at end of `## Anti-patterns` block**
 
 Locate the `## Anti-patterns` block starting at line 176. After the last existing bullet ("Accepting a report that *looks* right but violates the schema. Schema is the contract."), append one new bullet on a new line:
 
@@ -187,7 +187,7 @@ Locate the `## Anti-patterns` block starting at line 176. After the last existin
 - Accepting a NEEDS_INPUT return with `tried: "n/a"` or a single-option `options` array because "the question seems reasonable." The filter's job is schema enforcement; reasonableness is the orchestrator's call after the schema passes. Reject and let the subagent re-format.
 ```
 
-- [ ] **Step 4: Post-edit grep — confirm all three strings present**
+- [x] **Step 4: Post-edit grep — confirm all three strings present**
 
 Run:
 ```bash
@@ -197,7 +197,7 @@ grep -cF 'Accepting a NEEDS_INPUT return with' skills/report-filter/SKILL.md
 ```
 Expected: all three return `1`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add skills/report-filter/SKILL.md
