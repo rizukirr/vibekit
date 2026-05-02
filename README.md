@@ -79,10 +79,10 @@ Detailed Gemini docs: `INSTALL.gemini.md` and `docs/README.gemini.md`.
 Tell Pi:
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/docs/INSTALL.pi.md
+Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.pi-plugin/INSTALL.md
 ```
 
-Manual installation is also documented in `docs/INSTALL.pi.md`. Quick path:
+Manual installation is also documented in `.pi-plugin/INSTALL.md`. Quick path:
 
 ```bash
 npm install -g @mariozechner/pi-coding-agent
@@ -95,7 +95,7 @@ pi install git:github.com/rizukirr/vibekit
 > ls ~/.agents/skills/vibekit/ 2>/dev/null
 > ```
 >
-> If that lists 14 skill directories, vibekit is already reachable on pi via `/skill:<name>` — skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `docs/INSTALL.pi.md`.
+> If that lists 14 skill directories, vibekit is already reachable on pi via `/skill:<name>` — skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
 
 ---
 
