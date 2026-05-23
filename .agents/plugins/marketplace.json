@@ -1,0 +1,20 @@
+{
+  "name": "vibekit",
+  "interface": {
+    "displayName": "vibekit"
+  },
+  "plugins": [
+    {
+      "name": "vibekit",
+      "source": {
+        "source": "local",
+        "path": "./plugins/vibekit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
