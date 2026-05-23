@@ -1,9 +1,50 @@
 {
   "name": "vibekit",
-  "version": "0.3.0",
+  "version": "0.3.3",
+  "description": "Token-efficient vibe-coding pipeline plugin for Pi and OpenCode.",
   "type": "module",
   "main": ".opencode/plugins/vibekit.js",
-  "keywords": ["pi-package"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rizukirr/vibekit.git"
+  },
+  "homepage": "https://github.com/rizukirr/vibekit#readme",
+  "bugs": {
+    "url": "https://github.com/rizukirr/vibekit/issues"
+  },
+  "files": [
+    "skills/brainstorm-lean/",
+    "skills/brief-compiler/",
+    "skills/exec-dispatch/",
+    "skills/finish-branch/",
+    "skills/isolate/",
+    "skills/memory-dual/",
+    "skills/plan-write/",
+    "skills/ralph-loop/",
+    "skills/report-filter/",
+    "skills/review-pack/",
+    "skills/using-vibekit/",
+    "skills/verify-gate/",
+    "skills/vibe/",
+    "skills/vibekit-doctor/",
+    "commands/",
+    "hooks/",
+    ".pi-plugin/",
+    ".opencode/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "vibekit",
+    "pi-package",
+    "opencode-plugin",
+    "ai-coding",
+    "skills"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "pi": {
     "skills": ["./skills"],
     "prompts": ["./.pi-plugin/prompts"],

@@ -6,11 +6,19 @@ Add vibekit to the `plugin` array in your `opencode.json` (global or project-lev
 
 ```json
 {
-  "plugin": ["vibekit@git+https://github.com/rizukirr/vibekit.git"]
+  "plugin": ["vibekit"]
 }
 ```
 
 This enables plugin hooks (bootstrap injection and skill path registration).
+
+If you need to install directly from git before npm publish, use:
+
+```json
+{
+  "plugin": ["vibekit@git+https://github.com/rizukirr/vibekit.git"]
+}
+```
 
 ## 2) Install commands
 
@@ -48,5 +56,5 @@ If vibekit slash commands do not appear in autocomplete or return unknown comman
 4. If needed, clear vibekit package cache and restart OpenCode:
 
 ```bash
-rm -rf ~/.cache/opencode/packages/vibekit@git+https:/github.com/rizukirr/vibekit.git
+rm -rf ~/.cache/opencode/packages/vibekit
 ```
