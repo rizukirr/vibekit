@@ -83,20 +83,35 @@ Tell Pi:
 Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.pi-plugin/INSTALL.md
 ```
 
-Manual installation is also documented in `.pi-plugin/INSTALL.md`. Quick path:
+Manual installation is also documented in `.pi-plugin/INSTALL.md`.
+
+Quick install (global settings):
 
 ```bash
-npm install -g @mariozechner/pi-coding-agent
 pi install git:github.com/rizukirr/vibekit
 ```
 
-> **Heads-up — possible conflict if vibekit is already installed.** Pi reads skills from `~/.agents/skills/` as well as its own package directory. If you previously installed vibekit for another runtime (most commonly Codex, which symlinks `~/.agents/skills/vibekit/`), pi will already see every vibekit skill from that path, and running `pi install …` on top of it produces benign-but-noisy "skill collision" warnings on every pi startup (pi's precedence ranks `~/.agents/`-auto above `pi install` packages, so the auto copy wins). **Check first:**
+Install into project settings (`.pi/settings.json`) instead of global settings:
+
+```bash
+pi install git:github.com/rizukirr/vibekit -l
+```
+
+Useful maintenance commands:
+
+```bash
+pi list
+pi update
+pi remove git:github.com/rizukirr/vibekit
+```
+
+> **Heads-up — possible conflict if vibekit is already installed.** Pi reads skills from `~/.agents/skills/` as well as Pi package sources. If you previously installed vibekit for another runtime (commonly Codex, which symlinks `~/.agents/skills/vibekit/`), Pi can already see every vibekit skill from that path, and installing again can produce benign "skill collision" warnings on startup. **Check first:**
 >
 > ```bash
 > ls ~/.agents/skills/vibekit/ 2>/dev/null
 > ```
 >
-> If that lists 14 skill directories, vibekit is already reachable on pi via `/skill:<name>` — skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
+> If that lists 14 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
 
 ---
 
