@@ -56,13 +56,14 @@ That keeps installation instructions centralized in one file and avoids README d
 
 ### OpenAI Codex
 
-Tell Codex:
+Install with:
 
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.codex/INSTALL.md
+```bash
+codex plugin marketplace add rizukirr/vibekit
+codex plugin add vibekit --marketplace vibekit
 ```
 
-Manual installation is also documented in `.codex/INSTALL.md`.
+Detailed Codex docs are in `.codex/INSTALL.md`.
 
 ### Gemini CLI
 
