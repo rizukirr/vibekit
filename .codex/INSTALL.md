@@ -1,55 +1,47 @@
 # Installing Vibekit for Codex
 
-Enable vibekit skills in Codex via native skill discovery. Clone and symlink — no bootstrap edits required.
+Vibekit ships with a Codex plugin manifest and marketplace snapshot metadata in this repo.
 
 ## Prerequisites
 
-- Git
-- Codex CLI
+- Codex CLI with plugin marketplace support
 
 ## Installation
 
-1. **Clone the vibekit repository:**
-   ```bash
-   git clone https://github.com/rizukirr/vibekit.git ~/.codex/vibekit
-   ```
+```bash
+codex plugin marketplace add rizukirr/vibekit
+codex plugin add vibekit --marketplace vibekit
+```
 
-2. **Create the skills symlink:**
-   ```bash
-   mkdir -p ~/.agents/skills
-   ln -s ~/.codex/vibekit/skills ~/.agents/skills/vibekit
-   ```
+On first use, Codex will prompt you to review and trust the SessionStart hook.
 
-   **Windows (PowerShell):**
-   ```powershell
-   New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills"
-   cmd /c mklink /J "$env:USERPROFILE\.agents\skills\vibekit" "$env:USERPROFILE\.codex\vibekit\skills"
-   ```
+## What gets loaded
 
-3. **Restart Codex** to discover the skills.
-
-Codex auto-discovers all skills under `~/.agents/skills/`. The `using-vibekit` skill carries a `Use when starting any conversation` description so it fires on session start, loading the auto-trigger map for the rest of the pipeline.
+- **Skills** are discovered from `./skills/` (declared in `plugin.json`).
+- **SessionStart hook** (`./hooks/hooks.json` → `./hooks/session-start`) injects the `using-vibekit` priming layer at session start so the auto-trigger map fires for the rest of the pipeline.
 
 ## Verify
 
+You can validate marketplace/plugin resolution with:
+
 ```bash
-ls -la ~/.agents/skills/vibekit
+codex plugin list --marketplace vibekit
 ```
 
-You should see a symlink (or junction on Windows) pointing to the vibekit skills directory.
+You should see `vibekit@vibekit` in the list.
 
 ## Updating
 
-```bash
-cd ~/.codex/vibekit && git pull
-```
+Re-run:
 
-Skills update instantly through the symlink.
+```bash
+codex plugin marketplace remove vibekit
+codex plugin marketplace add rizukirr/vibekit
+```
 
 ## Uninstalling
 
 ```bash
-rm ~/.agents/skills/vibekit
+codex plugin remove vibekit
+codex plugin marketplace remove vibekit
 ```
-
-Optionally delete the clone: `rm -rf ~/.codex/vibekit`.
