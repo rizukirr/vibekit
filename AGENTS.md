@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, OpenCode, Pi, or otherwise 
 
 ## What this repo is
 
-`vibekit` is a 14-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. `using-vibekit` is the auto-trigger priming layer — auto-loaded by every supported runtime so the trigger map for the rest of the pipeline is always in context.
+`vibekit` is a 15-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. `using-vibekit` is the auto-trigger priming layer — auto-loaded by every supported runtime so the trigger map for the rest of the pipeline is always in context.
 
 ## Repository layout
 
@@ -50,6 +50,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
+| `debug-recovery` | Pipeline failure branch + standalone debugger. Stop-the-line root-cause triage with one fresh read-only confirmation dispatch; produces a proven diagnosis and routes the fix to `exec-dispatch`/`plan-write`. Never edits code. |
 | `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic; same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
 | `using-vibekit` | Auto-trigger priming layer. Auto-loaded by SessionStart hook (Claude Code), `@`-import (Gemini), native discovery (Codex), message transform (opencode), and `before_agent_start` extension (Pi) so the trigger map and 1%-chance rule are always in context. Not user-invoked. |
 
