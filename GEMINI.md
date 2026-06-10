@@ -21,6 +21,9 @@ For implementation planning and execution:
 @./skills/review-pack/SKILL.md
 @./skills/finish-branch/SKILL.md
 
+For the pipeline failure branch and standalone debugging (root-cause triage, routes fixes to exec/plan):
+@./skills/debug-recovery/SKILL.md
+
 For durable project knowledge — atomic facts, compound documents, working notepad:
 @./skills/memory-dual/SKILL.md
 
