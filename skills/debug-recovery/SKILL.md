@@ -18,6 +18,8 @@ A confident guess is not a root cause. Every diagnosis here is backed by verbati
 - **Pipeline failure branch:** `verify-gate` returns a `not satisfied` or `partial` requirement, OR an `exec-dispatch` subagent report contains a failing test (`result: fail`) or a broken build.
 - **Standalone:** the user says "debug this", "why is this failing", or names a failing test, error, stack trace, or broken build outside a vibe run.
 
+**Precedence:** debug-recovery fires *after* `verify-gate` or `exec-dispatch` has already produced a failure — it consumes that failure, it does not compete with those skills and never pre-empts a passing `verify-gate`. A passing gate routes onward (review-pack); only a failing one routes here.
+
 Do NOT invoke for:
 - A feature that is working but slow or ugly — that is not a failure.
 - Applying a fix you already understand with certainty under a normal plan — route straight to `exec-dispatch`/`plan-write`.
