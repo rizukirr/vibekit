@@ -12,7 +12,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 - **`/vibe <intent>`** — the full 7-stage pipeline in one command.
 - **`/ralph-loop <intent>`** — autonomous bounded re-run of `/vibe` with a blocker classifier and thrashing critic. Same gates, never bypasses sign-off.
-- **Thirteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
+- **Fourteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
 - **Auto-trigger discipline.** A SessionStart hook (Claude Code) and equivalent adapters (Codex native discovery, Gemini `@`-import, opencode plugin, Pi `before_agent_start` extension) load `using-vibekit` into every session so pipeline skills cannot be silently skipped.
 - **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
 - **Halt-and-report discipline.** Real live eval caught two plan defects cleanly; neither reached a commit.
@@ -111,7 +111,7 @@ pi remove git:github.com/rizukirr/vibekit
 > ls ~/.agents/skills/vibekit/ 2>/dev/null
 > ```
 >
-> If that lists 14 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
+> If that lists 15 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
 
 ---
 
@@ -137,7 +137,7 @@ You only talk to the pipeline during brainstorm and at each gate. The rest is au
 
 ## The skills
 
-All 13 invocable skills live in `skills/` and can be used standalone. A 14th skill, `using-vibekit`, is the priming layer — it is auto-loaded on session start by every supported runtime and is not invoked manually.
+All 14 invocable skills live in `skills/` and can be used standalone. A 15th skill, `using-vibekit`, is the priming layer — it is auto-loaded on session start by every supported runtime and is not invoked manually.
 
 **Pipeline:**
 
@@ -160,6 +160,7 @@ All 13 invocable skills live in `skills/` and can be used standalone. A 14th ski
 |-------|------|
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus a working notepad. Keyword + tag + type search; `[[key]]` cross-links; audit pass. |
 | `vibekit-doctor` | Diagnostic health check — skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default; `--fix` for safe repairs. |
+| `debug-recovery` | Pipeline failure branch + standalone debugger. Stop-the-line root-cause triage with one fresh read-only confirmation dispatch; produces a proven diagnosis and routes the fix to `exec-dispatch`/`plan-write`. Never edits code. |
 | `ralph-loop` | Autonomous-driver peer to `vibe` — bounded persistence loop with blocker classifier and thrashing critic. Same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
 
 ---
