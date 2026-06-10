@@ -37,6 +37,8 @@ If the user says "skip the brainstorm" or "just write the code," follow the user
 | `review-pack` returned `yes` and user signed off on the diff | `finish-branch` |
 | Driving a vibe run autonomously across iterations | `ralph-loop` |
 | Storing, recalling, or auditing durable project knowledge | `memory-dual` |
+| `verify-gate` returns `not satisfied`/`partial`, or an `exec-dispatch` task fails its test/build | `debug-recovery` |
+| User reports a bug, failing test, broken build, or asks "why is this failing" | `debug-recovery` |
 | User reports vibekit feels broken, skills not firing, or cross-runtime drift | `vibekit-doctor` |
 
 ## Hard gates (never bypass)
