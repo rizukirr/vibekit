@@ -90,6 +90,17 @@ Finding severity:
 - `warn` — code that is twice the natural length but functionally correct.
 - `nit` — micro-bloat (extra wrapper, unused parameter).
 
+Tag each over-engineering finding so the cut is unambiguous:
+- `delete:` dead code, unused flexibility, speculative feature — replacement: nothing.
+- `stdlib:` hand-rolled thing the standard library ships — name the function.
+- `native:` dependency or code doing what the platform already does — name the feature.
+- `yagni:` abstraction with one implementation, config nobody sets, layer with one caller.
+- `shrink:` same logic, fewer lines — show the shorter form.
+
+End this pass with the metric that matters: `net: -<N> lines possible.` If there
+is nothing to cut, write `Lean already.` This pass hunts complexity only;
+correctness, security, and performance belong to the other passes, not here.
+
 A `block` here halts the handoff just like a spec violation.
 
 ### Pass 5 — surgical-diff (Karpathy principle 3)

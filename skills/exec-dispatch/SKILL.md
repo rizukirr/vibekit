@@ -58,6 +58,8 @@ CONSTRAINTS:
   - Match existing code style; do not "improve" formatting or comments unrelated to the task.
   - Do not delete pre-existing dead code; if you notice some, mention it in OUTPUT.unexpected.
   - Do not install new dependencies or modify package manifests unless the task explicitly says so.
+  - Prefer the standard library and native platform features over new code; add no unrequested abstractions or scaffolding.
+  - Mark any deliberate simplification with a `vibekit:` comment naming its ceiling and upgrade path (see "vibekit: simplification comments").
   - The task header's `→ verify:` clause is the success criterion; the task is not done until that criterion is observably met.
   - If any step fails or produces output that does not match the task's "Expected" value, stop and report the failure. Do not improvise a fix.
 CONTEXT:
@@ -84,6 +86,20 @@ OUTPUT (return exactly this JSON schema):
 Every CONSTRAINT is verbatim. Every CONTEXT file path is verbatim. The OUTPUT schema is byte-identical to what the return-side filter will validate against.
 
 **Tool requirement.** Because the plan is embedded by reference at a specific commit SHA, the dispatched subagent needs read access to the git object database — typically `Read`, `Grep`, `Glob`, and a `Bash` allowlist entry for `git show` and `git log`. If your runtime scopes tools per subagent, include those before dispatch, otherwise the agent cannot resolve the plan at the named commit and the task will fail with a permission error rather than a work error.
+
+## `vibekit:` simplification comments
+
+A deliberate simplification is marked inline so it reads as intent, not
+ignorance. The convention:
+
+`# vibekit: <ceiling>, <upgrade path>`  (or `//` for C-family languages)
+
+The comment names the shortcut's known ceiling and the trigger to revisit it,
+e.g. `# vibekit: global lock, per-account locks if throughput matters`. A
+shortcut with no upgrade path is a rot risk — name one. These markers are
+harvested into a debt ledger by `memory-dual` (the `debt-ledger` operation), so
+a deferral cannot quietly become permanent. The marker is for *intentional*
+shortcuts only; it is not a TODO dumping ground.
 
 ## Return-side filter
 

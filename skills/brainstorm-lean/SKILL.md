@@ -119,6 +119,28 @@ The user's response (or absence of pushback) is recorded in the spec's `## Appro
 
 This turn is **never compressed**. It joins the verbatim list.
 
+## Laziness ladder (apply when generating approaches)
+
+The best code is the code never written. Before proposing any approach, walk the
+ladder and stop at the first rung that holds — then prefer the approach that sits
+highest:
+
+1. **Does this need to exist at all?** Speculative need → skip it, say so in one line. (YAGNI)
+2. **Stdlib does it?** Use it.
+3. **Native platform feature covers it?** `<input type="date">` over a picker lib, CSS over JS, a DB constraint over app code.
+4. **Already-installed dependency solves it?** Use it. Never add a new dependency for what a few lines do.
+5. **Can it be one line?** One line.
+6. **Only then:** the minimum code that works.
+
+The ladder is a reflex, not a research project. Two rungs work → take the higher
+one and move on. At least one of the 2-3 approaches you present must be the
+laziest rung that still meets the requirement, so the user can choose it.
+
+**Never simplify away** (not on the ladder — always built): input validation at
+trust boundaries, error handling that prevents data loss, security,
+accessibility, and anything the user explicitly requested. Lazy means less code,
+not a flimsier algorithm or a missing safety check.
+
 ## Exploring approaches
 
 - Propose 2-3 different approaches with trade-offs.

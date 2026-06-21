@@ -199,6 +199,26 @@ superseded_with_active_inbound: [<key>, ...]
 
 Audit is read-mostly. The only writes are the prune + INDEX rebuild. Never delete an entry without explicit user instruction.
 
+### `debt-ledger`
+Harvest every `vibekit:` simplification comment (written by exec-dispatch) into a
+ledger so deferred shortcuts get tracked instead of rotting into "later means
+never".
+
+1. Scan: `grep -rnE '(#|//) ?vibekit:' .` (skip `node_modules`, `.git`, and build output; add other comment prefixes if the stack uses them).
+2. One ledger row per hit, grouped by file: `<file>:<line>, <what was simplified>. ceiling: <the limit named>. upgrade: <the trigger to revisit>.`
+3. Any marker that names no upgrade trigger gets a `no-trigger` tag — those silently rot.
+
+Output:
+
+```yaml
+markers: <count>
+no_trigger: <count>
+rows:
+  - "<file>:<line>, <what>. ceiling: <limit>. upgrade: <trigger>."
+```
+
+End with `<N> markers, <M> with no trigger.` Nothing found: `No vibekit: debt. Clean ledger.` Read-only by default; persist to a file (e.g. `.vibekit/DEBT.md`) only when the user asks.
+
 ## Discipline rules
 
 These join the never-compress list. Compress narration around them; never the rules themselves.
@@ -244,6 +264,7 @@ Other skills MAY invoke memory-dual but are not required to:
 - `brainstorm-lean` step 1 — `query` for prior decisions/architecture in the relevant domain. Surface 1-3 hits before asking clarifying questions.
 - `brief-compiler` — pull entries cited by the user into the CONTEXT block (verbatim; no compression).
 - `review-pack` after sign-off — propose a `classify` pass on findings; with user approval, propose `write` for entries that generalize.
+- `review-pack` / on request — run `debt-ledger` to surface deferred `vibekit:` shortcuts before sign-off.
 - `verify-gate` — does NOT write. Verification is not knowledge capture.
 
 These are suggestions, not hard wires. Each calling skill decides whether the round-trip is worth the tokens.

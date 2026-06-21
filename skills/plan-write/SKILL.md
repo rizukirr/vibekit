@@ -221,6 +221,19 @@ Every step must contain the actual content an engineer needs. These are plan fai
 - DRY, YAGNI, TDD, frequent commits.
 - One logical change per commit.
 
+## Minimalism constraint
+
+The plan describes *what* to build; this constrains *how much*. Plan the laziest
+implementation that meets the spec:
+
+- Prefer the standard library and native platform features over new code; never add a dependency for what a few lines do.
+- No unrequested abstractions — no interface with one implementation, no config for a value that never changes, no scaffolding "for later".
+- Fewest files, shortest working diff. Deletion over addition.
+- When a task deliberately takes a shortcut with a known ceiling (a global lock, an O(n²) scan, a naive heuristic), the planned code includes a `vibekit:` comment naming the ceiling and the upgrade path (see exec-dispatch). Plan the comment, not just the shortcut.
+
+This does not relax the never-cut list (validation, error handling, security,
+accessibility, explicit requests) — those are always planned in full.
+
 ## Self-review (after writing the plan)
 
 Look at the spec with fresh eyes and check the plan against it. This is a checklist — not a subagent dispatch.
