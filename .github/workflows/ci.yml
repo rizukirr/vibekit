@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref to save runner minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Node 24+ runs the TypeScript syntax check (type stripping) with no
+          # toolchain install. shellcheck is preinstalled on ubuntu-latest.
+          node-version: '24'
+
+      # The repo ships no dependencies; the checks run on a bare node. No
+      # install step is needed.
+      - name: Validate manifests, skills, and package contents
+        run: npm run check

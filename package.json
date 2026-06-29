@@ -4,6 +4,15 @@
   "description": "Token-efficient vibe-coding pipeline — 15 auto-triggered guardrail skills for Claude Code, Codex, Gemini, Pi, and OpenCode.",
   "type": "module",
   "main": ".opencode/plugins/vibekit.js",
+  "scripts": {
+    "check": "npm run check:json && npm run check:versions && npm run check:manifests && npm run check:skills && npm run check:code && npm run check:pack",
+    "check:json": "node scripts/check-json.mjs",
+    "check:versions": "node scripts/check-versions.mjs",
+    "check:manifests": "node scripts/check-manifests.mjs",
+    "check:skills": "node scripts/check-skills.mjs",
+    "check:code": "node scripts/check-code.mjs",
+    "check:pack": "node scripts/check-pack.mjs"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
