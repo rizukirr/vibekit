@@ -25,6 +25,18 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 ## Install
 
+### Via npm
+
+Vibekit is published to npm as [`@rizukirr/vibekit`](https://www.npmjs.com/package/@rizukirr/vibekit) — a pinned, versioned alternative to the git and marketplace installs below. The published package bundles all 15 skills plus every runtime adapter (Claude Code, Codex, Gemini, Pi, OpenCode).
+
+```bash
+npm install @rizukirr/vibekit
+# or, to vendor it globally
+npm install -g @rizukirr/vibekit
+```
+
+This vendors the full skill set and adapters under `node_modules/@rizukirr/vibekit/`. Point your runtime at that path using the per-runtime steps below. Reach for npm when you want a specific released version pinned in a project; the marketplace and git methods below track `main` and are simpler for most setups.
+
 ### Claude Code
 
 From a marketplace that hosts this plugin:

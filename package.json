@@ -1,7 +1,7 @@
 {
-  "name": "vibekit",
+  "name": "@rizukirr/vibekit",
   "version": "0.5.0",
-  "description": "Token-efficient vibe-coding pipeline plugin for Pi and OpenCode.",
+  "description": "Token-efficient vibe-coding pipeline — 15 auto-triggered guardrail skills for Claude Code, Codex, Gemini, Pi, and OpenCode.",
   "type": "module",
   "main": ".opencode/plugins/vibekit.js",
   "license": "MIT",
@@ -16,6 +16,7 @@
   "files": [
     "skills/brainstorm-lean/",
     "skills/brief-compiler/",
+    "skills/debug-recovery/",
     "skills/exec-dispatch/",
     "skills/finish-branch/",
     "skills/isolate/",
@@ -30,8 +31,15 @@
     "skills/vibekit-doctor/",
     "commands/",
     "hooks/",
+    ".claude-plugin/",
+    ".codex/",
+    ".codex-plugin/",
     ".pi-plugin/",
     ".opencode/",
+    "gemini-extension.json",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
     "README.md",
     "LICENSE"
   ],
@@ -40,6 +48,11 @@
     "pi-package",
     "opencode-plugin",
     "ai-coding",
+    "vibe-coding",
+    "claude-code",
+    "codex",
+    "gemini",
+    "agent-skills",
     "skills"
   ],
   "publishConfig": {
