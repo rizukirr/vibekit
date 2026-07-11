@@ -34,6 +34,7 @@ If the user says "skip the brainstorm" or "just write the code," follow the user
 | Just received output from a subagent, tool chain, or dispatched task | `report-filter` |
 | About to claim work is done, fixed, complete, or passing | `verify-gate` |
 | `verify-gate` returned `ready`, before any outward-facing action | `review-pack` |
+| A vibe run is complete and the user wants a security pass on the diff (optional, before finish-branch) | `security-review` |
 | `review-pack` returned `yes` and user signed off on the diff | `finish-branch` |
 | Driving a vibe run autonomously across iterations | `ralph-loop` |
 | Storing, recalling, or auditing durable project knowledge | `memory-dual` |
@@ -46,6 +47,7 @@ If the user says "skip the brainstorm" or "just write the code," follow the user
 - **No code before brainstorm-approved design.** `brainstorm-lean` has a HARD-GATE; respect it on every project regardless of perceived simplicity.
 - **No "done" claim before verify-gate.** Evidence before assertions, always.
 - **No merge / push / PR before review-pack sign-off.** `finish-branch` is the only outward-facing endpoint.
+- **`security-review` is an optional peer gate.** When the user runs it and it returns `blocked` (CRITICAL/HIGH finding), `finish-branch` is unavailable until the user fixes or waives — the same block-halts-handoff rule as `review-pack`.
 - **No subagent dispatch without a compiled brief.** `brief-compiler` runs first; `report-filter` runs on return.
 
 ## How to access skills

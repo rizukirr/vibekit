@@ -20,6 +20,7 @@ This is the last reasoning gate before the pipeline touches anything outside the
 ## When to invoke
 
 - After `verify-gate` returns verdict `ready`.
+- `security-review` is a complementary optional gate (threat-model, not spec-conformance). Either or both may run after `verify-gate` and before `finish-branch`; there is no ordering dependency between them.
 - Before `finish-branch`, before any merge, PR, push, tag, or deploy.
 - When the user explicitly asks for a review of completed work.
 

@@ -143,9 +143,10 @@ Verify: <path>
 Commits: <first sha>..<last sha> on <branch or worktree>
 
 Next, your choice:
-  (a) run the review-pack skill (self-review, then present diff for your sign-off)
-  (b) run the finish-branch skill (merge or open a PR)
-  (c) stop here; the work is committed and verified.
+  (a) run the security-review skill (tiered security pass over the diff; blocks finish-branch on CRITICAL/HIGH findings)
+  (b) run the review-pack skill (self-review, then present diff for your sign-off)
+  (c) run the finish-branch skill (merge or open a PR)
+  (d) stop here; the work is committed and verified.
 ```
 
 Do not auto-merge, auto-push, or auto-PR. Those are outward-facing actions that require explicit user consent.
