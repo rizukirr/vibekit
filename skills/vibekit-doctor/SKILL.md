@@ -48,7 +48,7 @@ Run all checks, then auto-repair the items below. Other findings remain in the r
 
 | Finding | Auto-fix |
 |---|---|
-| `docs/specs|plans|reviews|verifications/` missing | `mkdir -p` |
+| `docs/specs|plans|reviews|verifications|security/` missing | `mkdir -p` |
 | `.vibekit/memory/INDEX.md` drifted from disk | rebuild INDEX from existing files |
 | `.vibekit/wiki/index.md` drifted from disk | rebuild from existing pages |
 | `.vibekit/wiki/log.md` missing | create empty log |
@@ -106,7 +106,7 @@ Existence check.
 
 ### C4 — `docs/` subdirectory presence
 
-The pipeline writes to `docs/specs/`, `docs/plans/`, `docs/reviews/`, `docs/verifications/`. Each must exist as a directory.
+The pipeline writes to `docs/specs/`, `docs/plans/`, `docs/reviews/`, `docs/verifications/`, `docs/security/`. Each must exist as a directory.
 
 `warn` for any missing dir (not `critical` — fresh repos won't have them yet, and `--fix` creates them).
 
