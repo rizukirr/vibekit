@@ -1,7 +1,7 @@
 {
   "name": "@rizukirr/vibekit",
-  "version": "0.5.1",
-  "description": "Token-efficient vibe-coding pipeline — 15 auto-triggered guardrail skills for Claude Code, Codex, Gemini, Pi, and OpenCode.",
+  "version": "0.5.2",
+  "description": "Token-efficient vibe-coding pipeline — 16 auto-triggered guardrail skills for Claude Code, Codex, Gemini, Pi, and OpenCode.",
   "type": "module",
   "main": ".opencode/plugins/vibekit.js",
   "scripts": {

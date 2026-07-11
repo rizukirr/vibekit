@@ -1,6 +1,6 @@
 {
   "name": "vibekit",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Token-efficient vibe-coding pipeline with hard guardrails: brainstorm, plan, isolate, exec, verify, review, integrate.",
   "author": {
     "name": "rizukirr",
