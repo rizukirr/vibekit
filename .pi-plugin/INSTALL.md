@@ -20,7 +20,7 @@ Quick check:
 ls ~/.agents/skills/vibekit/ 2>/dev/null
 ```
 
-If that lists the 14 skill directories, vibekit is already reachable on pi. You only need:
+If that lists the 16 skill directories, vibekit is already reachable on pi. You only need:
 
 1. **Skip `pi install`.** Skills are already discovered. The `/skill:<name>` namespace works for every skill out of the box.
 2. **Optional — add `/vibe` and the priming extension.** The shared `~/.agents/skills/` path delivers skills but not the pi-only `/vibe` prompt template or the `vibekit-prime` extension. To get those without re-shipping the skills, install vibekit project-locally with `-l` (it will still produce one-time collision warnings; if that's intolerable, see "Avoiding collisions" below).
@@ -50,7 +50,7 @@ pi install git:github.com/rizukirr/vibekit -l
 
 Pi reads vibekit's `package.json` `pi` key and registers:
 
-- All 14 skills under `skills/` (auto-discovered via the `pi.skills` path).
+- All 16 skills under `skills/` (auto-discovered via the `pi.skills` path).
 - The `/vibe` slash command from `.pi-plugin/prompts/vibe.md`.
 - The `vibekit-prime` extension from `.pi-plugin/extensions/vibekit-prime.ts`, which injects the using-vibekit priming body into every agent turn's system prompt.
 

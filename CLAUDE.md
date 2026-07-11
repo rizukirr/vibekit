@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Claude Code-specific guidance for contributing to vibekit. This file is the Claude Code overlay on top of `AGENTS.md`. **Read `AGENTS.md` first** — it covers everything that applies to all runtimes (repo layout, the 14 skills, compression policy, guardrails, commit rules, eval workflow). This file only adds what is specific to working on vibekit *with Claude Code*.
+Claude Code-specific guidance for contributing to vibekit. This file is the Claude Code overlay on top of `AGENTS.md`. **Read `AGENTS.md` first** — it covers everything that applies to all runtimes (repo layout, the 16 skills, compression policy, guardrails, commit rules, eval workflow). This file only adds what is specific to working on vibekit *with Claude Code*.
 
 ## What auto-fires when you start a session
 

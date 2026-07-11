@@ -27,7 +27,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 ### Via npm
 
-Vibekit is published to npm as [`@rizukirr/vibekit`](https://www.npmjs.com/package/@rizukirr/vibekit) — a pinned, versioned alternative to the git and marketplace installs below. The published package bundles all 15 skills plus every runtime adapter (Claude Code, Codex, Gemini, Pi, OpenCode).
+Vibekit is published to npm as [`@rizukirr/vibekit`](https://www.npmjs.com/package/@rizukirr/vibekit) — a pinned, versioned alternative to the git and marketplace installs below. The published package bundles all 16 skills plus every runtime adapter (Claude Code, Codex, Gemini, Pi, OpenCode).
 
 ```bash
 npm install @rizukirr/vibekit
@@ -123,7 +123,7 @@ pi remove git:github.com/rizukirr/vibekit
 > ls ~/.agents/skills/vibekit/ 2>/dev/null
 > ```
 >
-> If that lists 15 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
+> If that lists 16 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
 
 ---
 
@@ -163,6 +163,7 @@ All 14 invocable skills live in `skills/` and can be used standalone. A 15th ski
 | `report-filter` | Validates subagent returns against the declared schema; rejects drift. |
 | `verify-gate` | Evidence-based completion check, three independent verdict dispatches per requirement, plus a fail-closed surgical-diff pass. |
 | `review-pack` | Reflexion-style self-critique with simplicity + surgical-diff passes, then user sign-off on the diff. |
+| `security-review` | Optional threat-model gate, peer to `review-pack`. Tiered security pass over the diff — universal code-security always, AI-artifact checks when the diff builds a skill/agent/prompt/MCP server. Blocks finish-branch on CRITICAL/HIGH with a written-waiver escape. |
 | `finish-branch` | Integration endpoint — merge / PR / keep / abandon, no auto-actions. |
 | `isolate` | Dedicated worktree or branch per run; rollback is cheap. |
 
