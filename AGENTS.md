@@ -4,7 +4,7 @@ Guidance for any AI agent — Claude, Codex, Gemini, OpenCode, Pi, or otherwise 
 
 ## What this repo is
 
-`vibekit` is a 15-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. `using-vibekit` is the auto-trigger priming layer — auto-loaded by every supported runtime so the trigger map for the rest of the pipeline is always in context.
+`vibekit` is a 16-skill plugin that turns a short user intent into a verified, user-approved feature through a disciplined pipeline: brainstorm → plan → isolate → exec → verify → review → integrate. The orchestrator is `vibe`; every other skill composes beneath it. `ralph-loop` is its autonomous-driver peer — wraps `vibe` in a bounded persistence loop with classifier + thrashing critic, halts on genuine ambiguity, never bypasses review-pack sign-off. `memory-dual` is the cross-cutting durable-knowledge surface (atomic facts + compound documents + working notepad, one storage convention). `vibekit-doctor` is a diagnostic utility. `using-vibekit` is the auto-trigger priming layer — auto-loaded by every supported runtime so the trigger map for the rest of the pipeline is always in context.
 
 ## Repository layout
 
@@ -46,6 +46,7 @@ Every skill is **self-contained**. Do not reference external plugins (superpower
 | `report-filter` | Syntactic schema validation of subagent returns. |
 | `verify-gate` | Evidence-based completion, three independent verdict dispatches per requirement. |
 | `review-pack` | Reflexion-style self-critique + user sign-off. |
+| `security-review` | Optional threat-model gate, peer to `review-pack`. Tiered security pass over the vibe diff — universal code-security on every diff, AI-artifact checks when the diff builds a skill/agent/prompt/MCP server. Hard-gates finish-branch on CRITICAL/HIGH with a written-waiver escape. Self-contained; never executes reviewed code. |
 | `finish-branch` | Integration endpoint — merge / PR / keep / abandon, never auto. |
 | `isolate` | Worktree or branch per run; clean slate, cheap rollback. |
 | `memory-dual` | Durable project knowledge under `.vibekit/memory/` — atomic facts and compound documents in one storage convention, plus working notepad; keyword + tag + type search, `[[key]]` cross-links, audit pass. |
