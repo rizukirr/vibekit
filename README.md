@@ -12,7 +12,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 - **`/vibe <intent>`** — the full 7-stage pipeline in one command.
 - **`/ralph-loop <intent>`** — autonomous bounded re-run of `/vibe` with a blocker classifier and thrashing critic. Same gates, never bypasses sign-off.
-- **Fourteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
+- **Fifteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
 - **Auto-trigger discipline.** A SessionStart hook (Claude Code) and equivalent adapters (Codex native discovery, Gemini `@`-import, opencode plugin, Pi `before_agent_start` extension) load `using-vibekit` into every session so pipeline skills cannot be silently skipped.
 - **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
 - **Halt-and-report discipline.** Real live eval caught two plan defects cleanly; neither reached a commit.
@@ -149,7 +149,7 @@ You only talk to the pipeline during brainstorm and at each gate. The rest is au
 
 ## The skills
 
-All 14 invocable skills live in `skills/` and can be used standalone. A 15th skill, `using-vibekit`, is the priming layer — it is auto-loaded on session start by every supported runtime and is not invoked manually.
+All 15 invocable skills live in `skills/` and can be used standalone. A 16th skill, `using-vibekit`, is the priming layer — it is auto-loaded on session start by every supported runtime and is not invoked manually.
 
 **Pipeline:**
 
