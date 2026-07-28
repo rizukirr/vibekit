@@ -36,15 +36,26 @@ If you want both adapters cleanly without warnings, pick one source of truth:
 
 ## Install
 
-Install vibekit as a pi package directly from the git repo:
+Install a pinned Vibekit release from npm:
+
+```bash
+pi install npm:@rizukirr/vibekit@0.5.2
+```
+
+Or install Vibekit directly from the git repository:
 
 ```bash
 pi install git:github.com/rizukirr/vibekit
 ```
 
-For project-local installs (vibekit lives only inside the current project's `.pi/`), add `-l`:
+> [!IMPORTANT]
+> Running `npm install @rizukirr/vibekit` or `npm install -g @rizukirr/vibekit` directly is not equivalent to `pi install npm:@rizukirr/vibekit`. Pi's installer records the package in Pi settings and then loads the resources declared by the package's `pi` manifest.
+
+For project-local installs (Vibekit lives only inside the current project's `.pi/`), add `-l` to either source:
 
 ```bash
+pi install npm:@rizukirr/vibekit@0.5.2 -l
+# or
 pi install git:github.com/rizukirr/vibekit -l
 ```
 

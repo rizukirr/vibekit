@@ -4,6 +4,9 @@ Use this file when asked to install Vibekit in Gemini CLI.
 
 ## Install
 
+> [!IMPORTANT]
+> `npm install @rizukirr/vibekit` and `npm install -g @rizukirr/vibekit` only download the package files. They do not register a Gemini CLI extension. Gemini extensions are installed from a GitHub repository URL or local path, so use the command below even if you already downloaded the npm package.
+
 ```bash
 gemini extensions install https://github.com/rizukirr/vibekit
 ```
