@@ -25,7 +25,7 @@ Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the
 
 ## Install
 
-Choose your runtime below and use its native plugin or package installer. Raw `npm install` and `npm install -g` commands only download Vibekit's files; they are not universal installation commands. The [`@rizukirr/vibekit`](https://www.npmjs.com/package/@rizukirr/vibekit) package is consumed directly by OpenCode and Pi, while Claude Code, Codex, and Gemini CLI use their own installers.
+Choose your runtime below and use its native plugin or package installer bellow:
 
 ### Claude Code
 
