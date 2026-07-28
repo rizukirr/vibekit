@@ -29,8 +29,6 @@ Choose your runtime below and use its native plugin or package installer bellow:
 
 ### Claude Code
 
-Installing `@rizukirr/vibekit` with npm alone does not register the plugin with Claude Code. Use Claude Code's plugin marketplace:
-
 From a marketplace that hosts this plugin:
 
 ```
@@ -50,7 +48,13 @@ After installation, restart Claude Code. The `/vibe` command and all skills beco
 
 ### OpenCode
 
-Installing `@rizukirr/vibekit` with npm alone does not activate the plugin. Add the scoped npm package name to an OpenCode configuration file:
+Install `@rizukirr/vibekit` using npm:
+
+```bash
+npm install -g @rizukirr/vibekit 
+```
+
+Then add the scoped npm package name to an OpenCode configuration file:
 
 - Global, for all projects: `~/.config/opencode/opencode.json`
 - Project-specific: `<project-root>/opencode.json`
@@ -74,7 +78,7 @@ That keeps installation instructions centralized in one file and avoids README d
 
 ### OpenAI Codex
 
-Installing `@rizukirr/vibekit` with npm alone does not make its skills available in Codex. Codex does not automatically discover globally installed npm packages. Register and install the plugin through its Codex marketplace:
+Register and install the plugin through its Codex marketplace:
 
 ```bash
 codex plugin marketplace add rizukirr/vibekit
@@ -85,7 +89,7 @@ Restart Codex after installation. Detailed Codex docs, including verification st
 
 ### Gemini CLI
 
-Installing `@rizukirr/vibekit` with npm alone does not register a Gemini CLI extension. Use Gemini's extension installer with the GitHub URL:
+Use Gemini's extension installer with the GitHub URL:
 
 Tell Gemini CLI:
 
@@ -97,7 +101,7 @@ Detailed Gemini docs: `INSTALL.gemini.md`.
 
 ### Pi
 
-Installing `@rizukirr/vibekit` directly with npm alone does not add it to Pi's package settings. Use Pi's package installer with either the npm release or Git repository:
+Use Pi's package installer with either the npm release or Git repository:
 
 Tell Pi:
 
