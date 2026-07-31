@@ -27,7 +27,9 @@ const contextOf = (o) =>
 if (!existsSync(wrapper)) {
   errors.push("hooks/run-hook.cmd does not exist");
 } else {
-  const r = run();
+  // Hermetic: clear every envelope-selecting variable so the bare shape is
+  // deterministic regardless of what the ambient environment happens to set.
+  const r = run({ CURSOR_PLUGIN_ROOT: "", CLAUDE_PLUGIN_ROOT: "", COPILOT_CLI: "" });
 
   if (r.status !== 0) {
     errors.push(`wrapper exited ${r.status} (stderr: ${(r.stderr || "").trim().slice(0, 200)})`);
@@ -65,6 +67,17 @@ if (!existsSync(wrapper)) {
     }
   } catch {
     errors.push("CLAUDE_PLUGIN_ROOT branch did not emit valid JSON");
+  }
+
+  // The CURSOR_PLUGIN_ROOT branch must produce the flat snake_case envelope.
+  const cursor = run({ CURSOR_PLUGIN_ROOT: process.cwd() });
+  try {
+    const c = JSON.parse(cursor.stdout);
+    if (!c.additional_context?.includes("You have vibekit")) {
+      errors.push("CURSOR_PLUGIN_ROOT branch did not produce additional_context");
+    }
+  } catch {
+    errors.push("CURSOR_PLUGIN_ROOT branch did not emit valid JSON");
   }
 
   // On Unix the wrapper must be a transparent pass-through. (Skipped on

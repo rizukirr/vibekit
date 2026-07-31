@@ -16,22 +16,33 @@ if "%~1"=="" (
 )
 
 set "HOOK_DIR=%~dp0"
+set "HOOK_SCRIPT=%~1"
+
+REM Forward every argument after the first, preserving the caller's quoting.
+REM cmd has no "$@" equivalent: %* still includes %1, and shift does not
+REM affect %*, so split %* on its first token and keep the remainder.
+set "HOOK_ARGS="
+for /f "tokens=1,*" %%a in ("%*") do set "HOOK_ARGS=%%b"
+
+REM Bare `exit /b` propagates the real errorlevel. `exit /b %ERRORLEVEL%`
+REM would not: cmd expands %ERRORLEVEL% when it parses the whole
+REM parenthesised block, before any line inside it has run.
 
 REM Try Git for Windows bash in standard locations
 if exist "C:\Program Files\Git\bin\bash.exe" (
-    "C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    "C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%HOOK_SCRIPT%" %HOOK_ARGS%
+    exit /b
 )
 if exist "C:\Program Files (x86)\Git\bin\bash.exe" (
-    "C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    "C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_DIR%%HOOK_SCRIPT%" %HOOK_ARGS%
+    exit /b
 )
 
 REM Try bash on PATH (e.g. user-installed Git Bash, MSYS2, Cygwin)
 where bash >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-    bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    bash "%HOOK_DIR%%HOOK_SCRIPT%" %HOOK_ARGS%
+    exit /b
 )
 
 REM No bash found - exit silently rather than error
