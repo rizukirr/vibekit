@@ -33,7 +33,7 @@ Create a task for each item. Complete in order:
 6. **Write design doc** — `docs/specs/YYYY-MM-DD-<topic>-design.md`, then commit.
 7. **Spec self-review** — placeholders, contradictions, ambiguity, scope.
 8. **User reviews written spec** — wait for explicit approval.
-9. **Transition** — invoke the implementation-plan skill. This is the only terminal handoff.
+9. **Transition** — invoke `plan-write`. This is the only terminal handoff.
 
 ## Process flow
 
@@ -47,7 +47,7 @@ Explore context
   └─ Write design doc → docs/specs/YYYY-MM-DD-<topic>-design.md → commit
   └─ Spec self-review (fix inline)
   └─ User reviews spec (verbatim prompt — see §User review gate)
-  └─ Invoke implementation-plan skill  [terminal]
+  └─ Invoke `plan-write`  [terminal]
 ```
 
 ## Key principles
@@ -76,7 +76,7 @@ This skill compresses *only* assistant narration. Everything else is verbatim.
 - **Constraints, requirements, success criteria** as captured.
 - **All three approach options + trade-offs + your recommendation.** Full prose — the user is making a decision.
 - **The design itself**, at every section. Full prose, scaled to complexity.
-- **The written design doc.** Normal prose. The implementation-plan skill parses this.
+- **The written design doc.** Normal prose. `plan-write` parses this.
 - **The user-review-gate message** (see below).
 - **The pushback turn** (see §Pushback turn).
 - **Any destructive-operation warning, scope flag, or ambiguity alert.**
@@ -231,7 +231,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 ## After the design
 
-- The ONLY next skill is the implementation-plan skill (writing-plans equivalent). Do not invoke any frontend, component, or implementation skill directly from this one.
+- The ONLY next skill is `plan-write`. Do not invoke any frontend, component, or implementation skill directly from this one.
 
 ## Output of this skill
 
@@ -242,4 +242,4 @@ Not a structured report — this skill is user-facing and file-producing.
 - User has explicitly approved the spec.
 
 **Terminal action:**
-- Invoke the implementation-plan skill with the spec path.
+- Invoke `plan-write` with the spec path.
