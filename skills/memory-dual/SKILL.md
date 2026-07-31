@@ -226,7 +226,7 @@ These join the never-compress list. Compress narration around them; never the ru
 - **One file per key.** Do not concatenate unrelated facts.
 - **Do not dump.** Most session findings should NOT be stored. Default `classify` verdict is `surface: none`. Memory rots when overfilled.
 - **Mark uncertainty.** No user confirmation or codebase evidence → `confidence: low`. Lying about confidence destroys the surface.
-- **Bodies are verbatim.** Caveman compression applies to skill narration ("Stored.", "Found 3 candidates."), never to entry bodies.
+- **Bodies are verbatim.** Terse, telegraphic compression applies to skill narration ("Stored.", "Found 3 candidates."), never to entry bodies.
 - **Keyword + tag + type matching only.** No embeddings, no fuzzy, no LLM-side reranking. Determinism beats cleverness for project knowledge.
 - **Default to `supersede` over `delete`.** Project history matters; rot is preferable to silent deletion of decisions.
 - **Closed type set.** Adding a type updates this skill, not a single entry.
