@@ -8,7 +8,7 @@
       "name": "vibekit",
       "source": {
         "source": "local",
-        "path": "./plugins/vibekit"
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",
