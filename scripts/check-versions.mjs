@@ -1,7 +1,8 @@
 // Assert every published manifest shares one version. Drift here is the exact
 // "works on Pi but not Claude Code" failure mode the portability layer exists
-// to prevent (see CLAUDE.md). The list is explicit on purpose — it names only
-// the canonical manifests and skips the stale plugins/vibekit/ duplicate tree.
+// to prevent (see CLAUDE.md). The list is explicit on purpose — it names every
+// manifest that ships, so adding a runtime adapter without adding it here is a
+// visible omission rather than a silent one.
 import { readJson, report } from "./_util.mjs";
 
 // Each entry resolves the version field for one manifest.
