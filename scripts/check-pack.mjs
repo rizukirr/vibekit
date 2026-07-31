@@ -9,7 +9,12 @@ import { join } from "node:path";
 import { report } from "./_util.mjs";
 
 const out = execSync("npm pack --dry-run --json", { encoding: "utf8" });
-const shipped = new Set(JSON.parse(out)[0].files.map((f) => f.path));
+// npm >=12 returns an object keyed by package name; earlier versions
+// returned a single-element array. Accept both so the check survives an
+// npm major bump.
+const parsed = JSON.parse(out);
+const meta = Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0];
+const shipped = new Set(meta.files.map((f) => f.path));
 const errors = [];
 
 // (a) every top-level skill with a SKILL.md must ship.
