@@ -127,18 +127,23 @@ If `.vibekit/notepad.md` exists:
 - Has the three sections (`## Priority Context`, `## Working Memory`, `## Manual`). `warn` on missing section.
 - Priority Context ≤ 500 chars. `warn` on overflow.
 
-### C6 — Authoring contract alignment
+### C6 — Authoring contract alignment (if present)
 
-`skills/_authoring/peg-cheatsheet.md` and `skills/_authoring/karpathy-principles.md` exist. `critical` if either is missing — they are the source of truth for skill authoring.
+`skills/_authoring/` is a maintainer-only tree. It is excluded from `package.json`'s `files` array and never ships, so a downstream install will not have it and its absence is not a fault.
 
-The Karpathy principles file declares an injection map (which principles are enforced by which skills). For each principle row, every named enforcing skill must exist on disk. `warn` on mismatch.
+If `skills/_authoring/` is absent: emit one `info` row and skip the rest of this check. `info` never escalates the verdict.
 
-### C7 — `external/` integrity
+If present: `skills/_authoring/peg-cheatsheet.md` and `skills/_authoring/karpathy-principles.md` must exist. `warn` if either is missing — they are the source of truth for skill authoring.
 
-`external/` is the read-only references dir.
-- It exists. `warn` if missing; the references inform skill authoring.
-- It is gitignored. `warn` if not (would commit a large external tree by accident).
-- The expected sub-references exist if referenced in CLAUDE.md (caveman, superpowers, oh-my-claudecode, oh-my-codex, Prompt-Engineering-Guide, andrej-karpathy-skills). `warn` per missing sub-tree.
+Also if present: the Karpathy principles file declares an injection map (which principles are enforced by which skills). For each principle row, every named enforcing skill must exist on disk. `warn` on mismatch.
+
+### C7 — removed
+
+C7 audited the read-only references directory used during skill authoring. That directory is gitignored and never ships, so the check could only ever pass on a maintainer checkout — on every user install it reported spurious warnings for trees that install was never meant to have.
+
+Its one portable assertion, that the directory must never leak into the published package, is enforced by `scripts/check-pack.mjs`.
+
+The ID is retained rather than renumbered because check IDs are referenced outside this file.
 
 ### C8 — Skill count consistency
 
