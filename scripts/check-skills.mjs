@@ -9,13 +9,24 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { report } from "./_util.mjs";
 
-// Unambiguous leaks. `external/` is deliberately NOT here: vibekit-doctor
-// legitimately references it as the directory it audits.
+// Unambiguous leaks. A shipped skill must be readable by someone who has only
+// the published package: no machine paths, no third-party project names, and no
+// reference to dev-only trees that never ship. AGENTS.md states this rule; this
+// list is what enforces it. Authoring docs under skills/_authoring/ may name
+// other projects freely — the directory scan below skips `_`-prefixed dirs.
 const FORBIDDEN = [
   [/\/home\/[a-z]/i, "machine-absolute path (/home/...)"],
   [/\/Users\/[A-Za-z]/, "machine-absolute path (/Users/...)"],
   [/\bponytail\b/i, "vendored-project name (ponytail)"],
   [/\bopenclaw\b/i, "vendored-project name (openclaw)"],
+  [/\bsuperpowers\b/i, "third-party project name (superpowers)"],
+  [/\bcaveman\b/i, "third-party project name (caveman)"],
+  [/\boh-my-claudecode\b/i, "third-party project name (oh-my-claudecode)"],
+  [/\boh-my-codex\b/i, "third-party project name (oh-my-codex)"],
+  [/\bPrompt-Engineering-Guide\b/i, "third-party project name (Prompt-Engineering-Guide)"],
+  [/\bandrej-karpathy-skills\b/i, "third-party project name (andrej-karpathy-skills)"],
+  [/\bwriting-plans\b/i, "foreign skill name (writing-plans) — vibekit's is plan-write"],
+  [/external\//, "dev-only path (external/) — never ships, see check-pack.mjs"],
 ];
 
 const errors = [];
