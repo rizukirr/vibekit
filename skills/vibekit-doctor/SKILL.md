@@ -139,11 +139,9 @@ Also if present: the Karpathy principles file declares an injection map (which p
 
 ### C7 — removed
 
-C7 audited the read-only references directory used during skill authoring. That directory is gitignored and never ships, so the check could only ever pass on a maintainer checkout — on every user install it reported spurious warnings for trees that install was never meant to have.
+C7 audited a gitignored authoring-references directory that never ships, so it could only pass on a maintainer checkout and warned spuriously on every user install. Its one portable assertion — that the directory must not leak into the published package — is enforced by `scripts/check-pack.mjs`.
 
-Its one portable assertion, that the directory must never leak into the published package, is enforced by `scripts/check-pack.mjs`.
-
-The ID is retained rather than renumbered because check IDs are referenced outside this file.
+The ID is retained rather than renumbered: check IDs are referenced outside this file.
 
 ### C8 — Skill count consistency
 

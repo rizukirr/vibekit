@@ -19,14 +19,18 @@ const FORBIDDEN = [
   [/\/Users\/[A-Za-z]/, "machine-absolute path (/Users/...)"],
   [/\bponytail\b/i, "vendored-project name (ponytail)"],
   [/\bopenclaw\b/i, "vendored-project name (openclaw)"],
-  [/\bsuperpowers\b/i, "third-party project name (superpowers)"],
-  [/\bcaveman\b/i, "third-party project name (caveman)"],
+  // `superpowers` and `caveman` are also ordinary English words. The strict
+  // match is deliberate — vibekit must be readable without knowing any other
+  // project — so if you hit this on genuine prose, rephrase rather than
+  // loosening the pattern.
+  [/\bsuperpowers\b/i, "third-party project name (superpowers) — rephrase if you meant the English word"],
+  [/\bcaveman\b/i, "third-party project name (caveman) — rephrase if you meant the English word"],
   [/\boh-my-claudecode\b/i, "third-party project name (oh-my-claudecode)"],
   [/\boh-my-codex\b/i, "third-party project name (oh-my-codex)"],
   [/\bPrompt-Engineering-Guide\b/i, "third-party project name (Prompt-Engineering-Guide)"],
   [/\bandrej-karpathy-skills\b/i, "third-party project name (andrej-karpathy-skills)"],
   [/\bwriting-plans\b/i, "foreign skill name (writing-plans) — vibekit's is plan-write"],
-  [/external\//, "dev-only path (external/) — never ships, see check-pack.mjs"],
+  [/\bexternal\//, "dev-only path (external/) — never ships, see check-pack.mjs"],
 ];
 
 const errors = [];
