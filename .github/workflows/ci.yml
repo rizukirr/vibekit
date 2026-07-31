@@ -29,3 +29,24 @@ jobs:
       # install step is needed.
       - name: Validate manifests, skills, and package contents
         run: npm run check
+
+  hook:
+    name: hook (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # The SessionStart hook is the entire vibekit integration: if it fails to
+      # execute, every skill is inert with no visible error. The windows-latest
+      # leg is the only machine-executed proof that the polyglot wrapper's batch
+      # half works; nothing on a Unix dev box can verify it.
+      - name: Smoke-test the SessionStart hook
+        run: npm run check:hook
