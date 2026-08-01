@@ -62,14 +62,21 @@ CONSTRAINTS:
   - Mark any deliberate simplification with a `vibekit:` comment naming its ceiling and upgrade path (see "vibekit: simplification comments").
   - The task header's `→ verify:` clause is the success criterion; the task is not done until that criterion is observably met.
   - If any step fails or produces output that does not match the task's "Expected" value, stop and report the failure. Do not improvise a fix.
+  - You MAY halt with a NEEDS_INPUT return ONLY on spec-ambiguity (a spec/plan detail with two reasonable interpretations) OR missing-context (a file/API/library reference the brief did not provide). You MAY NOT use NEEDS_INPUT for environment, tooling, test, or dependency failures — those are task failures and go in `unexpected`.
+  - A NEEDS_INPUT return MUST include: `blocking_step` (verbatim quote of the plan step you halted at), `tried` (what you attempted to resolve from the brief alone — `n/a` is invalid), 2+ `options` with non-empty `label` and `summary`, and a `recommendation` (option label + reason, or exactly `none — no clear preference`). Vague returns are REJECTED by report-filter.
+  - Before halting with NEEDS_INPUT, roll back any uncommitted partial work (`git restore .`) and any commits made during this task attempt (`git reset --hard <pre-task-sha>`). Set `rolled_back: true` in the return.
+  - Budget cap: at most TWO NEEDS_INPUT signals on the same task across re-dispatches. A third halt is a task failure, not a question.
 CONTEXT:
   Plan path: <path>
   Plan commit SHA: <sha of HEAD for the plan file at dispatch time>
   Task id: Task N
   Instruction: read the plan file at <path> at commit <sha>, locate the section headed `### Task N:`, and follow every step in order. Do not paraphrase the plan; execute it as written.
   Repo state: <branch, worktree, any user-visible constraints>
-OUTPUT (return exactly this JSON schema):
+OUTPUT (discriminated union — return EXACTLY ONE variant):
+
+  Variant A — task complete:
   {
+    "status": "complete",
     "task_number": <int>,
     "task_title": "<string>",
     "files_created": ["<path>"],
@@ -80,6 +87,23 @@ OUTPUT (return exactly this JSON schema):
     ],
     "commits": [{"sha": "<string>", "subject": "<string>"}],
     "unexpected": "<string — anything that deviated from the plan, empty if none>"
+  }
+
+  Variant B — needs input (spec-ambiguity OR missing-context only):
+  {
+    "status": "needs_input",
+    "task_number": <int>,
+    "task_title": "<string>",
+    "blocking_step": "<verbatim plan step quote>",
+    "ambiguity_type": "spec-ambiguity | missing-context",
+    "question": "<string ending with ?>",
+    "tried": "<what you attempted from the brief alone>",
+    "options": [
+      {"label": "A", "summary": "<string>"},
+      {"label": "B", "summary": "<string>"}
+    ],
+    "recommendation": "<option label + reason, or 'none — no clear preference'>",
+    "rolled_back": true
   }
 ```
 
