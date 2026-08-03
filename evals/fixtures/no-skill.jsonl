@@ -1,0 +1,4 @@
+{"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Bash","Read","Skill"],"skills":["vibekit:example-plain"],"slash_commands":[]}
+{"type":"rate_limit_event","rate_limit_info":{"status":"allowed","rateLimitType":"five_hour"}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"ok"}]}}
+{"type":"result","subtype":"success","is_error":false,"num_turns":1,"total_cost_usd":0.0887088,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}
