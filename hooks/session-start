@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# SessionStart hook: injects the bootstrap skill as session context.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Read the bootstrap skill name out of the config without a JSON parser.
+bootstrap=$(sed -n 's/.*"bootstrap"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+    "${PLUGIN_ROOT}/vibekit.config.json" | head -n 1)
+if [ -z "$bootstrap" ]; then
+    exit 0
+fi
+
+content=$(cat "${PLUGIN_ROOT}/skills/${bootstrap}/SKILL.md" 2>/dev/null || echo "")
+if [ -z "$content" ]; then
+    exit 0
+fi
+
+# Escape for JSON embedding. Each substitution is a single C-level pass.
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+escaped=$(escape_for_json "$content")
+context="<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\n**Below is the full content of the '${bootstrap}' skill. For all other skills, use the 'Skill' tool:**\n\n${escaped}\n</EXTREMELY_IMPORTANT>"
+
+# Each platform reads a different field, and Claude Code reads more than one
+# without deduplicating, so exactly one shape is emitted per platform.
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "additional_context": "%s"\n}\n' "$context"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$context"
+else
+    printf '{\n  "additionalContext": "%s"\n}\n' "$context"
+fi
+
+exit 0
