@@ -392,7 +392,7 @@ git commit -m "feat(evals): transcript parser with errored-run detection"
 - Create: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-score.test.mjs
@@ -469,12 +469,12 @@ test('compare fails a candidate that regressed against baseline beyond tolerance
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... score.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/score.mjs
@@ -542,12 +542,12 @@ export function compare(candidate, baseline, thresholds) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: PASS — `pass 9`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
