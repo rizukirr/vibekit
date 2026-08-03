@@ -187,9 +187,18 @@ a `rate_limit_event`, so this is observed behaviour, not a hypothetical. Without
 this rule an API hiccup reads as a behavioural regression and sends someone
 debugging skills that are fine.
 
-Errored runs are reported in a separate `errors` block and re-run up to a small
-retry budget. If a scenario cannot complete `n` successful runs, it is reported
-as `incomplete` and fails the run — loudly, and distinctly from a low rate.
+Errored runs are counted per scenario and reported alongside the rate, so a run
+with a shrunken sample is visible rather than silent. If a scenario produces no
+successful run at all, it is reported as `incomplete` and fails the run — loudly,
+and distinctly from a low rate.
+
+<!-- Amended 2026-08-03, during verification. This originally also promised
+errored runs would be "re-run up to a small retry budget". No retry was built,
+and the sentence was corrected rather than the code: excluding errored runs from
+scoring is the correctness property, while retry is a sample-size convenience.
+On a paid run there is also a fair argument that a rate limit should surface
+rather than be silently absorbed by retries that spend more money. Retry remains
+available as a future addition if transient errors prove noisy in practice. -->
 
 ### The judge is opt-in
 
