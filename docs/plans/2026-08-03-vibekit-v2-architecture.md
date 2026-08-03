@@ -332,7 +332,7 @@ git commit -m "feat: repo skeleton, config, and three fixture skills"
 
 The format is a deliberately restricted YAML subset: flat `key: value` lines only. No nesting, no lists, no quoting rules. Anything else is an error rather than a silent misparse — this is what lets the parser be twenty lines instead of a dependency.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/frontmatter.test.mjs
@@ -367,12 +367,12 @@ test('throws on a malformed line', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/frontmatter.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... frontmatter.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/frontmatter.mjs
@@ -404,12 +404,12 @@ export function parseFrontmatter(text) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/frontmatter.test.mjs`
 Expected: PASS — `pass 5`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/frontmatter.mjs tests/frontmatter.test.mjs
