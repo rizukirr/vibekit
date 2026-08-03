@@ -1,0 +1,23 @@
+[
+  {
+    "id": "footprint",
+    "prompt": "Say only: ok",
+    "expect": {},
+    "n": 3,
+    "model": "haiku"
+  },
+  {
+    "id": "bootstrap-injected",
+    "prompt": "Say only: ok",
+    "expect": { "transcriptContains": "You have vibekit" },
+    "n": 3,
+    "model": "haiku"
+  },
+  {
+    "id": "skill-invocable",
+    "prompt": "Invoke the vibekit:example-plain skill using the Skill tool, then stop.",
+    "expect": { "skill": "vibekit:example-plain" },
+    "n": 3,
+    "model": "haiku"
+  }
+]

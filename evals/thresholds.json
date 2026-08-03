@@ -1,0 +1,7 @@
+{
+  "defaults": { "minFiringRate": 0.8, "maxRateRegression": 0.2 },
+  "scenarios": {
+    "footprint": { "minFiringRate": 0 },
+    "bootstrap-injected": { "minFiringRate": 1 }
+  }
+}
