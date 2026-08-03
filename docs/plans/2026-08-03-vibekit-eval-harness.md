@@ -18,7 +18,7 @@
 - The plan assumes an authenticated `claude` on PATH. Not verifiable at unit-test time; Task 7's `requireClaude` fails fast with a named error instead of producing misleading zeros.
 
 **Irreversible / risky steps:**
-- Sessions run with `--permission-mode bypassPermissions` so the agent can actually attempt edits (the thing being measured). If the cwd were wrong, an eval run could edit the repo. Mitigated structurally: `runSession` creates the cwd with `mkdtemp` under the OS temp dir, passes it as `cwd` to the spawn, and removes it in a `finally`. Task 5's verify clause asserts the spawned cwd is under `os.tmpdir()` and is never the repo root — a test that fails if someone later "simplifies" the cwd away.
+- Sessions run with `--permission-mode bypassPermissions` so the agent can actually attempt edits (the thing being measured). **A temp cwd is not a sandbox** — this was corrected mid-run after a security review flagged it. `bypassPermissions` grants `Bash`, and no working directory contains arbitrary command execution. Mitigation is two-layered: the spawn passes `--disallowedTools Bash`, removing the execution path, and `runSession` creates the cwd with `mkdtemp` under the OS temp dir and removes it in a `finally`. Task 5's verify clause asserts both — the cwd is under `os.tmpdir()` and is never the repo root, and `Bash` is disallowed — so neither can be "simplified" away later. **Residual risk, accepted:** a `Write` to an absolute path can still escape the temp directory. Closing that needs an OS-level sandbox, which conflicts with the zero-dependency constraint.
 - Worktree removal deletes a directory. Restricted to paths the runner created under `.eval-worktrees/`, and it refuses to remove a dirty worktree rather than forcing.
 - `none` beyond those two — every other task creates new files under `evals/` or `tests/`, and `git revert` restores the tree fully.
 
@@ -556,13 +556,24 @@ git commit -m "feat(evals): scoring, incomplete detection and threshold comparis
 
 ---
 
-### Task 5: Session runner → verify: `tests/eval-session.test.mjs` reports `pass 5`; the injected spawn receives a `cwd` under `os.tmpdir()` that is not the repo root, and the temp dir does not exist after the call
+### Task 5: Session runner → verify: `tests/eval-session.test.mjs` reports `pass 6`; the injected spawn receives a `cwd` under `os.tmpdir()` that is not the repo root, the spawn args disallow `Bash`, and the temp dir does not exist after the call
 
 **Files:**
 - Create: `evals/session.mjs`
 - Test: `tests/eval-session.test.mjs`
 
-The cwd assertions are the safety property from the premortem: sessions run with edits permitted, so the working directory must never be the repo.
+The cwd assertions are the safety property from the premortem: sessions run with
+edits permitted, so the working directory must never be the repo.
+
+**Containment, stated accurately.** `bypassPermissions` would otherwise grant the
+session `Bash`, and a temp cwd does not contain arbitrary command execution — a
+session can run anything the user account can, regardless of where it is rooted.
+The spawn therefore passes `--disallowedTools Bash`, removing the
+arbitrary-execution path while leaving `Write` and `Edit` attemptable, which is
+all the ordering measurement needs. Residual risk remains and is accepted
+knowingly: a `Write` to an absolute path can still land outside the temp
+directory. Full containment would need an OS-level sandbox, which conflicts with
+the zero-dependency constraint.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -615,6 +626,14 @@ test('removes the temp cwd afterwards', () => {
   assert.equal(existsSync(calls[0].opts.cwd), false)
 })
 
+test('disallows Bash so a session cannot run arbitrary commands', () => {
+  const calls = []
+  runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
+  const args = calls[0].args
+  assert.ok(args.includes('--disallowedTools'), 'must pass --disallowedTools')
+  assert.equal(args[args.indexOf('--disallowedTools') + 1], 'Bash')
+})
+
 test('returns the parsed transcript', () => {
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
   assert.equal(result.ok, true)
@@ -650,6 +669,10 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
       '--verbose', // required by the CLI whenever output-format is stream-json
       '--plugin-dir', pluginDir,
       '--permission-mode', 'bypassPermissions',
+      // bypassPermissions would otherwise hand the session Bash, and a temp cwd
+      // does not contain arbitrary command execution. Write/Edit stay available
+      // because attempting them is the behaviour under measurement.
+      '--disallowedTools', 'Bash',
     ]
     if (scenario.model) args.push('--model', scenario.model)
 
@@ -668,7 +691,7 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
 - [ ] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-session.test.mjs`
-Expected: PASS — `pass 5`, `fail 0`.
+Expected: PASS — `pass 6`, `fail 0`.
 
 - [ ] **Step 5: Commit**
 

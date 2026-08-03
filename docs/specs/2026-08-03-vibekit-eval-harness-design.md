@@ -148,8 +148,18 @@ mode blocks edits, and "did the agent write code before brainstorming" is exactl
 what is being measured. Plan mode would mask the failure it is meant to observe.
 
 Each session instead runs with its **cwd set to a fresh temp directory** and edits
-permitted. Behaviour stays realistic; the blast radius is a directory the runner
-deletes afterwards. The repo is never the session's working directory.
+permitted. The repo is never the session's working directory.
+
+A temp cwd alone is **not** containment, though: `bypassPermissions` grants the
+session `Bash`, and no working directory bounds arbitrary command execution. The
+spawn therefore also passes `--disallowedTools Bash`, which removes the execution
+path while leaving `Write` and `Edit` attemptable — the ordering measurement only
+needs the attempt to be observable, not to succeed.
+
+Residual risk is stated rather than hidden: a `Write` to an absolute path can
+still land outside the temp directory. Eliminating that requires an OS-level
+sandbox (container, VM, or dedicated user), which conflicts with the
+zero-dependency constraint, so it is accepted knowingly.
 
 ### Metrics
 
