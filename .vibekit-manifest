@@ -1,0 +1,11 @@
+.claude-plugin/marketplace.json
+.claude-plugin/plugin.json
+.codex-plugin/plugin.json
+.vibekit-manifest
+AGENTS.md
+CLAUDE.md
+README.md
+commands/example-command.md
+commands/example-command.toml
+hooks/hooks.json
+package.json

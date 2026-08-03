@@ -83,7 +83,7 @@ Modified:
 - Create: `CLAUDE.md`, `AGENTS.md`, `README.md`
 - Test: `tests/skeleton.test.mjs`
 
-- [ ] **Step 1: Write `vibekit.config.json`**
+- [x] **Step 1: Write `vibekit.config.json`**
 
 The `npm` block is the complete npm metadata; Task 6's `core` emitter composes `package.json` from it plus the generated `files[]` and `version`. Nothing outside this file names a skill.
 
@@ -113,7 +113,7 @@ The `npm` block is the complete npm metadata; Task 6's `core` emitter composes `
 }
 ```
 
-- [ ] **Step 2: Write the seed `package.json`**
+- [x] **Step 2: Write the seed `package.json`**
 
 Hand-written now so `npm test` works before the generator exists. Task 10 proves the generator reproduces this exact content.
 
@@ -162,7 +162,7 @@ Hand-written now so `npm test` works before the generator exists. Task 10 proves
 }
 ```
 
-- [ ] **Step 3: Write the three stub skills**
+- [x] **Step 3: Write the three stub skills**
 
 These are empty fixtures. They carry no v1 content and exist only to exercise emission paths.
 
@@ -218,7 +218,7 @@ and emits no command file. Uses `gate: hard` so the Gate column has a non-defaul
 value to render. Deleted once the real pipeline is authored.
 ```
 
-- [ ] **Step 4: Write the three mixed Markdown files with marker regions**
+- [x] **Step 4: Write the three mixed Markdown files with marker regions**
 
 The generator replaces only what is between the markers. Everything else is prose you own.
 
@@ -277,7 +277,7 @@ Claude Code: `/plugin marketplace add rizukirr/vibekit`
 - `npm test` — run the unit tests
 ```
 
-- [ ] **Step 5: Write the skeleton test**
+- [x] **Step 5: Write the skeleton test**
 
 ```js
 // tests/skeleton.test.mjs
@@ -310,12 +310,12 @@ test('mixed markdown files carry balanced marker regions', () => {
 })
 ```
 
-- [ ] **Step 6: Run the tests**
+- [x] **Step 6: Run the tests**
 
 Run: `npm test`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add vibekit.config.json package.json skills CLAUDE.md AGENTS.md README.md tests/skeleton.test.mjs
@@ -332,7 +332,7 @@ git commit -m "feat: repo skeleton, config, and three fixture skills"
 
 The format is a deliberately restricted YAML subset: flat `key: value` lines only. No nesting, no lists, no quoting rules. Anything else is an error rather than a silent misparse — this is what lets the parser be twenty lines instead of a dependency.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/frontmatter.test.mjs
@@ -367,12 +367,12 @@ test('throws on a malformed line', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/frontmatter.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... frontmatter.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/frontmatter.mjs
@@ -404,12 +404,12 @@ export function parseFrontmatter(text) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/frontmatter.test.mjs`
 Expected: PASS — `pass 5`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/frontmatter.mjs tests/frontmatter.test.mjs
@@ -427,7 +427,7 @@ git commit -m "feat: add restricted-subset frontmatter parser"
 
 Note that duplicate skill names are structurally impossible here rather than checked: directory names are unique by the filesystem, and `name` must equal its directory. That is one fewer rule to maintain.
 
-- [ ] **Step 1: Write the test helper**
+- [x] **Step 1: Write the test helper**
 
 ```js
 // tests/helpers.mjs
@@ -477,7 +477,7 @@ export const MODEL = {
 }
 ```
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 ```js
 // tests/model.test.mjs
@@ -551,12 +551,12 @@ test('throws when the configured bootstrap skill does not exist', () => {
 })
 ```
 
-- [ ] **Step 3: Run the test to confirm it fails**
+- [x] **Step 3: Run the test to confirm it fails**
 
 Run: `node --test tests/model.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... model.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 ```js
 // lib/model.mjs
@@ -623,12 +623,12 @@ export function buildModel(config, skillsDir) {
 }
 ```
 
-- [ ] **Step 5: Run the test to confirm it passes**
+- [x] **Step 5: Run the test to confirm it passes**
 
 Run: `node --test tests/model.test.mjs`
 Expected: PASS — `pass 7`, `fail 0`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/model.mjs tests/helpers.mjs tests/model.test.mjs
@@ -643,7 +643,7 @@ git commit -m "feat: discover and validate skills into a single model"
 - Create: `lib/markers.mjs`
 - Test: `tests/markers.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/markers.test.mjs
@@ -695,12 +695,12 @@ test('throws when the close marker is missing', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/markers.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... markers.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/markers.mjs
@@ -725,12 +725,12 @@ export function applyRegion(text, id, replacement) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/markers.test.mjs`
 Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/markers.mjs tests/markers.test.mjs
@@ -747,7 +747,7 @@ git commit -m "feat: add marker-region replacement for mixed markdown files"
 
 Both `CLAUDE.md` and `AGENTS.md` render the same table, so it lives in one place rather than being restated in each emitter.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/table.test.mjs
@@ -775,12 +775,12 @@ test('renders a skill list with descriptions', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/table.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... table.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/table.mjs
@@ -800,12 +800,12 @@ export function skillList(skills) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/table.test.mjs`
 Expected: PASS — `pass 3`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/table.mjs tests/table.test.mjs
@@ -825,7 +825,7 @@ git commit -m "feat: add shared trigger-table and skill-list renderers"
 
 `package.json` and the README skill list are not runtime-specific, so they belong to a `core` emitter the driver always loads rather than being arbitrarily assigned to one runtime.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/core.test.mjs
@@ -864,12 +864,12 @@ test('owns the README skill-list region', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/core.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... core.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/core.mjs
@@ -916,12 +916,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/core.test.mjs`
 Expected: PASS — `pass 5`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/core.mjs tests/core.test.mjs
@@ -936,7 +936,7 @@ git commit -m "feat: add core emitter for package.json and README skill list"
 - Create: `runtimes/claude-code.mjs`
 - Test: `tests/claude-code.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/claude-code.test.mjs
@@ -992,12 +992,12 @@ test('is identified as claude-code', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/claude-code.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... claude-code.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/claude-code.mjs
@@ -1080,12 +1080,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/claude-code.test.mjs`
 Expected: PASS — `pass 7`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/claude-code.mjs tests/claude-code.test.mjs
@@ -1102,7 +1102,7 @@ git commit -m "feat: add claude-code emitter"
 
 The TOML and manifest shapes are taken from the v1 package that shipped and worked, not from documentation. If Codex's format has since moved, this is a data change in one file — which is the property the emitter contract exists to give.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/codex.test.mjs
@@ -1147,12 +1147,12 @@ test('owns the AGENTS.md trigger-table region', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/codex.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... codex.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/codex.mjs
@@ -1207,12 +1207,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/codex.test.mjs`
 Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/codex.mjs tests/codex.test.mjs
@@ -1231,7 +1231,7 @@ git commit -m "feat: add codex emitter"
 
 `build()` returns the in-memory path→contents map. `plan()` compares it against disk. Because both modes read the same map, `--check` cannot disagree with what `generate` would write.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/build.test.mjs
@@ -1304,12 +1304,12 @@ test('throws when the config names an emitter that does not exist', async () => 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/build.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... build.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/build.mjs
@@ -1388,12 +1388,12 @@ export async function build(root) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/build.test.mjs`
 Expected: PASS — `pass 10`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/build.mjs tests/build.test.mjs
@@ -1410,7 +1410,7 @@ git commit -m "feat: add driver core with collision detection and drift planning
 
 The `git diff --exit-code package.json` clause is the real proof: the generator must reproduce the hand-written seed byte-for-byte, which fails loudly if any emitter is a stub.
 
-- [ ] **Step 1: Write the CLI**
+- [x] **Step 1: Write the CLI**
 
 ```js
 #!/usr/bin/env node
@@ -1465,32 +1465,32 @@ for (const path of remove) {
 console.log('done')
 ```
 
-- [ ] **Step 2: Run the generator**
+- [x] **Step 2: Run the generator**
 
 Run: `npm run generate`
 Expected: a `wrote <path>` line for each generated file, then `done`. `package.json` may or may not appear — it appears only if the generated content differs from the Task 1 seed.
 
-- [ ] **Step 3: Confirm the generator reproduces the hand-written package.json**
+- [x] **Step 3: Confirm the generator reproduces the hand-written package.json**
 
 Run: `git diff --exit-code package.json`
 Expected: exit code 0, no output. If this fails, the `core` emitter and the Task 1 seed disagree — fix the emitter to match the seed, or correct the seed if the emitter is right, then re-run Step 2.
 
-- [ ] **Step 4: Confirm the run is idempotent and check mode agrees**
+- [x] **Step 4: Confirm the run is idempotent and check mode agrees**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 5: Confirm the version was actually stamped**
+- [x] **Step 5: Confirm the version was actually stamped**
 
 Run: `node -e "const p=require('./.claude-plugin/plugin.json');const m=require('./.claude-plugin/marketplace.json');const c=require('./vibekit.config.json');if(p.version!==c.version||m.plugins[0].version!==c.version)throw new Error('version not stamped');console.log('version ok: '+p.version)"`
 Expected: `version ok: 2.0.0`
 
-- [ ] **Step 6: Confirm the fixture skills produced the right command files**
+- [x] **Step 6: Confirm the fixture skills produced the right command files**
 
 Run: `ls commands/`
 Expected: exactly `example-command.md` and `example-command.toml`. No file for `example-plain` or `using-vibekit`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add bin/generate.mjs .vibekit-manifest .claude-plugin .codex-plugin commands hooks/hooks.json CLAUDE.md AGENTS.md README.md package.json
@@ -1508,7 +1508,7 @@ git commit -m "feat: add generator CLI and commit first generated output"
 
 The hook is the entire integration. If it fails to execute, every skill is inert with no visible error — which is why this gets a test that actually runs it rather than a code review.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/hook.test.mjs
@@ -1545,12 +1545,12 @@ test('emits the SDK-standard shape when no platform variable is set', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `npm run check:hook`
 Expected: FAIL — both tests error because `hooks/run-hook.cmd` does not exist.
 
-- [ ] **Step 3: Write the polyglot wrapper**
+- [x] **Step 3: Write the polyglot wrapper**
 
 This file is simultaneously a valid Windows batch file and a valid bash script. On Windows, `cmd.exe` runs the batch half and locates bash; on Unix, `:` is a no-op and the heredoc hides the batch text. The extensionless hook filename is deliberate — Claude Code's Windows auto-detection prepends `bash` to any command containing `.sh`.
 
@@ -1592,7 +1592,7 @@ shift
 exec bash "${SCRIPT_DIR}/${SCRIPT_NAME}" "$@"
 ```
 
-- [ ] **Step 4: Write the hook**
+- [x] **Step 4: Write the hook**
 
 The bootstrap skill name is read from `vibekit.config.json` rather than hardcoded, so renaming it in spec 2 needs no hook edit.
 
@@ -1644,30 +1644,30 @@ fi
 exit 0
 ```
 
-- [ ] **Step 5: Make the hook scripts executable**
+- [x] **Step 5: Make the hook scripts executable**
 
 ```bash
 chmod +x hooks/session-start hooks/run-hook.cmd
 ```
 
-- [ ] **Step 6: Add the phrase the test asserts on to the bootstrap skill**
+- [x] **Step 6: Add the phrase the test asserts on to the bootstrap skill**
 
 The test asserts the injected context carries the skill body, not just its name. Confirm `skills/using-vibekit/SKILL.md` contains the words `auto-trigger discipline` — it does, in the `description` line written in Task 1. No edit needed unless that line was changed.
 
 Run: `grep -c "auto-trigger discipline" skills/using-vibekit/SKILL.md`
 Expected: `1`
 
-- [ ] **Step 7: Run the test to confirm it passes**
+- [x] **Step 7: Run the test to confirm it passes**
 
 Run: `npm run check:hook`
 Expected: PASS — `pass 2`, `fail 0`.
 
-- [ ] **Step 8: Confirm the hook did not disturb generated output**
+- [x] **Step 8: Confirm the hook did not disturb generated output**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add hooks/session-start hooks/run-hook.cmd tests/hook.test.mjs
@@ -1684,7 +1684,7 @@ git commit -m "feat: add SessionStart hook and polyglot windows wrapper"
 
 The workflow's own behavior can only be observed on a GitHub runner, so the checkable local criterion is that it invokes scripts that actually exist — the failure mode that silently broke CI when v1's scripts were deleted.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/ci.test.mjs
@@ -1720,12 +1720,12 @@ test('no dependency install step is needed', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/ci.test.mjs`
 Expected: FAIL — at least one assertion fails, because the existing workflow invokes `npm run check:json`, `check:versions`, and the other v1 script names that no longer exist.
 
-- [ ] **Step 3: Rewrite the workflow**
+- [x] **Step 3: Rewrite the workflow**
 
 ```yaml
 name: CI
@@ -1781,22 +1781,22 @@ jobs:
         run: npm run check:hook
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/ci.test.mjs`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `npm test`
 Expected: PASS — `fail 0` across every suite.
 
-- [ ] **Step 6: Confirm the tree is fully generated**
+- [x] **Step 6: Confirm the tree is fully generated**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 7: Prove the core promise — adding a skill touches one directory**
+- [x] **Step 7: Prove the core promise — adding a skill touches one directory**
 
 ```bash
 mkdir -p skills/scratch-probe
@@ -1813,7 +1813,7 @@ npm run check
 
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add .github/workflows/ci.yml tests/ci.test.mjs

@@ -1,0 +1,23 @@
+{
+  "name": "vibekit",
+  "version": "2.0.0",
+  "description": "Guardrailed vibe-coding pipeline for coding agents.",
+  "author": {
+    "name": "rizukirr",
+    "url": "https://github.com/rizukirr"
+  },
+  "homepage": "https://github.com/rizukirr/vibekit",
+  "repository": "https://github.com/rizukirr/vibekit",
+  "license": "MIT",
+  "keywords": [
+    "vibekit",
+    "ai-coding",
+    "vibe-coding",
+    "claude-code",
+    "codex",
+    "agent-skills",
+    "skills"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}
