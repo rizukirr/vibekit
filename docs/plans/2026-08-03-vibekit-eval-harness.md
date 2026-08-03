@@ -1114,14 +1114,14 @@ git commit -m "feat(evals): opt-in judge for skill-following, not just invocatio
 
 This is the only paid step in the plan. It costs roughly 9 haiku sessions — on the order of $0.20–0.80 based on the $0.024–0.089 per-session figures measured during design.
 
-- [ ] **Step 1: Run the harness for real**
+- [x] **Step 1: Run the harness for real**
 
 Run: `npm run eval`
 Expected: a plan line, then a progress line of dots (one per session, `E` for an errored session), then `results: evals/results/<timestamp>-HEAD.json`, a per-scenario summary, and `PASS`. Exit code 0.
 
 If a scenario reports `incomplete`, the sessions are failing rather than the skills — check `claude` auth and rate limits, then re-run. Do not lower the thresholds to make it pass.
 
-- [ ] **Step 2: Assert the acceptance criteria against the results file**
+- [x] **Step 2: Assert the acceptance criteria against the results file**
 
 Run:
 ```bash
@@ -1137,12 +1137,12 @@ console.log('acceptance ok — footprint', r.candidate.footprint.inputFootprint,
 ```
 Expected: `acceptance ok — footprint <n> tokens` with `<n>` in the low tens of thousands.
 
-- [ ] **Step 3: Confirm no worktree or temp directory leaked**
+- [x] **Step 3: Confirm no worktree or temp directory leaked**
 
 Run: `git worktree list && ls .eval-worktrees 2>/dev/null || echo "(no .eval-worktrees)"`
 Expected: only the main worktree, and either an empty `.eval-worktrees` or the `(no .eval-worktrees)` line.
 
-- [ ] **Step 4: Document the harness in the README**
+- [x] **Step 4: Document the harness in the README**
 
 Insert this section immediately before the existing `## Install` section:
 
@@ -1167,12 +1167,12 @@ This costs real money and needs an authenticated `claude` CLI, so it is a manual
 gate — not part of the free CI (`check`, `test`, `check:hook`).
 ```
 
-- [ ] **Step 5: Regenerate and check**
+- [x] **Step 5: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `up to date`, exit 0. The README skill-list region is untouched by the prose edit.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/results README.md
