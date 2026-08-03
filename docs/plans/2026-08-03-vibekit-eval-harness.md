@@ -575,7 +575,7 @@ knowingly: a `Write` to an absolute path can still land outside the temp
 directory. Full containment would need an OS-level sandbox, which conflicts with
 the zero-dependency constraint.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-session.test.mjs
@@ -641,12 +641,12 @@ test('returns the parsed transcript', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-session.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... session.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/session.mjs
@@ -688,12 +688,12 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-session.test.mjs`
 Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/session.mjs tests/eval-session.test.mjs
