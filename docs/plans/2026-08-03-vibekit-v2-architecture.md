@@ -1684,7 +1684,7 @@ git commit -m "feat: add SessionStart hook and polyglot windows wrapper"
 
 The workflow's own behavior can only be observed on a GitHub runner, so the checkable local criterion is that it invokes scripts that actually exist — the failure mode that silently broke CI when v1's scripts were deleted.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/ci.test.mjs
@@ -1720,12 +1720,12 @@ test('no dependency install step is needed', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/ci.test.mjs`
 Expected: FAIL — at least one assertion fails, because the existing workflow invokes `npm run check:json`, `check:versions`, and the other v1 script names that no longer exist.
 
-- [ ] **Step 3: Rewrite the workflow**
+- [x] **Step 3: Rewrite the workflow**
 
 ```yaml
 name: CI
@@ -1781,22 +1781,22 @@ jobs:
         run: npm run check:hook
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/ci.test.mjs`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `npm test`
 Expected: PASS — `fail 0` across every suite.
 
-- [ ] **Step 6: Confirm the tree is fully generated**
+- [x] **Step 6: Confirm the tree is fully generated**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 7: Prove the core promise — adding a skill touches one directory**
+- [x] **Step 7: Prove the core promise — adding a skill touches one directory**
 
 ```bash
 mkdir -p skills/scratch-probe
@@ -1813,7 +1813,7 @@ npm run check
 
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add .github/workflows/ci.yml tests/ci.test.mjs
