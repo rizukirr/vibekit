@@ -12,6 +12,7 @@
   "npm": {
     "name": "@rizukirr/vibekit",
     "type": "module",
+    "engines": { "node": ">=24" },
     "scripts": {
       "generate": "node bin/generate.mjs",
       "check": "node bin/generate.mjs --check",

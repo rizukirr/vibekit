@@ -24,6 +24,13 @@ test('files[] lists directories, never individual skills', () => {
   assert.ok(!pkg.files.some(entry => entry.includes('alpha')), 'files[] must not name skills')
 })
 
+// The spec constrains this project to Node 24+. CI pinning node-version only
+// binds CI; an `engines` field is what tells a consumer installing from npm.
+test('declares the engines constraint the spec requires', () => {
+  const pkg = JSON.parse(emit(MODEL)['package.json'])
+  assert.deepEqual(pkg.engines, { node: '>=24' })
+})
+
 test('package.json ends with a trailing newline', () => {
   assert.ok(emit(MODEL)['package.json'].endsWith('\n'))
 })

@@ -30,6 +30,7 @@ export function emit(model) {
     homepage: config.homepage,
     repository: config.repository,
     keywords: config.keywords,
+    engines: config.npm.engines,
     scripts: config.npm.scripts,
     files: FILES,
     publishConfig: config.npm.publishConfig,

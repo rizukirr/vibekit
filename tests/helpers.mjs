@@ -34,6 +34,7 @@ export const MODEL = {
     npm: {
       name: '@rizukirr/vibekit',
       type: 'module',
+      engines: { node: '>=24' },
       scripts: { check: 'node bin/generate.mjs --check' },
       publishConfig: { access: 'public' },
     },
