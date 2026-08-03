@@ -825,7 +825,7 @@ git commit -m "feat: add shared trigger-table and skill-list renderers"
 
 `package.json` and the README skill list are not runtime-specific, so they belong to a `core` emitter the driver always loads rather than being arbitrarily assigned to one runtime.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/core.test.mjs
@@ -864,12 +864,12 @@ test('owns the README skill-list region', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/core.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... core.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/core.mjs
@@ -916,12 +916,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/core.test.mjs`
 Expected: PASS — `pass 5`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/core.mjs tests/core.test.mjs
@@ -936,7 +936,7 @@ git commit -m "feat: add core emitter for package.json and README skill list"
 - Create: `runtimes/claude-code.mjs`
 - Test: `tests/claude-code.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/claude-code.test.mjs
@@ -992,12 +992,12 @@ test('is identified as claude-code', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/claude-code.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... claude-code.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/claude-code.mjs
@@ -1080,12 +1080,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/claude-code.test.mjs`
 Expected: PASS — `pass 7`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/claude-code.mjs tests/claude-code.test.mjs
@@ -1102,7 +1102,7 @@ git commit -m "feat: add claude-code emitter"
 
 The TOML and manifest shapes are taken from the v1 package that shipped and worked, not from documentation. If Codex's format has since moved, this is a data change in one file — which is the property the emitter contract exists to give.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/codex.test.mjs
@@ -1147,12 +1147,12 @@ test('owns the AGENTS.md trigger-table region', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/codex.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... codex.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // runtimes/codex.mjs
@@ -1207,12 +1207,12 @@ export function regions(model) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/codex.test.mjs`
 Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add runtimes/codex.mjs tests/codex.test.mjs
