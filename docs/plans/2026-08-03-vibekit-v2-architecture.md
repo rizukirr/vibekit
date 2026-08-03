@@ -643,7 +643,7 @@ git commit -m "feat: discover and validate skills into a single model"
 - Create: `lib/markers.mjs`
 - Test: `tests/markers.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/markers.test.mjs
@@ -695,12 +695,12 @@ test('throws when the close marker is missing', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/markers.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... markers.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/markers.mjs
@@ -725,12 +725,12 @@ export function applyRegion(text, id, replacement) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/markers.test.mjs`
 Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/markers.mjs tests/markers.test.mjs
