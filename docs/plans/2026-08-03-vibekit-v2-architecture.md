@@ -1410,7 +1410,7 @@ git commit -m "feat: add driver core with collision detection and drift planning
 
 The `git diff --exit-code package.json` clause is the real proof: the generator must reproduce the hand-written seed byte-for-byte, which fails loudly if any emitter is a stub.
 
-- [ ] **Step 1: Write the CLI**
+- [x] **Step 1: Write the CLI**
 
 ```js
 #!/usr/bin/env node
@@ -1465,32 +1465,32 @@ for (const path of remove) {
 console.log('done')
 ```
 
-- [ ] **Step 2: Run the generator**
+- [x] **Step 2: Run the generator**
 
 Run: `npm run generate`
 Expected: a `wrote <path>` line for each generated file, then `done`. `package.json` may or may not appear — it appears only if the generated content differs from the Task 1 seed.
 
-- [ ] **Step 3: Confirm the generator reproduces the hand-written package.json**
+- [x] **Step 3: Confirm the generator reproduces the hand-written package.json**
 
 Run: `git diff --exit-code package.json`
 Expected: exit code 0, no output. If this fails, the `core` emitter and the Task 1 seed disagree — fix the emitter to match the seed, or correct the seed if the emitter is right, then re-run Step 2.
 
-- [ ] **Step 4: Confirm the run is idempotent and check mode agrees**
+- [x] **Step 4: Confirm the run is idempotent and check mode agrees**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 5: Confirm the version was actually stamped**
+- [x] **Step 5: Confirm the version was actually stamped**
 
 Run: `node -e "const p=require('./.claude-plugin/plugin.json');const m=require('./.claude-plugin/marketplace.json');const c=require('./vibekit.config.json');if(p.version!==c.version||m.plugins[0].version!==c.version)throw new Error('version not stamped');console.log('version ok: '+p.version)"`
 Expected: `version ok: 2.0.0`
 
-- [ ] **Step 6: Confirm the fixture skills produced the right command files**
+- [x] **Step 6: Confirm the fixture skills produced the right command files**
 
 Run: `ls commands/`
 Expected: exactly `example-command.md` and `example-command.toml`. No file for `example-plain` or `using-vibekit`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add bin/generate.mjs .vibekit-manifest .claude-plugin .codex-plugin commands hooks/hooks.json CLAUDE.md AGENTS.md README.md package.json
