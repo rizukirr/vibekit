@@ -243,7 +243,7 @@ git commit -m "test(evals): transcript fixtures captured from live probe shapes"
 - Create: `evals/parse.mjs`
 - Test: `tests/eval-parse.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-parse.test.mjs
@@ -302,12 +302,12 @@ test('an unparseable transcript is an error, never a silent non-firing run', () 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-parse.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... parse.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/parse.mjs
@@ -372,12 +372,12 @@ export function parseTranscript(text) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-parse.test.mjs`
 Expected: PASS — `pass 8`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/parse.mjs tests/eval-parse.test.mjs
