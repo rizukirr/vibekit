@@ -1,7 +1,7 @@
 ---
 title: vibekit eval harness
 date: 2026-08-03
-status: draft
+status: approved
 ---
 
 # vibekit eval harness — Design
