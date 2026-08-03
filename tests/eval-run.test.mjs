@@ -1,7 +1,7 @@
 // tests/eval-run.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { parseArgs, planRuns, formatPlan } from '../evals/run.mjs'
+import { parseArgs, planRuns, formatPlan, estimateCost } from '../evals/run.mjs'
 
 const scenarios = [
   { id: 'a', prompt: 'x', n: 3, model: 'haiku' },
@@ -35,4 +35,21 @@ test('plans one run per scenario per repeat per variant', () => {
 test('the printed plan names the session count so an empty plan is visible', () => {
   const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
   assert.match(formatPlan(runs, { candidate: 'HEAD', baseline: null }), /9 sessions/)
+})
+
+test('estimates a cost range from the planned sessions', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  const est = estimateCost(runs, { judge: false })
+  assert.equal(est.sessions, 9)
+  assert.ok(est.low > 0 && est.high > est.low, 'range must be positive and ordered')
+})
+
+test('judging raises the estimate because it doubles the calls', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.ok(estimateCost(runs, { judge: true }).high > estimateCost(runs, { judge: false }).high)
+})
+
+test('the printed plan carries the estimate so a dry run shows the bill', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.match(formatPlan(runs, { candidate: 'HEAD', baseline: null }), /est\. \$/)
 })

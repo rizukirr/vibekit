@@ -37,9 +37,40 @@ export function planRuns(scenarios, opts) {
   return runs
 }
 
+// Measured per-session cost ranges, taken from real runs recorded in
+// evals/results/*.json — not estimated from token prices. Haiku sessions in this
+// project ranged $0.0217 to $0.0887 depending on how much the session did.
+// vibekit: flat per-model range, refine from historical results if the spread
+// starts misleading people.
+const COST_PER_SESSION = {
+  haiku: [0.02, 0.09],
+  sonnet: [0.10, 0.45],
+  opus: [0.50, 2.00],
+}
+const DEFAULT_RANGE = COST_PER_SESSION.sonnet
+
+export function estimateCost(runs, opts) {
+  let low = 0
+  let high = 0
+  for (const run of runs) {
+    const [lo, hi] = COST_PER_SESSION[run.scenario.model] ?? DEFAULT_RANGE
+    low += lo
+    high += hi
+    // A judged run adds one grading call per successful session.
+    if (opts.judge) {
+      const [jlo, jhi] = COST_PER_SESSION.haiku
+      low += jlo
+      high += jhi
+    }
+  }
+  return { sessions: runs.length, low, high }
+}
+
 export function formatPlan(runs, opts) {
+  const est = estimateCost(runs, opts)
   const lines = [
-    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}`,
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}` +
+      ` — est. $${est.low.toFixed(2)}-$${est.high.toFixed(2)}`,
     `candidate: ${opts.candidate}`,
   ]
   if (opts.baseline) lines.push(`baseline: ${opts.baseline}`)
