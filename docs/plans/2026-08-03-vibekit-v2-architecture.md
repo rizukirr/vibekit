@@ -1508,7 +1508,7 @@ git commit -m "feat: add generator CLI and commit first generated output"
 
 The hook is the entire integration. If it fails to execute, every skill is inert with no visible error — which is why this gets a test that actually runs it rather than a code review.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/hook.test.mjs
@@ -1545,12 +1545,12 @@ test('emits the SDK-standard shape when no platform variable is set', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `npm run check:hook`
 Expected: FAIL — both tests error because `hooks/run-hook.cmd` does not exist.
 
-- [ ] **Step 3: Write the polyglot wrapper**
+- [x] **Step 3: Write the polyglot wrapper**
 
 This file is simultaneously a valid Windows batch file and a valid bash script. On Windows, `cmd.exe` runs the batch half and locates bash; on Unix, `:` is a no-op and the heredoc hides the batch text. The extensionless hook filename is deliberate — Claude Code's Windows auto-detection prepends `bash` to any command containing `.sh`.
 
@@ -1592,7 +1592,7 @@ shift
 exec bash "${SCRIPT_DIR}/${SCRIPT_NAME}" "$@"
 ```
 
-- [ ] **Step 4: Write the hook**
+- [x] **Step 4: Write the hook**
 
 The bootstrap skill name is read from `vibekit.config.json` rather than hardcoded, so renaming it in spec 2 needs no hook edit.
 
@@ -1644,30 +1644,30 @@ fi
 exit 0
 ```
 
-- [ ] **Step 5: Make the hook scripts executable**
+- [x] **Step 5: Make the hook scripts executable**
 
 ```bash
 chmod +x hooks/session-start hooks/run-hook.cmd
 ```
 
-- [ ] **Step 6: Add the phrase the test asserts on to the bootstrap skill**
+- [x] **Step 6: Add the phrase the test asserts on to the bootstrap skill**
 
 The test asserts the injected context carries the skill body, not just its name. Confirm `skills/using-vibekit/SKILL.md` contains the words `auto-trigger discipline` — it does, in the `description` line written in Task 1. No edit needed unless that line was changed.
 
 Run: `grep -c "auto-trigger discipline" skills/using-vibekit/SKILL.md`
 Expected: `1`
 
-- [ ] **Step 7: Run the test to confirm it passes**
+- [x] **Step 7: Run the test to confirm it passes**
 
 Run: `npm run check:hook`
 Expected: PASS — `pass 2`, `fail 0`.
 
-- [ ] **Step 8: Confirm the hook did not disturb generated output**
+- [x] **Step 8: Confirm the hook did not disturb generated output**
 
 Run: `npm run check`
 Expected: `up to date`, exit code 0.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add hooks/session-start hooks/run-hook.cmd tests/hook.test.mjs
