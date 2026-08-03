@@ -1007,7 +1007,7 @@ git commit -m "feat(evals): runner CLI with dry-run planning"
 - Create: `evals/judge.md`
 - Modify: `evals/run.mjs`
 
-- [ ] **Step 1: Write the rubric**
+- [x] **Step 1: Write the rubric**
 
 `evals/judge.md`:
 
@@ -1035,7 +1035,7 @@ Scoring:
 Do not explain outside the JSON. Do not wrap the JSON in a code fence.
 ```
 
-- [ ] **Step 2: Add the judge to the runner**
+- [x] **Step 2: Add the judge to the runner**
 
 Insert this function into `evals/run.mjs` immediately after the `requireClaude` function:
 
@@ -1058,7 +1058,7 @@ export function judgeTranscript(scenario, transcript, spawn) {
 }
 ```
 
-- [ ] **Step 3: Mention the judge in the plan output**
+- [x] **Step 3: Mention the judge in the plan output**
 
 In `formatPlan`, change the first line so the judge is visible in a dry run. Replace:
 
@@ -1075,7 +1075,7 @@ with:
   ]
 ```
 
-- [ ] **Step 4: Verify the rubric contract is present**
+- [x] **Step 4: Verify the rubric contract is present**
 
 Run:
 ```bash
@@ -1087,17 +1087,17 @@ console.log('rubric ok');
 ```
 Expected: `rubric ok`
 
-- [ ] **Step 5: Confirm a judged dry run still spawns nothing**
+- [x] **Step 5: Confirm a judged dry run still spawns nothing**
 
 Run: `npm run eval -- --dry-run --judge`
 Expected: a plan whose first line reads `9 sessions + 9 judge calls`, then `dry run — nothing spawned`.
 
-- [ ] **Step 6: Run the full unit suite**
+- [x] **Step 6: Run the full unit suite**
 
 Run: `npm test`
 Expected: `fail 0` across every suite.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add evals/judge.md evals/run.mjs
