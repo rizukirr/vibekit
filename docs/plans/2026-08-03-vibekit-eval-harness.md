@@ -1178,3 +1178,137 @@ Expected: `up to date`, exit 0. The README skill-list region is untouched by the
 git add evals/results README.md
 git commit -m "test(evals): live acceptance run and harness docs"
 ```
+
+---
+
+### Task 10: Dry-run cost estimate → verify: `tests/eval-run.test.mjs` reports `pass 7`; `npm run eval -- --dry-run` prints a line containing `est. $` and `npm run eval -- --dry-run --judge` prints a strictly larger high estimate
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-run.test.mjs`
+
+Added after verification found the spec and README both promise `--dry-run`
+prints "an estimated cost", while the implementation printed only a session
+count. This is the guardrail between a typo in `--scenarios` and an unexpectedly
+large bill, so it is implemented rather than removed from the spec.
+
+The per-session figures are measured, not invented: haiku sessions during this
+project's design and acceptance runs cost between `$0.021719866666666667` and
+`$0.0887088` inclusive, recorded in `evals/results/*.json` and in the design
+probes. The estimate is therefore a range, not a point.
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `tests/eval-run.test.mjs`:
+
+```js
+test('estimates a cost range from the planned sessions', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  const est = estimateCost(runs, { judge: false })
+  assert.equal(est.sessions, 9)
+  assert.ok(est.low > 0 && est.high > est.low, 'range must be positive and ordered')
+})
+
+test('judging raises the estimate because it doubles the calls', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.ok(estimateCost(runs, { judge: true }).high > estimateCost(runs, { judge: false }).high)
+})
+
+test('the printed plan carries the estimate so a dry run shows the bill', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.match(formatPlan(runs, { candidate: 'HEAD', baseline: null }), /est\. \$/)
+})
+```
+
+Update the import line at the top of the file to include `estimateCost`:
+
+```js
+import { parseArgs, planRuns, formatPlan, estimateCost } from '../evals/run.mjs'
+```
+
+- [ ] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: FAIL — `estimateCost` is not exported, so at least one test errors. Report the actual failure text.
+
+- [ ] **Step 3: Add the estimator to `evals/run.mjs`**
+
+Insert immediately after the `planRuns` function:
+
+```js
+// Measured per-session cost ranges, taken from real runs recorded in
+// evals/results/*.json — not estimated from token prices. Haiku sessions in this
+// project ranged $0.0217 to $0.0887 depending on how much the session did.
+// vibekit: flat per-model range, refine from historical results if the spread
+// starts misleading people.
+const COST_PER_SESSION = {
+  haiku: [0.02, 0.09],
+  sonnet: [0.10, 0.45],
+  opus: [0.50, 2.00],
+}
+const DEFAULT_RANGE = COST_PER_SESSION.sonnet
+
+export function estimateCost(runs, opts) {
+  let low = 0
+  let high = 0
+  for (const run of runs) {
+    const [lo, hi] = COST_PER_SESSION[run.scenario.model] ?? DEFAULT_RANGE
+    low += lo
+    high += hi
+    // A judged run adds one grading call per successful session.
+    if (opts.judge) {
+      const [jlo, jhi] = COST_PER_SESSION.haiku
+      low += jlo
+      high += jhi
+    }
+  }
+  return { sessions: runs.length, low, high }
+}
+```
+
+- [ ] **Step 4: Print it in `formatPlan`**
+
+Replace the existing first-line construction:
+
+```js
+  const lines = [
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}`,
+    `candidate: ${opts.candidate}`,
+  ]
+```
+
+with:
+
+```js
+  const est = estimateCost(runs, opts)
+  const lines = [
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}` +
+      ` — est. $${est.low.toFixed(2)}-$${est.high.toFixed(2)}`,
+    `candidate: ${opts.candidate}`,
+  ]
+```
+
+- [ ] **Step 5: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: PASS — `pass 7`, `fail 0`.
+
+- [ ] **Step 6: Confirm the dry run shows the bill and still spawns nothing**
+
+Run: `npm run eval -- --dry-run`
+Expected: a first line of the form `9 sessions — est. $0.18-$0.81`, then the candidate line, per-scenario counts, and `dry run — nothing spawned`.
+
+Run: `npm run eval -- --dry-run --judge`
+Expected: a first line naming both session and judge calls with a strictly larger estimate, then `dry run — nothing spawned`.
+
+- [ ] **Step 7: Run the full suite**
+
+Run: `npm test`
+Expected: `fail 0` across every suite.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add evals/run.mjs tests/eval-run.test.mjs
+git commit -m "feat(evals): print a measured cost range in dry-run output"
+```
