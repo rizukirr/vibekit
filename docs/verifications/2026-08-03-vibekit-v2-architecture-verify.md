@@ -3,7 +3,15 @@
 **Date:** 2026-08-03
 **Spec:** docs/specs/2026-08-03-vibekit-v2-architecture-design.md
 **Plan:** docs/plans/2026-08-03-vibekit-v2-architecture.md
-**Commit verified:** 0818637 (branch `vibe/vibekit-v2-architecture`, base `v2`@0272053)
+**Commit verified:** a5bc4f1 (branch `vibekit-v2-architecture`, base `v2`@022af09)
+**CI run:** [30804224918](https://github.com/rizukirr/vibekit/actions/runs/30804224918) via PR #11 — overall `success`
+
+> **Revision, same day.** The first pass of this report returned **not ready** with
+> three blockers (R1 disagreement, C2 partial, C3 partial). All three were then
+> resolved and re-verified; the sections below reflect the resolved state, and
+> each records what changed. Commit SHAs differ from the first pass because the
+> history was rewritten to strip `Co-Authored-By` trailers — a message-only
+> rewrite, verified by an identical tree hash (`75f603c…`).
 
 **Rigor:** critical-requirements-only three-pass, chosen by the user. Seven
 requirements received three independent passes; nine received a single pass and
@@ -15,14 +23,14 @@ are marked `[single-pass]` below — weaker evidence, but a single-pass `no` or
 - Tests: **pass** — `npm test` → exit 0
 
   ```
-  ℹ tests 59
+  ℹ tests 60
   ℹ suites 0
-  ℹ pass 59
+  ℹ pass 60
   ℹ fail 0
   ℹ cancelled 0
   ℹ skipped 0
   ℹ todo 0
-  ℹ duration_ms 258.279087
+  ℹ duration_ms 102.638083
   ```
 
 - Drift check / build: **pass** — `npm run check` → exit 0
@@ -47,46 +55,80 @@ are marked `[single-pass]` below — weaker evidence, but a single-pass `no` or
 - Type checker: N/A — no TypeScript in this repo.
 - Linter: N/A — none configured (zero dependencies).
 
+- CI, run 30804224918 (PR #11, `pull_request` trigger): **all green**
+
+  ```
+  overall: success
+  hook (ubuntu-latest): success
+  validate: success
+  hook (windows-latest): success
+  ```
+
+  `hook (windows-latest)` step detail — this is the C3 evidence, and the only
+  machine-executed proof that the polyglot wrapper's batch half works:
+
+  ```
+  Set up job: success
+  Run actions/checkout@v4: success
+  Run actions/setup-node@v4: success
+  Smoke-test the SessionStart hook: success
+  Post Run actions/setup-node@v4: success
+  Post Run actions/checkout@v4: success
+  Complete job: success
+  ```
+
+  The 60th local test is `✔ declares the engines constraint the spec requires`,
+  added by the C2 fix.
+
 - `git status --porcelain`:
 
   ```
   ```
   (empty)
 
-- `git log --oneline 0272053..HEAD`:
+- `git log --oneline 022af09..HEAD`:
 
   ```
-  0818637 chore: complete Task 12 — CI wiring
-  2a9c820 ci: run drift check, unit tests, and two-OS hook smoke test
-  10f3e00 chore: complete Task 11 — SessionStart hook
-  76e964e feat: add SessionStart hook and polyglot windows wrapper
-  18cd017 chore: complete Task 10 — Generator CLI and first generation
-  f8fa402 feat: add generator CLI and commit first generated output
-  763975b chore: complete Task 9 — Driver core
-  a36aec3 feat: add driver core with collision detection and drift planning
-  f85fd06 chore: complete parallel-group emitters
-  0713022 feat: add codex emitter
-  3f3edb0 feat: add claude-code emitter
-  97425c0 feat: add core emitter for package.json and README skill list
-  73bd328 chore: complete Task 5 — Shared table rendering
-  bf9353e feat: add shared trigger-table and skill-list renderers
-  650b691 chore: complete Task 4 — Marker regions
-  4e932c0 feat: add marker-region replacement for mixed markdown files
-  a2db88f chore: complete Task 3 — Skill discovery and validation
-  c14f904 feat: discover and validate skills into a single model
-  cf42ee2 chore: complete Task 2 — Frontmatter parser
-  83cc8d2 feat: add restricted-subset frontmatter parser
-  1e0eab7 chore: complete Task 1 — Repo skeleton and config
-  ec03681 feat: repo skeleton, config, and three fixture skills
+  a5bc4f1 fix: declare engines node>=24 and correct the R1 spec wording
+  a12d887 docs: verification report for vibekit v2 architecture
+  e485a57 chore: complete Task 12 — CI wiring
+  29e17c9 ci: run drift check, unit tests, and two-OS hook smoke test
+  b11f859 chore: complete Task 11 — SessionStart hook
+  da236b7 feat: add SessionStart hook and polyglot windows wrapper
+  f202530 chore: complete Task 10 — Generator CLI and first generation
+  ae361de feat: add generator CLI and commit first generated output
+  3cc79c8 chore: complete Task 9 — Driver core
+  d67d712 feat: add driver core with collision detection and drift planning
+  e0fc077 chore: complete parallel-group emitters
+  0fe5846 feat: add codex emitter
+  85654ff feat: add claude-code emitter
+  e6922d5 feat: add core emitter for package.json and README skill list
+  c67350e chore: complete Task 5 — Shared table rendering
+  045f0e3 feat: add shared trigger-table and skill-list renderers
+  fbe2233 chore: complete Task 4 — Marker regions
+  53ddb4b feat: add marker-region replacement for mixed markdown files
+  2b1f671 chore: complete Task 3 — Skill discovery and validation
+  db395e1 feat: discover and validate skills into a single model
+  7b301d5 chore: complete Task 2 — Frontmatter parser
+  0f74d8c feat: add restricted-subset frontmatter parser
+  4140c18 chore: complete Task 1 — Repo skeleton and config
+  ac26b09 feat: repo skeleton, config, and three fixture skills
   ```
 
 - Surgical-diff pass: **clean** — zero orphans across all 40 changed files.
 
 ## Requirements
 
-### R1. "Adding a skill touches exactly one directory and nothing else in the repo."
-- Passes: partial / no / partial
-- Verdict: **disagreement: escalate**
+### R1. "Adding a skill requires editing exactly one directory; every other affected file is regenerated by `npm run generate` and enforced by `npm run check`."
+- Passes: yes / yes / yes (re-run against the amended wording)
+- Verdict: **satisfied**
+- **Resolution.** The original wording was *"Adding a skill touches exactly one
+  directory and nothing else in the repo."* Three independent passes returned
+  partial / no / partial — not because the implementation was wrong, but because
+  the sentence overclaimed: `npm run generate` legitimately rewrites three doc
+  regions. The user chose to amend the spec to describe what was actually built,
+  and the three passes were re-run against the new sentence. The evidence below
+  is unchanged; only the requirement it is judged against changed.
 - Evidence:
   - `lib/model.mjs:14` — discovery is a glob, not a list:
     ```
@@ -111,7 +153,8 @@ are marked `[single-pass]` below — weaker evidence, but a single-pass `no` or
      M README.md
     ?? skills/probe-verify/
     ```
-- See §Disagreements.
+  - CI enforcement: `.github/workflows/ci.yml:27` → `run: npm run check`; the
+    `validate` job concluded `success` on run 30804224918.
 
 ### R2. "Adding a runtime is one emitter file plus one config entry — no change to the generator core, no change to any skill."
 - Passes: yes / yes / yes
@@ -186,18 +229,42 @@ are marked `[single-pass]` below — weaker evidence, but a single-pass `no` or
 - Evidence: no deps/devDeps, no lockfile, `external/` gitignored, no source file imports from it.
 
 ### C2. "Node 24+ (already the CI baseline; needed for type-stripping in checks)." `[single-pass]`
-- Verdict: **partial**
-- Reason: CI pins `node-version: '24'` in both jobs, but `package.json` declares no `engines` field, so the constraint is unenforced for consumers installing from npm. Local runs used Node v26.4.0; Node 24 itself was never exercised.
-- Evidence: `grep -n "engines" package.json` → `(no engines field declared)`
+- Verdict: **satisfied** (was `partial`; fixed in commit a5bc4f1)
+- **Resolution.** The first pass found CI pinned `node-version: '24'` but
+  `package.json` declared no `engines` field, leaving the constraint unenforced
+  for anyone installing from npm. Fixed — and notably it could not be fixed by
+  editing `package.json`, which is generated. The field was added to
+  `vibekit.config.json`, threaded through `runtimes/core.mjs`, and regenerated:
+
+  ```
+  "engines": {
+    "node": ">=24"
+  },
+  ```
+
+  Pinned by a new test, `✔ declares the engines constraint the spec requires`.
+  Both CI jobs ran on Node 24 and concluded `success`, so Node 24 is now
+  exercised rather than merely declared.
 
 ### C3. "Must work on Windows — the SessionStart hook is the entire integration, and its polyglot batch half can only be verified on a Windows runner." `[single-pass]`
-- Verdict: **partial**
-- Reason: the `windows-latest` matrix leg is configured but has never executed. The branch has never been pushed, so CI has not run at all against this work.
+- Verdict: **satisfied** (was `partial`; no proxy needed — real evidence obtained)
+- **Resolution.** The first pass found the `windows-latest` leg had never
+  executed. The cause was subtler than an unpushed branch: `on.push.branches` is
+  `[main, v2]`, so pushing a feature branch triggers nothing at all. This repo
+  has always gotten branch CI through the `pull_request` trigger. Draft PR #11
+  was opened against `v2`, which fired the run.
 - Evidence:
   - `.github/workflows/ci.yml` defines `matrix: os: [ubuntu-latest, windows-latest]` running `npm run check:hook`.
   - `hooks/run-hook.cmd` committed with mode 100755, byte-identical to the plan's polyglot block.
-  - Remote branches present: `main`, `exec-dispatch-defers`, `remove-duplicate-plugin-tree`, `windows-polyglot-hook`. `vibe/vibekit-v2-architecture` is absent, as is `v2`.
-- Proxy check available: push the branch and let the `hook (windows-latest)` job run; it is the only machine-executed proof of the batch half.
+  - Run 30804224918, job `hook (windows-latest)`, step:
+
+    ```
+    Smoke-test the SessionStart hook: success
+    ```
+
+    A real Windows runner executed the batch half of the polyglot wrapper,
+    located bash, ran `hooks/session-start`, and the hook test asserted the
+    emitted JSON shape. This is the claim nothing on a Unix box can make.
 
 ### C4. "Generated files are committed. A user installing... gets working output with no build step." `[single-pass]`
 - Verdict: **satisfied**
@@ -209,28 +276,45 @@ are marked `[single-pass]` below — weaker evidence, but a single-pass `no` or
 
 ## Disagreements
 
-### R1 — "Adding a skill touches exactly one directory and nothing else in the repo."
+None outstanding.
 
-- Pass 1: **partial** — "No hand edits outside skills/... but the probe shows adding a skill still mutates three tracked root files (README/CLAUDE/AGENTS) via npm run generate, so the requirement holds only under the hand-edited reading and fails under the literal all-changed-files reading."
-- Pass 2: **no** — "Live probe shows adding one skill dir also leaves AGENTS.md, CLAUDE.md and README.md modified (and `npm run check` fails until `npm run generate` is run), so the commit touches four paths, not one directory — hand-edits are confined to one directory, but the requirement as written says nothing else in the repo changes."
-- Pass 3: **partial** — "No hand-edits outside skills/ are needed... but the live probe shows adding a skill still leaves three tracked root files modified via a mandatory `npm run generate`, so the literal 'nothing else in the repo' claim holds only under a hand-edited-files reading."
-
-**Action required.** The three passes agree on the facts and disagree on the wording. The engineering outcome is exactly what was designed — the author edits one directory, the machine updates the rest, and CI catches it if they forget. But the spec sentence says "nothing else in the repo," and three generated files do change. The user must decide:
-
-1. Amend the spec sentence to say what was actually built, e.g. *"Adding a skill requires editing exactly one directory; every other affected file is regenerated by `npm run generate` and enforced by `npm run check`."* — then this requirement is satisfied as written.
-2. Accept the requirement as satisfied under the hand-edited reading and record that interpretation.
-3. Treat it as a genuine miss and change the design (no viable option exists that keeps static manifests and committed output).
+**Resolved:** R1 originally split partial / no / partial. The three passes agreed
+on every fact and disagreed only on how to read the sentence — all three noted
+that no hand-edit outside `skills/` is required, and that three generated files
+change anyway. That is a specification defect, not an implementation one, which
+is exactly what the disagreement rule is designed to surface: had the majority
+been taken, a `partial` would have been silently rounded to satisfied and the
+overclaiming sentence would have shipped. The spec was amended and the passes
+re-run: yes / yes / yes.
 
 ## Overall verdict
 
-**not ready**
+**ready**
 
-Blockers:
+All 16 requirements satisfied. All repo-level checks pass. No disagreements. The
+surgical-diff pass returned `clean` with zero orphans. CI is green on all three
+jobs, including `hook (windows-latest)`.
 
-- **R1** — three passes disagree (partial / no / partial). Spec wording ambiguity, not an implementation defect. Requires a user decision.
-- **C2** — `partial`. `package.json` declares no `engines` field, so the documented Node 24+ constraint is unenforced for consumers.
-- **C3** — `partial`. The Windows CI leg has never executed because the branch has never been pushed; the polyglot batch half is unverified on a real Windows runner.
+The three blockers from the first pass of this report were resolved as recorded
+above: R1 by amending an overclaiming spec sentence and re-running its three
+passes; C2 by routing an `engines` field through the config and emitter; C3 by
+opening PR #11 so the `pull_request` trigger would fire the Windows job.
 
-Everything else passed, including all repo-level checks and a clean surgical-diff audit.
+Two items carried forward, neither blocking:
 
-Suggested next step: resolve R1 by amending the spec sentence (option 1 above), add an `engines` field for C2, and push the branch so the `hook (windows-latest)` job supplies the missing C3 evidence. Then re-run verify-gate.
+- `.vibekit-manifest` does not list itself, because `bin/generate.mjs` evaluates
+  `Object.keys(files)` before assigning `files[MANIFEST]`. Inert — `MANIFEST` is
+  always present in `files`, so `planChanges` can never select it for removal.
+  Originates in the plan, not the implementation.
+- `tests/hook.test.mjs` is missing the leading `// tests/hook.test.mjs` path
+  comment that every other test file carries. Cosmetic.
+
+One process finding worth recording, because it nearly hid C3: the plan's
+premortem correctly noted that CI behavior "cannot be verified locally" and
+tightened Task 12's verify clause to what *was* locally checkable — that the
+workflow invokes npm scripts that exist. That check passed and was the wrong
+check. It confirmed the workflow's commands were valid without confirming the
+workflow would ever run. A verify clause scoped to what is convenient to test
+can pass while the thing it stands in for is broken.
+
+Next: review-pack, then user sign-off on the diff, then finish-branch.
