@@ -1197,7 +1197,7 @@ project's design and acceptance runs cost between `$0.021719866666666667` and
 `$0.0887088` inclusive, recorded in `evals/results/*.json` and in the design
 probes. The estimate is therefore a range, not a point.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-run.test.mjs`:
 
@@ -1226,12 +1226,12 @@ Update the import line at the top of the file to include `estimateCost`:
 import { parseArgs, planRuns, formatPlan, estimateCost } from '../evals/run.mjs'
 ```
 
-- [ ] **Step 2: Run the tests to confirm they fail**
+- [x] **Step 2: Run the tests to confirm they fail**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: FAIL — `estimateCost` is not exported, so at least one test errors. Report the actual failure text.
 
-- [ ] **Step 3: Add the estimator to `evals/run.mjs`**
+- [x] **Step 3: Add the estimator to `evals/run.mjs`**
 
 Insert immediately after the `planRuns` function:
 
@@ -1266,7 +1266,7 @@ export function estimateCost(runs, opts) {
 }
 ```
 
-- [ ] **Step 4: Print it in `formatPlan`**
+- [x] **Step 4: Print it in `formatPlan`**
 
 Replace the existing first-line construction:
 
@@ -1288,12 +1288,12 @@ with:
   ]
 ```
 
-- [ ] **Step 5: Run the tests to confirm they pass**
+- [x] **Step 5: Run the tests to confirm they pass**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: PASS — `pass 7`, `fail 0`.
 
-- [ ] **Step 6: Confirm the dry run shows the bill and still spawns nothing**
+- [x] **Step 6: Confirm the dry run shows the bill and still spawns nothing**
 
 Run: `npm run eval -- --dry-run`
 Expected: a first line of the form `9 sessions — est. $0.18-$0.81`, then the candidate line, per-scenario counts, and `dry run — nothing spawned`.
@@ -1301,12 +1301,12 @@ Expected: a first line of the form `9 sessions — est. $0.18-$0.81`, then the c
 Run: `npm run eval -- --dry-run --judge`
 Expected: a first line naming both session and judge calls with a strictly larger estimate, then `dry run — nothing spawned`.
 
-- [ ] **Step 7: Run the full suite**
+- [x] **Step 7: Run the full suite**
 
 Run: `npm test`
 Expected: `fail 0` across every suite.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add evals/run.mjs tests/eval-run.test.mjs
