@@ -72,7 +72,7 @@ Modified:
 
 `package.json` is generated output. The `eval` script must be added to `vibekit.config.json` and regenerated — hand-editing `package.json` would be reverted by the next `npm run generate` and would fail `npm run check`.
 
-- [ ] **Step 1: Add the worktree directory to `.gitignore`**
+- [x] **Step 1: Add the worktree directory to `.gitignore`**
 
 Append one line, so the file reads:
 
@@ -82,7 +82,7 @@ external/
 .eval-worktrees/
 ```
 
-- [ ] **Step 2: Add the eval script to `vibekit.config.json`**
+- [x] **Step 2: Add the eval script to `vibekit.config.json`**
 
 In the `npm.scripts` object, add one entry. The block becomes:
 
@@ -96,7 +96,7 @@ In the `npm.scripts` object, add one entry. The block becomes:
     },
 ```
 
-- [ ] **Step 3: Write `evals/scenarios.json`**
+- [x] **Step 3: Write `evals/scenarios.json`**
 
 Three scenarios against skills that exist today. `footprint` deliberately does nothing but start a session — its purpose is measuring vibekit's input cost.
 
@@ -126,7 +126,7 @@ Three scenarios against skills that exist today. `footprint` deliberately does n
 ]
 ```
 
-- [ ] **Step 4: Write `evals/thresholds.json`**
+- [x] **Step 4: Write `evals/thresholds.json`**
 
 ```json
 {
@@ -140,12 +140,12 @@ Three scenarios against skills that exist today. `footprint` deliberately does n
 
 `footprint` has no expectation to satisfy, so its floor is 0; it exists for its token numbers. `bootstrap-injected` is deterministic — the hook either fires or it does not — so its floor is 1.
 
-- [ ] **Step 5: Regenerate and verify**
+- [x] **Step 5: Regenerate and verify**
 
 Run: `npm run generate && npm run check`
 Expected: `wrote package.json` then `up to date`, exit 0.
 
-- [ ] **Step 6: Confirm the eval script landed and evals/ does not ship**
+- [x] **Step 6: Confirm the eval script landed and evals/ does not ship**
 
 Run:
 ```bash
@@ -153,7 +153,7 @@ node -e "const p=require('./package.json'); if(!p.scripts.eval) throw new Error(
 ```
 Expected: `ok: node evals/run.mjs`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add .gitignore vibekit.config.json package.json evals/scenarios.json evals/thresholds.json
