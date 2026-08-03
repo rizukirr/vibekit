@@ -83,7 +83,7 @@ Modified:
 - Create: `CLAUDE.md`, `AGENTS.md`, `README.md`
 - Test: `tests/skeleton.test.mjs`
 
-- [ ] **Step 1: Write `vibekit.config.json`**
+- [x] **Step 1: Write `vibekit.config.json`**
 
 The `npm` block is the complete npm metadata; Task 6's `core` emitter composes `package.json` from it plus the generated `files[]` and `version`. Nothing outside this file names a skill.
 
@@ -113,7 +113,7 @@ The `npm` block is the complete npm metadata; Task 6's `core` emitter composes `
 }
 ```
 
-- [ ] **Step 2: Write the seed `package.json`**
+- [x] **Step 2: Write the seed `package.json`**
 
 Hand-written now so `npm test` works before the generator exists. Task 10 proves the generator reproduces this exact content.
 
@@ -162,7 +162,7 @@ Hand-written now so `npm test` works before the generator exists. Task 10 proves
 }
 ```
 
-- [ ] **Step 3: Write the three stub skills**
+- [x] **Step 3: Write the three stub skills**
 
 These are empty fixtures. They carry no v1 content and exist only to exercise emission paths.
 
@@ -218,7 +218,7 @@ and emits no command file. Uses `gate: hard` so the Gate column has a non-defaul
 value to render. Deleted once the real pipeline is authored.
 ```
 
-- [ ] **Step 4: Write the three mixed Markdown files with marker regions**
+- [x] **Step 4: Write the three mixed Markdown files with marker regions**
 
 The generator replaces only what is between the markers. Everything else is prose you own.
 
@@ -277,7 +277,7 @@ Claude Code: `/plugin marketplace add rizukirr/vibekit`
 - `npm test` — run the unit tests
 ```
 
-- [ ] **Step 5: Write the skeleton test**
+- [x] **Step 5: Write the skeleton test**
 
 ```js
 // tests/skeleton.test.mjs
@@ -310,12 +310,12 @@ test('mixed markdown files carry balanced marker regions', () => {
 })
 ```
 
-- [ ] **Step 6: Run the tests**
+- [x] **Step 6: Run the tests**
 
 Run: `npm test`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add vibekit.config.json package.json skills CLAUDE.md AGENTS.md README.md tests/skeleton.test.mjs
