@@ -4,8 +4,9 @@
 **Spec:** docs/specs/2026-08-03-vibekit-v2-architecture-design.md
 **Plan:** docs/plans/2026-08-03-vibekit-v2-architecture.md
 **Verify report:** docs/verifications/2026-08-03-vibekit-v2-architecture-verify.md (verdict `ready`)
-**Commits under review:** 022af09..c651fdd on `vibekit-v2-architecture`
-**Fixes applied:** 46ef8bd — see §Resolution
+**Commits reviewed:** 022af09..c651fdd on `vibekit-v2-architecture` (findings below)
+**Fixes applied:** 46ef8bd, 41e8820 — see §Resolution
+**Signed off at:** 41e8820 — the user's `yes` followed the fixes and a green CI run on that commit, so the sign-off covers 022af09..41e8820, not just the range the findings were raised against.
 
 ## Diff summary
 
