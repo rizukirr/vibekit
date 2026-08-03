@@ -427,7 +427,7 @@ git commit -m "feat: add restricted-subset frontmatter parser"
 
 Note that duplicate skill names are structurally impossible here rather than checked: directory names are unique by the filesystem, and `name` must equal its directory. That is one fewer rule to maintain.
 
-- [ ] **Step 1: Write the test helper**
+- [x] **Step 1: Write the test helper**
 
 ```js
 // tests/helpers.mjs
@@ -477,7 +477,7 @@ export const MODEL = {
 }
 ```
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 ```js
 // tests/model.test.mjs
@@ -551,12 +551,12 @@ test('throws when the configured bootstrap skill does not exist', () => {
 })
 ```
 
-- [ ] **Step 3: Run the test to confirm it fails**
+- [x] **Step 3: Run the test to confirm it fails**
 
 Run: `node --test tests/model.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... model.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 ```js
 // lib/model.mjs
@@ -623,12 +623,12 @@ export function buildModel(config, skillsDir) {
 }
 ```
 
-- [ ] **Step 5: Run the test to confirm it passes**
+- [x] **Step 5: Run the test to confirm it passes**
 
 Run: `node --test tests/model.test.mjs`
 Expected: PASS — `pass 7`, `fail 0`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/model.mjs tests/helpers.mjs tests/model.test.mjs
