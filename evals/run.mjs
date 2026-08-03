@@ -38,7 +38,10 @@ export function planRuns(scenarios, opts) {
 }
 
 export function formatPlan(runs, opts) {
-  const lines = [`${runs.length} sessions`, `candidate: ${opts.candidate}`]
+  const lines = [
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}`,
+    `candidate: ${opts.candidate}`,
+  ]
   if (opts.baseline) lines.push(`baseline: ${opts.baseline}`)
   for (const [id, count] of Object.entries(
     runs.reduce((acc, r) => ({ ...acc, [`${r.variant}:${r.scenario.id}`]: (acc[`${r.variant}:${r.scenario.id}`] ?? 0) + 1 }), {}),
@@ -52,6 +55,23 @@ function requireClaude() {
   const probe = spawnSync('claude', ['--version'], { encoding: 'utf8' })
   if (probe.status !== 0) {
     throw new Error('claude CLI not available or not authenticated — cannot run evals')
+  }
+}
+
+// The judge is the same claude binary, so it adds no dependency. Opt-in because
+// it doubles session count and cost.
+export function judgeTranscript(scenario, transcript, spawn) {
+  const rubric = readFileSync('evals/judge.md', 'utf8')
+  const prompt = `${rubric}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
+  const proc = spawn('claude', ['-p', prompt, '--output-format', 'json', '--model', 'haiku'], {
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  })
+  try {
+    const outer = JSON.parse(proc.stdout ?? '')
+    return JSON.parse(outer.result)
+  } catch {
+    return { judge_error: true, followed: null, score: null, why: 'unparseable judge output' }
   }
 }
 
