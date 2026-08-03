@@ -21,3 +21,17 @@ test('renders a skill list with descriptions', () => {
   assert.ok(out.includes('- `alpha` — Alpha does A.'))
   assert.ok(out.includes('- `beta` — Beta does B.'))
 })
+
+// B1: a pipe in a cell silently added a column, corrupting the auto-trigger map.
+test('escapes pipes in table cells so a row keeps three columns', () => {
+  const skills = [{ name: 'probe', description: 'd', trigger: 'When A | B happens', command: false, gate: 'none', dir: 'probe' }]
+  const row = triggerTable(skills).split('\n')[2]
+  assert.equal(row, '| When A \\| B happens | `probe` | none |')
+  // Count unescaped delimiters: a well-formed 3-column row has exactly 4.
+  const delimiters = row.split('').filter((c, i) => c === '|' && row[i - 1] !== '\\').length
+  assert.equal(delimiters, 4)
+})
+
+test('leaves pipe-free cells untouched', () => {
+  assert.ok(triggerTable(MODEL.skills).includes('| When A happens | `alpha` | hard |'))
+})

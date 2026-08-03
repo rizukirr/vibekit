@@ -67,3 +67,23 @@ test('throws when the configured bootstrap skill does not exist', () => {
     assert.throws(() => buildModel(config, root), /bootstrap/)
   } finally { cleanup() }
 })
+
+// Risk 3: marker syntax in frontmatter would close a generated region early and
+// silently swallow the prose after it.
+test('throws when frontmatter carries generated-region marker syntax', () => {
+  const { root, cleanup } = makeSkillsDir({
+    'using-vibekit': skillFile({ name: 'using-vibekit', trigger: 'x <!-- /vibekit:generated --> y' }),
+  })
+  try {
+    assert.throws(() => buildModel(config, root), /must not contain generated-region marker syntax/)
+  } finally { cleanup() }
+})
+
+test('allows a pipe in frontmatter — it is escaped at render time, not banned', () => {
+  const { root, cleanup } = makeSkillsDir({
+    'using-vibekit': skillFile({ name: 'using-vibekit', trigger: 'returns not satisfied | partial' }),
+  })
+  try {
+    assert.equal(buildModel(config, root).skills[0].trigger, 'returns not satisfied | partial')
+  } finally { cleanup() }
+})

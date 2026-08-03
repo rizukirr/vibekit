@@ -1,27 +1,23 @@
 #!/usr/bin/env node
 // bin/generate.mjs
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs'
+import { writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { build, mergeEmitters, applyRegions, planChanges, MANIFEST } from '../lib/build.mjs'
+import { build } from '../lib/build.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const check = process.argv.includes('--check')
 
-const io = {
-  read(path) {
-    try { return readFileSync(join(ROOT, path), 'utf8') } catch { return null }
-  },
+// Validation failures are authoring mistakes, not crashes. A skill author who
+// mistypes a gate value should see the sentence, not a Node stack trace.
+let built
+try {
+  built = await build(ROOT)
+} catch (error) {
+  console.error(`vibekit: ${error.message}`)
+  process.exit(1)
 }
-
-const { emitters, model } = await build(ROOT)
-const { files, owner } = mergeEmitters(emitters, model)
-applyRegions(emitters, model, files, owner, io)
-
-const previous = (io.read(MANIFEST) ?? '').split('\n').filter(Boolean)
-files[MANIFEST] = `${Object.keys(files).sort().join('\n')}\n`
-
-const { write, remove } = planChanges(files, io, previous)
+const { files, write, remove } = built
 
 if (check) {
   if (write.length === 0 && remove.length === 0) {

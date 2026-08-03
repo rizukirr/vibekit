@@ -3,7 +3,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { writeFileSync, mkdirSync, cpSync } from 'node:fs'
 import { join } from 'node:path'
-import { build, mergeEmitters, planChanges } from '../lib/build.mjs'
+import { build, mergeEmitters, applyRegions, planChanges, MANIFEST } from '../lib/build.mjs'
 import { makeSkillsDir, skillFile, MODEL } from './helpers.mjs'
 
 const alpha = { id: 'alpha', emit: () => ({ 'a.json': '1\n' }) }
@@ -53,6 +53,37 @@ test('never removes a path absent from the previous manifest', () => {
 test('loads core plus every configured runtime, in that order', async () => {
   const { emitters } = await build(process.cwd())
   assert.deepEqual(emitters.map(e => e.id), ['core', 'claude-code', 'codex'])
+})
+
+// W2: the merge → regions → manifest → plan sequencing used to live untested in
+// the CLI. These assert the assembly, not just its parts.
+test('assembles every generated path and reports no drift on a clean tree', async () => {
+  const { files, write, remove } = await build(process.cwd())
+  for (const path of ['package.json', 'CLAUDE.md', 'AGENTS.md', 'README.md',
+                      '.claude-plugin/plugin.json', '.codex-plugin/plugin.json', MANIFEST]) {
+    assert.ok(path in files, `${path} missing from assembled output`)
+  }
+  assert.deepEqual(write, [], 'clean tree must report no stale files')
+  assert.deepEqual(remove, [], 'clean tree must report no orphans')
+})
+
+// N1: the manifest used to omit itself, because Object.keys(files) was read
+// before files[MANIFEST] was assigned.
+test('the manifest lists itself and every other generated path, sorted', async () => {
+  const { files } = await build(process.cwd())
+  const listed = files[MANIFEST].split('\n').filter(Boolean)
+  assert.ok(listed.includes(MANIFEST), 'manifest must list itself')
+  assert.deepEqual(listed, [...Object.keys(files)].sort())
+  assert.deepEqual(listed, [...listed].sort(), 'manifest must be sorted')
+})
+
+test('applyRegions mutates in place and returns nothing', () => {
+  const files = {}
+  const io = { read: () => '<!-- vibekit:generated:r -->\n<!-- /vibekit:generated -->\n' }
+  const emitter = { id: 'e', emit: () => ({}), regions: () => ({ 'D.md': { r: 'rows' } }) }
+  const result = applyRegions([emitter], MODEL, files, {}, io)
+  assert.equal(result, undefined)
+  assert.ok(files['D.md'].includes('rows'))
 })
 
 test('throws when the config names an emitter that does not exist', async () => {
