@@ -798,7 +798,7 @@ git commit -m "feat(evals): git-ref worktree materialisation with removal guard"
 
 The dry-run assertion checks both that nothing spawned *and* that the plan is non-empty — a dry run that silently did nothing would otherwise look identical to a correct one.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-run.test.mjs
@@ -841,12 +841,12 @@ test('the printed plan names the session count so an empty plan is visible', () 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... run.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/run.mjs
@@ -977,22 +977,22 @@ if (process.argv[1] && process.argv[1].endsWith('run.mjs')) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 5: Confirm a real dry run spawns nothing**
+- [x] **Step 5: Confirm a real dry run spawns nothing**
 
 Run: `npm run eval -- --dry-run`
 Expected: a plan listing `9 sessions`, then `dry run — nothing spawned`. No `claude` process starts and no worktree is created.
 
-- [ ] **Step 6: Confirm no worktree leaked**
+- [x] **Step 6: Confirm no worktree leaked**
 
 Run: `git worktree list`
 Expected: only the main worktree.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add evals/run.mjs tests/eval-run.test.mjs
