@@ -21,6 +21,25 @@ The Codex emitter's tests assert that it produces what we decided it should
 produce, which says nothing about whether Codex accepts it. Treat Codex support
 as unproven until someone installs the generated plugin and reports back.
 
+## Evals
+
+Skills are behaviour-shaping prompts, so the only way to know one works is to
+watch it fire in a real session.
+
+```
+npm run eval                                  # candidate only, deterministic
+npm run eval -- --baseline main --candidate HEAD   # A/B two refs
+npm run eval -- --dry-run                     # print the plan and cost, spawn nothing
+npm run eval -- --judge                       # also grade whether the skill was followed
+```
+
+Variants are git refs materialised as throwaway worktrees, so there is never a
+second `skills/` tree to drift. Sessions run in a disposable temp directory, not
+the repo.
+
+This costs real money and needs an authenticated `claude` CLI, so it is a manual
+gate — not part of the free CI (`check`, `test`, `check:hook`).
+
 ## Install
 
 Claude Code: `/plugin marketplace add rizukirr/vibekit`
