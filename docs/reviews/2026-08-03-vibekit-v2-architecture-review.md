@@ -5,6 +5,7 @@
 **Plan:** docs/plans/2026-08-03-vibekit-v2-architecture.md
 **Verify report:** docs/verifications/2026-08-03-vibekit-v2-architecture-verify.md (verdict `ready`)
 **Commits under review:** 022af09..c651fdd on `vibekit-v2-architecture`
+**Fixes applied:** 46ef8bd — see §Resolution
 
 ## Diff summary
 
@@ -172,3 +173,47 @@ above and in PR #11.
 - [ ] User reviewed findings.
 - [ ] User reviewed diff.
 - [ ] User approves proceeding to finish-branch.
+
+
+---
+
+## Resolution
+
+The user chose `fix` on all findings. Applied in commit 46ef8bd.
+
+| ID | Status | What changed |
+|---|---|---|
+| B1 | fixed | `lib/table.mjs` escapes `\|` in every table cell. Re-probed: `\| When A \\\| B happens \| \`probe-hostile\` \| none \|` — three columns. Two tests added, one counting unescaped delimiters so a regression cannot pass by matching a string. |
+| — | fixed | **Root cause.** `lib/model.mjs` now rejects generated-region marker syntax in frontmatter, closing self-critique risk 3 by the same mechanism. Pipes are deliberately *not* rejected — they are legitimate prose and are escaped at render time. |
+| W1 | fixed | The amendment is now recorded as a comment beside the amended goal in the spec, so a reader of that file alone can see it happened and why. |
+| W2 | fixed | Assembly moved out of the CLI into `build()`. Three tests now cover the sequencing: full-path assembly, clean-tree drift, and manifest composition. `bin/generate.mjs` is down to argument parsing, error reporting, and I/O. |
+| W3 | fixed | README gains a **Runtime support** table stating plainly that Codex output has never been confirmed against a live install, and that the emitter tests are circular. The limitation is disclosed rather than removed — validating it needs a Codex install. |
+| W4 | fixed | `tests/hook.test.mjs` asserts `JSON.parse` succeeds on a bootstrap body containing quotes, backslashes and tabs. Hook suite is now 3 tests. |
+| N1 | fixed | `.vibekit-manifest` lists itself; a test asserts it equals the sorted key set. |
+| N2 | fixed | `applyRegions` returns nothing; a test pins `undefined`. |
+| N3 | fixed | Path comment restored. |
+
+### Found while fixing
+
+Validation failures printed a Node stack trace. Every authoring mistake — a
+missing `trigger:`, a bad gate value — would have greeted a skill author that
+way, which undercuts the goal that adding a skill is easy. `bin/generate.mjs`
+now catches and prints one line:
+
+```
+$ npm run check
+vibekit: probe-bad: frontmatter 'trigger' is required and must be a non-empty string
+(exit 1)
+```
+
+### Post-fix state
+
+- 68 tests pass (was 60), `fail 0`
+- `npm run check` → `up to date`
+- `npm run check:hook` → `pass 3`
+- Hand-written source: **460 lines** (down from 499, despite four new behaviours —
+  the assembly move deleted more CLI glue than it added)
+- Diff vs base: 43 files, +1991 / −84
+
+CI must go green again on the new commits before finish-branch; the prior run
+covered c651fdd, not 46ef8bd.
