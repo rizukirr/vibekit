@@ -172,7 +172,7 @@ git commit -m "feat(evals): harness skeleton, scenarios and thresholds"
 
 These encode event shapes captured from live probes on 2026-08-03. They are trimmed to the fields the parser reads — real transcripts carry ~25 more keys per event and embed session ids and local paths, which do not belong in the repo.
 
-- [ ] **Step 1: Write `evals/fixtures/skill-fired.jsonl`**
+- [x] **Step 1: Write `evals/fixtures/skill-fired.jsonl`**
 
 ```
 {"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Bash","Read","Skill"],"skills":["vibekit:example-command","vibekit:example-plain","vibekit:using-vibekit"],"slash_commands":["vibekit:example-command"]}
@@ -181,7 +181,7 @@ These encode event shapes captured from live probes on 2026-08-03. They are trim
 {"type":"result","subtype":"success","is_error":false,"num_turns":2,"total_cost_usd":0.0239948,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}
 ```
 
-- [ ] **Step 2: Write `evals/fixtures/no-skill.jsonl`**
+- [x] **Step 2: Write `evals/fixtures/no-skill.jsonl`**
 
 Includes a `rate_limit_event`, which real transcripts emit and which must not be mistaken for a failure.
 
@@ -192,14 +192,14 @@ Includes a `rate_limit_event`, which real transcripts emit and which must not be
 {"type":"result","subtype":"success","is_error":false,"num_turns":1,"total_cost_usd":0.0887088,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}
 ```
 
-- [ ] **Step 3: Write `evals/fixtures/errored.jsonl`**
+- [x] **Step 3: Write `evals/fixtures/errored.jsonl`**
 
 ```
 {"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Skill"],"skills":[],"slash_commands":[]}
 {"type":"result","subtype":"error_during_execution","is_error":true,"num_turns":0,"total_cost_usd":0,"usage":{"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0}}
 ```
 
-- [ ] **Step 4: Write `evals/fixtures/late-skill.jsonl`**
+- [x] **Step 4: Write `evals/fixtures/late-skill.jsonl`**
 
 The skill fires, but only after a `Write` — a pass by firing alone, a failure by order.
 
@@ -210,7 +210,7 @@ The skill fires, but only after a `Write` — a pass by firing alone, a failure 
 {"type":"result","subtype":"success","is_error":false,"num_turns":3,"total_cost_usd":0.03,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":100,"output_tokens":400}}
 ```
 
-- [ ] **Step 5: Verify the fixtures**
+- [x] **Step 5: Verify the fixtures**
 
 Run:
 ```bash
@@ -228,7 +228,7 @@ console.log('fixtures ok');
 ```
 Expected: four `<name> <n> events` lines then `fixtures ok`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/fixtures
