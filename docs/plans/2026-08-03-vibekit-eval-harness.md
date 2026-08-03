@@ -709,7 +709,7 @@ git commit -m "feat(evals): session runner with disposable cwd"
 
 This task has no unit test: every meaningful behaviour is a git side effect, and mocking git would test the mock. It is verified by the runnable check in Step 2 instead.
 
-- [ ] **Step 1: Write the implementation**
+- [x] **Step 1: Write the implementation**
 
 ```js
 // evals/worktree.mjs
@@ -745,7 +745,7 @@ export function remove(path) {
 }
 ```
 
-- [ ] **Step 2: Verify with a real worktree round-trip**
+- [x] **Step 2: Verify with a real worktree round-trip**
 
 Run:
 ```bash
@@ -763,7 +763,7 @@ import('./evals/worktree.mjs').then(async wt => {
 ```
 Expected: `created .eval-worktrees/HEAD` then `removed ok`.
 
-- [ ] **Step 3: Confirm the guard rejects an outside path**
+- [x] **Step 3: Confirm the guard rejects an outside path**
 
 Run:
 ```bash
@@ -776,12 +776,12 @@ import('./evals/worktree.mjs').then(wt => {
 ```
 Expected: `guard ok`
 
-- [ ] **Step 4: Confirm no worktree leaked**
+- [x] **Step 4: Confirm no worktree leaked**
 
 Run: `git worktree list`
 Expected: only the main worktree at `/home/rizukirr/Projects/vibekit`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/worktree.mjs
