@@ -1231,7 +1231,7 @@ git commit -m "feat: add codex emitter"
 
 `build()` returns the in-memory path→contents map. `plan()` compares it against disk. Because both modes read the same map, `--check` cannot disagree with what `generate` would write.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/build.test.mjs
@@ -1304,12 +1304,12 @@ test('throws when the config names an emitter that does not exist', async () => 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/build.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... build.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // lib/build.mjs
@@ -1388,12 +1388,12 @@ export async function build(root) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/build.test.mjs`
 Expected: PASS — `pass 10`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/build.mjs tests/build.test.mjs
