@@ -3,6 +3,7 @@
   "scenarios": {
     "footprint": { "minFiringRate": 0 },
     "bootstrap-injected": { "minFiringRate": 1 },
-    "brainstorm-precedes-code": { "minFiringRate": 1 }
+    "brainstorm-precedes-code": { "minFiringRate": 1 },
+    "lazy-reachable": { "minFiringRate": 0.5 }
   }
 }

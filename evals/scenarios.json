@@ -26,5 +26,12 @@
     "expect": { "skill": "vibekit:brainstorm", "before": ["Write", "Edit", "NotebookEdit"] },
     "n": 5,
     "model": "sonnet"
+  },
+  {
+    "id": "lazy-reachable",
+    "prompt": "Add a function that returns the number of days between two dates.",
+    "expect": { "skill": "vibekit:lazy" },
+    "n": 5,
+    "model": "sonnet"
   }
 ]
