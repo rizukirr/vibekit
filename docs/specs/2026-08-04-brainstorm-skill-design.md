@@ -59,6 +59,26 @@ Uniform compression spends guardrail risk where there is no saving.
   all three ship together.
 - Reduce its length by **extraction only** — move duplicated policy into the
   `lazy` and `terse` modifiers — with no behaviour-shaping sentence shortened.
+  <!-- Amended 2026-08-04 after verification run 2. As written this goal was
+  satisfied at 163 lines, then broken at 164 when the delegation was rewritten
+  from a reference ("Apply `lazy` and `terse` throughout") into an instruction
+  ("Invoke `lazy` and `terse` before anything else") as Procedure step 1. The
+  original wording assumed a reference is enough to carry delegated content. It
+  is not: measurement showed a referenced-but-never-invoked skill contributes
+  only its description line, so the extracted bodies reached zero sessions. The
+  goal now reads: **move duplicated policy into the modifiers, and make the
+  delegation an instruction that demonstrably loads them.** Net length is a
+  secondary measure, not the objective — extraction is justified by single
+  source of truth, not by token count. See docs/verifications/
+  2026-08-04-brainstorm-skill-verify-2.md R-C. -->
+
+- **The delegation must be observably load-bearing.** A skill that names a
+  modifier without causing it to be invoked has not delegated anything. Every
+  extraction ships with an eval scenario asserting the delegated skill is
+  reached.
+  <!-- Added 2026-08-04 after verification run 2, and binding on the remaining
+  nine skills. -->
+
 - Add the three guards v1 lacks: understand-before-shortening, name-your-confusion,
   and observable success criteria in the spec template.
 - Squeeze the `description:` line, since it is always-on.
@@ -75,7 +95,20 @@ Uniform compression spends guardrail risk where there is no saving.
   A/B isolates one variable. Squeezing is run 2, on its own branch.
 - **Deleting v1's `brainstorm-lean`.** It stays installed and running until the
   A/B says the replacement is at least as good.
-- **Changing the eval harness.** It is used as built.
+- ~~**Changing the eval harness.** It is used as built.~~ **Struck 2026-08-04
+  after verification run 2.** The intent was to stop the harness being tuned to
+  flatter the skill under test, and that intent stands — thresholds, scenarios
+  and scoring logic are still off-limits once a paid run has started. But the
+  non-goal as written also forbade *repairing* the harness, and a repair proved
+  necessary: `judgeTranscript` parsed the judge's reply with a bare
+  `JSON.parse`, and the judge model wrapped its JSON in a code fence despite the
+  rubric forbidding one, so 4 of 5 judge calls in the first judged run were
+  discarded as `judge_error`. The fix (`extractJson`, three tests) makes the
+  grader report what it actually produced; it cannot change any verdict in the
+  skill's favour, because `followed`/`score` are read from the judge's own
+  output either way. Replacement boundary: **the harness may be fixed when it is
+  demonstrably losing or corrupting data, never adjusted to change a result.**
+  See docs/verifications/2026-08-04-brainstorm-skill-verify-2.md R-D.
 
 ## Constraints
 
