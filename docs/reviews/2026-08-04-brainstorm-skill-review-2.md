@@ -226,6 +226,54 @@ is not specific to the extraction (the pre-extraction control scored `followed`
 to the remaining nine skills, and it should be named as such in their specs
 rather than quietly inherited.
 
+### W1 — second attempt (commits f45e210, 1450f68): improved, not closed
+
+Diagnosed properly this time instead of guessed at. Three transcripts were
+captured at HEAD and hand-graded, then the judge was run offline against four
+saved transcripts to check it discriminates.
+
+**What the captured transcripts showed.** The batching rule from the first
+attempt *did* work — three of three sessions ask exactly one question. So
+`followed=0.00` had never been reporting batching. All three sessions were
+compliant by hand-grading, and the judge still failed them.
+
+**Defect A — the rubric.** `evals/judge.md` asked whether the agent followed the
+procedure, against transcripts that always truncate at the first user question,
+because stopping to ask *is* the procedure. Absence of the later steps was graded
+as failure. The rubric now grades only steps the transcript could exhibit and
+enumerates the compliance failures that do count.
+
+Checked for discrimination rather than assumed, on saved transcripts:
+
+| transcript | verdict |
+|---|---|
+| skipped the gate, wrote code immediately | `followed:false, score:0` |
+| batched two questions | `followed:false, score:3` |
+| one question, modifiers invoked | `followed:false, score:3` |
+| scope check + pushback + one question | `followed:false, score:2` |
+
+The rubric did not inflate: it still failed both *good* transcripts. That is
+what surfaced defect B.
+
+**Defect B — the skill.** Both graders, independently, gave the same reason:
+Procedure step 2 was being skipped. Sessions asserted "no context to explore —
+new project" with no tool call, then asked their first question. Step 2 now
+states the conclusion is available only *after* a tool call, never instead of
+one.
+
+**Result.** `followed` 0.00 → **0.40**, score 2.6 → **3.8**, rate held at 1.00.
+`terse-reachable` also rose 0.80 → 1.00.
+
+**Not closed, and one methodological caveat.** 2 of 5 sessions still fail the
+follow-through grade — this is better, not fixed. And two variables changed
+between the runs (rubric and skill), so the improvement cannot be attributed to
+either alone; no run isolating one was performed. Both facts are recorded in the
+commit rather than left to be discovered.
+
+W1 stands as the open question handed to the remaining nine skills, now with a
+sharper statement of it: the pipeline's skills fire reliably and are followed
+inconsistently, and the second half of that sentence is the unsolved part.
+
 ## Sign-off
 
 - [ ] User reviewed findings.
