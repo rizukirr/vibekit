@@ -851,7 +851,7 @@ scope did not include this paragraph, so nothing caught it.
 N1 rides along: `rung` is used at the "At least one approach" line but defined only
 in `lazy`, so the replacement text names the ladder's owner explicitly.
 
-- [ ] **Step 1: Replace the duplicated section**
+- [x] **Step 1: Replace the duplicated section**
 
 In `skills/brainstorm/SKILL.md`, replace the whole `## Understand before you shorten` section — heading and its four-line paragraph — with:
 
@@ -867,7 +867,7 @@ The claims about confident wrong fixes and efficiency-in-disguise are not delete
 from the system — they live in `lazy`, which this skill already delegates to at
 the top.
 
-- [ ] **Step 2: Name the ladder's owner where the term is used**
+- [x] **Step 2: Name the ladder's owner where the term is used**
 
 Find the line reading:
 
@@ -882,12 +882,12 @@ Replace that sentence's opening so the term is anchored. The full sentence becom
 meets the requirement**, so the user can choose it.
 ```
 
-- [ ] **Step 3: Regenerate and check**
+- [x] **Step 3: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `up to date`. The description and trigger are unchanged, so the trigger table does not move and `generate` may report nothing to write.
 
-- [ ] **Step 4: Verify the duplication is gone and the content still exists elsewhere**
+- [x] **Step 4: Verify the duplication is gone and the content still exists elsewhere**
 
 Run:
 ```bash
@@ -904,12 +904,12 @@ console.log('dedup ok —', b.split('\n').length, 'lines');
 ```
 Expected: `dedup ok — 163 lines` (that count is `split('\n').length`, one more than `wc -l`, which reports 162 — down from 163).
 
-- [ ] **Step 5: Run the suite**
+- [x] **Step 5: Run the suite**
 
 Run: `npm test`
 Expected: `fail 0`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/brainstorm/SKILL.md
@@ -932,7 +932,7 @@ It is deliberately written to avoid naming individual skills. The trigger table 
 restating any of it here would create exactly the drift the generator exists to
 prevent. This file is also always-on, so length is the budget.
 
-- [ ] **Step 1: Rewrite the skill**
+- [x] **Step 1: Rewrite the skill**
 
 Replace the entire contents of `skills/using-vibekit/SKILL.md` with:
 
@@ -989,12 +989,12 @@ read a skill file as a substitute for invoking it — reading gives you the text
 without the commitment.
 ````
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `wrote` lines for the generated docs (the description changed, so the skill-list region moves), then `up to date`.
 
-- [ ] **Step 3: Verify content**
+- [x] **Step 3: Verify content**
 
 Run:
 ```bash
@@ -1012,17 +1012,17 @@ console.log('bootstrap ok —', t.split('\n').length, 'lines');
 ```
 Expected: `bootstrap ok — <n> lines`.
 
-- [ ] **Step 4: Confirm the hook still emits parseable JSON carrying the new text**
+- [x] **Step 4: Confirm the hook still emits parseable JSON carrying the new text**
 
 Run: `npm run check:hook`
 Expected: `ℹ pass 3`, `ℹ fail 0`. This test asserts the SessionStart hook's output parses as JSON and contains the bootstrap body, so a malformed rewrite would fail here.
 
-- [ ] **Step 5: Run the suite**
+- [x] **Step 5: Run the suite**
 
 Run: `npm test`
 Expected: `fail 0`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add skills/using-vibekit/SKILL.md CLAUDE.md AGENTS.md README.md
@@ -1042,7 +1042,7 @@ can never fail. It was written to stop the first test passing vacuously on an em
 file list; that guarantee currently rests entirely on the `assert.ok(actual.length > 0)`
 beside it.
 
-- [ ] **Step 1: Replace the second test**
+- [x] **Step 1: Replace the second test**
 
 Replace the whole `test('the guard actually covers every skill directory', ...)` block with:
 
@@ -1067,12 +1067,12 @@ test('the guard covers every skill plus all three generated docs', () => {
 })
 ```
 
-- [ ] **Step 2: Run it**
+- [x] **Step 2: Run it**
 
 Run: `node --test tests/no-external-references.test.mjs`
 Expected: PASS — `pass 2`, `fail 0`.
 
-- [ ] **Step 3: Prove the new assertion can actually fail**
+- [x] **Step 3: Prove the new assertion can actually fail**
 
 A test that has never failed is not known to work. Temporarily drop a doc from the
 covered list, confirm the failure, then restore:
@@ -1086,12 +1086,12 @@ rm /tmp/guard-backup.mjs
 ```
 Expected: the middle run reports `fail 1` and a message containing `README.md must be covered`. After the restore, `git diff --stat tests/no-external-references.test.mjs` shows the file matches what Step 1 wrote.
 
-- [ ] **Step 4: Run the suite**
+- [x] **Step 4: Run the suite**
 
 Run: `npm test && npm run check`
 Expected: `fail 0`, then `up to date`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/no-external-references.test.mjs
