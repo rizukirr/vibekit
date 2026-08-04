@@ -34,7 +34,10 @@ shortens the reading.
    build, `terse` how you talk; both stay on for the rest of the session. Their
    description lines are not their content — you have not read either skill until
    you have invoked it.
-2. Explore context — files, docs, recent commits.
+2. Explore context — **look before you ask**. List the directory, read what
+   matters, check recent commits. "New project, nothing to explore" is a
+   conclusion you may only reach *after* a tool call, never instead of one —
+   and asking your first question before you have looked is skipping this step.
 3. Clarifying questions, one at a time.
 4. Scope check.
 5. Pushback turn.
