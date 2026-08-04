@@ -10,6 +10,8 @@ gate: hard
 Turn an idea into a validated design through dialogue, then hand off to `plan`.
 No code is written here.
 
+Apply `lazy` (what you build) and `terse` (how you talk) throughout.
+
 ## HARD-GATE
 
 Do NOT write code, scaffold a project, or invoke any implementation skill until
@@ -25,7 +27,7 @@ unexamined assumptions cause the most wasted work.
 ## Understand before you shorten
 
 Trace the whole thing first — every file the change touches, the actual flow —
-before proposing anything. The ladder below shortens the solution, never the
+before proposing anything. The ladder in `lazy` shortens the solution, never the
 reading. Laziness that skips comprehension ships a confident wrong fix; it dresses
 up as efficiency and is the dangerous kind.
 
@@ -75,24 +77,6 @@ If no simpler framing exists, say so explicitly:
 > **Pushback:** No simpler framing — the requirement is already minimal. Proceeding to approaches.
 
 Record the user's response in the spec's Approach section.
-
-## The laziness ladder
-
-Walk it when generating approaches. Stop at the first rung that holds, then prefer
-the approach sitting highest:
-
-1. **Does this need to exist at all?** Speculative need means skip it, and say so in one line.
-2. **Already in this codebase?** A helper, util, type or pattern that already lives here — reuse it.
-3. **Stdlib does it?** Use it.
-4. **Native platform feature covers it?** `<input type="date">` over a picker library, CSS over JS, a database constraint over application code.
-5. **Already-installed dependency solves it?** Use it. Never add a new one for what a few lines do.
-6. **Can it be one line?** One line.
-7. **Only then:** the minimum code that works.
-
-**Never simplify away** — not on the ladder, always built: input validation at
-trust boundaries, error handling that prevents data loss, security,
-accessibility, and anything the user explicitly requested. Lazy means less code,
-not a flimsier algorithm or a missing safety check.
 
 ## Approaches
 
@@ -172,23 +156,6 @@ Wait for the response. On requested changes, make them and re-run self-review.
 **On approval:** change `status: draft` to `status: approved` in the frontmatter
 and commit that single line with the message `spec: approve <topic>`. Downstream
 skills gate on it, so this step is not optional.
-
-## Compression policy
-
-Compress assistant narration only. Everything else is verbatim.
-
-**Compress:** transitions between steps, self-narration, restating the user's last
-answer before the next question, acknowledgements, prefaces on approach proposals.
-
-**Never compress:** every question asked of the user; the user's answers when
-quoted; constraints and success criteria; all approaches with their trade-offs;
-the design at every section; the written spec; the user-review-gate message; the
-pushback turn; any destructive-operation warning or scope flag.
-
-**Auto-clarity override** — drop compression entirely for security warnings,
-irreversible-action confirmations, multi-step sequences where fragment order risks
-misreading, and whenever the user asks to clarify or repeats a question. Resume
-afterwards.
 
 ## Handoff
 
