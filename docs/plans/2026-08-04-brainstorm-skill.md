@@ -836,7 +836,8 @@ git commit -m "test: vibekit absorbs from external/, never references it"
 
 ---
 
-### Task 8: Remove the surviving duplication → verify: `npm run check` exits 0; `skills/brainstorm/SKILL.md` no longer contains the phrase "dresses up as efficiency"; that phrase still appears in `skills/lazy/SKILL.md`; the file is at least 4 lines shorter
+### Task 8: Remove the surviving duplication → verify: `npm run check` exits 0; with whitespace normalised, `skills/brainstorm/SKILL.md` no longer contains "dresses up as efficiency" while `skills/lazy/SKILL.md` still does; `brainstorm` is 162 lines by `wc -l`, down from 163
+<!-- Verify clause corrected 2026-08-04 during execution. It originally demanded the file be "at least 4 lines shorter" and checked the phrase as a contiguous substring. Both were unsatisfiable by construction: the replacement text this task mandates verbatim is 3 prose lines replacing 4, so the maximum possible saving is 1 line; and in skills/lazy/SKILL.md the phrase is line-wrapped as "it dresses up as\nefficiency", so a literal includes() can never match. The implementer reported both rather than deleting extra text to hit the number — which is the correct behaviour and the reason the clause, not the work, is what changed. -->
 
 **Files:**
 - Modify: `skills/brainstorm/SKILL.md`
@@ -894,14 +895,14 @@ node -e "
 const {readFileSync} = require('fs');
 const b = readFileSync('skills/brainstorm/SKILL.md','utf8');
 const l = readFileSync('skills/lazy/SKILL.md','utf8');
-if (b.includes('dresses up as efficiency')) throw new Error('duplication still in brainstorm');
-if (!l.includes('dresses up as efficiency')) throw new Error('claim lost from lazy');
+if (b.replace(/\\s+/g,' ').includes('dresses up as efficiency')) throw new Error('duplication still in brainstorm');
+if (!l.replace(/\\s+/g,' ').includes('dresses up as efficiency')) throw new Error('claim lost from lazy');
 if (!b.includes(\"laziest rung of \`lazy\`'s ladder\")) throw new Error('rung not anchored');
 if (!b.includes('Trace the whole thing first')) throw new Error('understand-first guard lost');
 console.log('dedup ok —', b.split('\n').length, 'lines');
 "
 ```
-Expected: `dedup ok — 159 lines` (from 163; the paragraph loses 4 lines).
+Expected: `dedup ok — 163 lines` (that count is `split('\n').length`, one more than `wc -l`, which reports 162 — down from 163).
 
 - [ ] **Step 5: Run the suite**
 
