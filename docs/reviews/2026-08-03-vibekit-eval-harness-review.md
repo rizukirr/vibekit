@@ -5,6 +5,7 @@
 **Plan:** docs/plans/2026-08-03-vibekit-eval-harness.md
 **Verify report:** docs/verifications/2026-08-03-vibekit-eval-harness-verify.md (verdict `ready`)
 **Commits under review:** 65b0894..18e7b04 on `vibekit-eval-harness`
+**Fixes applied:** 914ce1b, 86de128, 12bb884 — see §Resolution
 
 ## Diff summary
 
@@ -170,3 +171,47 @@ Per-file summary is in §Diff summary.
 - [ ] User reviewed findings.
 - [ ] User reviewed diff.
 - [ ] User approves proceeding to finish-branch.
+
+
+---
+
+## Resolution
+
+The user chose `fix` on all findings. Applied as Tasks 11-13, appended to the
+plan at ebf7bdb/bf7d824 before any code was written.
+
+| ID | Status | What changed |
+|---|---|---|
+| **B1** | fixed | `validatePlan()` rejects an empty plan, an unknown scenario id, a non-integer `-n`, and a threshold key naming a scenario that does not exist. Called **before** the dry-run early return, so a typo is caught without spending anything. Re-probed: `npm run eval -- --scenarios nosuchscenario` now prints `vibekit-eval: unknown scenario id(s): nosuchscenario`, exits 1, and writes no results file — `ls evals/results` is byte-identical before and after. |
+| W2 | fixed | `scoreScenario` now returns a `judge` block (`graded`, `followedRate`, `meanScore`, `errors`), so the verdict reaches both the console summary and the persisted results file. `judge: null` in both the normal and `incomplete` return branches keeps the shape consistent. Judge errors are counted, never averaged into the score as zeros. |
+| W3 | fixed | `evals/run.mjs` and `evals/worktree.mjs` resolve paths from `import.meta.url` via an `at()` helper, matching `bin/generate.mjs`. The git helper pins `cwd` to the repo. Verified: `cd /tmp && node <repo>/evals/run.mjs --dry-run` prints the 9-session plan instead of failing on a missing file. |
+| W4 | fixed | `parseArgs` throws when a flag's value is missing or begins with `-`, so `--scenarios --judge` is an error rather than a scenario named `--judge`. |
+| W5 | fixed | Threshold keys are validated against scenario ids; a typo'd key is now an error instead of silently applying the default gate. |
+| N1 | fixed | The rubric is read once into a module-level cache instead of once per judged session. |
+| N2 | fixed | `formatPlan` counts with a `Map` instead of spreading an accumulator inside a reduce. |
+| N3 | fixed | The deletion guard uses `path.relative` semantics rather than a string prefix. Verified it rejects a sibling (`.eval-worktrees-old/x`), a traversal (`.eval-worktrees/../../etc`) and an unrelated absolute path (`/tmp`). |
+
+### Post-fix state
+
+- **106 tests pass** (was 98), `fail 0`
+- `npm run check` → `up to date`
+- Happy path unchanged: `npm run eval -- --dry-run` → `9 sessions — est. $0.18-$0.81`, exit 0
+- No worktree or temp directory leaked
+
+### One plan error the implementer caught
+
+Task 12's verify clause said `tests/eval-score.test.mjs` should report `pass 11`.
+The file had 9 tests and the task adds 3, so the correct figure is 12. The
+implementer reported the discrepancy rather than quietly adding or dropping a
+test to match — which is the behaviour the `→ verify:` contract is supposed to
+produce, working as intended on a plan-authoring mistake rather than an
+implementation one.
+
+### What this round says about the gates
+
+B1 and W2 were both **live-input defects that every prior gate missed**, and they
+missed them the same way: unit tests construct well-formed models, the acceptance
+run used the real scenario list, and verification quoted both back as evidence.
+Nothing in the pipeline typed a wrong flag on purpose until review-pack did.
+Worth carrying into spec 3 — a gate that only ever sees valid input cannot
+distinguish "works" from "works on the happy path".
