@@ -412,7 +412,7 @@ git commit -m "feat(skills): lazy modifier — the laziness ladder"
 **Files:**
 - Create: `skills/terse/SKILL.md`
 
-- [ ] **Step 1: Write the skill**
+- [x] **Step 1: Write the skill**
 
 Create `skills/terse/SKILL.md` with exactly this content:
 
@@ -500,12 +500,12 @@ exact. Preserve the user's language — compress the style, not the language.
 volume. "stop terse" or "normal mode" reverts.
 ````
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `wrote` lines, `done`, then `up to date`.
 
-- [ ] **Step 3: Verify content**
+- [x] **Step 3: Verify content**
 
 Run:
 ```bash
@@ -518,7 +518,7 @@ console.log('terse ok');
 ```
 Expected: `terse ok`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/terse CLAUDE.md AGENTS.md README.md .vibekit-manifest
