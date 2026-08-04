@@ -10,8 +10,8 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | About to start creative or implementation work, before code is written | `brainstorm` | hard |
 | Never — this is a build fixture | `example-command` | none |
 | Never — this is a build fixture | `example-plain` | hard |
-| Any coding work — writing, adding, refactoring, fixing, or designing code | `lazy` | none |
-| Every response — compress conversation, never compress artifacts | `terse` | none |
+| First moment of any coding work — invoke once, then it stays on | `lazy` | none |
+| First response of the session — invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
 <!-- /vibekit:generated -->
 

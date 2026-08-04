@@ -1,7 +1,7 @@
 ---
 name: terse
-description: Governs how you talk — compress narration, never artifacts. Default on. Questions, evidence, specs, plans and warnings are always verbatim.
-trigger: Every response — compress conversation, never compress artifacts
+description: Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after.
+trigger: First response of the session — invoke once, then it stays on
 gate: none
 ---
 
@@ -12,8 +12,9 @@ fluff dies.
 
 ## Persistence
 
-Active every response. No filler drift after many turns. Still active if unsure.
-Off only on "stop terse" or "normal mode".
+Invoke once, then active every response — no need to invoke again. No filler
+drift after many turns. Still active if unsure. Off only on "stop terse" or
+"normal mode".
 
 ## The placement rule
 

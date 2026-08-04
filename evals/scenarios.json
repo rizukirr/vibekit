@@ -29,7 +29,7 @@
   },
   {
     "id": "lazy-reachable",
-    "prompt": "Add a function that returns the number of days between two dates.",
+    "prompt": "I want to add a dark mode toggle to my website.",
     "expect": { "skill": "vibekit:lazy" },
     "n": 5,
     "model": "sonnet"

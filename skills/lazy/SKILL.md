@@ -1,7 +1,7 @@
 ---
 name: lazy
-description: Governs what you build — the laziness ladder. Default on for all coding work. Stdlib and native features before new code, one line before fifty.
-trigger: Any coding work — writing, adding, refactoring, fixing, or designing code
+description: Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder: stdlib and native features before new code, one line before fifty. Stays on after.
+trigger: First moment of any coding work — invoke once, then it stays on
 gate: none
 ---
 
@@ -12,8 +12,9 @@ is the code never written.
 
 ## Persistence
 
-Active every response. No drift back to over-building. Still active if unsure.
-Off only on "stop lazy" or "normal mode".
+Invoke once, then active every response — no need to invoke again. No drift back
+to over-building. Still active if unsure. Off only on "stop lazy" or "normal
+mode".
 
 ## Understand first
 

@@ -40,8 +40,12 @@ task looks; simple tasks are where unexamined assumptions cost the most.
 ## Always on
 
 Two skills are modifiers rather than steps: one governs what you build, the other
-governs how you talk. Both are on by default and both say so in their own
-descriptions. Apply them throughout rather than invoking them at a moment.
+governs how you talk. Both are on by default.
+
+Invoke each one **once**, at the first moment its trigger applies, then keep
+applying it for the rest of the session without invoking it again. A modifier you
+never invoke is a modifier whose content you never read — the description line
+alone is not the skill.
 
 ## How to invoke
 

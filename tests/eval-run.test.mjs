@@ -1,7 +1,7 @@
 // tests/eval-run.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan } from '../evals/run.mjs'
+import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan, extractJson } from '../evals/run.mjs'
 
 const scenarios = [
   { id: 'a', prompt: 'x', n: 3, model: 'haiku' },
@@ -84,4 +84,21 @@ test('refuses to score a plan with zero sessions', () => {
     () => validatePlan([], scenarios, { scenarios: null }, { scenarios: {} }),
     /no sessions planned/,
   )
+})
+
+// The rubric forbids code fences; the judge model used one anyway on 4 of 5
+// calls. A grader that discards four fifths of its own output is not a grader.
+test('extracts fenced judge JSON', () => {
+  const out = extractJson('```json\n{"followed": true, "score": 5}\n```')
+  assert.deepEqual(JSON.parse(out), { followed: true, score: 5 })
+})
+
+test('extracts judge JSON wrapped in prose', () => {
+  const out = extractJson('Here is my grade:\n{"followed": false, "score": 1}\nHope that helps.')
+  assert.deepEqual(JSON.parse(out), { followed: false, score: 1 })
+})
+
+test('leaves output with no braces untouched so the caller still fails', () => {
+  assert.equal(extractJson('I could not grade this'), 'I could not grade this')
+  assert.equal(extractJson(null), '')
 })

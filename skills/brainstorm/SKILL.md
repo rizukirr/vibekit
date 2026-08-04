@@ -10,8 +10,6 @@ gate: hard
 Turn an idea into a validated design through dialogue, then hand off to `plan`.
 No code is written here.
 
-Apply `lazy` (what you build) and `terse` (how you talk) throughout.
-
 ## HARD-GATE
 
 Do NOT write code, scaffold a project, or invoke any implementation skill until
@@ -32,16 +30,20 @@ shortens the reading.
 
 ## Procedure
 
-1. Explore context — files, docs, recent commits.
-2. Clarifying questions, one at a time.
-3. Scope check.
-4. Pushback turn.
-5. Two or three approaches with a recommendation.
-6. Present the design in sections, approval after each.
-7. Write the spec doc, commit.
-8. Self-review.
-9. User review gate.
-10. Hand off to `plan`. Terminal.
+1. **Invoke `lazy` and `terse` before anything else.** `lazy` governs what you
+   build, `terse` how you talk; both stay on for the rest of the session. Their
+   description lines are not their content — you have not read either skill until
+   you have invoked it.
+2. Explore context — files, docs, recent commits.
+3. Clarifying questions, one at a time.
+4. Scope check.
+5. Pushback turn.
+6. Two or three approaches with a recommendation.
+7. Present the design in sections, approval after each.
+8. Write the spec doc, commit.
+9. Self-review.
+10. User review gate.
+11. Hand off to `plan`. Terminal.
 
 ## Clarifying questions
 
