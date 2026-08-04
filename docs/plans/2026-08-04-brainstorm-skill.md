@@ -695,12 +695,12 @@ This is the only paid step: 5 repeats × 2 arms = 10 sonnet sessions, roughly $1
 
 The result is information, not a pass/fail on the work. Report the numbers whatever they are. **Do not adjust the skill, the scenario, or the threshold to make the run come out well** — that would destroy the measurement this whole spec exists to produce.
 
-- [ ] **Step 1: Confirm the plan and cost before spending**
+- [x] **Step 1: Confirm the plan and cost before spending**
 
 Run: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --scenarios brainstorm-precedes-code --dry-run`
 Expected: `10 sessions` with a cost estimate, `candidate: HEAD`, `baseline: brainstorm-arm-a`, then `dry run — nothing spawned`.
 
-- [ ] **Step 2: Run it**
+- [x] **Step 2: Run it**
 
 Run: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --scenarios brainstorm-precedes-code`
 Expected: a plan line, a progress line of ten characters (`.` per successful session, `E` per errored one), a `results: evals/results/<timestamp>-HEAD.json` line, a per-scenario summary, and `PASS` or `FAIL`.
@@ -709,7 +709,7 @@ Either verdict is a valid outcome of this task. `FAIL` means the candidate's fir
 
 If a scenario reports `incomplete`, the sessions themselves failed rather than the skill. Check `claude` auth and rate limits, then re-run once. Do not lower the threshold.
 
-- [ ] **Step 3: Extract both rates**
+- [x] **Step 3: Extract both rates**
 
 Run:
 ```bash
@@ -729,12 +729,12 @@ console.log('verdict:', JSON.stringify(r.verdict));
 ```
 Expected: two rate lines and a verdict. Record the numbers verbatim in your report.
 
-- [ ] **Step 4: Confirm nothing leaked**
+- [x] **Step 4: Confirm nothing leaked**
 
 Run: `git worktree list && (ls .eval-worktrees 2>/dev/null || echo "(no .eval-worktrees)")`
 Expected: no `.eval-worktrees` entry in the worktree list.
 
-- [ ] **Step 5: Commit the result**
+- [x] **Step 5: Commit the result**
 
 ```bash
 git add evals/results
