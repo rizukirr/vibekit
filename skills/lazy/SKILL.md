@@ -56,5 +56,4 @@ If the user insists on the full version, build it. Do not re-argue.
 
 ## Boundaries
 
-`lazy` governs what you build, not how you talk — pair it with `terse` for prose.
-"stop lazy" or "normal mode" reverts.
+What you build, not how you talk — `terse` covers prose.

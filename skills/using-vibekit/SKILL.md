@@ -39,13 +39,15 @@ task looks; simple tasks are where unexamined assumptions cost the most.
 
 ## Always on
 
-Two skills are modifiers rather than steps: one governs what you build, the other
-governs how you talk. Both are on by default.
+Some skills are modifiers rather than steps — they say so in their own
+descriptions, which end "Stays on after." The trigger table lists them like any
+other skill; nothing here enumerates them, because a count kept by hand goes
+stale the moment one is added.
 
-Invoke each one **once**, at the first moment its trigger applies, then keep
-applying it for the rest of the session without invoking it again. A modifier you
-never invoke is a modifier whose content you never read — the description line
-alone is not the skill.
+Invoke each **once**, at the first moment its trigger applies, then keep applying
+it for the rest of the session without invoking it again. A modifier you never
+invoke is a modifier whose content you never read — the description line alone is
+not the skill.
 
 ## How to invoke
 

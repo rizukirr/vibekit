@@ -1,5 +1,10 @@
 # Verification Report — brainstorm skill
 
+> **Superseded.** This report's headline conclusion ("extraction is free") is
+> wrong; see the correction block under §The headline measurement. The current
+> verdict for this feature is in
+> `docs/verifications/2026-08-04-brainstorm-skill-verify-4.md`.
+
 **Date:** 2026-08-04
 **Spec:** docs/specs/2026-08-04-brainstorm-skill-design.md
 **Plan:** docs/plans/2026-08-04-brainstorm-skill.md

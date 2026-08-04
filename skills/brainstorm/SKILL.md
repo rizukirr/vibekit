@@ -50,6 +50,13 @@ shortens the reading.
 One at a time. Never batch. Multiple choice when the option space is small,
 open-ended when it is wide. Focus on purpose, constraints, success criteria.
 
+**One question mark per turn.** Batching is what this rule actually fails at, so
+check the literal text before sending: if your turn contains a second `?`, or an
+"and" joining two asks, cut everything after the first question and hold it for
+the next turn. Two questions in one turn is a violation even when they are
+related — especially then, because the answer to the first often deletes the
+second.
+
 Two rules that override the urge to proceed:
 
 - **If multiple interpretations exist, present them — do not pick silently.**

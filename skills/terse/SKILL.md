@@ -78,5 +78,4 @@ exact. Preserve the user's language — compress the style, not the language.
 
 ## Boundaries
 
-`terse` governs how you talk, not what you build — pair it with `lazy` for code
-volume. "stop terse" or "normal mode" reverts.
+How you talk, not what you build — `lazy` covers code volume.

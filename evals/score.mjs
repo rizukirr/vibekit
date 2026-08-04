@@ -9,6 +9,15 @@ function satisfied(scenario, run) {
       const earlier = run.tools.find(t => t.name === forbidden && t.index < hit.index)
       if (earlier) return false
     }
+    // `after` is `before`'s mirror over skills: each named skill must already
+    // have fired. Without it a delegation scenario cannot tell "brainstorm
+    // delegated to lazy" from "lazy fired on its own trigger" — both leave a
+    // lazy invocation in the transcript, and only one of them is the thing
+    // under test.
+    for (const required of expect.after ?? []) {
+      const earlier = run.skills.find(s => s.name === required && s.index < hit.index)
+      if (!earlier) return false
+    }
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return false

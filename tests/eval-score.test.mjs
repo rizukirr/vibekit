@@ -95,3 +95,29 @@ test('judge errors are counted, not averaged into the score', () => {
   assert.equal(r.judge.meanScore, 4)
   assert.equal(r.judge.errors, 1)
 })
+
+// W3: `expect: {skill: "vibekit:lazy"}` alone passes whether lazy was delegated
+// to or fired on its own trigger. `after` is what makes a delegation scenario
+// measure delegation.
+const chain = { id: 's', expect: { skill: 'vibekit:lazy', after: ['vibekit:brainstorm'] } }
+
+test('after expectation passes when the prerequisite skill fired first', () => {
+  const run = ok(
+    [{ name: 'vibekit:brainstorm', index: 0 }, { name: 'vibekit:lazy', index: 1 }],
+    [{ name: 'Skill', index: 0 }, { name: 'Skill', index: 1 }],
+  )
+  assert.equal(scoreScenario(chain, [run]).rate, 1)
+})
+
+test('after expectation fails when the skill fired without its prerequisite', () => {
+  const run = ok([{ name: 'vibekit:lazy', index: 0 }], [{ name: 'Skill', index: 0 }])
+  assert.equal(scoreScenario(chain, [run]).rate, 0)
+})
+
+test('after expectation fails when the prerequisite fired later', () => {
+  const run = ok(
+    [{ name: 'vibekit:lazy', index: 0 }, { name: 'vibekit:brainstorm', index: 1 }],
+    [{ name: 'Skill', index: 0 }, { name: 'Skill', index: 1 }],
+  )
+  assert.equal(scoreScenario(chain, [run]).rate, 0)
+})

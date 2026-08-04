@@ -30,7 +30,14 @@
   {
     "id": "lazy-reachable",
     "prompt": "I want to add a dark mode toggle to my website.",
-    "expect": { "skill": "vibekit:lazy" },
+    "expect": { "skill": "vibekit:lazy", "after": ["vibekit:brainstorm"] },
+    "n": 5,
+    "model": "sonnet"
+  },
+  {
+    "id": "terse-reachable",
+    "prompt": "I want to add a keyboard shortcut for saving.",
+    "expect": { "skill": "vibekit:terse", "after": ["vibekit:brainstorm"] },
     "n": 5,
     "model": "sonnet"
   }
