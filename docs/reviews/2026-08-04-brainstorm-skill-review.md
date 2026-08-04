@@ -94,6 +94,16 @@ The harness has the tool for this — `--judge` grades whether a skill was *foll
 rather than merely invoked — and it was not used. A judged run, or a scenario whose
 expectation depends on ladder-shaped output, would close the gap.
 
+**Resolved, 2026-08-04 (commit 6ef25c3).** The gap was closed and W4's second
+reading turned out to be the correct one: the extracted content *never mattered
+for the measurement*, because it never loaded. `lazy-reachable` scored 0.00 on the
+arm that has `lazy`; a live probe showed `using-vibekit` explicitly instructing the
+agent not to invoke the modifiers, so only their description lines ever reached a
+session. After making invocation explicit and moving the delegation to procedure
+step 1 of `brainstorm`, `lazy-reachable` scores 1.00 with the judge reporting
+`followed=0.60`, and the input footprint rises by ~2,900 tokens — the real cost of
+the content that had been silently absent. W3's caveat stands unchanged: n=5.
+
 ### Nit
 
 **N1. `skills/brainstorm/SKILL.md:88` uses "rung" without defining it.**

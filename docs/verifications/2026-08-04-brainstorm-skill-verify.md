@@ -75,6 +75,20 @@ PASS
 **Extraction costs no firing rate and saves tokens on both axes.** The modifier
 architecture is validated on evidence rather than argument.
 
+> **Correction, 2026-08-04 (commit 6ef25c3).** The sentence above is wrong and
+> the table below understates the footprint. A follow-up run measuring whether
+> `lazy` itself is ever reached scored **0.00 over 5 sessions on the arm that has
+> it**. Cause: `using-vibekit` instructed the agent to "apply them throughout
+> rather than invoking them at a moment", so neither modifier was ever invoked
+> and neither body ever loaded. The 444-token saving was the cost of not loading
+> the extracted content at all.
+>
+> After the fix, `lazy-reachable` scores 1.00 and the input footprint rises from
+> 18,299 to **21,180** — extraction costs roughly 2,900 tokens per session rather
+> than saving 444. The modifier architecture still stands, but on
+> single-source-of-truth grounds, not on footprint. See
+> `evals/results/2026-08-04T15-20-05-729Z-HEAD.json`.
+
 **Measurement integrity:** nothing under `skills/`, `evals/scenarios.json` or
 `evals/thresholds.json` changed during or after the paid run. Gate 2 checked that
 specifically — a rate of 1.00 obtained by softening a threshold would be
