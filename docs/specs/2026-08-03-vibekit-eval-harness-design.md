@@ -148,8 +148,18 @@ mode blocks edits, and "did the agent write code before brainstorming" is exactl
 what is being measured. Plan mode would mask the failure it is meant to observe.
 
 Each session instead runs with its **cwd set to a fresh temp directory** and edits
-permitted. Behaviour stays realistic; the blast radius is a directory the runner
-deletes afterwards. The repo is never the session's working directory.
+permitted. The repo is never the session's working directory.
+
+A temp cwd alone is **not** containment, though: `bypassPermissions` grants the
+session `Bash`, and no working directory bounds arbitrary command execution. The
+spawn therefore also passes `--disallowedTools Bash`, which removes the execution
+path while leaving `Write` and `Edit` attemptable — the ordering measurement only
+needs the attempt to be observable, not to succeed.
+
+Residual risk is stated rather than hidden: a `Write` to an absolute path can
+still land outside the temp directory. Eliminating that requires an OS-level
+sandbox (container, VM, or dedicated user), which conflicts with the
+zero-dependency constraint, so it is accepted knowingly.
 
 ### Metrics
 
@@ -177,9 +187,18 @@ a `rate_limit_event`, so this is observed behaviour, not a hypothetical. Without
 this rule an API hiccup reads as a behavioural regression and sends someone
 debugging skills that are fine.
 
-Errored runs are reported in a separate `errors` block and re-run up to a small
-retry budget. If a scenario cannot complete `n` successful runs, it is reported
-as `incomplete` and fails the run — loudly, and distinctly from a low rate.
+Errored runs are counted per scenario and reported alongside the rate, so a run
+with a shrunken sample is visible rather than silent. If a scenario produces no
+successful run at all, it is reported as `incomplete` and fails the run — loudly,
+and distinctly from a low rate.
+
+<!-- Amended 2026-08-03, during verification. This originally also promised
+errored runs would be "re-run up to a small retry budget". No retry was built,
+and the sentence was corrected rather than the code: excluding errored runs from
+scoring is the correctness property, while retry is a sample-size convenience.
+On a paid run there is also a fair argument that a rate limit should surface
+rather than be silently absorbed by retries that spend more money. Retry remains
+available as a future addition if transient errors prove noisy in practice. -->
 
 ### The judge is opt-in
 

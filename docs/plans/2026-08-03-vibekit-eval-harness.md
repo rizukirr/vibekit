@@ -18,7 +18,7 @@
 - The plan assumes an authenticated `claude` on PATH. Not verifiable at unit-test time; Task 7's `requireClaude` fails fast with a named error instead of producing misleading zeros.
 
 **Irreversible / risky steps:**
-- Sessions run with `--permission-mode bypassPermissions` so the agent can actually attempt edits (the thing being measured). If the cwd were wrong, an eval run could edit the repo. Mitigated structurally: `runSession` creates the cwd with `mkdtemp` under the OS temp dir, passes it as `cwd` to the spawn, and removes it in a `finally`. Task 5's verify clause asserts the spawned cwd is under `os.tmpdir()` and is never the repo root — a test that fails if someone later "simplifies" the cwd away.
+- Sessions run with `--permission-mode bypassPermissions` so the agent can actually attempt edits (the thing being measured). **A temp cwd is not a sandbox** — this was corrected mid-run after a security review flagged it. `bypassPermissions` grants `Bash`, and no working directory contains arbitrary command execution. Mitigation is two-layered: the spawn passes `--disallowedTools Bash`, removing the execution path, and `runSession` creates the cwd with `mkdtemp` under the OS temp dir and removes it in a `finally`. Task 5's verify clause asserts both — the cwd is under `os.tmpdir()` and is never the repo root, and `Bash` is disallowed — so neither can be "simplified" away later. **Residual risk, accepted:** a `Write` to an absolute path can still escape the temp directory. Closing that needs an OS-level sandbox, which conflicts with the zero-dependency constraint.
 - Worktree removal deletes a directory. Restricted to paths the runner created under `.eval-worktrees/`, and it refuses to remove a dirty worktree rather than forcing.
 - `none` beyond those two — every other task creates new files under `evals/` or `tests/`, and `git revert` restores the tree fully.
 
@@ -72,7 +72,7 @@ Modified:
 
 `package.json` is generated output. The `eval` script must be added to `vibekit.config.json` and regenerated — hand-editing `package.json` would be reverted by the next `npm run generate` and would fail `npm run check`.
 
-- [ ] **Step 1: Add the worktree directory to `.gitignore`**
+- [x] **Step 1: Add the worktree directory to `.gitignore`**
 
 Append one line, so the file reads:
 
@@ -82,7 +82,7 @@ external/
 .eval-worktrees/
 ```
 
-- [ ] **Step 2: Add the eval script to `vibekit.config.json`**
+- [x] **Step 2: Add the eval script to `vibekit.config.json`**
 
 In the `npm.scripts` object, add one entry. The block becomes:
 
@@ -96,7 +96,7 @@ In the `npm.scripts` object, add one entry. The block becomes:
     },
 ```
 
-- [ ] **Step 3: Write `evals/scenarios.json`**
+- [x] **Step 3: Write `evals/scenarios.json`**
 
 Three scenarios against skills that exist today. `footprint` deliberately does nothing but start a session — its purpose is measuring vibekit's input cost.
 
@@ -126,7 +126,7 @@ Three scenarios against skills that exist today. `footprint` deliberately does n
 ]
 ```
 
-- [ ] **Step 4: Write `evals/thresholds.json`**
+- [x] **Step 4: Write `evals/thresholds.json`**
 
 ```json
 {
@@ -140,12 +140,12 @@ Three scenarios against skills that exist today. `footprint` deliberately does n
 
 `footprint` has no expectation to satisfy, so its floor is 0; it exists for its token numbers. `bootstrap-injected` is deterministic — the hook either fires or it does not — so its floor is 1.
 
-- [ ] **Step 5: Regenerate and verify**
+- [x] **Step 5: Regenerate and verify**
 
 Run: `npm run generate && npm run check`
 Expected: `wrote package.json` then `up to date`, exit 0.
 
-- [ ] **Step 6: Confirm the eval script landed and evals/ does not ship**
+- [x] **Step 6: Confirm the eval script landed and evals/ does not ship**
 
 Run:
 ```bash
@@ -153,7 +153,7 @@ node -e "const p=require('./package.json'); if(!p.scripts.eval) throw new Error(
 ```
 Expected: `ok: node evals/run.mjs`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add .gitignore vibekit.config.json package.json evals/scenarios.json evals/thresholds.json
@@ -172,7 +172,7 @@ git commit -m "feat(evals): harness skeleton, scenarios and thresholds"
 
 These encode event shapes captured from live probes on 2026-08-03. They are trimmed to the fields the parser reads — real transcripts carry ~25 more keys per event and embed session ids and local paths, which do not belong in the repo.
 
-- [ ] **Step 1: Write `evals/fixtures/skill-fired.jsonl`**
+- [x] **Step 1: Write `evals/fixtures/skill-fired.jsonl`**
 
 ```
 {"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Bash","Read","Skill"],"skills":["vibekit:example-command","vibekit:example-plain","vibekit:using-vibekit"],"slash_commands":["vibekit:example-command"]}
@@ -181,7 +181,7 @@ These encode event shapes captured from live probes on 2026-08-03. They are trim
 {"type":"result","subtype":"success","is_error":false,"num_turns":2,"total_cost_usd":0.0239948,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}
 ```
 
-- [ ] **Step 2: Write `evals/fixtures/no-skill.jsonl`**
+- [x] **Step 2: Write `evals/fixtures/no-skill.jsonl`**
 
 Includes a `rate_limit_event`, which real transcripts emit and which must not be mistaken for a failure.
 
@@ -192,14 +192,14 @@ Includes a `rate_limit_event`, which real transcripts emit and which must not be
 {"type":"result","subtype":"success","is_error":false,"num_turns":1,"total_cost_usd":0.0887088,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}
 ```
 
-- [ ] **Step 3: Write `evals/fixtures/errored.jsonl`**
+- [x] **Step 3: Write `evals/fixtures/errored.jsonl`**
 
 ```
 {"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Skill"],"skills":[],"slash_commands":[]}
 {"type":"result","subtype":"error_during_execution","is_error":true,"num_turns":0,"total_cost_usd":0,"usage":{"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0}}
 ```
 
-- [ ] **Step 4: Write `evals/fixtures/late-skill.jsonl`**
+- [x] **Step 4: Write `evals/fixtures/late-skill.jsonl`**
 
 The skill fires, but only after a `Write` — a pass by firing alone, a failure by order.
 
@@ -210,7 +210,7 @@ The skill fires, but only after a `Write` — a pass by firing alone, a failure 
 {"type":"result","subtype":"success","is_error":false,"num_turns":3,"total_cost_usd":0.03,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":100,"output_tokens":400}}
 ```
 
-- [ ] **Step 5: Verify the fixtures**
+- [x] **Step 5: Verify the fixtures**
 
 Run:
 ```bash
@@ -228,7 +228,7 @@ console.log('fixtures ok');
 ```
 Expected: four `<name> <n> events` lines then `fixtures ok`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/fixtures
@@ -243,7 +243,7 @@ git commit -m "test(evals): transcript fixtures captured from live probe shapes"
 - Create: `evals/parse.mjs`
 - Test: `tests/eval-parse.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-parse.test.mjs
@@ -302,12 +302,12 @@ test('an unparseable transcript is an error, never a silent non-firing run', () 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-parse.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... parse.mjs`, reported as `fail 1` (a file that cannot load counts as one failing test, not one per test).
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/parse.mjs
@@ -372,12 +372,12 @@ export function parseTranscript(text) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-parse.test.mjs`
 Expected: PASS — `pass 8`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/parse.mjs tests/eval-parse.test.mjs
@@ -392,7 +392,7 @@ git commit -m "feat(evals): transcript parser with errored-run detection"
 - Create: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-score.test.mjs
@@ -469,12 +469,12 @@ test('compare fails a candidate that regressed against baseline beyond tolerance
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... score.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/score.mjs
@@ -542,12 +542,12 @@ export function compare(candidate, baseline, thresholds) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: PASS — `pass 9`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
@@ -556,15 +556,26 @@ git commit -m "feat(evals): scoring, incomplete detection and threshold comparis
 
 ---
 
-### Task 5: Session runner → verify: `tests/eval-session.test.mjs` reports `pass 5`; the injected spawn receives a `cwd` under `os.tmpdir()` that is not the repo root, and the temp dir does not exist after the call
+### Task 5: Session runner → verify: `tests/eval-session.test.mjs` reports `pass 6`; the injected spawn receives a `cwd` under `os.tmpdir()` that is not the repo root, the spawn args disallow `Bash`, and the temp dir does not exist after the call
 
 **Files:**
 - Create: `evals/session.mjs`
 - Test: `tests/eval-session.test.mjs`
 
-The cwd assertions are the safety property from the premortem: sessions run with edits permitted, so the working directory must never be the repo.
+The cwd assertions are the safety property from the premortem: sessions run with
+edits permitted, so the working directory must never be the repo.
 
-- [ ] **Step 1: Write the failing test**
+**Containment, stated accurately.** `bypassPermissions` would otherwise grant the
+session `Bash`, and a temp cwd does not contain arbitrary command execution — a
+session can run anything the user account can, regardless of where it is rooted.
+The spawn therefore passes `--disallowedTools Bash`, removing the
+arbitrary-execution path while leaving `Write` and `Edit` attemptable, which is
+all the ordering measurement needs. Residual risk remains and is accepted
+knowingly: a `Write` to an absolute path can still land outside the temp
+directory. Full containment would need an OS-level sandbox, which conflicts with
+the zero-dependency constraint.
+
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-session.test.mjs
@@ -615,6 +626,14 @@ test('removes the temp cwd afterwards', () => {
   assert.equal(existsSync(calls[0].opts.cwd), false)
 })
 
+test('disallows Bash so a session cannot run arbitrary commands', () => {
+  const calls = []
+  runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
+  const args = calls[0].args
+  assert.ok(args.includes('--disallowedTools'), 'must pass --disallowedTools')
+  assert.equal(args[args.indexOf('--disallowedTools') + 1], 'Bash')
+})
+
 test('returns the parsed transcript', () => {
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
   assert.equal(result.ok, true)
@@ -622,12 +641,12 @@ test('returns the parsed transcript', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-session.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... session.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/session.mjs
@@ -650,6 +669,10 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
       '--verbose', // required by the CLI whenever output-format is stream-json
       '--plugin-dir', pluginDir,
       '--permission-mode', 'bypassPermissions',
+      // bypassPermissions would otherwise hand the session Bash, and a temp cwd
+      // does not contain arbitrary command execution. Write/Edit stay available
+      // because attempting them is the behaviour under measurement.
+      '--disallowedTools', 'Bash',
     ]
     if (scenario.model) args.push('--model', scenario.model)
 
@@ -665,12 +688,12 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-session.test.mjs`
-Expected: PASS — `pass 5`, `fail 0`.
+Expected: PASS — `pass 6`, `fail 0`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/session.mjs tests/eval-session.test.mjs
@@ -686,7 +709,7 @@ git commit -m "feat(evals): session runner with disposable cwd"
 
 This task has no unit test: every meaningful behaviour is a git side effect, and mocking git would test the mock. It is verified by the runnable check in Step 2 instead.
 
-- [ ] **Step 1: Write the implementation**
+- [x] **Step 1: Write the implementation**
 
 ```js
 // evals/worktree.mjs
@@ -722,7 +745,7 @@ export function remove(path) {
 }
 ```
 
-- [ ] **Step 2: Verify with a real worktree round-trip**
+- [x] **Step 2: Verify with a real worktree round-trip**
 
 Run:
 ```bash
@@ -740,7 +763,7 @@ import('./evals/worktree.mjs').then(async wt => {
 ```
 Expected: `created .eval-worktrees/HEAD` then `removed ok`.
 
-- [ ] **Step 3: Confirm the guard rejects an outside path**
+- [x] **Step 3: Confirm the guard rejects an outside path**
 
 Run:
 ```bash
@@ -753,12 +776,12 @@ import('./evals/worktree.mjs').then(wt => {
 ```
 Expected: `guard ok`
 
-- [ ] **Step 4: Confirm no worktree leaked**
+- [x] **Step 4: Confirm no worktree leaked**
 
 Run: `git worktree list`
 Expected: only the main worktree at `/home/rizukirr/Projects/vibekit`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/worktree.mjs
@@ -775,7 +798,7 @@ git commit -m "feat(evals): git-ref worktree materialisation with removal guard"
 
 The dry-run assertion checks both that nothing spawned *and* that the plan is non-empty — a dry run that silently did nothing would otherwise look identical to a correct one.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```js
 // tests/eval-run.test.mjs
@@ -818,12 +841,12 @@ test('the printed plan names the session count so an empty plan is visible', () 
 })
 ```
 
-- [ ] **Step 2: Run the test to confirm it fails**
+- [x] **Step 2: Run the test to confirm it fails**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: FAIL — the suite fails to load with `Error [ERR_MODULE_NOT_FOUND]: Cannot find module ... run.mjs`, reported as `fail 1`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```js
 // evals/run.mjs
@@ -954,22 +977,22 @@ if (process.argv[1] && process.argv[1].endsWith('run.mjs')) {
 }
 ```
 
-- [ ] **Step 4: Run the test to confirm it passes**
+- [x] **Step 4: Run the test to confirm it passes**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: PASS — `pass 4`, `fail 0`.
 
-- [ ] **Step 5: Confirm a real dry run spawns nothing**
+- [x] **Step 5: Confirm a real dry run spawns nothing**
 
 Run: `npm run eval -- --dry-run`
 Expected: a plan listing `9 sessions`, then `dry run — nothing spawned`. No `claude` process starts and no worktree is created.
 
-- [ ] **Step 6: Confirm no worktree leaked**
+- [x] **Step 6: Confirm no worktree leaked**
 
 Run: `git worktree list`
 Expected: only the main worktree.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add evals/run.mjs tests/eval-run.test.mjs
@@ -984,7 +1007,7 @@ git commit -m "feat(evals): runner CLI with dry-run planning"
 - Create: `evals/judge.md`
 - Modify: `evals/run.mjs`
 
-- [ ] **Step 1: Write the rubric**
+- [x] **Step 1: Write the rubric**
 
 `evals/judge.md`:
 
@@ -1012,7 +1035,7 @@ Scoring:
 Do not explain outside the JSON. Do not wrap the JSON in a code fence.
 ```
 
-- [ ] **Step 2: Add the judge to the runner**
+- [x] **Step 2: Add the judge to the runner**
 
 Insert this function into `evals/run.mjs` immediately after the `requireClaude` function:
 
@@ -1035,7 +1058,7 @@ export function judgeTranscript(scenario, transcript, spawn) {
 }
 ```
 
-- [ ] **Step 3: Mention the judge in the plan output**
+- [x] **Step 3: Mention the judge in the plan output**
 
 In `formatPlan`, change the first line so the judge is visible in a dry run. Replace:
 
@@ -1052,7 +1075,7 @@ with:
   ]
 ```
 
-- [ ] **Step 4: Verify the rubric contract is present**
+- [x] **Step 4: Verify the rubric contract is present**
 
 Run:
 ```bash
@@ -1064,17 +1087,17 @@ console.log('rubric ok');
 ```
 Expected: `rubric ok`
 
-- [ ] **Step 5: Confirm a judged dry run still spawns nothing**
+- [x] **Step 5: Confirm a judged dry run still spawns nothing**
 
 Run: `npm run eval -- --dry-run --judge`
 Expected: a plan whose first line reads `9 sessions + 9 judge calls`, then `dry run — nothing spawned`.
 
-- [ ] **Step 6: Run the full unit suite**
+- [x] **Step 6: Run the full unit suite**
 
 Run: `npm test`
 Expected: `fail 0` across every suite.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add evals/judge.md evals/run.mjs
@@ -1091,14 +1114,14 @@ git commit -m "feat(evals): opt-in judge for skill-following, not just invocatio
 
 This is the only paid step in the plan. It costs roughly 9 haiku sessions — on the order of $0.20–0.80 based on the $0.024–0.089 per-session figures measured during design.
 
-- [ ] **Step 1: Run the harness for real**
+- [x] **Step 1: Run the harness for real**
 
 Run: `npm run eval`
 Expected: a plan line, then a progress line of dots (one per session, `E` for an errored session), then `results: evals/results/<timestamp>-HEAD.json`, a per-scenario summary, and `PASS`. Exit code 0.
 
 If a scenario reports `incomplete`, the sessions are failing rather than the skills — check `claude` auth and rate limits, then re-run. Do not lower the thresholds to make it pass.
 
-- [ ] **Step 2: Assert the acceptance criteria against the results file**
+- [x] **Step 2: Assert the acceptance criteria against the results file**
 
 Run:
 ```bash
@@ -1114,12 +1137,12 @@ console.log('acceptance ok — footprint', r.candidate.footprint.inputFootprint,
 ```
 Expected: `acceptance ok — footprint <n> tokens` with `<n>` in the low tens of thousands.
 
-- [ ] **Step 3: Confirm no worktree or temp directory leaked**
+- [x] **Step 3: Confirm no worktree or temp directory leaked**
 
 Run: `git worktree list && ls .eval-worktrees 2>/dev/null || echo "(no .eval-worktrees)"`
 Expected: only the main worktree, and either an empty `.eval-worktrees` or the `(no .eval-worktrees)` line.
 
-- [ ] **Step 4: Document the harness in the README**
+- [x] **Step 4: Document the harness in the README**
 
 Insert this section immediately before the existing `## Install` section:
 
@@ -1144,14 +1167,618 @@ This costs real money and needs an authenticated `claude` CLI, so it is a manual
 gate — not part of the free CI (`check`, `test`, `check:hook`).
 ```
 
-- [ ] **Step 5: Regenerate and check**
+- [x] **Step 5: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `up to date`, exit 0. The README skill-list region is untouched by the prose edit.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/results README.md
 git commit -m "test(evals): live acceptance run and harness docs"
+```
+
+---
+
+### Task 10: Dry-run cost estimate → verify: `tests/eval-run.test.mjs` reports `pass 7`; `npm run eval -- --dry-run` prints a line containing `est. $` and `npm run eval -- --dry-run --judge` prints a strictly larger high estimate
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-run.test.mjs`
+
+Added after verification found the spec and README both promise `--dry-run`
+prints "an estimated cost", while the implementation printed only a session
+count. This is the guardrail between a typo in `--scenarios` and an unexpectedly
+large bill, so it is implemented rather than removed from the spec.
+
+The per-session figures are measured, not invented: haiku sessions during this
+project's design and acceptance runs cost between `$0.021719866666666667` and
+`$0.0887088` inclusive, recorded in `evals/results/*.json` and in the design
+probes. The estimate is therefore a range, not a point.
+
+- [x] **Step 1: Write the failing tests**
+
+Append to `tests/eval-run.test.mjs`:
+
+```js
+test('estimates a cost range from the planned sessions', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  const est = estimateCost(runs, { judge: false })
+  assert.equal(est.sessions, 9)
+  assert.ok(est.low > 0 && est.high > est.low, 'range must be positive and ordered')
+})
+
+test('judging raises the estimate because it doubles the calls', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.ok(estimateCost(runs, { judge: true }).high > estimateCost(runs, { judge: false }).high)
+})
+
+test('the printed plan carries the estimate so a dry run shows the bill', () => {
+  const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
+  assert.match(formatPlan(runs, { candidate: 'HEAD', baseline: null }), /est\. \$/)
+})
+```
+
+Update the import line at the top of the file to include `estimateCost`:
+
+```js
+import { parseArgs, planRuns, formatPlan, estimateCost } from '../evals/run.mjs'
+```
+
+- [x] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: FAIL — `estimateCost` is not exported, so at least one test errors. Report the actual failure text.
+
+- [x] **Step 3: Add the estimator to `evals/run.mjs`**
+
+Insert immediately after the `planRuns` function:
+
+```js
+// Measured per-session cost ranges, taken from real runs recorded in
+// evals/results/*.json — not estimated from token prices. Haiku sessions in this
+// project ranged $0.0217 to $0.0887 depending on how much the session did.
+// vibekit: flat per-model range, refine from historical results if the spread
+// starts misleading people.
+const COST_PER_SESSION = {
+  haiku: [0.02, 0.09],
+  sonnet: [0.10, 0.45],
+  opus: [0.50, 2.00],
+}
+const DEFAULT_RANGE = COST_PER_SESSION.sonnet
+
+export function estimateCost(runs, opts) {
+  let low = 0
+  let high = 0
+  for (const run of runs) {
+    const [lo, hi] = COST_PER_SESSION[run.scenario.model] ?? DEFAULT_RANGE
+    low += lo
+    high += hi
+    // A judged run adds one grading call per successful session.
+    if (opts.judge) {
+      const [jlo, jhi] = COST_PER_SESSION.haiku
+      low += jlo
+      high += jhi
+    }
+  }
+  return { sessions: runs.length, low, high }
+}
+```
+
+- [x] **Step 4: Print it in `formatPlan`**
+
+Replace the existing first-line construction:
+
+```js
+  const lines = [
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}`,
+    `candidate: ${opts.candidate}`,
+  ]
+```
+
+with:
+
+```js
+  const est = estimateCost(runs, opts)
+  const lines = [
+    `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}` +
+      ` — est. $${est.low.toFixed(2)}-$${est.high.toFixed(2)}`,
+    `candidate: ${opts.candidate}`,
+  ]
+```
+
+- [x] **Step 5: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: PASS — `pass 7`, `fail 0`.
+
+- [x] **Step 6: Confirm the dry run shows the bill and still spawns nothing**
+
+Run: `npm run eval -- --dry-run`
+Expected: a first line of the form `9 sessions — est. $0.18-$0.81`, then the candidate line, per-scenario counts, and `dry run — nothing spawned`.
+
+Run: `npm run eval -- --dry-run --judge`
+Expected: a first line naming both session and judge calls with a strictly larger estimate, then `dry run — nothing spawned`.
+
+- [x] **Step 7: Run the full suite**
+
+Run: `npm test`
+Expected: `fail 0` across every suite.
+
+- [x] **Step 8: Commit**
+
+```bash
+git add evals/run.mjs tests/eval-run.test.mjs
+git commit -m "feat(evals): print a measured cost range in dry-run output"
+```
+
+---
+
+### Task 11: Reject degenerate input → verify: `tests/eval-run.test.mjs` reports `pass 12`; `npm run eval -- --scenarios nosuchscenario` exits 1 with `vibekit-eval: unknown scenario id(s): nosuchscenario` and writes no results file
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-run.test.mjs`
+
+Closes review finding B1 (a zero-session run reported `PASS` and exited 0),
+plus W4 (a flag silently consuming the next flag as its value) and W5 (threshold
+keys never checked against scenario ids).
+
+The root cause named in the review: every existing test constructs well-formed
+input. These tests are deliberately about malformed input.
+
+- [x] **Step 1: Write the failing tests**
+
+Append to `tests/eval-run.test.mjs`:
+
+```js
+test('rejects a non-integer -n instead of planning zero runs', () => {
+  assert.throws(() => parseArgs(['-n', 'abc']), /-n must be an integer/)
+})
+
+test('rejects a flag whose value is another flag', () => {
+  assert.throws(() => parseArgs(['--scenarios', '--judge']), /--scenarios requires a value/)
+})
+
+test('rejects an unknown scenario id', () => {
+  const opts = { scenarios: ['nosuchscenario'] }
+  assert.throws(
+    () => validatePlan([{}], scenarios, opts, { scenarios: {} }),
+    /unknown scenario id\(s\): nosuchscenario/,
+  )
+})
+
+test('rejects a thresholds key naming a scenario that does not exist', () => {
+  assert.throws(
+    () => validatePlan([{}], scenarios, { scenarios: null }, { scenarios: { ghost: {} } }),
+    /thresholds.json names unknown scenario\(s\): ghost/,
+  )
+})
+
+// B1: the harness exists to measure. Reporting PASS having measured nothing is
+// worse than crashing, because it looks like success and gets committed.
+test('refuses to score a plan with zero sessions', () => {
+  assert.throws(
+    () => validatePlan([], scenarios, { scenarios: null }, { scenarios: {} }),
+    /no sessions planned/,
+  )
+})
+```
+
+Update the import line to include `validatePlan`:
+
+```js
+import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan } from '../evals/run.mjs'
+```
+
+- [x] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: FAIL — `validatePlan` is not exported, so the suite fails to load with a `SyntaxError` about a missing export, reported as `fail 1`.
+
+- [x] **Step 3: Harden `parseArgs`**
+
+Replace the whole `parseArgs` function with:
+
+```js
+export function parseArgs(argv) {
+  const value = flag => {
+    const i = argv.indexOf(flag)
+    if (i === -1) return null
+    const next = argv[i + 1]
+    // A flag's value must never be another flag: `--scenarios --judge` is a
+    // typo, not a scenario named "--judge".
+    if (next === undefined || next.startsWith('-')) {
+      throw new Error(`${flag} requires a value`)
+    }
+    return next
+  }
+
+  const list = value('--scenarios')
+  const n = value('-n')
+  if (n !== null && !Number.isInteger(Number(n))) {
+    throw new Error(`-n must be an integer, got '${n}'`)
+  }
+
+  return {
+    baseline: value('--baseline'),
+    candidate: value('--candidate') ?? 'HEAD',
+    judge: argv.includes('--judge'),
+    dryRun: argv.includes('--dry-run'),
+    scenarios: list ? list.split(',') : null,
+    n: n ? Number(n) : null,
+  }
+}
+```
+
+- [x] **Step 4: Add `validatePlan`**
+
+Insert immediately after `planRuns`:
+
+```js
+// Every check here is about malformed input. The harness reports a verdict, so
+// the one thing it must never do is report PASS without having measured
+// anything — a green result with nothing behind it is worse than a crash,
+// because it looks like success and gets committed as trend history.
+export function validatePlan(runs, scenarios, opts, thresholds) {
+  const known = new Set(scenarios.map(s => s.id))
+
+  if (opts.scenarios) {
+    const unknown = opts.scenarios.filter(id => !known.has(id))
+    if (unknown.length) throw new Error(`unknown scenario id(s): ${unknown.join(', ')}`)
+  }
+
+  const ghosts = Object.keys(thresholds.scenarios ?? {}).filter(id => !known.has(id))
+  if (ghosts.length) {
+    throw new Error(`thresholds.json names unknown scenario(s): ${ghosts.join(', ')}`)
+  }
+
+  if (runs.length === 0) {
+    throw new Error('no sessions planned — refusing to report a result for zero measurements')
+  }
+}
+```
+
+- [x] **Step 5: Call it in `main`**
+
+In `main()`, insert the validation call between `planRuns` and the `console.log(formatPlan(...))` line, so a dry run is checked too:
+
+```js
+  const runs = planRuns(scenarios, opts)
+  validatePlan(runs, scenarios, opts, thresholds)
+
+  console.log(formatPlan(runs, opts))
+```
+
+- [x] **Step 6: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: PASS — `pass 12`, `fail 0`.
+
+- [x] **Step 7: Confirm the block is closed end to end**
+
+Run: `npm run eval -- --scenarios nosuchscenario`
+Expected: `vibekit-eval: unknown scenario id(s): nosuchscenario` on stderr, exit code 1, and NO new file in `evals/results/`. Check with `ls evals/results` before and after.
+
+Run: `npm run eval -- -n abc --dry-run`
+Expected: `vibekit-eval: -n must be an integer, got 'abc'`, exit code 1.
+
+Run: `npm run eval -- --dry-run`
+Expected: unchanged — `9 sessions — est. $0.18-$0.81` then `dry run — nothing spawned`, exit 0.
+
+- [x] **Step 8: Commit**
+
+```bash
+git add evals/run.mjs tests/eval-run.test.mjs
+git commit -m "fix(evals): refuse to report a verdict for zero measurements"
+```
+
+---
+
+### Task 12: Persist the judge verdict → verify: `tests/eval-score.test.mjs` reports `pass 11`; `scoreScenario` returns a `judge` block summarising graded runs, and returns `judge: null` when no run was judged
+
+**Files:**
+- Modify: `evals/score.mjs`
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-score.test.mjs`
+
+Closes review finding W2 — `--judge` doubled the cost of a run and then dropped
+the grading on the floor, because `scoreScenario` never read `result.judge` and
+the results file persists only the scored summary. Also closes N1 (the rubric
+was re-read from disk on every judge call).
+
+- [x] **Step 1: Write the failing tests**
+
+Append to `tests/eval-score.test.mjs`:
+
+```js
+const judged = (followed, score) => ({
+  ...fired(),
+  judge: { followed, score, why: 'because' },
+})
+
+test('summarises judge verdicts so a paid grading is not discarded', () => {
+  const r = scoreScenario(scenario, [judged(true, 5), judged(false, 1)])
+  assert.equal(r.judge.graded, 2)
+  assert.equal(r.judge.followedRate, 0.5)
+  assert.equal(r.judge.meanScore, 3)
+  assert.equal(r.judge.errors, 0)
+})
+
+test('judge is null when no run was judged', () => {
+  assert.equal(scoreScenario(scenario, [fired(), fired()]).judge, null)
+})
+
+test('judge errors are counted, not averaged into the score', () => {
+  const broken = { ...fired(), judge: { judge_error: true, followed: null, score: null } }
+  const r = scoreScenario(scenario, [judged(true, 4), broken])
+  assert.equal(r.judge.graded, 1)
+  assert.equal(r.judge.meanScore, 4)
+  assert.equal(r.judge.errors, 1)
+})
+```
+
+- [x] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-score.test.mjs`
+Expected: FAIL — at least one test fails with an assertion error, because `scoreScenario` returns no `judge` property (reading `.graded` of `undefined`).
+
+- [x] **Step 3: Summarise judge output in `scoreScenario`**
+
+In `evals/score.mjs`, inside `scoreScenario`, add this immediately before the final `return`:
+
+```js
+  // W2: a judged run costs a second model call per session. Summarising it here
+  // is what makes that spend readable — previously the verdict was attached to
+  // the run object and then dropped when the summary was written.
+  const graded = good.filter(r => r.judge && !r.judge.judge_error)
+  const judge = graded.length === 0
+    ? null
+    : {
+        graded: graded.length,
+        followedRate: graded.filter(r => r.judge.followed).length / graded.length,
+        meanScore: mean(graded.map(r => r.judge.score ?? 0)),
+        errors: good.filter(r => r.judge?.judge_error).length,
+      }
+```
+
+and add `judge,` to the returned object, after `cost`.
+
+Also add `judge: null` to the early `incomplete` return object, so the shape is
+consistent whether or not any run succeeded.
+
+- [x] **Step 4: Print the judge summary in the runner**
+
+In `evals/run.mjs`, replace the per-scenario summary loop:
+
+```js
+  for (const [id, r] of Object.entries(candidate)) {
+    const rate = r.incomplete ? 'incomplete' : r.rate.toFixed(2)
+    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}`)
+  }
+```
+
+with:
+
+```js
+  for (const [id, r] of Object.entries(candidate)) {
+    const rate = r.incomplete ? 'incomplete' : r.rate.toFixed(2)
+    const judged = r.judge ? ` followed=${r.judge.followedRate.toFixed(2)} score=${r.judge.meanScore.toFixed(1)}` : ''
+    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}${judged}`)
+  }
+```
+
+- [x] **Step 5: Read the rubric once**
+
+In `evals/run.mjs`, replace the first line of `judgeTranscript`:
+
+```js
+  const rubric = readFileSync('evals/judge.md', 'utf8')
+```
+
+with a module-level lazy cache. Insert above `judgeTranscript`:
+
+```js
+// N1: the rubric is identical for every call; re-reading it once per judged
+// session was nine identical disk reads on a nine-session run.
+let rubricCache = null
+function rubric() {
+  rubricCache ??= readFileSync('evals/judge.md', 'utf8')
+  return rubricCache
+}
+```
+
+and inside `judgeTranscript` use:
+
+```js
+  const prompt = `${rubric()}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
+```
+
+deleting the old `const rubric = ...` line.
+
+- [x] **Step 6: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-score.test.mjs`
+Expected: PASS — `pass 11`, `fail 0`.
+
+- [x] **Step 7: Run the full suite**
+
+Run: `npm test`
+Expected: `fail 0` across every suite.
+
+- [x] **Step 8: Commit**
+
+```bash
+git add evals/score.mjs evals/run.mjs tests/eval-score.test.mjs
+git commit -m "fix(evals): persist and print the judge verdict a run paid for"
+```
+
+---
+
+### Task 13: Root-relative paths and a real containment check → verify: `npm test` reports `fail 0`; `cd /tmp && node <repo>/evals/run.mjs --dry-run` prints the 9-session plan instead of failing on a missing file
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `evals/worktree.mjs`
+
+Closes review findings W3 (the runner only worked from the repo root, unlike
+`bin/generate.mjs` which resolves from `import.meta.url`), N3 (the deletion guard
+used a string prefix test, so a sibling named `.eval-worktrees-old` would pass)
+and N2 (an O(n²) spread inside a reduce).
+
+- [x] **Step 1: Resolve runner paths from the module, not the cwd**
+
+In `evals/run.mjs`, extend the imports:
+
+```js
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { spawnSync } from 'node:child_process'
+```
+
+and add below them:
+
+```js
+// Paths resolve from the module, not the caller's cwd — the same convention
+// bin/generate.mjs uses. Previously running the harness from a subdirectory
+// failed on a missing-file error that did not name the real cause.
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const at = (...parts) => join(ROOT, ...parts)
+```
+
+Then replace each cwd-relative path:
+
+- `readFileSync('evals/scenarios.json', 'utf8')` → `readFileSync(at('evals/scenarios.json'), 'utf8')`
+- `readFileSync('evals/thresholds.json', 'utf8')` → `readFileSync(at('evals/thresholds.json'), 'utf8')`
+- `readFileSync('evals/judge.md', 'utf8')` → `readFileSync(at('evals/judge.md'), 'utf8')`
+- `mkdirSync('evals/results', { recursive: true })` → `mkdirSync(at('evals/results'), { recursive: true })`
+- `writeFileSync(out, ...)` → `writeFileSync(at(out), ...)` (leave the `out` string itself relative so the printed path stays short)
+
+- [x] **Step 2: Replace the O(n²) reduce in `formatPlan`**
+
+Replace:
+
+```js
+  for (const [id, count] of Object.entries(
+    runs.reduce((acc, r) => ({ ...acc, [`${r.variant}:${r.scenario.id}`]: (acc[`${r.variant}:${r.scenario.id}`] ?? 0) + 1 }), {}),
+  )) {
+    lines.push(`  ${id} x${count}`)
+  }
+```
+
+with:
+
+```js
+  const counts = new Map()
+  for (const run of runs) {
+    const key = `${run.variant}:${run.scenario.id}`
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  for (const [id, count] of counts) lines.push(`  ${id} x${count}`)
+```
+
+- [x] **Step 3: Make the worktree guard a real containment check**
+
+Replace the whole of `evals/worktree.mjs` with:
+
+```js
+// evals/worktree.mjs
+import { spawnSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const ROOT = join(REPO, '.eval-worktrees')
+
+function git(args) {
+  // cwd is pinned to the repo so the harness works from any directory.
+  const proc = spawnSync('git', args, { encoding: 'utf8', cwd: REPO })
+  if (proc.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${proc.stderr.trim()}`)
+  return proc.stdout.trim()
+}
+
+// N3: a string prefix test would accept a sibling like `.eval-worktrees-old`.
+// path.relative answers the question actually being asked — is this path inside
+// that directory — and rejects both siblings and `..` traversal.
+function inside(root, target) {
+  const rel = relative(root, resolve(target))
+  return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel)
+}
+
+// Materialises a ref as a throwaway worktree. Variants are git refs rather than
+// directories in the repo: a second skills/ tree would drift from the real one,
+// which is the failure this project was rebuilt to remove.
+export function materialise(ref) {
+  git(['rev-parse', '--verify', `${ref}^{commit}`]) // fail before spawning sessions
+  const path = join(ROOT, ref.replace(/[^\w.-]/g, '_'))
+  if (existsSync(path)) return path
+  git(['worktree', 'add', '--detach', path, ref])
+  return path
+}
+
+export function remove(path) {
+  if (!inside(ROOT, path)) {
+    throw new Error(`refusing to remove ${path}: outside ${ROOT}`)
+  }
+  if (!existsSync(path)) return
+  git(['worktree', 'remove', path]) // no --force: a dirty worktree should fail loudly
+}
+```
+
+- [x] **Step 4: Verify the guard rejects a sibling and a traversal**
+
+Run:
+```bash
+node -e "
+import('./evals/worktree.mjs').then(wt => {
+  for (const bad of ['.eval-worktrees-old/x', '.eval-worktrees/../../etc', '/tmp']) {
+    try { wt.remove(bad); throw new Error('guard did not fire for ' + bad) }
+    catch (e) { if(!/refusing to remove/.test(e.message)) throw e; console.log('rejected', bad) }
+  }
+  console.log('guard ok');
+})
+"
+```
+Expected: three `rejected <path>` lines then `guard ok`.
+
+- [x] **Step 5: Verify the worktree round-trip still works**
+
+Run:
+```bash
+node -e "
+import('./evals/worktree.mjs').then(async wt => {
+  const {existsSync}=await import('fs');
+  const p = wt.materialise('HEAD');
+  if(!existsSync(p+'/evals')) throw new Error('worktree missing evals/');
+  wt.remove(p);
+  if(existsSync(p)) throw new Error('worktree not removed');
+  console.log('round-trip ok');
+})
+"
+```
+Expected: `round-trip ok`
+
+- [x] **Step 6: Verify the runner works from another directory**
+
+Run: `cd /tmp && node /home/rizukirr/Projects/vibekit/.vibe-worktrees/2026-08-03-vibekit-eval-harness/evals/run.mjs --dry-run`
+Expected: the normal 9-session plan and `dry run — nothing spawned`, exit 0. Before this task it failed on a missing `evals/scenarios.json`.
+
+- [x] **Step 7: Run the full suite and the drift check**
+
+Run: `npm test && npm run check`
+Expected: `fail 0`, then `up to date`.
+
+- [x] **Step 8: Confirm no worktree leaked**
+
+Run: `git worktree list`
+Expected: the main repo and this task's worktree only — no `.eval-worktrees` entry.
+
+- [x] **Step 9: Commit**
+
+```bash
+git add evals/run.mjs evals/worktree.mjs
+git commit -m "fix(evals): resolve paths from the module and bound the deletion guard"
 ```

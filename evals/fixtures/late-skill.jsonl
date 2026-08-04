@@ -1,0 +1,4 @@
+{"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Write","Skill"],"skills":["vibekit:example-plain"],"slash_commands":[]}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Write","input":{"file_path":"/tmp/x/App.jsx"}}]}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Skill","input":{"skill":"vibekit:example-plain"}}]}}
+{"type":"result","subtype":"success","is_error":false,"num_turns":3,"total_cost_usd":0.03,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":100,"output_tokens":400}}
