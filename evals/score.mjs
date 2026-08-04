@@ -25,8 +25,21 @@ export function scoreScenario(scenario, runs) {
   // No successful run is "incomplete", not a zero rate. A zero rate says the
   // skill failed to fire; incomplete says we never got to find out.
   if (good.length === 0) {
-    return { id: scenario.id, rate: null, incomplete: true, successful: 0, errored, inputFootprint: null, outputTokens: null, cost: null }
+    return { id: scenario.id, rate: null, incomplete: true, successful: 0, errored, inputFootprint: null, outputTokens: null, cost: null, judge: null }
   }
+
+  // W2: a judged run costs a second model call per session. Summarising it here
+  // is what makes that spend readable — previously the verdict was attached to
+  // the run object and then dropped when the summary was written.
+  const graded = good.filter(r => r.judge && !r.judge.judge_error)
+  const judge = graded.length === 0
+    ? null
+    : {
+        graded: graded.length,
+        followedRate: graded.filter(r => r.judge.followed).length / graded.length,
+        meanScore: mean(graded.map(r => r.judge.score ?? 0)),
+        errors: good.filter(r => r.judge?.judge_error).length,
+      }
 
   return {
     id: scenario.id,
@@ -37,6 +50,7 @@ export function scoreScenario(scenario, runs) {
     inputFootprint: mean(good.map(r => r.usage?.cache_creation_input_tokens ?? 0)),
     outputTokens: mean(good.map(r => r.usage?.output_tokens ?? 0)),
     cost: mean(good.map(r => r.cost ?? 0)),
+    judge,
   }
 }
 

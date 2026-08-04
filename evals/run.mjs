@@ -123,11 +123,18 @@ function requireClaude() {
   }
 }
 
+// N1: the rubric is identical for every call; re-reading it once per judged
+// session was nine identical disk reads on a nine-session run.
+let rubricCache = null
+function rubric() {
+  rubricCache ??= readFileSync('evals/judge.md', 'utf8')
+  return rubricCache
+}
+
 // The judge is the same claude binary, so it adds no dependency. Opt-in because
 // it doubles session count and cost.
 export function judgeTranscript(scenario, transcript, spawn) {
-  const rubric = readFileSync('evals/judge.md', 'utf8')
-  const prompt = `${rubric}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
+  const prompt = `${rubric()}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
   const proc = spawn('claude', ['-p', prompt, '--output-format', 'json', '--model', 'haiku'], {
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
@@ -192,7 +199,8 @@ async function main() {
 
   for (const [id, r] of Object.entries(candidate)) {
     const rate = r.incomplete ? 'incomplete' : r.rate.toFixed(2)
-    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}`)
+    const judged = r.judge ? ` followed=${r.judge.followedRate.toFixed(2)} score=${r.judge.meanScore.toFixed(1)}` : ''
+    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}${judged}`)
   }
 
   if (!verdict.pass) {

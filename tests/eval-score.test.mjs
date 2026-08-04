@@ -70,3 +70,28 @@ test('compare fails a candidate that regressed against baseline beyond tolerance
   assert.equal(out.pass, false)
   assert.match(out.failures[0], /regressed/)
 })
+
+const judged = (followed, score) => ({
+  ...fired(),
+  judge: { followed, score, why: 'because' },
+})
+
+test('summarises judge verdicts so a paid grading is not discarded', () => {
+  const r = scoreScenario(scenario, [judged(true, 5), judged(false, 1)])
+  assert.equal(r.judge.graded, 2)
+  assert.equal(r.judge.followedRate, 0.5)
+  assert.equal(r.judge.meanScore, 3)
+  assert.equal(r.judge.errors, 0)
+})
+
+test('judge is null when no run was judged', () => {
+  assert.equal(scoreScenario(scenario, [fired(), fired()]).judge, null)
+})
+
+test('judge errors are counted, not averaged into the score', () => {
+  const broken = { ...fired(), judge: { judge_error: true, followed: null, score: null } }
+  const r = scoreScenario(scenario, [judged(true, 4), broken])
+  assert.equal(r.judge.graded, 1)
+  assert.equal(r.judge.meanScore, 4)
+  assert.equal(r.judge.errors, 1)
+})
