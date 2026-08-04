@@ -5,6 +5,7 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 ## Skills
 
 <!-- vibekit:generated:skill-list -->
+- `brainstorm` — Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design.
 - `example-command` — Fixture skill that exercises slash-command emission.
 - `example-plain` — Fixture skill that exercises the plain-skill path.
 - `using-vibekit` — Use when starting any conversation — establishes vibekit's auto-trigger discipline.
