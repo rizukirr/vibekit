@@ -314,7 +314,7 @@ git tag brainstorm-arm-a
 **Files:**
 - Create: `skills/lazy/SKILL.md`
 
-- [ ] **Step 1: Write the skill**
+- [x] **Step 1: Write the skill**
 
 Create `skills/lazy/SKILL.md` with exactly this content:
 
@@ -380,12 +380,12 @@ If the user insists on the full version, build it. Do not re-argue.
 "stop lazy" or "normal mode" reverts.
 ````
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `wrote` lines, `done`, then `up to date`.
 
-- [ ] **Step 3: Verify content**
+- [x] **Step 3: Verify content**
 
 Run:
 ```bash
@@ -398,7 +398,7 @@ console.log('lazy ok');
 ```
 Expected: `lazy ok`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/lazy CLAUDE.md AGENTS.md README.md .vibekit-manifest
