@@ -1,0 +1,35 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": true,
+    "dryRun": false,
+    "scenarios": [
+      "terse-reachable"
+    ],
+    "n": null
+  },
+  "candidate": {
+    "terse-reachable": {
+      "id": "terse-reachable",
+      "rate": 0.8,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21703.8,
+      "outputTokens": 782.2,
+      "cost": 0.18835962,
+      "judge": {
+        "graded": 5,
+        "followedRate": 1,
+        "meanScore": 4.6,
+        "errors": 0
+      }
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}
