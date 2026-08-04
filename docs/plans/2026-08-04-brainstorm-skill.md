@@ -1100,18 +1100,22 @@ git commit -m "test: make the coverage assertion capable of failing"
 
 ---
 
-### Task 11: Re-measure with more power and a judge → verify: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable` writes a results file where both arms report `incomplete: false`, `brainstorm-precedes-code` carries a non-null `judge` block, and `lazy-reachable` has a numeric rate
+### Task 11: Re-measure with a judge and a delegation scenario → verify: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable` writes a results file where both arms report `incomplete: false`, `brainstorm-precedes-code` carries a non-null `judge` block, and `lazy-reachable` has a numeric rate
 
 **Files:**
 - Modify: `evals/scenarios.json`
 - Modify: `evals/thresholds.json`
 - Create: `evals/results/<timestamp>-HEAD.json` (produced by the run, then committed)
 
-Closes review findings W3 and W4.
+Closes review finding W4. **W3 is deliberately NOT fixed** — see below.
 
-**W3** — the first run used `n: 5`. If the true firing rate were 0.85, a 5-run
-sample shows 5/5 about 44% of the time, so "1.00 vs 1.00" did not bound the
-comparison tightly. `n` rises to 10.
+**W3, accepted rather than closed.** The first run used `n: 5`, and at that sample
+size a true rate of 0.85 still shows 5/5 about 44% of the time, so the comparison
+is not tightly bounded. Raising `n` to 10 would narrow the interval without
+changing the finding, at roughly double the cost. The maintainer chose to record
+the limitation instead: **the honest claim is "no regression detected at n=5", not
+"provably identical"**, and that wording belongs in the verification and review
+documents. `n` stays at 5.
 
 **W4** — the first run proved `brainstorm` *fires*. It could not prove the
 delegation still carries behaviour, because firing happens at the start of a
@@ -1121,22 +1125,23 @@ have scored exactly 1.00. Two additions close this: a scenario asserting `lazy` 
 reachable at all, and `--judge`, which grades whether a skill was *followed*
 rather than merely invoked.
 
-**This is a paid step.** 10 repeats × 2 scenarios × 2 arms = 40 sessions, plus 40
-judge calls. The dry run in Step 3 prints the estimate before anything spawns.
+**This is a paid step.** 5 repeats × 2 scenarios × 2 arms = 20 sessions, plus 20
+judge calls — roughly $2.40-$10.80. The dry run in Step 3 prints the estimate
+before anything spawns.
 
 The result is information. **Do not adjust any skill, scenario or threshold to make
 it come out well** — that would destroy the measurement.
 
-- [ ] **Step 1: Raise the repeat count and add the delegation scenario**
+- [ ] **Step 1: Add the delegation scenario**
 
-In `evals/scenarios.json`, change `brainstorm-precedes-code`'s `"n": 5` to `"n": 10`, and append this scenario after it:
+Leave `brainstorm-precedes-code`'s `"n": 5` unchanged. In `evals/scenarios.json`, append this scenario after it:
 
 ```json
   {
     "id": "lazy-reachable",
     "prompt": "Add a function that returns the number of days between two dates.",
     "expect": { "skill": "vibekit:lazy" },
-    "n": 10,
+    "n": 5,
     "model": "sonnet"
   }
 ```
@@ -1161,9 +1166,9 @@ design never claimed.
 - [ ] **Step 3: Confirm the plan and cost before spending**
 
 Run: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable --dry-run`
-Expected: `40 sessions + 40 judge calls` with a cost estimate, `candidate: HEAD`, `baseline: brainstorm-arm-a`, per-scenario counts of x10 each, then `dry run — nothing spawned`.
+Expected: `20 sessions + 20 judge calls` with a cost estimate, `candidate: HEAD`, `baseline: brainstorm-arm-a`, per-scenario counts of x5 each, then `dry run — nothing spawned`.
 
-**Report this estimate and STOP if it exceeds $25.** Return a `needs_input` result
+**Report this estimate and STOP if it exceeds $15.** Return a `needs_input` result
 naming the figure rather than spending it.
 
 - [ ] **Step 4: Run it**
