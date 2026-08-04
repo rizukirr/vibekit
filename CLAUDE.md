@@ -11,6 +11,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | Never — this is a build fixture | `example-command` | none |
 | Never — this is a build fixture | `example-plain` | hard |
 | Any coding work — writing, adding, refactoring, fixing, or designing code | `lazy` | none |
+| Every response — compress conversation, never compress artifacts | `terse` | none |
 | Session start | `using-vibekit` | none |
 <!-- /vibekit:generated -->
 
