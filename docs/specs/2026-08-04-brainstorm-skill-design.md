@@ -1,7 +1,7 @@
 ---
 title: brainstorm skill
 date: 2026-08-04
-status: draft
+status: approved
 ---
 
 # brainstorm skill — Design
