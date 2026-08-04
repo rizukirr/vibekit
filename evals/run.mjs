@@ -8,10 +8,22 @@ import { materialise, remove } from './worktree.mjs'
 export function parseArgs(argv) {
   const value = flag => {
     const i = argv.indexOf(flag)
-    return i === -1 ? null : argv[i + 1]
+    if (i === -1) return null
+    const next = argv[i + 1]
+    // A flag's value must never be another flag: `--scenarios --judge` is a
+    // typo, not a scenario named "--judge".
+    if (next === undefined || next.startsWith('-')) {
+      throw new Error(`${flag} requires a value`)
+    }
+    return next
   }
+
   const list = value('--scenarios')
   const n = value('-n')
+  if (n !== null && !Number.isInteger(Number(n))) {
+    throw new Error(`-n must be an integer, got '${n}'`)
+  }
+
   return {
     baseline: value('--baseline'),
     candidate: value('--candidate') ?? 'HEAD',
@@ -35,6 +47,28 @@ export function planRuns(scenarios, opts) {
     }
   }
   return runs
+}
+
+// Every check here is about malformed input. The harness reports a verdict, so
+// the one thing it must never do is report PASS without having measured
+// anything — a green result with nothing behind it is worse than a crash,
+// because it looks like success and gets committed as trend history.
+export function validatePlan(runs, scenarios, opts, thresholds) {
+  const known = new Set(scenarios.map(s => s.id))
+
+  if (opts.scenarios) {
+    const unknown = opts.scenarios.filter(id => !known.has(id))
+    if (unknown.length) throw new Error(`unknown scenario id(s): ${unknown.join(', ')}`)
+  }
+
+  const ghosts = Object.keys(thresholds.scenarios ?? {}).filter(id => !known.has(id))
+  if (ghosts.length) {
+    throw new Error(`thresholds.json names unknown scenario(s): ${ghosts.join(', ')}`)
+  }
+
+  if (runs.length === 0) {
+    throw new Error('no sessions planned — refusing to report a result for zero measurements')
+  }
 }
 
 // Measured per-session cost ranges, taken from real runs recorded in
@@ -111,6 +145,7 @@ async function main() {
   const scenarios = JSON.parse(readFileSync('evals/scenarios.json', 'utf8'))
   const thresholds = JSON.parse(readFileSync('evals/thresholds.json', 'utf8'))
   const runs = planRuns(scenarios, opts)
+  validatePlan(runs, scenarios, opts, thresholds)
 
   console.log(formatPlan(runs, opts))
   if (opts.dryRun) {

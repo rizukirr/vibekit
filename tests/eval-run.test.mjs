@@ -1,7 +1,7 @@
 // tests/eval-run.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { parseArgs, planRuns, formatPlan, estimateCost } from '../evals/run.mjs'
+import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan } from '../evals/run.mjs'
 
 const scenarios = [
   { id: 'a', prompt: 'x', n: 3, model: 'haiku' },
@@ -52,4 +52,36 @@ test('judging raises the estimate because it doubles the calls', () => {
 test('the printed plan carries the estimate so a dry run shows the bill', () => {
   const runs = planRuns(scenarios, { candidate: 'HEAD', baseline: null, scenarios: null, n: null })
   assert.match(formatPlan(runs, { candidate: 'HEAD', baseline: null }), /est\. \$/)
+})
+
+test('rejects a non-integer -n instead of planning zero runs', () => {
+  assert.throws(() => parseArgs(['-n', 'abc']), /-n must be an integer/)
+})
+
+test('rejects a flag whose value is another flag', () => {
+  assert.throws(() => parseArgs(['--scenarios', '--judge']), /--scenarios requires a value/)
+})
+
+test('rejects an unknown scenario id', () => {
+  const opts = { scenarios: ['nosuchscenario'] }
+  assert.throws(
+    () => validatePlan([{}], scenarios, opts, { scenarios: {} }),
+    /unknown scenario id\(s\): nosuchscenario/,
+  )
+})
+
+test('rejects a thresholds key naming a scenario that does not exist', () => {
+  assert.throws(
+    () => validatePlan([{}], scenarios, { scenarios: null }, { scenarios: { ghost: {} } }),
+    /thresholds.json names unknown scenario\(s\): ghost/,
+  )
+})
+
+// B1: the harness exists to measure. Reporting PASS having measured nothing is
+// worse than crashing, because it looks like success and gets committed.
+test('refuses to score a plan with zero sessions', () => {
+  assert.throws(
+    () => validatePlan([], scenarios, { scenarios: null }, { scenarios: {} }),
+    /no sessions planned/,
+  )
 })
