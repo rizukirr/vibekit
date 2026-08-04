@@ -1,9 +1,17 @@
 // evals/run.mjs
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { runSession } from './session.mjs'
 import { scoreScenario, compare } from './score.mjs'
 import { materialise, remove } from './worktree.mjs'
+
+// Paths resolve from the module, not the caller's cwd — the same convention
+// bin/generate.mjs uses. Previously running the harness from a subdirectory
+// failed on a missing-file error that did not name the real cause.
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const at = (...parts) => join(ROOT, ...parts)
 
 export function parseArgs(argv) {
   const value = flag => {
@@ -108,11 +116,12 @@ export function formatPlan(runs, opts) {
     `candidate: ${opts.candidate}`,
   ]
   if (opts.baseline) lines.push(`baseline: ${opts.baseline}`)
-  for (const [id, count] of Object.entries(
-    runs.reduce((acc, r) => ({ ...acc, [`${r.variant}:${r.scenario.id}`]: (acc[`${r.variant}:${r.scenario.id}`] ?? 0) + 1 }), {}),
-  )) {
-    lines.push(`  ${id} x${count}`)
+  const counts = new Map()
+  for (const run of runs) {
+    const key = `${run.variant}:${run.scenario.id}`
+    counts.set(key, (counts.get(key) ?? 0) + 1)
   }
+  for (const [id, count] of counts) lines.push(`  ${id} x${count}`)
   return lines.join('\n')
 }
 
@@ -127,7 +136,7 @@ function requireClaude() {
 // session was nine identical disk reads on a nine-session run.
 let rubricCache = null
 function rubric() {
-  rubricCache ??= readFileSync('evals/judge.md', 'utf8')
+  rubricCache ??= readFileSync(at('evals/judge.md'), 'utf8')
   return rubricCache
 }
 
@@ -149,8 +158,8 @@ export function judgeTranscript(scenario, transcript, spawn) {
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2))
-  const scenarios = JSON.parse(readFileSync('evals/scenarios.json', 'utf8'))
-  const thresholds = JSON.parse(readFileSync('evals/thresholds.json', 'utf8'))
+  const scenarios = JSON.parse(readFileSync(at('evals/scenarios.json'), 'utf8'))
+  const thresholds = JSON.parse(readFileSync(at('evals/thresholds.json'), 'utf8'))
   const runs = planRuns(scenarios, opts)
   validatePlan(runs, scenarios, opts, thresholds)
 
@@ -190,11 +199,11 @@ async function main() {
   const verdict = compare(candidate, baseline, thresholds)
 
   const stamp = new Date().toISOString().replace(/[:.]/g, '-')
-  mkdirSync('evals/results', { recursive: true })
+  mkdirSync(at('evals/results'), { recursive: true })
   const out = `evals/results/${stamp}-${opts.candidate.replace(/[^\w.-]/g, '_')}.json`
   // The runner writes the file; committing it is a human step. A runner that
   // auto-commits would fight the review pipeline.
-  writeFileSync(out, `${JSON.stringify({ opts, candidate, baseline, verdict }, null, 2)}\n`)
+  writeFileSync(at(out), `${JSON.stringify({ opts, candidate, baseline, verdict }, null, 2)}\n`)
   console.log(`results: ${out}`)
 
   for (const [id, r] of Object.entries(candidate)) {
