@@ -624,7 +624,7 @@ git commit -m "refactor(skills): extract ladder and compression policy out of br
 - Modify: `evals/scenarios.json`
 - Modify: `evals/thresholds.json`
 
-- [ ] **Step 1: Add the scenario**
+- [x] **Step 1: Add the scenario**
 
 Append to the array in `evals/scenarios.json`, after the existing `skill-invocable` entry:
 
@@ -640,7 +640,7 @@ Append to the array in `evals/scenarios.json`, after the existing `skill-invocab
 
 The prompt is superpowers' published acceptance test for this gate. The `before` clause is the strong assertion: a skill that fires after the agent has already written the file has failed while still looking like a pass.
 
-- [ ] **Step 2: Pin the threshold**
+- [x] **Step 2: Pin the threshold**
 
 In `evals/thresholds.json`, add to the `scenarios` object:
 
@@ -650,7 +650,7 @@ In `evals/thresholds.json`, add to the `scenarios` object:
 
 A hard gate that fires four times in five is not a gate.
 
-- [ ] **Step 3: Confirm the skill id is spelled the way the runtime reports it**
+- [x] **Step 3: Confirm the skill id is spelled the way the runtime reports it**
 
 Run:
 ```bash
@@ -667,17 +667,17 @@ Expected: `scenario ok: {"skill":"vibekit:brainstorm","before":["Write","Edit","
 
 The `vibekit:` prefix matches the shape observed in spec 2's live probe, where a real invocation reported `{"skill":"vibekit:example-plain"}`.
 
-- [ ] **Step 4: Dry run**
+- [x] **Step 4: Dry run**
 
 Run: `npm run eval -- --dry-run`
 Expected: a first line naming a session count and a cost estimate, a `candidate:` line, one `candidate:<id> xN` line per scenario including `candidate:brainstorm-precedes-code x5`, then `dry run — nothing spawned`. Exit 0. No `claude` process starts.
 
-- [ ] **Step 5: Confirm the validator accepts the new threshold key**
+- [x] **Step 5: Confirm the validator accepts the new threshold key**
 
 Run: `npm run eval -- --dry-run --scenarios brainstorm-precedes-code`
 Expected: `5 sessions` and its cost estimate, then `dry run — nothing spawned`. A threshold key naming a scenario that does not exist would have failed here with `thresholds.json names unknown scenario(s)`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/scenarios.json evals/thresholds.json
