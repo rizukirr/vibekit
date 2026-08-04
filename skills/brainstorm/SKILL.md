@@ -27,9 +27,8 @@ unexamined assumptions cause the most wasted work.
 ## Understand before you shorten
 
 Trace the whole thing first — every file the change touches, the actual flow —
-before proposing anything. The ladder in `lazy` shortens the solution, never the
-reading. Laziness that skips comprehension ships a confident wrong fix; it dresses
-up as efficiency and is the dangerous kind.
+before proposing anything. `lazy` governs how short the solution gets; it never
+shortens the reading.
 
 ## Procedure
 
@@ -85,8 +84,8 @@ Two or three, always, even when one seems obvious. The user decides obviousness.
 Full prose, with trade-offs and your recommendation. Lead with the recommendation
 and say why.
 
-**At least one approach must sit at the laziest rung that still meets the
-requirement**, so the user can choose it.
+**At least one approach must sit at the laziest rung of `lazy`'s ladder that still
+meets the requirement**, so the user can choose it.
 
 ## Presenting the design
 
