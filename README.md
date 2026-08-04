@@ -8,6 +8,7 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 - `brainstorm` — Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design.
 - `example-command` — Fixture skill that exercises slash-command emission.
 - `example-plain` — Fixture skill that exercises the plain-skill path.
+- `lazy` — Governs what you build — the laziness ladder. Default on for all coding work. Stdlib and native features before new code, one line before fifty.
 - `using-vibekit` — Use when starting any conversation — establishes vibekit's auto-trigger discipline.
 <!-- /vibekit:generated -->
 
