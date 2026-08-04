@@ -833,3 +833,376 @@ Expected: no output from `git status`, `fail 0` from the suite, and `up to date`
 git add tests/no-external-references.test.mjs
 git commit -m "test: vibekit absorbs from external/, never references it"
 ```
+
+---
+
+### Task 8: Remove the surviving duplication → verify: `npm run check` exits 0; `skills/brainstorm/SKILL.md` no longer contains the phrase "dresses up as efficiency"; that phrase still appears in `skills/lazy/SKILL.md`; the file is at least 4 lines shorter
+
+**Files:**
+- Modify: `skills/brainstorm/SKILL.md`
+
+Closes review findings W1 and N1. The extraction in Task 4 moved the ladder and
+the compression policy but left a third duplicated block behind: `brainstorm`'s
+`## Understand before you shorten` restates `lazy`'s `## Understand first` almost
+claim for claim. Both were authored independently in Tasks 1 and 2, and Task 4's
+scope did not include this paragraph, so nothing caught it.
+
+N1 rides along: `rung` is used at the "At least one approach" line but defined only
+in `lazy`, so the replacement text names the ladder's owner explicitly.
+
+- [ ] **Step 1: Replace the duplicated section**
+
+In `skills/brainstorm/SKILL.md`, replace the whole `## Understand before you shorten` section — heading and its four-line paragraph — with:
+
+```markdown
+## Understand before you shorten
+
+Trace the whole thing first — every file the change touches, the actual flow —
+before proposing anything. `lazy` governs how short the solution gets; it never
+shortens the reading.
+```
+
+The claims about confident wrong fixes and efficiency-in-disguise are not deleted
+from the system — they live in `lazy`, which this skill already delegates to at
+the top.
+
+- [ ] **Step 2: Name the ladder's owner where the term is used**
+
+Find the line reading:
+
+```
+**At least one approach must sit at the laziest rung that still meets the
+```
+
+Replace that sentence's opening so the term is anchored. The full sentence becomes:
+
+```markdown
+**At least one approach must sit at the laziest rung of `lazy`'s ladder that still
+meets the requirement**, so the user can choose it.
+```
+
+- [ ] **Step 3: Regenerate and check**
+
+Run: `npm run generate && npm run check`
+Expected: `up to date`. The description and trigger are unchanged, so the trigger table does not move and `generate` may report nothing to write.
+
+- [ ] **Step 4: Verify the duplication is gone and the content still exists elsewhere**
+
+Run:
+```bash
+node -e "
+const {readFileSync} = require('fs');
+const b = readFileSync('skills/brainstorm/SKILL.md','utf8');
+const l = readFileSync('skills/lazy/SKILL.md','utf8');
+if (b.includes('dresses up as efficiency')) throw new Error('duplication still in brainstorm');
+if (!l.includes('dresses up as efficiency')) throw new Error('claim lost from lazy');
+if (!b.includes(\"laziest rung of \`lazy\`'s ladder\")) throw new Error('rung not anchored');
+if (!b.includes('Trace the whole thing first')) throw new Error('understand-first guard lost');
+console.log('dedup ok —', b.split('\n').length, 'lines');
+"
+```
+Expected: `dedup ok — 159 lines` (from 163; the paragraph loses 4 lines).
+
+- [ ] **Step 5: Run the suite**
+
+Run: `npm test`
+Expected: `fail 0`.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add skills/brainstorm/SKILL.md
+git commit -m "refactor(skills): drop the paragraph brainstorm duplicated from lazy"
+```
+
+---
+
+### Task 9: Refresh the bootstrap → verify: `npm run check` exits 0; `skills/using-vibekit/SKILL.md` no longer contains the word "Stub", contains the 1% rule and the instruction-priority order, and names no individual skill
+
+**Files:**
+- Modify: `skills/using-vibekit/SKILL.md`
+
+Closes review finding W2. This is the document the SessionStart hook injects into
+**every** session, and it still described the plugin as an empty stub after three
+real skills landed.
+
+It is deliberately written to avoid naming individual skills. The trigger table in
+`CLAUDE.md` is generated from skill frontmatter and is therefore never stale;
+restating any of it here would create exactly the drift the generator exists to
+prevent. This file is also always-on, so length is the budget.
+
+- [ ] **Step 1: Rewrite the skill**
+
+Replace the entire contents of `skills/using-vibekit/SKILL.md` with:
+
+````markdown
+---
+name: using-vibekit
+description: Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
+trigger: Session start
+gate: none
+---
+
+# using-vibekit
+
+If there is even a 1% chance a vibekit skill applies to what you are about to do,
+invoke it.
+
+This is not negotiable. "The task is too small", "I already know the answer" and
+"it would be faster to just do it" are the rationalisations this plugin exists to
+stop. A guardrail you talked yourself out of is a guardrail that was never there.
+
+If a skill turns out to be wrong for the situation, you do not have to follow it —
+but you do have to check.
+
+## If you are a subagent
+
+If you were dispatched to execute a specific task, skip this and follow your
+brief. The orchestration discipline belongs to the session that dispatched you.
+
+## Instruction priority
+
+1. **The user's explicit instructions** — highest. If they say "skip the design step", skip it.
+2. **vibekit skills** — these override default behaviour where they conflict.
+3. **The default system prompt** — lowest.
+
+## Finding the right skill
+
+Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is
+generated from those declarations — so it is never out of date. Read the table,
+not a copy of it.
+
+A skill whose row says `hard` is a gate. Respect it regardless of how simple the
+task looks; simple tasks are where unexamined assumptions cost the most.
+
+## Always on
+
+Two skills are modifiers rather than steps: one governs what you build, the other
+governs how you talk. Both are on by default and both say so in their own
+descriptions. Apply them throughout rather than invoking them at a moment.
+
+## How to invoke
+
+Use the `Skill` tool. The skill's content loads and you follow it directly. Never
+read a skill file as a substitute for invoking it — reading gives you the text
+without the commitment.
+````
+
+- [ ] **Step 2: Regenerate and check**
+
+Run: `npm run generate && npm run check`
+Expected: `wrote` lines for the generated docs (the description changed, so the skill-list region moves), then `up to date`.
+
+- [ ] **Step 3: Verify content**
+
+Run:
+```bash
+node -e "
+const t = require('fs').readFileSync('skills/using-vibekit/SKILL.md','utf8');
+if (t.includes('Stub')) throw new Error('still describes itself as a stub');
+for (const m of ['1% chance','Instruction priority','generated from those declarations','Skill\` tool']) {
+  if (!t.includes(m)) throw new Error('missing: ' + m);
+}
+for (const skill of ['brainstorm','lazy','terse','example-command','example-plain']) {
+  if (t.includes(skill)) throw new Error('names an individual skill: ' + skill + ' — the table is generated, do not restate it');
+}
+console.log('bootstrap ok —', t.split('\n').length, 'lines');
+"
+```
+Expected: `bootstrap ok — <n> lines`.
+
+- [ ] **Step 4: Confirm the hook still emits parseable JSON carrying the new text**
+
+Run: `npm run check:hook`
+Expected: `ℹ pass 3`, `ℹ fail 0`. This test asserts the SessionStart hook's output parses as JSON and contains the bootstrap body, so a malformed rewrite would fail here.
+
+- [ ] **Step 5: Run the suite**
+
+Run: `npm test`
+Expected: `fail 0`.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add skills/using-vibekit/SKILL.md CLAUDE.md AGENTS.md README.md
+git commit -m "feat(skills): bootstrap describes the discipline, not an empty stub"
+```
+
+---
+
+### Task 10: De-tautologise the coverage assertion → verify: `node --test tests/no-external-references.test.mjs` reports `pass 2`; deleting the `README.md` entry from `shippedFiles()` makes the coverage test fail
+
+**Files:**
+- Modify: `tests/no-external-references.test.mjs`
+
+Closes review finding N2. The second test's `assert.equal(covered.length, actual.length)`
+compares two values derived from the same `readdirSync` and the same filter, so it
+can never fail. It was written to stop the first test passing vacuously on an empty
+file list; that guarantee currently rests entirely on the `assert.ok(actual.length > 0)`
+beside it.
+
+- [ ] **Step 1: Replace the second test**
+
+Replace the whole `test('the guard actually covers every skill directory', ...)` block with:
+
+```js
+test('the guard covers every skill plus all three generated docs', () => {
+  const files = shippedFiles()
+  const skillDirs = readdirSync('skills', { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+
+  // Without this the first test passes vacuously on an empty list.
+  assert.ok(skillDirs.length > 0, 'no skills found — the guard would pass vacuously')
+
+  // Anchored on a file that must exist, so the assertion is not derived purely
+  // from the same readdirSync the implementation uses.
+  assert.ok(files.includes('skills/brainstorm/SKILL.md'), 'a known skill must be covered')
+
+  for (const doc of ['README.md', 'CLAUDE.md', 'AGENTS.md']) {
+    assert.ok(files.includes(doc), `${doc} must be covered`)
+  }
+
+  assert.equal(files.length, skillDirs.length + 3, 'every skill plus exactly three docs')
+})
+```
+
+- [ ] **Step 2: Run it**
+
+Run: `node --test tests/no-external-references.test.mjs`
+Expected: PASS — `pass 2`, `fail 0`.
+
+- [ ] **Step 3: Prove the new assertion can actually fail**
+
+A test that has never failed is not known to work. Temporarily drop a doc from the
+covered list, confirm the failure, then restore:
+
+```bash
+cp tests/no-external-references.test.mjs /tmp/guard-backup.mjs
+sed -i "s/return \[...skills, 'README.md', 'CLAUDE.md', 'AGENTS.md'\]/return [...skills, 'CLAUDE.md', 'AGENTS.md']/" tests/no-external-references.test.mjs
+node --test tests/no-external-references.test.mjs 2>&1 | grep -E "README.md must be covered|^ℹ (pass|fail)"
+cp /tmp/guard-backup.mjs tests/no-external-references.test.mjs
+rm /tmp/guard-backup.mjs
+```
+Expected: the middle run reports `fail 1` and a message containing `README.md must be covered`. After the restore, `git diff --stat tests/no-external-references.test.mjs` shows the file matches what Step 1 wrote.
+
+- [ ] **Step 4: Run the suite**
+
+Run: `npm test && npm run check`
+Expected: `fail 0`, then `up to date`.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add tests/no-external-references.test.mjs
+git commit -m "test: make the coverage assertion capable of failing"
+```
+
+---
+
+### Task 11: Re-measure with more power and a judge → verify: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable` writes a results file where both arms report `incomplete: false`, `brainstorm-precedes-code` carries a non-null `judge` block, and `lazy-reachable` has a numeric rate
+
+**Files:**
+- Modify: `evals/scenarios.json`
+- Modify: `evals/thresholds.json`
+- Create: `evals/results/<timestamp>-HEAD.json` (produced by the run, then committed)
+
+Closes review findings W3 and W4.
+
+**W3** — the first run used `n: 5`. If the true firing rate were 0.85, a 5-run
+sample shows 5/5 about 44% of the time, so "1.00 vs 1.00" did not bound the
+comparison tightly. `n` rises to 10.
+
+**W4** — the first run proved `brainstorm` *fires*. It could not prove the
+delegation still carries behaviour, because firing happens at the start of a
+session, before the ladder or the compression policy would ever apply. A run that
+invoked `brainstorm`, ignored the delegation line and never loaded `lazy` would
+have scored exactly 1.00. Two additions close this: a scenario asserting `lazy` is
+reachable at all, and `--judge`, which grades whether a skill was *followed*
+rather than merely invoked.
+
+**This is a paid step.** 10 repeats × 2 scenarios × 2 arms = 40 sessions, plus 40
+judge calls. The dry run in Step 3 prints the estimate before anything spawns.
+
+The result is information. **Do not adjust any skill, scenario or threshold to make
+it come out well** — that would destroy the measurement.
+
+- [ ] **Step 1: Raise the repeat count and add the delegation scenario**
+
+In `evals/scenarios.json`, change `brainstorm-precedes-code`'s `"n": 5` to `"n": 10`, and append this scenario after it:
+
+```json
+  {
+    "id": "lazy-reachable",
+    "prompt": "Add a function that returns the number of days between two dates.",
+    "expect": { "skill": "vibekit:lazy" },
+    "n": 10,
+    "model": "sonnet"
+  }
+```
+
+This asserts the modifier is discoverable and invocable in a coding session. It
+does not prove `brainstorm`'s delegation line specifically caused it — `lazy` has
+its own trigger — but a rate near zero would prove the modifier is unreachable,
+which is the failure mode W4 identifies.
+
+- [ ] **Step 2: Add its threshold**
+
+In `evals/thresholds.json`, add to the `scenarios` object:
+
+```json
+    "lazy-reachable": { "minFiringRate": 0.5 }
+```
+
+Deliberately looser than `brainstorm`'s 1.0. `lazy` is `gate: none` — a modifier,
+not a hard gate — so demanding perfect invocation would be asserting something the
+design never claimed.
+
+- [ ] **Step 3: Confirm the plan and cost before spending**
+
+Run: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable --dry-run`
+Expected: `40 sessions + 40 judge calls` with a cost estimate, `candidate: HEAD`, `baseline: brainstorm-arm-a`, per-scenario counts of x10 each, then `dry run — nothing spawned`.
+
+**Report this estimate and STOP if it exceeds $25.** Return a `needs_input` result
+naming the figure rather than spending it.
+
+- [ ] **Step 4: Run it**
+
+Run: `npm run eval -- --baseline brainstorm-arm-a --candidate HEAD --judge --scenarios brainstorm-precedes-code,lazy-reachable`
+Expected: a plan line, a progress line, a `results:` path, a per-scenario summary now including `followed=` and `score=` segments, and `PASS` or `FAIL`.
+
+Either verdict is a valid outcome. If a scenario reports `incomplete`, the sessions
+failed rather than the skills — check auth and rate limits, re-run once, and do not
+lower a threshold.
+
+- [ ] **Step 5: Extract the numbers**
+
+Run:
+```bash
+node -e "
+const {readdirSync,readFileSync} = require('fs');
+const f = readdirSync('evals/results').sort().pop();
+const r = JSON.parse(readFileSync('evals/results/'+f,'utf8'));
+console.log('file:', f);
+for (const id of ['brainstorm-precedes-code','lazy-reachable']) {
+  const c = r.candidate[id], b = r.baseline && r.baseline[id];
+  if (!c) { console.log(id + ': absent from candidate'); continue }
+  const j = v => v && v.judge ? ' followed=' + v.judge.followedRate.toFixed(2) + ' score=' + v.judge.meanScore.toFixed(1) + ' judgeErrors=' + v.judge.errors : ' judge=null';
+  console.log(id + ' B rate=' + c.rate + ' n=' + c.successful + ' errors=' + c.errored + j(c));
+  if (b) console.log(id + ' A rate=' + b.rate + ' n=' + b.successful + ' errors=' + b.errored + j(b));
+}
+console.log('verdict:', JSON.stringify(r.verdict));
+"
+```
+Expected: two lines per scenario with numeric rates, and a `followed=`/`score=` segment on at least `brainstorm-precedes-code`. Record every figure verbatim.
+
+- [ ] **Step 6: Confirm nothing leaked**
+
+Run: `git status --porcelain && git worktree list`
+Expected: `evals/results/` as the only new path, and no `.eval-worktrees` entry.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add evals/scenarios.json evals/thresholds.json evals/results
+git commit -m "test(evals): re-measure at n=10 with a judge and a delegation scenario"
+```
