@@ -28,10 +28,21 @@ test('no shipped file names a project vibekit only borrows from', () => {
   }
 })
 
-test('the guard actually covers every skill directory', () => {
-  const covered = shippedFiles().filter(p => p.startsWith('skills/'))
-  const actual = readdirSync('skills', { withFileTypes: true })
+test('the guard covers every skill plus all three generated docs', () => {
+  const files = shippedFiles()
+  const skillDirs = readdirSync('skills', { withFileTypes: true })
     .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
-  assert.equal(covered.length, actual.length)
-  assert.ok(actual.length > 0, 'no skills found — the guard would pass vacuously')
+
+  // Without this the first test passes vacuously on an empty list.
+  assert.ok(skillDirs.length > 0, 'no skills found — the guard would pass vacuously')
+
+  // Anchored on a file that must exist, so the assertion is not derived purely
+  // from the same readdirSync the implementation uses.
+  assert.ok(files.includes('skills/brainstorm/SKILL.md'), 'a known skill must be covered')
+
+  for (const doc of ['README.md', 'CLAUDE.md', 'AGENTS.md']) {
+    assert.ok(files.includes(doc), `${doc} must be covered`)
+  }
+
+  assert.equal(files.length, skillDirs.length + 3, 'every skill plus exactly three docs')
 })
