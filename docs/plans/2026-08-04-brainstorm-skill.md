@@ -758,7 +758,7 @@ The three skills this plan authors were checked and found clean when the plan wa
 written. This task turns that from a one-time check into an invariant, so the nine
 skills still to be authored cannot regress it.
 
-- [ ] **Step 1: Write the test**
+- [x] **Step 1: Write the test**
 
 ```js
 // tests/no-external-references.test.mjs
@@ -803,12 +803,12 @@ test('the guard actually covers every skill directory', () => {
 The second test exists because the first passes vacuously if `shippedFiles()`
 ever returns nothing.
 
-- [ ] **Step 2: Run it**
+- [x] **Step 2: Run it**
 
 Run: `node --test tests/no-external-references.test.mjs`
 Expected: PASS — `pass 2`, `fail 0`.
 
-- [ ] **Step 3: Prove the guard actually catches a violation**
+- [x] **Step 3: Prove the guard actually catches a violation**
 
 A test that has never failed is not known to work. Insert a violation, confirm it
 fails, then remove it:
@@ -822,12 +822,12 @@ rm /tmp/terse-backup.md
 ```
 Expected: the middle run FAILS with a message containing `skills/terse/SKILL.md references 'ponytail'`. After the restore, `git status --porcelain` must be empty.
 
-- [ ] **Step 4: Confirm the tree is restored and everything passes**
+- [x] **Step 4: Confirm the tree is restored and everything passes**
 
 Run: `git status --porcelain && npm test 2>&1 | grep -E "^ℹ (tests|pass|fail)" && npm run check`
 Expected: no output from `git status`, `fail 0` from the suite, and `up to date` from the check.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/no-external-references.test.mjs
