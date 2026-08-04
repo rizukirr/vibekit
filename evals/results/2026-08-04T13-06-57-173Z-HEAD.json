@@ -1,0 +1,42 @@
+{
+  "opts": {
+    "baseline": "brainstorm-arm-a",
+    "candidate": "HEAD",
+    "judge": false,
+    "dryRun": false,
+    "scenarios": [
+      "brainstorm-precedes-code"
+    ],
+    "n": null
+  },
+  "candidate": {
+    "brainstorm-precedes-code": {
+      "id": "brainstorm-precedes-code",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 17962.4,
+      "outputTokens": 608,
+      "cost": 0.13443762,
+      "judge": null
+    }
+  },
+  "baseline": {
+    "brainstorm-precedes-code": {
+      "id": "brainstorm-precedes-code",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 18406.2,
+      "outputTokens": 712.8,
+      "cost": 0.13864068000000002,
+      "judge": null
+    }
+  },
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}

@@ -2,6 +2,9 @@
   "defaults": { "minFiringRate": 0.8, "maxRateRegression": 0.2 },
   "scenarios": {
     "footprint": { "minFiringRate": 0 },
-    "bootstrap-injected": { "minFiringRate": 1 }
+    "bootstrap-injected": { "minFiringRate": 1 },
+    "brainstorm-precedes-code": { "minFiringRate": 1 },
+    "lazy-reachable": { "minFiringRate": 0.5 },
+    "terse-reachable": { "minFiringRate": 0.5 }
   }
 }

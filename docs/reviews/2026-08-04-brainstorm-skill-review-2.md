@@ -1,0 +1,281 @@
+# Review (round 2) — brainstorm skill
+
+**Date:** 2026-08-04
+**Spec:** docs/specs/2026-08-04-brainstorm-skill-design.md (amended at f11cadc)
+**Plan:** docs/plans/2026-08-04-brainstorm-skill.md (amended at f11cadc)
+**Verify report:** docs/verifications/2026-08-04-brainstorm-skill-verify-4.md (verdict `ready`)
+**Prior review:** docs/reviews/2026-08-04-brainstorm-skill-review.md (0 blocks, 4 warns, 2 nits)
+**Commits under review:** 6a09641..4b8871d on `brainstorm-skill`
+
+## Diff summary
+
+- Files changed: 23
+- Lines added: 2,236, removed: 47
+- Commits: 31
+- Skill content: 360 lines across four skills (`brainstorm` 164, `terse` 82,
+  `lazy` 60, `using-vibekit` 54)
+
+## Findings
+
+### Block
+
+**B1. `evals/scenarios.json` — `terse` was extracted and no scenario asserts it is
+reached. The spec's own goal, added four commits ago, requires one.**
+
+The amended spec §Goals says, verbatim:
+
+> - **The delegation must be observably load-bearing.** A skill that names a
+>   modifier without causing it to be invoked has not delegated anything. Every
+>   extraction ships with an eval scenario asserting the delegated skill is
+>   reached.
+
+`evals/scenarios.json` holds five scenarios — `footprint`, `bootstrap-injected`,
+`skill-invocable`, `brainstorm-precedes-code`, `lazy-reachable`. `grep -c terse
+evals/scenarios.json` returns `0`.
+
+This spec extracted **two** modifiers. `lazy` got `lazy-reachable` and is measured
+at 1.00. `terse` got nothing. The exact failure this goal exists to prevent —
+content extracted into a file that never loads — is currently unmeasured for
+`terse`, and it is the failure that actually happened here once already.
+
+`terse` was observed invoking in the run-4 transcripts, so this is very likely a
+paperwork gap rather than a live defect. But "very likely" is the standard the
+goal was written to replace.
+
+Two honest remedies:
+
+1. **Add `terse-reachable` and measure it** — one scenario, one paid run
+   (~$1–4.50 for the single scenario across both arms). Closes it on evidence.
+2. **Narrow the goal to what was actually delivered** — reword it to bind the
+   remaining nine skills prospectively, which is what its own inline comment
+   ("binding on the remaining nine skills") already says, and record `terse` as
+   knowingly unmeasured.
+
+Remedy 2 is legitimate but it is the second time this spec's wording would be
+adjusted to match the work rather than the reverse. I recommend remedy 1.
+
+### Warn
+
+**W1. `evals/results/2026-08-04T16-24-22-484Z-HEAD.json` — the candidate scored
+*worse* than the control on the follow-through metric, and nobody knows why.**
+
+```
+candidate brainstorm-precedes-code  followed=0.00 score=2.0 graded=5 judgeErr=0
+baseline  brainstorm-precedes-code  followed=0.20 score=3.0 graded=5 judgeErr=0
+```
+
+Zero judge errors on both arms, so the numbers are real numbers this time. The
+same candidate scenario scored 3.0 one run earlier, so run-to-run variance is at
+least ±1.0 and the gap may be noise. But the direction is unfavourable and the
+verification report's explanation — that a one-shot session cannot exhibit a
+completed procedure — is a hypothesis nobody has tested against a transcript.
+
+Not a block: it is identical in kind on both arms, so it says nothing about the
+extraction under review. It is the single most valuable open question for the
+remaining nine skills.
+
+**W2. `skills/using-vibekit/SKILL.md:42` hardcodes the modifier count in a
+hand-written file.**
+
+> Two skills are modifiers rather than steps: one governs what you build, the
+> other governs how you talk.
+
+The architecture's premise is that no hand-maintained file enumerates skills —
+`CLAUDE.md`'s trigger table is generated precisely so it cannot drift. This
+sentence reintroduces a hand-maintained count in the one document injected into
+every session. A third modifier makes it silently wrong, and `npm run check` will
+not catch it because the file is not generated.
+
+**W3. `evals/scenarios.json:31-36` — `lazy-reachable` does not actually assert the
+delegation chain.**
+
+```json
+"expect": { "skill": "vibekit:lazy" }
+```
+
+There is no `before` clause and no assertion that `brainstorm` preceded it. The
+scenario passes if `lazy` fires from its own trigger without `brainstorm`
+delegating at all. The transcripts did show the chain, but the scenario does not
+encode it, so a future regression that breaks delegation while leaving `lazy`'s
+own trigger intact would still score 1.00.
+
+The harness already supports the needed assertion — `before` was built in spec 2
+and is used by `brainstorm-precedes-code`. Tightening this is a one-line change to
+the expectation, though re-measuring costs money.
+
+**W4. n=5 per arm. Unchanged and knowingly accepted.**
+
+5/5 does not distinguish 1.00 from ~0.85. Carried from the prior review, recorded
+again because two more results files now quote 1.00 and the figure invites
+over-reading. The honest claim remains "no regression detected at n=5".
+
+### Nit
+
+**N1. Four verification reports and two reviews now exist for one feature, with no
+index.** `verify.md` still leads with a conclusion that is wrong; it carries an
+inline correction block, so a reader who starts at the top is not misled, but a
+reader who greps for "extraction is free" will find it. A one-line pointer at the
+top of `verify.md` to `verify-4.md` would close it.
+
+**N2. `skills/lazy/SKILL.md:57-60` and `skills/terse/SKILL.md:79-82` — near-identical
+`## Boundaries` sections.** Four lines each, mirror images ("governs what you
+build, not how you talk" / "governs how you talk, not what you build"). Deliberate
+symmetry rather than accidental duplication, and each is useful in isolation.
+Recorded only because the prior review's W1 was exactly this shape.
+
+## Pass 4 — simplicity
+
+- Skill content: **360 lines** across four files. Largest construct:
+  `skills/brainstorm/SKILL.md`, 164 lines.
+- New executable code in this range: `extractJson`, 6 lines, one caller, three
+  tests covering the fenced case, the prose-wrapped case, and the no-braces case
+  that must still fail.
+- Could a senior engineer halve it? **No.** The skill bodies are pay-per-use —
+  they load only on invocation — and squeezing procedure prose is an explicit
+  spec non-goal deferred to A/B run 2. The only executable addition is six lines
+  with a test each.
+
+`Lean already.`
+
+`net: -0 lines possible.`
+
+## Pass 5 — surgical diff
+
+**Clean.** An independent read-only auditor re-traced `90b7ab1..HEAD` after the
+f11cadc amendment and returned `clean` with zero orphans, having verified Task
+12's file list against `git show 6ef25c3` hunk by hunk rather than trusting the
+amendment's own claim. The earlier portion of the range was audited clean in
+review round 1.
+
+## Self-critique (three risks)
+
+1. **The judge metric may be measuring the harness, not the skill — and nine more
+   skills are about to be built on it.** `followed=0.00` on both arms is
+   consistent with "brainstorm is ignored" and with "a one-shot session ends
+   before the procedure can be exhibited", and nothing in the diff distinguishes
+   them. — **unmitigated.** Follow-up: read one run-4 transcript against
+   `evals/judge.md` by hand and record which reading it supports. Costs nothing.
+
+2. **Nothing measures a false-positive firing rate.** Both modifier descriptions
+   were rewritten to "Use at the start of…", which is what made them fire. The
+   same change may make them fire in sessions where they are irrelevant, and every
+   invocation loads a 60–82 line body. The suite has no negative scenario — no
+   prompt that asserts a skill does *not* fire. — **unmitigated.** Follow-up: a
+   haiku scenario with a non-coding prompt (`"What time zone is UTC+7?"`)
+   expecting no `lazy` invocation.
+
+3. **The entire result rests on a host heuristic no test pins.** Firing depends on
+   how the runtime matches a `description:` line to a request. If that matching
+   changes, every skill's rate moves and the only detector is a paid eval run
+   somebody has to remember to launch. — **partially mitigated:** `footprint` and
+   `bootstrap-injected` run on haiku and are cheap, but neither asserts a
+   *behavioural* trigger. Follow-up: promote one cheap haiku firing scenario into
+   whatever runs routinely, so drift surfaces without a $10 run.
+
+## Diff
+
+Run: `git diff 6a09641..4b8871d`
+
+Per-file summary is in §Diff summary.
+
+## Resolution (2026-08-04, commits c38e19a..7129f43)
+
+All seven findings were fixed at the user's instruction. Final measured state,
+candidate-only, n=5, judged, zero session errors and zero judge errors:
+
+| scenario | rate | judge |
+|---|---|---|
+| brainstorm-precedes-code | 1.00 | followed 0.00, score 2.6 |
+| lazy-reachable (with `after`) | 1.00 | followed 1.00, score 4.4 |
+| terse-reachable | 0.80 | followed 1.00, score 4.6 |
+
+**B1 — resolved, and my intermediate reading of it was wrong.** `terse-reachable`
+was built and first scored **0.40, FAIL**. I recorded at that point that the
+review's "very likely a paperwork gap rather than a live defect" had been wrong.
+It had not been. Diagnosis showed the prompt ("I want to add a keyboard shortcut
+for saving.") was answered as a question about Claude Code's own keybindings —
+the session invoked an unrelated `keybindings-help` skill and never entered the
+pipeline, so the `after: ["vibekit:brainstorm"]` clause could not be satisfied.
+Four of four probes reproduced it before any edit. On a valid probe `terse` is
+reached 4 of 5 times. The block was still right to raise: it is what caused the
+probe to exist at all.
+
+**W3 — resolved and strengthened.** `after` is implemented in the scorer as the
+mirror of `before` over skills, mutation-proven (neutering the guard fails
+exactly the two tests written for it), and applied to both delegation scenarios.
+`lazy-reachable` held at 1.00 under the stricter assertion, so the delegation
+chain is now proven rather than assumed.
+
+**W2, N1, N2 — resolved.** The hand-maintained modifier count is gone from the
+bootstrap; the superseded verification report carries a banner; the mirrored
+`Boundaries` sections are one line each.
+
+**W4 — unchanged, still accepted.** n=5.
+
+**W1 — fix shipped, and it did not work.** The batching rule was made checkable
+("one question mark per turn"), and the run above was taken *with that fix in
+place*: `followed` is still **0.00** and `score` moved 2.0 → 2.6, inside the
+±1.0 run-to-run variance already recorded. So the hand-graded defect was real —
+the transcript batched two questions against an explicit "Never batch" — but
+tightening the rule did not measurably change the outcome at n=5.
+
+This is the one finding from round 2 that remains open on the evidence. It is
+not a regression (`brainstorm` fires 1.00 and precedes every file write) and it
+is not specific to the extraction (the pre-extraction control scored `followed`
+0.20 / score 3.0 on the same scenario). It is the open question this spec hands
+to the remaining nine skills, and it should be named as such in their specs
+rather than quietly inherited.
+
+### W1 — second attempt (commits f45e210, 1450f68): improved, not closed
+
+Diagnosed properly this time instead of guessed at. Three transcripts were
+captured at HEAD and hand-graded, then the judge was run offline against four
+saved transcripts to check it discriminates.
+
+**What the captured transcripts showed.** The batching rule from the first
+attempt *did* work — three of three sessions ask exactly one question. So
+`followed=0.00` had never been reporting batching. All three sessions were
+compliant by hand-grading, and the judge still failed them.
+
+**Defect A — the rubric.** `evals/judge.md` asked whether the agent followed the
+procedure, against transcripts that always truncate at the first user question,
+because stopping to ask *is* the procedure. Absence of the later steps was graded
+as failure. The rubric now grades only steps the transcript could exhibit and
+enumerates the compliance failures that do count.
+
+Checked for discrimination rather than assumed, on saved transcripts:
+
+| transcript | verdict |
+|---|---|
+| skipped the gate, wrote code immediately | `followed:false, score:0` |
+| batched two questions | `followed:false, score:3` |
+| one question, modifiers invoked | `followed:false, score:3` |
+| scope check + pushback + one question | `followed:false, score:2` |
+
+The rubric did not inflate: it still failed both *good* transcripts. That is
+what surfaced defect B.
+
+**Defect B — the skill.** Both graders, independently, gave the same reason:
+Procedure step 2 was being skipped. Sessions asserted "no context to explore —
+new project" with no tool call, then asked their first question. Step 2 now
+states the conclusion is available only *after* a tool call, never instead of
+one.
+
+**Result.** `followed` 0.00 → **0.40**, score 2.6 → **3.8**, rate held at 1.00.
+`terse-reachable` also rose 0.80 → 1.00.
+
+**Not closed, and one methodological caveat.** 2 of 5 sessions still fail the
+follow-through grade — this is better, not fixed. And two variables changed
+between the runs (rubric and skill), so the improvement cannot be attributed to
+either alone; no run isolating one was performed. Both facts are recorded in the
+commit rather than left to be discovered.
+
+W1 stands as the open question handed to the remaining nine skills, now with a
+sharper statement of it: the pipeline's skills fire reliably and are followed
+inconsistently, and the second half of that sentence is the unsolved part.
+
+## Sign-off
+
+- [ ] User reviewed findings.
+- [ ] User reviewed diff.
+- [ ] User approves proceeding to finish-branch.

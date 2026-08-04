@@ -140,6 +140,16 @@ function rubric() {
   return rubricCache
 }
 
+// The rubric says "no code fence", and haiku fences it anyway — 4 of 5 judge
+// calls on the first judged run were lost to that alone. Take the outermost
+// braces rather than trusting the instruction to be obeyed.
+export function extractJson(text) {
+  const s = String(text ?? '')
+  const start = s.indexOf('{')
+  const end = s.lastIndexOf('}')
+  return start === -1 || end < start ? s : s.slice(start, end + 1)
+}
+
 // The judge is the same claude binary, so it adds no dependency. Opt-in because
 // it doubles session count and cost.
 export function judgeTranscript(scenario, transcript, spawn) {
@@ -150,7 +160,7 @@ export function judgeTranscript(scenario, transcript, spawn) {
   })
   try {
     const outer = JSON.parse(proc.stdout ?? '')
-    return JSON.parse(outer.result)
+    return JSON.parse(extractJson(outer.result))
   } catch {
     return { judge_error: true, followed: null, score: null, why: 'unparseable judge output' }
   }

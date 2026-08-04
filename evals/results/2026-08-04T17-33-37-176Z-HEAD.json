@@ -1,0 +1,69 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": true,
+    "dryRun": false,
+    "scenarios": [
+      "brainstorm-precedes-code",
+      "lazy-reachable",
+      "terse-reachable"
+    ],
+    "n": null
+  },
+  "candidate": {
+    "brainstorm-precedes-code": {
+      "id": "brainstorm-precedes-code",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21237.8,
+      "outputTokens": 581.2,
+      "cost": 0.17116482000000002,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0.4,
+        "meanScore": 3.8,
+        "errors": 0
+      }
+    },
+    "lazy-reachable": {
+      "id": "lazy-reachable",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21460.6,
+      "outputTokens": 513.4,
+      "cost": 0.17393388,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0.8,
+        "meanScore": 4.6,
+        "errors": 0
+      }
+    },
+    "terse-reachable": {
+      "id": "terse-reachable",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21566,
+      "outputTokens": 628.4,
+      "cost": 0.18146609999999996,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0.8,
+        "meanScore": 4.2,
+        "errors": 0
+      }
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}
