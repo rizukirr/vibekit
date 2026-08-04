@@ -10,7 +10,7 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 - `example-plain` — Fixture skill that exercises the plain-skill path.
 - `lazy` — Governs what you build — the laziness ladder. Default on for all coding work. Stdlib and native features before new code, one line before fifty.
 - `terse` — Governs how you talk — compress narration, never artifacts. Default on. Questions, evidence, specs, plans and warnings are always verbatim.
-- `using-vibekit` — Use when starting any conversation — establishes vibekit's auto-trigger discipline.
+- `using-vibekit` — Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
 <!-- /vibekit:generated -->
 
 ## Runtime support
