@@ -1,0 +1,85 @@
+{
+  "opts": {
+    "baseline": "brainstorm-arm-a",
+    "candidate": "HEAD",
+    "judge": true,
+    "dryRun": false,
+    "scenarios": [
+      "brainstorm-precedes-code",
+      "lazy-reachable"
+    ],
+    "n": null
+  },
+  "candidate": {
+    "brainstorm-precedes-code": {
+      "id": "brainstorm-precedes-code",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21138.6,
+      "outputTokens": 480.8,
+      "cost": 0.16132296,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0,
+        "meanScore": 2,
+        "errors": 0
+      }
+    },
+    "lazy-reachable": {
+      "id": "lazy-reachable",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21258.8,
+      "outputTokens": 549.8,
+      "cost": 0.16309152,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0.8,
+        "meanScore": 3.4,
+        "errors": 0
+      }
+    }
+  },
+  "baseline": {
+    "brainstorm-precedes-code": {
+      "id": "brainstorm-precedes-code",
+      "rate": 1,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 18393.8,
+      "outputTokens": 519.8,
+      "cost": 0.13567128,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0.2,
+        "meanScore": 3,
+        "errors": 0
+      }
+    },
+    "lazy-reachable": {
+      "id": "lazy-reachable",
+      "rate": 0,
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 18540,
+      "outputTokens": 587.6,
+      "cost": 0.13996992000000003,
+      "judge": {
+        "graded": 5,
+        "followedRate": 0,
+        "meanScore": 0,
+        "errors": 0
+      }
+    }
+  },
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}
