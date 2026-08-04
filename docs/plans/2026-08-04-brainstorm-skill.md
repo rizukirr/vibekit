@@ -57,7 +57,7 @@ Generated (by `npm run generate`, never hand-edited):
 
 This is the control arm. Everything is inline — the ladder and the compression policy are written into the body rather than delegated. Do not create `lazy` or `terse` in this task; their absence is what makes this arm self-contained.
 
-- [ ] **Step 1: Write the skill**
+- [x] **Step 1: Write the skill**
 
 Create `skills/brainstorm/SKILL.md` with exactly this content:
 
@@ -260,19 +260,19 @@ The only next skill is `plan`. Never invoke a frontend, component, or other
 implementation skill from here.
 ````
 
-- [ ] **Step 2: Regenerate**
+- [x] **Step 2: Regenerate**
 
 Run: `npm run generate`
 Expected: `wrote` lines for `CLAUDE.md`, `AGENTS.md`, `README.md` and `.vibekit-manifest`, then `done`.
 
-- [ ] **Step 3: Verify the generator accepted it**
+- [x] **Step 3: Verify the generator accepted it**
 
 Run: `npm run check`
 Expected: `up to date`, exit 0.
 
 If it instead prints `vibekit: brainstorm: frontmatter ...`, the frontmatter is malformed — most likely a multi-line `description`. The parser accepts only single-line `key: value` pairs.
 
-- [ ] **Step 4: Verify the load-bearing content survived**
+- [x] **Step 4: Verify the load-bearing content survived**
 
 Run:
 ```bash
@@ -294,12 +294,12 @@ console.log('arm A content ok —', t.split('\n').length, 'lines');
 ```
 Expected: `arm A content ok — 197 lines`.
 
-- [ ] **Step 5: Verify the trigger table**
+- [x] **Step 5: Verify the trigger table**
 
 Run: `sed -n '/vibekit:generated:trigger-table/,/\/vibekit:generated/p' CLAUDE.md`
 Expected: a row reading `| About to start creative or implementation work, before code is written | \`brainstorm\` | hard |`
 
-- [ ] **Step 6: Commit and tag the control**
+- [x] **Step 6: Commit and tag the control**
 
 ```bash
 git add skills/brainstorm CLAUDE.md AGENTS.md README.md .vibekit-manifest
