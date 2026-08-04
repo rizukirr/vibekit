@@ -84,6 +84,17 @@ Uniform compression spends guardrail risk where there is no saving.
   optional `command` and `gate`). Run `npm run generate` after; never hand-edit a
   generated file.
 - Zero dependencies.
+- **No shipped file may name a project vibekit only borrows from.** `external/`
+  holds caveman, ponytail, superpowers, the Karpathy guidelines and the Prompt
+  Engineering Guide; vibekit **absorbs** their ideas and never depends on them.
+  Naming one in a skill implies a dependency the user does not have, and
+  `external/` is gitignored so the reference could never resolve anyway.
+  Provenance belongs in specs and plans, never in `skills/`, `README.md`,
+  `CLAUDE.md` or `AGENTS.md`.
+  <!-- Added 2026-08-04 at the maintainer's direction, after the plan was
+  written. The three skills the plan specifies were already clean when checked,
+  so this codifies an invariant rather than fixing a violation — and it is
+  enforced by a test so the remaining nine skills cannot regress it. -->
 - Frontmatter values must not contain generated-region marker syntax, and pipes in
   `trigger` are escaped at render time — both enforced by the generator.
 - The eval scenario costs real money (~$0.10–0.45 per sonnet session; 5 repeats ×

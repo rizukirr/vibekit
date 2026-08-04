@@ -740,3 +740,96 @@ Expected: no `.eval-worktrees` entry in the worktree list.
 git add evals/results
 git commit -m "test(evals): A/B result for brainstorm extraction"
 ```
+
+---
+
+### Task 7: Enforce the no-external-references rule → verify: `tests/no-external-references.test.mjs` passes; deliberately inserting the word `ponytail` into any SKILL.md makes it fail, and removing it makes it pass again
+
+**Files:**
+- Create: `tests/no-external-references.test.mjs`
+
+vibekit **absorbs** ideas from the projects in `external/` and never depends on
+them. A shipped file naming one implies a dependency the user does not have, and
+`external/` is gitignored so the reference could not resolve anyway. Provenance
+belongs in specs and plans — which are also shipped, but as documentation of how
+the work was done rather than as instructions an agent follows.
+
+The three skills this plan authors were checked and found clean when the plan was
+written. This task turns that from a one-time check into an invariant, so the nine
+skills still to be authored cannot regress it.
+
+- [ ] **Step 1: Write the test**
+
+```js
+// tests/no-external-references.test.mjs
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+// vibekit absorbs ideas from the projects in external/; it never depends on them.
+// Naming one in a shipped file implies a dependency the user does not have, and
+// external/ is gitignored so the reference could never resolve.
+const BORROWED_FROM = ['caveman', 'ponytail', 'superpowers', 'karpathy', 'prompt-engineering-guide']
+
+function shippedFiles() {
+  const skills = readdirSync('skills', { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+    .map(entry => join('skills', entry.name, 'SKILL.md'))
+  return [...skills, 'README.md', 'CLAUDE.md', 'AGENTS.md']
+}
+
+test('no shipped file names a project vibekit only borrows from', () => {
+  for (const path of shippedFiles()) {
+    const text = readFileSync(path, 'utf8').toLowerCase()
+    for (const name of BORROWED_FROM) {
+      assert.ok(
+        !text.includes(name),
+        `${path} references '${name}' — vibekit absorbs, it does not depend`,
+      )
+    }
+  }
+})
+
+test('the guard actually covers every skill directory', () => {
+  const covered = shippedFiles().filter(p => p.startsWith('skills/'))
+  const actual = readdirSync('skills', { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+  assert.equal(covered.length, actual.length)
+  assert.ok(actual.length > 0, 'no skills found — the guard would pass vacuously')
+})
+```
+
+The second test exists because the first passes vacuously if `shippedFiles()`
+ever returns nothing.
+
+- [ ] **Step 2: Run it**
+
+Run: `node --test tests/no-external-references.test.mjs`
+Expected: PASS — `pass 2`, `fail 0`.
+
+- [ ] **Step 3: Prove the guard actually catches a violation**
+
+A test that has never failed is not known to work. Insert a violation, confirm it
+fails, then remove it:
+
+```bash
+cp skills/terse/SKILL.md /tmp/terse-backup.md
+printf '\nBorrowed from ponytail.\n' >> skills/terse/SKILL.md
+node --test tests/no-external-references.test.mjs 2>&1 | tail -5
+cp /tmp/terse-backup.md skills/terse/SKILL.md
+rm /tmp/terse-backup.md
+```
+Expected: the middle run FAILS with a message containing `skills/terse/SKILL.md references 'ponytail'`. After the restore, `git status --porcelain` must be empty.
+
+- [ ] **Step 4: Confirm the tree is restored and everything passes**
+
+Run: `git status --porcelain && npm test 2>&1 | grep -E "^ℹ (tests|pass|fail)" && npm run check`
+Expected: no output from `git status`, `fail 0` from the suite, and `up to date` from the check.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add tests/no-external-references.test.mjs
+git commit -m "test: vibekit absorbs from external/, never references it"
+```
