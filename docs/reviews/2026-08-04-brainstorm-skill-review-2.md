@@ -178,6 +178,54 @@ Run: `git diff 6a09641..4b8871d`
 
 Per-file summary is in §Diff summary.
 
+## Resolution (2026-08-04, commits c38e19a..7129f43)
+
+All seven findings were fixed at the user's instruction. Final measured state,
+candidate-only, n=5, judged, zero session errors and zero judge errors:
+
+| scenario | rate | judge |
+|---|---|---|
+| brainstorm-precedes-code | 1.00 | followed 0.00, score 2.6 |
+| lazy-reachable (with `after`) | 1.00 | followed 1.00, score 4.4 |
+| terse-reachable | 0.80 | followed 1.00, score 4.6 |
+
+**B1 — resolved, and my intermediate reading of it was wrong.** `terse-reachable`
+was built and first scored **0.40, FAIL**. I recorded at that point that the
+review's "very likely a paperwork gap rather than a live defect" had been wrong.
+It had not been. Diagnosis showed the prompt ("I want to add a keyboard shortcut
+for saving.") was answered as a question about Claude Code's own keybindings —
+the session invoked an unrelated `keybindings-help` skill and never entered the
+pipeline, so the `after: ["vibekit:brainstorm"]` clause could not be satisfied.
+Four of four probes reproduced it before any edit. On a valid probe `terse` is
+reached 4 of 5 times. The block was still right to raise: it is what caused the
+probe to exist at all.
+
+**W3 — resolved and strengthened.** `after` is implemented in the scorer as the
+mirror of `before` over skills, mutation-proven (neutering the guard fails
+exactly the two tests written for it), and applied to both delegation scenarios.
+`lazy-reachable` held at 1.00 under the stricter assertion, so the delegation
+chain is now proven rather than assumed.
+
+**W2, N1, N2 — resolved.** The hand-maintained modifier count is gone from the
+bootstrap; the superseded verification report carries a banner; the mirrored
+`Boundaries` sections are one line each.
+
+**W4 — unchanged, still accepted.** n=5.
+
+**W1 — fix shipped, and it did not work.** The batching rule was made checkable
+("one question mark per turn"), and the run above was taken *with that fix in
+place*: `followed` is still **0.00** and `score` moved 2.0 → 2.6, inside the
+±1.0 run-to-run variance already recorded. So the hand-graded defect was real —
+the transcript batched two questions against an explicit "Never batch" — but
+tightening the rule did not measurably change the outcome at n=5.
+
+This is the one finding from round 2 that remains open on the evidence. It is
+not a regression (`brainstorm` fires 1.00 and precedes every file write) and it
+is not specific to the extraction (the pre-extraction control scored `followed`
+0.20 / score 3.0 on the same scenario). It is the open question this spec hands
+to the remaining nine skills, and it should be named as such in their specs
+rather than quietly inherited.
+
 ## Sign-off
 
 - [ ] User reviewed findings.
