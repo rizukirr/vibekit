@@ -1627,7 +1627,7 @@ Closes review findings W3 (the runner only worked from the repo root, unlike
 used a string prefix test, so a sibling named `.eval-worktrees-old` would pass)
 and N2 (an O(n²) spread inside a reduce).
 
-- [ ] **Step 1: Resolve runner paths from the module, not the cwd**
+- [x] **Step 1: Resolve runner paths from the module, not the cwd**
 
 In `evals/run.mjs`, extend the imports:
 
@@ -1656,7 +1656,7 @@ Then replace each cwd-relative path:
 - `mkdirSync('evals/results', { recursive: true })` → `mkdirSync(at('evals/results'), { recursive: true })`
 - `writeFileSync(out, ...)` → `writeFileSync(at(out), ...)` (leave the `out` string itself relative so the printed path stays short)
 
-- [ ] **Step 2: Replace the O(n²) reduce in `formatPlan`**
+- [x] **Step 2: Replace the O(n²) reduce in `formatPlan`**
 
 Replace:
 
@@ -1679,7 +1679,7 @@ with:
   for (const [id, count] of counts) lines.push(`  ${id} x${count}`)
 ```
 
-- [ ] **Step 3: Make the worktree guard a real containment check**
+- [x] **Step 3: Make the worktree guard a real containment check**
 
 Replace the whole of `evals/worktree.mjs` with:
 
@@ -1728,7 +1728,7 @@ export function remove(path) {
 }
 ```
 
-- [ ] **Step 4: Verify the guard rejects a sibling and a traversal**
+- [x] **Step 4: Verify the guard rejects a sibling and a traversal**
 
 Run:
 ```bash
@@ -1744,7 +1744,7 @@ import('./evals/worktree.mjs').then(wt => {
 ```
 Expected: three `rejected <path>` lines then `guard ok`.
 
-- [ ] **Step 5: Verify the worktree round-trip still works**
+- [x] **Step 5: Verify the worktree round-trip still works**
 
 Run:
 ```bash
@@ -1761,22 +1761,22 @@ import('./evals/worktree.mjs').then(async wt => {
 ```
 Expected: `round-trip ok`
 
-- [ ] **Step 6: Verify the runner works from another directory**
+- [x] **Step 6: Verify the runner works from another directory**
 
 Run: `cd /tmp && node /home/rizukirr/Projects/vibekit/.vibe-worktrees/2026-08-03-vibekit-eval-harness/evals/run.mjs --dry-run`
 Expected: the normal 9-session plan and `dry run — nothing spawned`, exit 0. Before this task it failed on a missing `evals/scenarios.json`.
 
-- [ ] **Step 7: Run the full suite and the drift check**
+- [x] **Step 7: Run the full suite and the drift check**
 
 Run: `npm test && npm run check`
 Expected: `fail 0`, then `up to date`.
 
-- [ ] **Step 8: Confirm no worktree leaked**
+- [x] **Step 8: Confirm no worktree leaked**
 
 Run: `git worktree list`
 Expected: the main repo and this task's worktree only — no `.eval-worktrees` entry.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add evals/run.mjs evals/worktree.mjs
