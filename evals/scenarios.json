@@ -19,5 +19,12 @@
     "expect": { "skill": "vibekit:example-plain" },
     "n": 3,
     "model": "haiku"
+  },
+  {
+    "id": "brainstorm-precedes-code",
+    "prompt": "Let's make a react todo list",
+    "expect": { "skill": "vibekit:brainstorm", "before": ["Write", "Edit", "NotebookEdit"] },
+    "n": 5,
+    "model": "sonnet"
   }
 ]
