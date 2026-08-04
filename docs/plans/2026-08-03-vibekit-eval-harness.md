@@ -1312,3 +1312,473 @@ Expected: `fail 0` across every suite.
 git add evals/run.mjs tests/eval-run.test.mjs
 git commit -m "feat(evals): print a measured cost range in dry-run output"
 ```
+
+---
+
+### Task 11: Reject degenerate input → verify: `tests/eval-run.test.mjs` reports `pass 12`; `npm run eval -- --scenarios nosuchscenario` exits 1 with `vibekit-eval: unknown scenario id(s): nosuchscenario` and writes no results file
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-run.test.mjs`
+
+Closes review finding B1 (a zero-session run reported `PASS` and exited 0),
+plus W4 (a flag silently consuming the next flag as its value) and W5 (threshold
+keys never checked against scenario ids).
+
+The root cause named in the review: every existing test constructs well-formed
+input. These tests are deliberately about malformed input.
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `tests/eval-run.test.mjs`:
+
+```js
+test('rejects a non-integer -n instead of planning zero runs', () => {
+  assert.throws(() => parseArgs(['-n', 'abc']), /-n must be an integer/)
+})
+
+test('rejects a flag whose value is another flag', () => {
+  assert.throws(() => parseArgs(['--scenarios', '--judge']), /--scenarios requires a value/)
+})
+
+test('rejects an unknown scenario id', () => {
+  const opts = { scenarios: ['nosuchscenario'] }
+  assert.throws(
+    () => validatePlan([{}], scenarios, opts, { scenarios: {} }),
+    /unknown scenario id\(s\): nosuchscenario/,
+  )
+})
+
+test('rejects a thresholds key naming a scenario that does not exist', () => {
+  assert.throws(
+    () => validatePlan([{}], scenarios, { scenarios: null }, { scenarios: { ghost: {} } }),
+    /thresholds.json names unknown scenario\(s\): ghost/,
+  )
+})
+
+// B1: the harness exists to measure. Reporting PASS having measured nothing is
+// worse than crashing, because it looks like success and gets committed.
+test('refuses to score a plan with zero sessions', () => {
+  assert.throws(
+    () => validatePlan([], scenarios, { scenarios: null }, { scenarios: {} }),
+    /no sessions planned/,
+  )
+})
+```
+
+Update the import line to include `validatePlan`:
+
+```js
+import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan } from '../evals/run.mjs'
+```
+
+- [ ] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: FAIL — `validatePlan` is not exported, so the suite fails to load with a `SyntaxError` about a missing export, reported as `fail 1`.
+
+- [ ] **Step 3: Harden `parseArgs`**
+
+Replace the whole `parseArgs` function with:
+
+```js
+export function parseArgs(argv) {
+  const value = flag => {
+    const i = argv.indexOf(flag)
+    if (i === -1) return null
+    const next = argv[i + 1]
+    // A flag's value must never be another flag: `--scenarios --judge` is a
+    // typo, not a scenario named "--judge".
+    if (next === undefined || next.startsWith('-')) {
+      throw new Error(`${flag} requires a value`)
+    }
+    return next
+  }
+
+  const list = value('--scenarios')
+  const n = value('-n')
+  if (n !== null && !Number.isInteger(Number(n))) {
+    throw new Error(`-n must be an integer, got '${n}'`)
+  }
+
+  return {
+    baseline: value('--baseline'),
+    candidate: value('--candidate') ?? 'HEAD',
+    judge: argv.includes('--judge'),
+    dryRun: argv.includes('--dry-run'),
+    scenarios: list ? list.split(',') : null,
+    n: n ? Number(n) : null,
+  }
+}
+```
+
+- [ ] **Step 4: Add `validatePlan`**
+
+Insert immediately after `planRuns`:
+
+```js
+// Every check here is about malformed input. The harness reports a verdict, so
+// the one thing it must never do is report PASS without having measured
+// anything — a green result with nothing behind it is worse than a crash,
+// because it looks like success and gets committed as trend history.
+export function validatePlan(runs, scenarios, opts, thresholds) {
+  const known = new Set(scenarios.map(s => s.id))
+
+  if (opts.scenarios) {
+    const unknown = opts.scenarios.filter(id => !known.has(id))
+    if (unknown.length) throw new Error(`unknown scenario id(s): ${unknown.join(', ')}`)
+  }
+
+  const ghosts = Object.keys(thresholds.scenarios ?? {}).filter(id => !known.has(id))
+  if (ghosts.length) {
+    throw new Error(`thresholds.json names unknown scenario(s): ${ghosts.join(', ')}`)
+  }
+
+  if (runs.length === 0) {
+    throw new Error('no sessions planned — refusing to report a result for zero measurements')
+  }
+}
+```
+
+- [ ] **Step 5: Call it in `main`**
+
+In `main()`, insert the validation call between `planRuns` and the `console.log(formatPlan(...))` line, so a dry run is checked too:
+
+```js
+  const runs = planRuns(scenarios, opts)
+  validatePlan(runs, scenarios, opts, thresholds)
+
+  console.log(formatPlan(runs, opts))
+```
+
+- [ ] **Step 6: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-run.test.mjs`
+Expected: PASS — `pass 12`, `fail 0`.
+
+- [ ] **Step 7: Confirm the block is closed end to end**
+
+Run: `npm run eval -- --scenarios nosuchscenario`
+Expected: `vibekit-eval: unknown scenario id(s): nosuchscenario` on stderr, exit code 1, and NO new file in `evals/results/`. Check with `ls evals/results` before and after.
+
+Run: `npm run eval -- -n abc --dry-run`
+Expected: `vibekit-eval: -n must be an integer, got 'abc'`, exit code 1.
+
+Run: `npm run eval -- --dry-run`
+Expected: unchanged — `9 sessions — est. $0.18-$0.81` then `dry run — nothing spawned`, exit 0.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add evals/run.mjs tests/eval-run.test.mjs
+git commit -m "fix(evals): refuse to report a verdict for zero measurements"
+```
+
+---
+
+### Task 12: Persist the judge verdict → verify: `tests/eval-score.test.mjs` reports `pass 11`; `scoreScenario` returns a `judge` block summarising graded runs, and returns `judge: null` when no run was judged
+
+**Files:**
+- Modify: `evals/score.mjs`
+- Modify: `evals/run.mjs`
+- Modify: `tests/eval-score.test.mjs`
+
+Closes review finding W2 — `--judge` doubled the cost of a run and then dropped
+the grading on the floor, because `scoreScenario` never read `result.judge` and
+the results file persists only the scored summary. Also closes N1 (the rubric
+was re-read from disk on every judge call).
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `tests/eval-score.test.mjs`:
+
+```js
+const judged = (followed, score) => ({
+  ...fired(),
+  judge: { followed, score, why: 'because' },
+})
+
+test('summarises judge verdicts so a paid grading is not discarded', () => {
+  const r = scoreScenario(scenario, [judged(true, 5), judged(false, 1)])
+  assert.equal(r.judge.graded, 2)
+  assert.equal(r.judge.followedRate, 0.5)
+  assert.equal(r.judge.meanScore, 3)
+  assert.equal(r.judge.errors, 0)
+})
+
+test('judge is null when no run was judged', () => {
+  assert.equal(scoreScenario(scenario, [fired(), fired()]).judge, null)
+})
+
+test('judge errors are counted, not averaged into the score', () => {
+  const broken = { ...fired(), judge: { judge_error: true, followed: null, score: null } }
+  const r = scoreScenario(scenario, [judged(true, 4), broken])
+  assert.equal(r.judge.graded, 1)
+  assert.equal(r.judge.meanScore, 4)
+  assert.equal(r.judge.errors, 1)
+})
+```
+
+- [ ] **Step 2: Run the tests to confirm they fail**
+
+Run: `node --test tests/eval-score.test.mjs`
+Expected: FAIL — at least one test fails with an assertion error, because `scoreScenario` returns no `judge` property (reading `.graded` of `undefined`).
+
+- [ ] **Step 3: Summarise judge output in `scoreScenario`**
+
+In `evals/score.mjs`, inside `scoreScenario`, add this immediately before the final `return`:
+
+```js
+  // W2: a judged run costs a second model call per session. Summarising it here
+  // is what makes that spend readable — previously the verdict was attached to
+  // the run object and then dropped when the summary was written.
+  const graded = good.filter(r => r.judge && !r.judge.judge_error)
+  const judge = graded.length === 0
+    ? null
+    : {
+        graded: graded.length,
+        followedRate: graded.filter(r => r.judge.followed).length / graded.length,
+        meanScore: mean(graded.map(r => r.judge.score ?? 0)),
+        errors: good.filter(r => r.judge?.judge_error).length,
+      }
+```
+
+and add `judge,` to the returned object, after `cost`.
+
+Also add `judge: null` to the early `incomplete` return object, so the shape is
+consistent whether or not any run succeeded.
+
+- [ ] **Step 4: Print the judge summary in the runner**
+
+In `evals/run.mjs`, replace the per-scenario summary loop:
+
+```js
+  for (const [id, r] of Object.entries(candidate)) {
+    const rate = r.incomplete ? 'incomplete' : r.rate.toFixed(2)
+    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}`)
+  }
+```
+
+with:
+
+```js
+  for (const [id, r] of Object.entries(candidate)) {
+    const rate = r.incomplete ? 'incomplete' : r.rate.toFixed(2)
+    const judged = r.judge ? ` followed=${r.judge.followedRate.toFixed(2)} score=${r.judge.meanScore.toFixed(1)}` : ''
+    console.log(`  ${id}: rate=${rate} footprint=${r.inputFootprint ?? '-'} errors=${r.errored}${judged}`)
+  }
+```
+
+- [ ] **Step 5: Read the rubric once**
+
+In `evals/run.mjs`, replace the first line of `judgeTranscript`:
+
+```js
+  const rubric = readFileSync('evals/judge.md', 'utf8')
+```
+
+with a module-level lazy cache. Insert above `judgeTranscript`:
+
+```js
+// N1: the rubric is identical for every call; re-reading it once per judged
+// session was nine identical disk reads on a nine-session run.
+let rubricCache = null
+function rubric() {
+  rubricCache ??= readFileSync('evals/judge.md', 'utf8')
+  return rubricCache
+}
+```
+
+and inside `judgeTranscript` use:
+
+```js
+  const prompt = `${rubric()}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
+```
+
+deleting the old `const rubric = ...` line.
+
+- [ ] **Step 6: Run the tests to confirm they pass**
+
+Run: `node --test tests/eval-score.test.mjs`
+Expected: PASS — `pass 11`, `fail 0`.
+
+- [ ] **Step 7: Run the full suite**
+
+Run: `npm test`
+Expected: `fail 0` across every suite.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add evals/score.mjs evals/run.mjs tests/eval-score.test.mjs
+git commit -m "fix(evals): persist and print the judge verdict a run paid for"
+```
+
+---
+
+### Task 13: Root-relative paths and a real containment check → verify: `npm test` reports `fail 0`; `cd /tmp && node <repo>/evals/run.mjs --dry-run` prints the 9-session plan instead of failing on a missing file
+
+**Files:**
+- Modify: `evals/run.mjs`
+- Modify: `evals/worktree.mjs`
+
+Closes review findings W3 (the runner only worked from the repo root, unlike
+`bin/generate.mjs` which resolves from `import.meta.url`), N3 (the deletion guard
+used a string prefix test, so a sibling named `.eval-worktrees-old` would pass)
+and N2 (an O(n²) spread inside a reduce).
+
+- [ ] **Step 1: Resolve runner paths from the module, not the cwd**
+
+In `evals/run.mjs`, extend the imports:
+
+```js
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { spawnSync } from 'node:child_process'
+```
+
+and add below them:
+
+```js
+// Paths resolve from the module, not the caller's cwd — the same convention
+// bin/generate.mjs uses. Previously running the harness from a subdirectory
+// failed on a missing-file error that did not name the real cause.
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const at = (...parts) => join(ROOT, ...parts)
+```
+
+Then replace each cwd-relative path:
+
+- `readFileSync('evals/scenarios.json', 'utf8')` → `readFileSync(at('evals/scenarios.json'), 'utf8')`
+- `readFileSync('evals/thresholds.json', 'utf8')` → `readFileSync(at('evals/thresholds.json'), 'utf8')`
+- `readFileSync('evals/judge.md', 'utf8')` → `readFileSync(at('evals/judge.md'), 'utf8')`
+- `mkdirSync('evals/results', { recursive: true })` → `mkdirSync(at('evals/results'), { recursive: true })`
+- `writeFileSync(out, ...)` → `writeFileSync(at(out), ...)` (leave the `out` string itself relative so the printed path stays short)
+
+- [ ] **Step 2: Replace the O(n²) reduce in `formatPlan`**
+
+Replace:
+
+```js
+  for (const [id, count] of Object.entries(
+    runs.reduce((acc, r) => ({ ...acc, [`${r.variant}:${r.scenario.id}`]: (acc[`${r.variant}:${r.scenario.id}`] ?? 0) + 1 }), {}),
+  )) {
+    lines.push(`  ${id} x${count}`)
+  }
+```
+
+with:
+
+```js
+  const counts = new Map()
+  for (const run of runs) {
+    const key = `${run.variant}:${run.scenario.id}`
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  for (const [id, count] of counts) lines.push(`  ${id} x${count}`)
+```
+
+- [ ] **Step 3: Make the worktree guard a real containment check**
+
+Replace the whole of `evals/worktree.mjs` with:
+
+```js
+// evals/worktree.mjs
+import { spawnSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const ROOT = join(REPO, '.eval-worktrees')
+
+function git(args) {
+  // cwd is pinned to the repo so the harness works from any directory.
+  const proc = spawnSync('git', args, { encoding: 'utf8', cwd: REPO })
+  if (proc.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${proc.stderr.trim()}`)
+  return proc.stdout.trim()
+}
+
+// N3: a string prefix test would accept a sibling like `.eval-worktrees-old`.
+// path.relative answers the question actually being asked — is this path inside
+// that directory — and rejects both siblings and `..` traversal.
+function inside(root, target) {
+  const rel = relative(root, resolve(target))
+  return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel)
+}
+
+// Materialises a ref as a throwaway worktree. Variants are git refs rather than
+// directories in the repo: a second skills/ tree would drift from the real one,
+// which is the failure this project was rebuilt to remove.
+export function materialise(ref) {
+  git(['rev-parse', '--verify', `${ref}^{commit}`]) // fail before spawning sessions
+  const path = join(ROOT, ref.replace(/[^\w.-]/g, '_'))
+  if (existsSync(path)) return path
+  git(['worktree', 'add', '--detach', path, ref])
+  return path
+}
+
+export function remove(path) {
+  if (!inside(ROOT, path)) {
+    throw new Error(`refusing to remove ${path}: outside ${ROOT}`)
+  }
+  if (!existsSync(path)) return
+  git(['worktree', 'remove', path]) // no --force: a dirty worktree should fail loudly
+}
+```
+
+- [ ] **Step 4: Verify the guard rejects a sibling and a traversal**
+
+Run:
+```bash
+node -e "
+import('./evals/worktree.mjs').then(wt => {
+  for (const bad of ['.eval-worktrees-old/x', '.eval-worktrees/../../etc', '/tmp']) {
+    try { wt.remove(bad); throw new Error('guard did not fire for ' + bad) }
+    catch (e) { if(!/refusing to remove/.test(e.message)) throw e; console.log('rejected', bad) }
+  }
+  console.log('guard ok');
+})
+"
+```
+Expected: three `rejected <path>` lines then `guard ok`.
+
+- [ ] **Step 5: Verify the worktree round-trip still works**
+
+Run:
+```bash
+node -e "
+import('./evals/worktree.mjs').then(async wt => {
+  const {existsSync}=await import('fs');
+  const p = wt.materialise('HEAD');
+  if(!existsSync(p+'/evals')) throw new Error('worktree missing evals/');
+  wt.remove(p);
+  if(existsSync(p)) throw new Error('worktree not removed');
+  console.log('round-trip ok');
+})
+"
+```
+Expected: `round-trip ok`
+
+- [ ] **Step 6: Verify the runner works from another directory**
+
+Run: `cd /tmp && node /home/rizukirr/Projects/vibekit/.vibe-worktrees/2026-08-03-vibekit-eval-harness/evals/run.mjs --dry-run`
+Expected: the normal 9-session plan and `dry run — nothing spawned`, exit 0. Before this task it failed on a missing `evals/scenarios.json`.
+
+- [ ] **Step 7: Run the full suite and the drift check**
+
+Run: `npm test && npm run check`
+Expected: `fail 0`, then `up to date`.
+
+- [ ] **Step 8: Confirm no worktree leaked**
+
+Run: `git worktree list`
+Expected: the main repo and this task's worktree only — no `.eval-worktrees` entry.
+
+- [ ] **Step 9: Commit**
+
+```bash
+git add evals/run.mjs evals/worktree.mjs
+git commit -m "fix(evals): resolve paths from the module and bound the deletion guard"
+```
