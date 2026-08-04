@@ -36,7 +36,7 @@
   },
   {
     "id": "terse-reachable",
-    "prompt": "I want to add a keyboard shortcut for saving.",
+    "prompt": "Let's add pagination to my blog's post list.",
     "expect": { "skill": "vibekit:terse", "after": ["vibekit:brainstorm"] },
     "n": 5,
     "model": "sonnet"

@@ -133,6 +133,23 @@ Uniform compression spends guardrail risk where there is no saving.
 - The eval scenario costs real money (~$0.10–0.45 per sonnet session; 5 repeats ×
   2 variants ≈ $1–4.50 per A/B run).
 - `brainstorm` is `gate: hard`.
+- **An eval prompt must be an unambiguous request about the user's own project,
+  in vocabulary that cannot collide with the host tool's.** Sessions run inside a
+  real Claude Code install with other plugins' skills loaded, so a prompt is a
+  probe competing against them, not an instruction in a vacuum.
+  <!-- Added 2026-08-04 after `terse-reachable` scored 0.40. The prompt was "I
+  want to add a keyboard shortcut for saving."; transcripts showed the session
+  invoking an unrelated `keybindings-help` skill and answering a question about
+  Claude Code's own keybindings, never entering the pipeline at all. The
+  measurement was of the probe, not the skill. The shape that works — used by
+  both scenarios that score 1.00, and by the baseline project's own single
+  acceptance test — names the artefact being built: "Let's make a react todo
+  list", "I want to add a dark mode toggle to my website". -->
+- **Rates are measured with competing skills present.** Every figure this spec
+  reports was obtained in an environment containing non-vibekit skills. That is
+  the realistic condition and is deliberately not controlled for, but it means a
+  rate is "fires when other skills are also offering themselves", not "fires in
+  isolation".
 
 ## Approach
 
