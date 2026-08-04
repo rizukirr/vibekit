@@ -1328,7 +1328,7 @@ keys never checked against scenario ids).
 The root cause named in the review: every existing test constructs well-formed
 input. These tests are deliberately about malformed input.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-run.test.mjs`:
 
@@ -1372,12 +1372,12 @@ Update the import line to include `validatePlan`:
 import { parseArgs, planRuns, formatPlan, estimateCost, validatePlan } from '../evals/run.mjs'
 ```
 
-- [ ] **Step 2: Run the tests to confirm they fail**
+- [x] **Step 2: Run the tests to confirm they fail**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: FAIL — `validatePlan` is not exported, so the suite fails to load with a `SyntaxError` about a missing export, reported as `fail 1`.
 
-- [ ] **Step 3: Harden `parseArgs`**
+- [x] **Step 3: Harden `parseArgs`**
 
 Replace the whole `parseArgs` function with:
 
@@ -1412,7 +1412,7 @@ export function parseArgs(argv) {
 }
 ```
 
-- [ ] **Step 4: Add `validatePlan`**
+- [x] **Step 4: Add `validatePlan`**
 
 Insert immediately after `planRuns`:
 
@@ -1440,7 +1440,7 @@ export function validatePlan(runs, scenarios, opts, thresholds) {
 }
 ```
 
-- [ ] **Step 5: Call it in `main`**
+- [x] **Step 5: Call it in `main`**
 
 In `main()`, insert the validation call between `planRuns` and the `console.log(formatPlan(...))` line, so a dry run is checked too:
 
@@ -1451,12 +1451,12 @@ In `main()`, insert the validation call between `planRuns` and the `console.log(
   console.log(formatPlan(runs, opts))
 ```
 
-- [ ] **Step 6: Run the tests to confirm they pass**
+- [x] **Step 6: Run the tests to confirm they pass**
 
 Run: `node --test tests/eval-run.test.mjs`
 Expected: PASS — `pass 12`, `fail 0`.
 
-- [ ] **Step 7: Confirm the block is closed end to end**
+- [x] **Step 7: Confirm the block is closed end to end**
 
 Run: `npm run eval -- --scenarios nosuchscenario`
 Expected: `vibekit-eval: unknown scenario id(s): nosuchscenario` on stderr, exit code 1, and NO new file in `evals/results/`. Check with `ls evals/results` before and after.
@@ -1467,7 +1467,7 @@ Expected: `vibekit-eval: -n must be an integer, got 'abc'`, exit code 1.
 Run: `npm run eval -- --dry-run`
 Expected: unchanged — `9 sessions — est. $0.18-$0.81` then `dry run — nothing spawned`, exit 0.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add evals/run.mjs tests/eval-run.test.mjs
@@ -1488,7 +1488,7 @@ the grading on the floor, because `scoreScenario` never read `result.judge` and
 the results file persists only the scored summary. Also closes N1 (the rubric
 was re-read from disk on every judge call).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -1519,12 +1519,12 @@ test('judge errors are counted, not averaged into the score', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests to confirm they fail**
+- [x] **Step 2: Run the tests to confirm they fail**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: FAIL — at least one test fails with an assertion error, because `scoreScenario` returns no `judge` property (reading `.graded` of `undefined`).
 
-- [ ] **Step 3: Summarise judge output in `scoreScenario`**
+- [x] **Step 3: Summarise judge output in `scoreScenario`**
 
 In `evals/score.mjs`, inside `scoreScenario`, add this immediately before the final `return`:
 
@@ -1548,7 +1548,7 @@ and add `judge,` to the returned object, after `cost`.
 Also add `judge: null` to the early `incomplete` return object, so the shape is
 consistent whether or not any run succeeded.
 
-- [ ] **Step 4: Print the judge summary in the runner**
+- [x] **Step 4: Print the judge summary in the runner**
 
 In `evals/run.mjs`, replace the per-scenario summary loop:
 
@@ -1569,7 +1569,7 @@ with:
   }
 ```
 
-- [ ] **Step 5: Read the rubric once**
+- [x] **Step 5: Read the rubric once**
 
 In `evals/run.mjs`, replace the first line of `judgeTranscript`:
 
@@ -1597,17 +1597,17 @@ and inside `judgeTranscript` use:
 
 deleting the old `const rubric = ...` line.
 
-- [ ] **Step 6: Run the tests to confirm they pass**
+- [x] **Step 6: Run the tests to confirm they pass**
 
 Run: `node --test tests/eval-score.test.mjs`
 Expected: PASS — `pass 11`, `fail 0`.
 
-- [ ] **Step 7: Run the full suite**
+- [x] **Step 7: Run the full suite**
 
 Run: `npm test`
 Expected: `fail 0` across every suite.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add evals/score.mjs evals/run.mjs tests/eval-score.test.mjs
