@@ -534,15 +534,15 @@ git commit -m "feat(skills): terse modifier — compress conversation, never art
 
 Extraction only. Two blocks are removed and replaced by references. **No other sentence changes.** If you find yourself rewording anything outside those two blocks, stop — that is the next experiment, not this one.
 
-- [ ] **Step 1: Remove the laziness ladder**
+- [x] **Step 1: Remove the laziness ladder**
 
 Delete the entire `## The laziness ladder` section — its heading, all seven rungs, and the "Never simplify away" paragraph.
 
-- [ ] **Step 2: Remove the compression policy**
+- [x] **Step 2: Remove the compression policy**
 
 Delete the entire `## Compression policy` section — its heading, the Compress list, the Never compress list, and the Auto-clarity override paragraph.
 
-- [ ] **Step 3: Add the delegation line**
+- [x] **Step 3: Add the delegation line**
 
 Immediately after the `# brainstorm` heading's two-line intro, insert:
 
@@ -550,7 +550,7 @@ Immediately after the `# brainstorm` heading's two-line intro, insert:
 Apply `lazy` (what you build) and `terse` (how you talk) throughout.
 ```
 
-- [ ] **Step 4: Repoint the one ladder reference**
+- [x] **Step 4: Repoint the one ladder reference**
 
 In `## Understand before you shorten`, the sentence currently reads:
 
@@ -564,12 +564,12 @@ Change `The ladder below` to `The ladder in `lazy``, so it reads:
 before proposing anything. The ladder in `lazy` shortens the solution, never the
 ```
 
-- [ ] **Step 5: Regenerate and check**
+- [x] **Step 5: Regenerate and check**
 
 Run: `npm run generate && npm run check`
 Expected: `up to date`. The description and trigger are unchanged, so the trigger table should not move — `npm run generate` may report nothing to write.
 
-- [ ] **Step 6: Verify extraction removed the right things and kept the rest**
+- [x] **Step 6: Verify extraction removed the right things and kept the rest**
 
 Run:
 ```bash
@@ -594,7 +594,7 @@ console.log('arm B ok —', t.split('\n').length, 'lines');
 ```
 Expected: `arm B ok — <n> lines`.
 
-- [ ] **Step 7: Confirm the size reduction is real**
+- [x] **Step 7: Confirm the size reduction is real**
 
 Run:
 ```bash
@@ -609,7 +609,7 @@ measured figures rather than estimates. The threshold is 30 rather than 33 to
 leave room for a trailing-newline difference; a saving materially below 30 means
 something other than the two named blocks was removed.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add skills/brainstorm CLAUDE.md AGENTS.md README.md .vibekit-manifest
