@@ -600,7 +600,7 @@ more keys into the same hazard, so the guard goes in first.
 - Modify: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -628,11 +628,11 @@ test('every implemented key is accepted', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test**
+- [x] **Step 2: Run the test**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the guard**
+- [x] **Step 3: Implement the guard**
 
 In `evals/score.mjs`, above `unsatisfiedReason`:
 
@@ -659,11 +659,11 @@ At the top of `unsatisfiedReason`, immediately after `const expect = scenario.ex
   }
 ```
 
-- [ ] **Step 4: Run the suite**
+- [x] **Step 4: Run the suite**
 
 Run: `npm test`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
