@@ -159,6 +159,32 @@ exit 0.
   the three plans that predate the rule. A backdated filename now fails the
   suite instead of silently escaping the guard.
 
+## Post-resolution measurement — 2026-08-05
+
+Running the fixes surfaced seven further defects, **all in the measuring
+apparatus, none in the skill**: two invalid fixtures, five checker false
+positives, and one check (`tasksHaveVerify`) that had passed vacuously for the
+whole cycle because it matched only `###` headings while real plans used `##`.
+Full account in `docs/verifications/2026-08-05-plan-skill-verify-3.md`.
+
+Consequences for this review's findings:
+
+- **W2 is now closed**, not partly closed. The second fixture was invalid — it
+  referenced code that did not exist — which is why it scored 0.00. Repaired, it
+  scores 1.00. Spec-shape diversity is real and both shapes pass.
+- **W1's fix proved its worth immediately.** `failedArtifacts` plus the newly
+  added `failedFinalText` are what identified the invalid fixture: the stored
+  agent replies said in plain words that the spec referenced a write path that
+  did not exist.
+- **A new finding, recorded rather than fixed:** the refusal paths are now known
+  to work — the invalid fixture demonstrated them accidentally, five times out
+  of five — but no scenario asserts them, because "the spec is ambiguous" is a
+  judgement, not a predicate.
+
+Final measured state, one checker version, digest identical either side:
+`plan-fires` 1.00 (n=10), `plan-no-predicted-output` 1.00 (n=5),
+`plan-second-spec-shape` 1.00 (n=5).
+
 ## Sign-off
 
 - [ ] User reviewed findings.
