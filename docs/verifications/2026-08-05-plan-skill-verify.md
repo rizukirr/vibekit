@@ -1,3 +1,8 @@
+> **Superseded by `2026-08-05-plan-skill-verify-2.md`.** This report reached
+> `not ready` with four goals unmeasured. The evals have since been run and all
+> four resolved. Kept because its blocker list is what prompted the run, and
+> because the deviations it declares still stand.
+
 # Verification Report — plan skill
 
 **Date:** 2026-08-05
