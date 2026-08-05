@@ -1,0 +1,37 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": false,
+    "dryRun": false,
+    "scenarios": [
+      "plan-no-predicted-output"
+    ],
+    "n": null
+  },
+  "candidate": {
+    "plan-no-predicted-output": {
+      "id": "plan-no-predicted-output",
+      "rate": 0.4,
+      "failures": [
+        "non-predicate clause in docs/plans/2026-08-05-slug-command.md: exit status of `node --test test/` is 0",
+        "non-predicate clause in docs/plans/2026-08-05-slug-command.md: exit status 0",
+        "non-predicate clause in docs/plans/2026-08-05-slug-command.md: exit status 0"
+      ],
+      "incomplete": false,
+      "successful": 5,
+      "errored": 0,
+      "inputFootprint": 21799,
+      "outputTokens": 2262.4,
+      "cost": 0.24166422,
+      "judge": null
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": false,
+    "failures": [
+      "plan-no-predicted-output: rate 0.40 below floor 0.8"
+    ]
+  }
+}

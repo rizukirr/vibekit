@@ -15,9 +15,13 @@ const WORD = 'one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|doz
 const THRESHOLD = 'at least|at most|no more than|no fewer than|fewer than|under|over|below|above'
 
 const ALLOWED_NUMERIC = [
-  // `exits?` — clauses say "exits 0" far more often than "exit 0"; a singular-
-  // only pattern left a bare 0 behind and flagged its own plan.
-  /\bexits?\s+\d+/gi,
+  // Exit status, in the phrasings plans actually use. Measured: five
+  // agent-written plans produced "exit status 0" and "exit status of `cmd` is
+  // 0", and a pattern demanding digits immediately after "exit" rejected every
+  // one — three false positives and no true ones. Widening here can only admit
+  // clauses that were always predicates; a quoted string still fails on the
+  // quote, and a stale count still fails as a bare number.
+  /\bexit(?:s|ed)?(?:\s+(?:code|status))?(?:\s+of\s+`[^`]*`)?(?:\s+is)?\s+\d+/gi,
   /\b(?:status|http|returns)\s+\d{3}\b/gi,
   new RegExp(`\\b(?:${THRESHOLD})\\s+(?:\\d+|${WORD})\\b`, 'gi'),
 ]

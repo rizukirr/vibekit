@@ -1,7 +1,7 @@
 // tests/eval-score.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { scoreScenario, compare, verifyClauses } from '../evals/score.mjs'
+import { scoreScenario, compare, verifyClauses, isPredicate } from '../evals/score.mjs'
 
 const ok = (skills = [], tools = []) => ({ ok: true, skills, tools, usage: { cache_creation_input_tokens: 100, output_tokens: 10 }, cost: 0.01 })
 const fired = () => ok([{ name: 'vibekit:example-plain', index: 0 }], [{ name: 'Skill', index: 0 }])
@@ -219,4 +219,18 @@ test('a sub-1.00 rate names the expectation that failed', () => {
 test('a satisfied scenario reports no failures', () => {
   const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
   assert.deepEqual(scoreScenario(s, produced(planWith('`npm test` exits 0'), {})).failures, [])
+})
+
+// Measured, not imagined: three of three failures in the first real eval run
+// were the checker rejecting these phrasings, and none was a predicted
+// transcript. Widening admits only clauses that were always predicates.
+test('exit status phrasings are predicates', () => {
+  for (const c of ['exit 0', 'exits 0', 'exit code 1', 'exit status 0', 'exit status of `node --test test/` is 0']) {
+    assert.equal(isPredicate(` ${c}`), true, c)
+  }
+})
+
+test('widening exit status did not admit predicted output', () => {
+  assert.equal(isPredicate(' exit status 0 with "fn is not defined"'), false)
+  assert.equal(isPredicate(' exit status 0 and 214 lines'), false)
 })
