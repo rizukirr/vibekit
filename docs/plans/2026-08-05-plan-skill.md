@@ -51,6 +51,10 @@ Modified:
 Regenerated, never hand-edited:
 - `CLAUDE.md` — auto-trigger table row for `plan`.
 - `README.md` — skill list entry for `plan`.
+- `AGENTS.md` — auto-trigger table row for `plan`. Omitted from the first draft
+  of this list; `npm run generate` rewrites it too, and leaving it out of the
+  commit leaves a clean checkout failing `npm run check` with `stale:
+  AGENTS.md`.
 
 ---
 
@@ -491,7 +495,7 @@ git commit -m "eval: reject predicted output in verify clauses"
 - Create: `skills/plan/SKILL.md`
 - Regenerated: `CLAUDE.md`, `README.md`
 
-- [ ] **Step 1: Write the skill**
+- [x] **Step 1: Write the skill**
 
 Create `skills/plan/SKILL.md`:
 
@@ -558,9 +562,9 @@ task, so no task restates them and no task author has to remember them.
 - Create: `exact/path`
 - Modify: `exact/path:12-40`
 
-- [ ] Step 1: <one action>
-- [ ] Step 2: Run `<command>`
-- [ ] Step N: Commit
+- [x] Step 1: <one action>
+- [x] Step 2: Run `<command>`
+- [x] Step N: Commit
 
 ```
 
@@ -633,15 +637,15 @@ plan is written, committed and approved, and execution waits for the skill that
 consumes it. Never invoke an implementation skill from here.
 ````
 
-- [ ] **Step 2: Regenerate derived surfaces**
+- [x] **Step 2: Regenerate derived surfaces**
 
 Run: `npm run generate`
 
-- [ ] **Step 3: Check the generated tree and the tests**
+- [x] **Step 3: Check the generated tree and the tests**
 
 Run: `npm run check && npm test`
 
-- [ ] **Step 4: Check the two properties the design turns on**
+- [x] **Step 4: Check the two properties the design turns on**
 
 Run: `grep -c 'Expected:' skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
 
@@ -649,10 +653,10 @@ The first command finding no match and the second reporting a value under 168 ar
 
 Do not reflow or rewrap the body to pass the line count. The count is a content budget; rewrapping leaves the content identical and moves only the number. If the body genuinely exceeds the budget, cut content or stop and report it.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
-git add skills/plan/SKILL.md CLAUDE.md README.md
+git add skills/plan/SKILL.md CLAUDE.md README.md AGENTS.md
 git commit -m "feat: plan skill"
 ```
 

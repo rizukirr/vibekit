@@ -12,6 +12,7 @@ invoked by following the named workflow.
 | Never — this is a build fixture | `example-command` | none |
 | Never — this is a build fixture | `example-plain` | hard |
 | First moment of any coding work — invoke once, then it stays on | `lazy` | none |
+| Spec approved, implementation not yet started | `plan` | hard |
 | First response of the session — invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
 <!-- /vibekit:generated -->
