@@ -69,6 +69,17 @@ export function isPredicate(clause) {
   return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
 }
 
+// Every key the scorer implements. A key not on this list is a typo or an
+// expectation nobody built, and either way the scenario would score 1.00 while
+// asserting nothing. Throwing is correct: a silent pass is the worse failure.
+const KNOWN_EXPECTATIONS = new Set([
+  'skill', 'before', 'after',
+  'transcriptContains', 'transcriptMatches',
+  'fileMatching', 'onlyNewFilesMatching',
+  'verifyClauses', 'tasksHaveVerify',
+  'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
+])
+
 // Returns null when the run satisfies the scenario, else a short string naming
 // the expectation that failed. A bare rate says one run in five broke a rule
 // without saying which, and "which" is the whole question when a rule is under
@@ -77,6 +88,11 @@ export function isPredicate(clause) {
 // adjustment.
 function unsatisfiedReason(scenario, run) {
   const expect = scenario.expect ?? {}
+  for (const key of Object.keys(expect)) {
+    if (!KNOWN_EXPECTATIONS.has(key)) {
+      throw new Error(`unknown expectation '${key}' in scenario '${scenario.id}'`)
+    }
+  }
   if (expect.skill !== undefined) {
     const hit = run.skills.find(s => s.name === expect.skill)
     if (!hit) return `skill ${expect.skill} never fired`

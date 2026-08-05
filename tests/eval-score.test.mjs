@@ -349,3 +349,25 @@ test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
   const truncated = { ...call(), promptLength: 9999 }
   assert.equal(scoreScenario(s, dispatched([truncated])).rate, 0)
 })
+
+// A misspelled expectation key is silently ignored by a guard chain, so the
+// scenario scores 1.00 while testing nothing. A check that cannot fail is not
+// a check — and this one hides other checks that cannot fail.
+test('an unknown expectation key is an error, not a silent pass', () => {
+  const s = { id: 'p', expect: { transcriptMatchs: 'typo' } }
+  assert.throws(() => scoreScenario(s, [ok()]), /unknown expectation/i)
+})
+
+test('every implemented key is accepted', () => {
+  const s = {
+    id: 'p',
+    expect: {
+      skill: 'vibekit:example-plain', before: [], after: [],
+      transcriptContains: '', transcriptMatches: '',
+      fileMatching: '.', onlyNewFilesMatching: '.',
+      verifyClauses: 'predicate', tasksHaveVerify: true,
+      dispatchModelNamed: false,
+    },
+  }
+  assert.doesNotThrow(() => scoreScenario(s, [ok()]))
+})
