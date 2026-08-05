@@ -234,3 +234,20 @@ test('widening exit status did not admit predicted output', () => {
   assert.equal(isPredicate(' exit status 0 with "fn is not defined"'), false)
   assert.equal(isPredicate(' exit status 0 and 214 lines'), false)
 })
+
+// A failure reason names the rule; the artefact shows the text that broke it.
+// The session directory is deleted, so without this a disputed false positive
+// can only ever be argued about.
+test('a failing run keeps the artefact that failed', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const bad = { 'docs/plans/a.md': '### Task 1: x → verify: fails with "boom"\n' }
+  const r = scoreScenario(s, produced(bad, {}))
+  assert.deepEqual(r.failedArtifacts, [bad])
+})
+
+test('passing runs and seeded fixtures are not stored', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const files = { ...seeded, 'docs/plans/a.md': '### Task 1: x → verify: `npm test` exits 0\n' }
+  assert.deepEqual(scoreScenario(s, produced(files, seeded)).failedArtifacts, [])
+})

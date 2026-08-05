@@ -64,7 +64,7 @@ export function isPredicate(clause) {
 // test. Reporting the reason cannot change a rate — every return here maps to
 // the boolean the previous version returned — so this is observability, not an
 // adjustment.
-export function unsatisfiedReason(scenario, run) {
+function unsatisfiedReason(scenario, run) {
   const expect = scenario.expect ?? {}
   if (expect.skill !== undefined) {
     const hit = run.skills.find(s => s.name === expect.skill)
@@ -139,6 +139,10 @@ export function unsatisfiedReason(scenario, run) {
 
 const satisfied = (scenario, run) => unsatisfiedReason(scenario, run) === null
 
+// Enough to hold a plan; short enough that a runaway file cannot bloat the
+// committed results.
+const ARTIFACT_CAP = 20000
+
 const mean = xs => (xs.length === 0 ? null : xs.reduce((a, b) => a + b, 0) / xs.length)
 
 export function scoreScenario(scenario, runs) {
@@ -169,6 +173,17 @@ export function scoreScenario(scenario, runs) {
     rate: good.filter(r => satisfied(scenario, r)).length / good.length,
     // Kept so a sub-1.00 rate names what broke instead of only how often.
     failures: good.map(r => unsatisfiedReason(scenario, r)).filter(Boolean),
+    // The reason names the rule; the artefact shows the text that broke it.
+    // Without this a false positive can only ever be argued about, because the
+    // session directory is gone by the time anyone asks. Failing runs only,
+    // seeded fixtures excluded, each file capped.
+    failedArtifacts: good
+      .filter(r => unsatisfiedReason(scenario, r) !== null)
+      .map(r => Object.fromEntries(
+        Object.entries(r.files ?? {})
+          .filter(([path]) => !(path in (r.seeded ?? {})))
+          .map(([path, contents]) => [path, contents.slice(0, ARTIFACT_CAP)]),
+      )),
     incomplete: false,
     successful: good.length,
     errored,

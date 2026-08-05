@@ -65,5 +65,20 @@
     },
     "n": 5,
     "model": "sonnet"
+  },
+  {
+    "id": "plan-second-spec-shape",
+    "prompt": "The spec at docs/specs/2026-08-05-log-rotation-design.md is approved. Write the implementation plan for it.",
+    "files": {
+      "docs/specs/2026-08-05-log-rotation-design.md": "---\ntitle: log rotation\ndate: 2026-08-05\nstatus: approved\n---\n\n# log rotation — Design\n\n## Problem\n\nThe service writes one log file that grows without bound.\n\n## Goals\n\n- Rotate the log when it exceeds a configured size.\n- Keep a bounded number of rotated files and delete the oldest.\n- Rotation never loses a line that was mid-write.\n\n## Non-goals\n\n- Compression of rotated files.\n- Shipping logs off the host.\n\n## Constraints\n\n- No dependencies.\n- Must work on a file opened in append mode by another process.\n\n## Approach\n\nA `rotate` function in `src/logrotate.js`, called from the existing write path.\n\n## Testing\n\nUnit tests, plus one test that writes concurrently during a rotation.\n\n## Open questions\n\nNone.\n"
+    },
+    "expect": {
+      "fileMatching": "^docs/plans/.*\\.md$",
+      "onlyNewFilesMatching": "^docs/plans/",
+      "tasksHaveVerify": true,
+      "verifyClauses": "predicate"
+    },
+    "n": 5,
+    "model": "sonnet"
   }
 ]

@@ -33,3 +33,17 @@ test('a straight-quoted string is caught', () => {
 test('a spelled-out count is caught', () => {
   assert.equal(isPredicate(' the four new cases pass'), false)
 })
+
+// RULE_FROM is a convention, not an enforcement: a backdated filename would be
+// skipped silently. Pinning the skipped set makes that visible — a new plan
+// dated before the rule fails here instead of quietly escaping the guard.
+test('the skipped plans are exactly the three that predate the rule', () => {
+  const skipped = readdirSync(DIR)
+    .filter(f => f.endsWith('.md') && f.slice(0, 10) < RULE_FROM)
+    .sort()
+  assert.deepEqual(skipped, [
+    '2026-08-03-vibekit-eval-harness.md',
+    '2026-08-03-vibekit-v2-architecture.md',
+    '2026-08-04-brainstorm-skill.md',
+  ])
+})

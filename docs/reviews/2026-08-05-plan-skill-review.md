@@ -120,6 +120,45 @@ Fixed at `f88b73c`; the embedded copy is byte-identical to
 Run `git diff 2ae826d..042c3fb` to read it in full. Summary above; no hunk in
 the range lacks a traceable origin.
 
+## Resolution — 2026-08-05
+
+All three warns and both nits addressed. Suite 144 passing, `npm run check`
+exit 0.
+
+- **W1 — fixed by making the claim checkable rather than argued.** The defence
+  of `f0c91c5` rested on reasoning, because the eval session directory is
+  deleted before anyone can inspect the plan that failed. `scoreScenario` now
+  stores `failedArtifacts`: the produced non-seeded files for every failing run,
+  each capped at 20,000 characters, seeded fixtures excluded. A disputed false
+  positive can now be re-read from the committed results instead of argued
+  about. Two tests pin it, including one asserting passing runs and seeded
+  fixtures are *not* stored. The post-hoc widening itself stands as recorded —
+  this fixes the reviewability of such a change, not its history.
+
+- **W2 — partly fixed, and the remainder is recorded rather than closed.** A
+  second scenario, `plan-second-spec-shape`, seeds a differently-shaped spec (a
+  log-rotation design with three goals, two non-goals, and a concurrency
+  constraint) through the same four expectations. That addresses the literal
+  complaint: spec-shape diversity is no longer n=1. It does **not** exercise the
+  two refusal paths, and I could not find a mechanical assertion for them — "the
+  spec spans subsystems" and "this requirement has no possible verify clause"
+  are judgements, not predicates, and asserting them needs the judge. Left open
+  deliberately, with the reason stated, rather than closed with a weak
+  assertion. The new scenario is committed and **not yet run**.
+
+- **W3 — fixed.** `collectFiles` now tracks an aggregate ceiling
+  (`MAX_TOTAL_BYTES`, 8 MB) alongside the per-file cap, stops collecting when it
+  is reached, and reports `filesTruncated` on the run. Tested with 40 files of
+  250 KB each — every one under the per-file guard, 10 MB together — asserting
+  both the flag and the bound.
+
+- **N1 — fixed.** `seedFiles`, `collectFiles` and `unsatisfiedReason` are no
+  longer exported; `evals/session.mjs` is down to one export.
+
+- **N2 — fixed.** `tests/plan-clauses.test.mjs` pins the skipped set to exactly
+  the three plans that predate the rule. A backdated filename now fails the
+  suite instead of silently escaping the guard.
+
 ## Sign-off
 
 - [ ] User reviewed findings.

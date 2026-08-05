@@ -118,3 +118,25 @@ test('skips node_modules so a pathological session cannot blow up the read', () 
   const result = runSession(scenario, '/plugins/candidate', spawn)
   assert.deepEqual(Object.keys(result.files), [])
 })
+
+// A per-file cap does not bound the total. Many medium files each pass the
+// per-file guard and still exhaust memory together.
+test('collection stops at the aggregate ceiling and says so', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'big'), { recursive: true })
+    // 40 files x 250KB each = 10MB, every one under the 256KB per-file cap.
+    for (let i = 0; i < 40; i++) {
+      writeFileSync(join(opts.cwd, `big/f${i}.txt`), 'x'.repeat(250 * 1024))
+    }
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.equal(result.filesTruncated, true)
+  const bytes = Object.values(result.files).reduce((n, c) => n + c.length, 0)
+  assert.ok(bytes <= 8 * 1024 * 1024, `collected ${bytes} bytes`)
+})
+
+test('a small session is not marked truncated', () => {
+  const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
+  assert.equal(result.filesTruncated, false)
+})
