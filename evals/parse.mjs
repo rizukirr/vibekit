@@ -1,10 +1,17 @@
 // evals/parse.mjs
 
+// The tools that hand work to a fresh context. A name not on this list is not a
+// dispatch, and a dispatch this list misses is invisible to every expectation
+// built on it — which is why the scoring tests carry a negative case.
+const DISPATCH_TOOLS = new Set(['Task', 'Agent'])
+const PROMPT_CAP = 4000
+
 // Pure: JSONL text in, facts out. No fs, no network — this is what lets the
 // scoring rules be tested without spending money on sessions.
 export function parseTranscript(text) {
   const skills = []
   const tools = []
+  const dispatches = []
   let usage = null
   let cost = null
   let subtype = null
@@ -33,6 +40,18 @@ export function parseTranscript(text) {
         if (block.type !== 'tool_use') continue
         const index = toolIndex++
         tools.push({ name: block.name, index })
+        if (DISPATCH_TOOLS.has(block.name)) {
+          const prompt = String(block.input?.prompt ?? '')
+          dispatches.push({
+            name: block.name,
+            index,
+            model: block.input?.model ?? null,
+            prompt: prompt.slice(0, PROMPT_CAP),
+            // Kept so a truncated prompt cannot make an "omits" assertion pass
+            // on text that was merely cut off.
+            promptLength: prompt.length,
+          })
+        }
         if (block.name === 'Skill') {
           skills.push({ name: block.input?.skill, index })
         }
@@ -49,7 +68,7 @@ export function parseTranscript(text) {
   // "the skill did not fire" would let an API failure masquerade as a
   // behavioural regression, so it is an error instead.
   if (subtype === null) {
-    return { ok: false, error: 'no result event', skills, tools, usage, cost, subtype, initSkills, finalText }
+    return { ok: false, error: 'no result event', skills, tools, dispatches, usage, cost, subtype, initSkills, finalText }
   }
 
   return {
@@ -57,6 +76,7 @@ export function parseTranscript(text) {
     error: null,
     skills,
     tools,
+    dispatches,
     usage,
     cost,
     subtype,
