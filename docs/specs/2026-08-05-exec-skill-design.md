@@ -50,8 +50,11 @@ contradictions while writing them.
 
 - **A plan with any task lacking a `→ verify:` clause is rejected whole, before
   any dispatch.** Observable: a scenario seeds a plan whose third task has no
-  clause; assert no subagent dispatch appears in the transcript and no file is
-  written outside the plan itself. This is the enforcement `plan` was promised.
+  clause, and asserts the session names the offending task as the reason it
+  stopped. Asserting merely that no dispatch happened would be vacuous — eval
+  sessions run without `Bash`, so a dispatch may be impossible regardless, and a
+  check that cannot fail is not a check. This is the enforcement `plan` was
+  promised.
 
 - **Work is handed over as file paths, not pasted text.** Observable: the
   dispatch prompt in the transcript contains a brief path and does not contain
@@ -199,13 +202,19 @@ silently inherits the session's — usually the most expensive available. Choice
 is by task shape: mechanical edits carrying full code in the brief get the cheap
 tier; tasks whose steps require judgement get the standard tier.
 
-**This ships only if it beats a control arm.** A previous attempt at model-tier
-guidance was built across nine commits and five skills on 2026-07-31, measured
-0/5 in *both* arms, and was abandoned. The structural difference now is that the
-model is a real dispatch argument rather than a line of prose the agent must
-remember to emit — so it is observable in the transcript rather than
-self-reported. If the treatment arm does not beat control, model selection is
-removed from the skill. That outcome is declared acceptable in advance.
+**This ships only if it beats a control arm, by a margin stated before the run.**
+A previous attempt at model-tier guidance was built across nine commits and five
+skills on 2026-07-31, measured 0/5 in *both* arms, and was abandoned. The
+structural difference now is that the model is a real dispatch argument rather
+than a line of prose the agent must remember to emit — so it is observable in
+the transcript rather than self-reported.
+
+The threshold: at n=10 per arm, the treatment must reach **at least 0.70** and
+exceed control by **at least 0.30**. Anything less is within the noise this
+repository has already measured — the same scenario moved 0.80 to 0.40 across
+two runs with a rate-neutral change between them. If the threshold is not met,
+model selection is removed from the skill rather than kept and explained. That
+outcome is declared acceptable in advance.
 
 ### Pushback and response
 
@@ -263,8 +272,10 @@ a plan task before any paid run.
 - `exec-fires` — seed an approved plan and a prompt to execute it; assert
   `vibekit:exec` appears.
 - `exec-rejects-clauseless-plan` — seed a plan whose third task has no
-  `→ verify:` clause; assert no dispatch appears and nothing is written outside
-  the plan file.
+  `→ verify:` clause; assert the transcript names that task as the reason the
+  run stopped. A no-dispatch assertion is deliberately **not** used: `Bash` is
+  disallowed in eval sessions, so no-dispatch would hold whether or not the gate
+  works. The scenario must be able to fail.
 - `exec-names-a-model` — treatment arm asserting a dispatch carries an explicit
   model, run against a control arm with the guidance removed. Per the
   2026-07-31 lesson, the control runs first and the treatment must beat it.
