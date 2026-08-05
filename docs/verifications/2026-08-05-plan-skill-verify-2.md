@@ -1,3 +1,8 @@
+> **Superseded by `2026-08-05-plan-skill-verify-3.md`.** Its numbers came from a
+> checker corrected three times since, and from a fixture later found invalid.
+> Its G3 verdict rested on a check that never ran. Kept because its findings on
+> instrument-versus-skill still stand.
+
 # Verification Report 2 — plan skill
 
 **Date:** 2026-08-05
