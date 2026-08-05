@@ -672,6 +672,103 @@ git commit -m "eval: reject unknown expectation keys instead of ignoring them"
 
 ---
 
+### Task 8: Assert on what the agent said, not on what it read → verify: `npm test` exits 0 with the finalTextMatches cases passing, and `node --test tests/eval-score.test.mjs` exits 0
+
+**Added during execution.** Gate 2 on Task 6 found `exec-rejects-clauseless-plan`
+vacuous. `transcriptMatches` scores against `run.raw`, the full session stdout
+including every tool result, and the seeded plan contains the literal heading
+`### Task 3: shout function`. Reading the plan therefore satisfies the
+assertion, and a session that executes all three tasks — the exact behaviour the
+scenario exists to catch — scores 1.00.
+
+The parser already captures `finalText`, the last thing the agent said. A
+refusal is visible there and a tool result is not, so asserting on it cannot be
+satisfied by the fixture quoting itself.
+
+Gate 2 also found `exec-names-a-model` omits any skill assertion, so the A/B's
+treatment arm would credit generic dispatch behaviour to this skill.
+
+**Files:**
+- Modify: `evals/score.mjs`
+- Modify: `evals/scenarios.json`
+- Test: `tests/eval-score.test.mjs`
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `tests/eval-score.test.mjs`:
+
+```js
+// raw is the whole stdout, tool results included, so a fixture can satisfy an
+// assertion about itself. finalText is the last thing the agent said — a
+// refusal shows there and a file it read does not.
+const said = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => false, raw: 'irrelevant', finalText: text }]
+
+test('finalTextMatches judges the final message, not the transcript', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  assert.equal(scoreScenario(s, said('Stopping: Task 3 carries no verify clause.')).rate, 1)
+  assert.equal(scoreScenario(s, said('All three tasks are complete.')).rate, 0)
+})
+
+test('finalTextMatches is not satisfied by transcript contents', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: '### Task 3: shout function', finalText: 'Done.' }]
+  assert.equal(scoreScenario(s, run).rate, 0)
+})
+```
+
+- [ ] **Step 2: Run the tests**
+
+Run: `node --test tests/eval-score.test.mjs`
+
+- [ ] **Step 3: Implement the expectation**
+
+In `evals/score.mjs`, add `finalTextMatches` to the `KNOWN_EXPECTATIONS` set, and add this block inside `unsatisfiedReason` immediately after the `transcriptMatches` block:
+
+```js
+  if (expect.finalTextMatches !== undefined) {
+    const re = new RegExp(expect.finalTextMatches)
+    if (!re.test(run.finalText ?? '')) {
+      return `final message did not match /${expect.finalTextMatches}/`
+    }
+  }
+```
+
+- [ ] **Step 4: Repair the two scenarios**
+
+In `evals/scenarios.json`, change the `expect` object of `exec-rejects-clauseless-plan` to:
+
+```json
+    "expect": {
+      "skill": "vibekit:exec",
+      "finalTextMatches": "[Tt]ask 3",
+      "onlyNewFilesMatching": "^docs/"
+    }
+```
+
+and the `expect` object of `exec-names-a-model` to:
+
+```json
+    "expect": {
+      "skill": "vibekit:exec",
+      "dispatchModelNamed": true
+    }
+```
+
+Change nothing else in either scenario, and do not reformat the file.
+
+- [ ] **Step 5: Run the suite**
+
+Run: `npm test`
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add evals/score.mjs evals/scenarios.json tests/eval-score.test.mjs
+git commit -m "eval: assert on the final message, and stop the A/B crediting generic dispatch"
+```
+
+---
+
 ## After the plan
 
 The A/B is the next decision, not the next task. The model-selection arm is
