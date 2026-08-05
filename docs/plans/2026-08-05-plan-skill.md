@@ -562,9 +562,9 @@ task, so no task restates them and no task author has to remember them.
 - Create: `exact/path`
 - Modify: `exact/path:12-40`
 
-- [x] Step 1: <one action>
-- [x] Step 2: Run `<command>`
-- [x] Step N: Commit
+- [ ] Step 1: <one action>
+- [ ] Step 2: Run `<command>`
+- [ ] Step N: Commit
 
 ```
 
