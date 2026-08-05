@@ -311,3 +311,41 @@ test('transcriptMatches fails when the transcript does not match', () => {
   const s = { id: 'p', expect: { transcriptMatches: 'Task 3[^.]*no .verify' } }
   assert.equal(scoreScenario(s, spoke('All tasks complete.')).rate, 0)
 })
+
+const dispatched = list => [{ ok: true, skills: [], tools: [], dispatches: list, files: {}, seeded: {}, contains: () => false, raw: '' }]
+// promptLength is derived, never written by hand. A hand-counted length that
+// disagrees with the prompt reads as truncation and makes the fixture
+// unsatisfiable — which is exactly what happened on the first attempt at this
+// task.
+const call = (over = {}) => {
+  const prompt = over.prompt ?? 'read docs/briefs/task-1.md'
+  return { name: 'Task', index: 0, model: 'haiku', promptLength: prompt.length, ...over, prompt }
+}
+
+test('dispatchModelNamed requires every dispatch to name a model', () => {
+  const s = { id: 'p', expect: { dispatchModelNamed: true } }
+  assert.equal(scoreScenario(s, dispatched([call()])).rate, 1)
+  assert.equal(scoreScenario(s, dispatched([call(), call({ model: null })])).rate, 0)
+})
+
+// Without this the expectation passes on a session that never dispatched at
+// all, which is the vacuous-check failure this repo already shipped once.
+test('dispatchModelNamed fails when nothing was dispatched', () => {
+  const s = { id: 'p', expect: { dispatchModelNamed: true } }
+  assert.equal(scoreScenario(s, dispatched([])).rate, 0)
+})
+
+test('dispatchPromptMatches and dispatchPromptOmits judge every dispatch', () => {
+  const s = { id: 'p', expect: { dispatchPromptMatches: 'docs/briefs/', dispatchPromptOmits: '```' } }
+  assert.equal(scoreScenario(s, dispatched([call()])).rate, 1)
+  assert.equal(scoreScenario(s, dispatched([call({ prompt: 'here is the code:\n```js\nx\n```' })])).rate, 0)
+})
+
+// A capped prompt could pass an "omits" assertion on text that was cut off.
+// promptLength is passed explicitly here to simulate truncation, which is the
+// one place a hand-written length is correct.
+test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
+  const s = { id: 'p', expect: { dispatchPromptOmits: '```' } }
+  const truncated = { ...call(), promptLength: 9999 }
+  assert.equal(scoreScenario(s, dispatched([truncated])).rate, 0)
+})

@@ -103,6 +103,38 @@ function unsatisfiedReason(scenario, run) {
     if (!re.test(run.raw ?? '')) return `transcript did not match /${expect.transcriptMatches}/`
   }
 
+  // Expectations over how work was handed to a fresh context. Each requires at
+  // least one dispatch: a session that dispatched nothing must fail rather than
+  // pass over an empty list.
+  const dispatches = run.dispatches ?? []
+  const needsDispatch =
+    expect.dispatchModelNamed !== undefined ||
+    expect.dispatchPromptMatches !== undefined ||
+    expect.dispatchPromptOmits !== undefined
+  if (needsDispatch && dispatches.length === 0) return 'no dispatch was made'
+
+  if (expect.dispatchModelNamed) {
+    const bare = dispatches.find(d => !d.model)
+    if (bare) return `dispatch ${bare.index} named no model`
+  }
+
+  if (expect.dispatchPromptMatches !== undefined) {
+    const re = new RegExp(expect.dispatchPromptMatches)
+    const miss = dispatches.find(d => !re.test(d.prompt ?? ''))
+    if (miss) return `dispatch ${miss.index} did not match /${expect.dispatchPromptMatches}/`
+  }
+
+  if (expect.dispatchPromptOmits !== undefined) {
+    const re = new RegExp(expect.dispatchPromptOmits)
+    for (const d of dispatches) {
+      // A capped prompt is not evidence of absence.
+      if ((d.promptLength ?? 0) > (d.prompt ?? '').length) {
+        return `dispatch ${d.index} prompt was truncated; omission cannot be established`
+      }
+      if (re.test(d.prompt ?? '')) return `dispatch ${d.index} contained /${expect.dispatchPromptOmits}/`
+    }
+  }
+
   // Expectations over what the session wrote, not what it said. `plan`'s
   // observable criteria are properties of a file on disk, and a transcript
   // cannot carry them.
