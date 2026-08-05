@@ -251,3 +251,16 @@ test('passing runs and seeded fixtures are not stored', () => {
   const files = { ...seeded, 'docs/plans/a.md': '### Task 1: x → verify: `npm test` exits 0\n' }
   assert.deepEqual(scoreScenario(s, produced(files, seeded)).failedArtifacts, [])
 })
+
+// Measured on an agent-written plan: a clause held a `node -e "..."` command
+// whose quotes belong to the command, not to a predicted transcript. A code
+// span is what you run; prose is what you claim.
+test('quotes inside a code span belong to the command', () => {
+  const clause = ' `node -e "const a=require(\'node:assert\');a.strictEqual(p.type,\'module\')"` exits 0'
+  assert.equal(isPredicate(clause), true)
+})
+
+test('stripping spans did not stop quotes in prose being caught', () => {
+  assert.equal(isPredicate(' `npm test` fails with "fn is not defined"'), false)
+  assert.equal(isPredicate(' `wc -l` reports 214 lines'), false)
+})

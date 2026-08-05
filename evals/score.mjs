@@ -21,7 +21,7 @@ const ALLOWED_NUMERIC = [
   // one — three false positives and no true ones. Widening here can only admit
   // clauses that were always predicates; a quoted string still fails on the
   // quote, and a stale count still fails as a bare number.
-  /\bexit(?:s|ed)?(?:\s+(?:code|status))?(?:\s+of\s+`[^`]*`)?(?:\s+is)?\s+\d+/gi,
+  /\bexits?\b[^.\n]*?\b\d+/gi,
   /\b(?:status|http|returns)\s+\d{3}\b/gi,
   new RegExp(`\\b(?:${THRESHOLD})\\s+(?:\\d+|${WORD})\\b`, 'gi'),
 ]
@@ -49,11 +49,14 @@ export function verifyClauses(text) {
 }
 
 export function isPredicate(clause) {
-  // Backticks are not quotes here: a clause names its command in a code span,
-  // and every clause in this repo's own plans does. Straight quotes are the
-  // tell — a predicted transcript arrives as "FAIL with ...".
-  if (/["']/.test(clause)) return false
-  let rest = clause
+  // A code span is what you run; prose is what you claim. Predicted output is a
+  // claim, so the span comes out before anything is judged. Tolerating
+  // backticks was not enough — an agent-written clause held
+  // `node -e "...assert.strictEqual(pkg.type,'module')"` and was rejected for
+  // quotes that belonged to the command, not to a predicted transcript.
+  const prose = clause.replace(/`[^`]*`/g, ' ')
+  if (/["']/.test(prose)) return false
+  let rest = prose
   for (const re of ALLOWED_NUMERIC) rest = rest.replace(re, '')
   return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
 }
