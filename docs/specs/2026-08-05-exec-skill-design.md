@@ -1,7 +1,7 @@
 ---
 title: exec skill
 date: 2026-08-05
-status: draft
+status: approved
 ---
 
 # exec skill — Design
