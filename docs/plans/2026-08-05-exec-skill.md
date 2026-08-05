@@ -168,7 +168,7 @@ git commit -m "eval: capture dispatch calls with model and prompt"
 - Modify: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -189,11 +189,11 @@ test('transcriptMatches fails when the transcript does not match', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the expectation**
+- [x] **Step 3: Implement the expectation**
 
 In `evals/score.mjs`, inside `unsatisfiedReason`, immediately after the `transcriptContains` block:
 
@@ -204,11 +204,11 @@ In `evals/score.mjs`, inside `unsatisfiedReason`, immediately after the `transcr
   }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
@@ -569,6 +569,96 @@ git commit -m "eval: exec-fires, exec-rejects-clauseless-plan, exec-names-a-mode
 ```
 
 **Not covered by this task:** the scenarios are committed, not run. A green Task 6 means they are well-formed, not that the skill is measured.
+
+---
+
+### Task 7: Reject unknown expectation keys → verify: `node --test tests/eval-score.test.mjs` exits 0 with the unknown-key case passing, and `npm test` exits 0
+
+**Added during execution.** Gate 2 on Task 2 confirmed at source that
+`unsatisfiedReason` is a chain of `if (expect.X !== undefined)` guards ending in
+an unconditional `return null`, with no check that every key in `scenario.expect`
+is one the scorer implements. A misspelled key — `transcriptMatchs` — is
+silently ignored and the scenario scores 1.00. Task 2's positive test passed
+vacuously for exactly this reason before its implementation landed.
+
+This is the same defect class as the previous cycle's `tasksHaveVerify`, which
+matched no headings and passed by `every()` over an empty list for a full cycle
+while a verification report cited it as evidence. Task 6 is about to add three
+more keys into the same hazard, so the guard goes in first.
+
+**Files:**
+- Modify: `evals/score.mjs`
+- Test: `tests/eval-score.test.mjs`
+
+- [ ] **Step 1: Write the failing test**
+
+Append to `tests/eval-score.test.mjs`:
+
+```js
+// A misspelled expectation key is silently ignored by a guard chain, so the
+// scenario scores 1.00 while testing nothing. A check that cannot fail is not
+// a check — and this one hides other checks that cannot fail.
+test('an unknown expectation key is an error, not a silent pass', () => {
+  const s = { id: 'p', expect: { transcriptMatchs: 'typo' } }
+  assert.throws(() => scoreScenario(s, [ok()]), /unknown expectation/i)
+})
+
+test('every implemented key is accepted', () => {
+  const s = {
+    id: 'p',
+    expect: {
+      skill: 'vibekit:example-plain', before: [], after: [],
+      transcriptContains: '', transcriptMatches: '',
+      fileMatching: '.', onlyNewFilesMatching: '.',
+      verifyClauses: 'predicate', tasksHaveVerify: true,
+      dispatchModelNamed: false,
+    },
+  }
+  assert.doesNotThrow(() => scoreScenario(s, [ok()]))
+})
+```
+
+- [ ] **Step 2: Run the test**
+
+Run: `node --test tests/eval-score.test.mjs`
+
+- [ ] **Step 3: Implement the guard**
+
+In `evals/score.mjs`, above `unsatisfiedReason`:
+
+```js
+// Every key the scorer implements. A key not on this list is a typo or an
+// expectation nobody built, and either way the scenario would score 1.00 while
+// asserting nothing. Throwing is correct: a silent pass is the worse failure.
+const KNOWN_EXPECTATIONS = new Set([
+  'skill', 'before', 'after',
+  'transcriptContains', 'transcriptMatches',
+  'fileMatching', 'onlyNewFilesMatching',
+  'verifyClauses', 'tasksHaveVerify',
+  'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
+])
+```
+
+At the top of `unsatisfiedReason`, immediately after `const expect = scenario.expect ?? {}`:
+
+```js
+  for (const key of Object.keys(expect)) {
+    if (!KNOWN_EXPECTATIONS.has(key)) {
+      throw new Error(`unknown expectation '${key}' in scenario '${scenario.id}'`)
+    }
+  }
+```
+
+- [ ] **Step 4: Run the suite**
+
+Run: `npm test`
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add evals/score.mjs tests/eval-score.test.mjs
+git commit -m "eval: reject unknown expectation keys instead of ignoring them"
+```
 
 ---
 
