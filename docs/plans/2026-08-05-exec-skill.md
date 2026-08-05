@@ -27,7 +27,7 @@
 
 **Hidden assumptions:**
 - The plan assumes a dispatch appears in the transcript as a `tool_use` block whose `input` carries `prompt` and `model`. Task 1's verify clause asserts extraction from a fixture built to that shape, so a wrong shape fails the task rather than surfacing during a paid run.
-- The plan assumes `Task` and `Agent` are the dispatch tool names. If a runtime uses another name, dispatch capture silently records nothing and every dispatch expectation passes vacuously. Mitigated by Task 2's clause asserting a *negative* case — a transcript with no dispatch must fail the expectation.
+- The plan assumes `Task` and `Agent` are the dispatch tool names. If a runtime uses another name, dispatch capture silently records nothing and every dispatch expectation passes vacuously. Mitigated by Task 3's clause, which carries the no-dispatch negative case — a transcript with no dispatch must fail the expectation.
 - The plan assumes the control arm can be a git tag. `evals/run.mjs` already materialises variants as git refs (`--baseline`), so this needs no harness change.
 
 **Irreversible / risky steps:**
@@ -39,7 +39,7 @@
 
 **Verify-clause weakness:**
 - `npm test` alone would pass if a new test file were never imported. Every test-adding task names its own file and asserts a non-zero count from it.
-- Task 5's clause could pass on a skill file that is well-formed but missing the gate under construction. Tightened to assert both that `npm run check` exits 0 and that the file contains the whole-plan gate's clause requirement.
+- Task 4's clause could pass on a skill file that is well-formed but missing the gate under construction. Tightened to assert `npm run check` exits 0, the file names no model, and the body stays under the line budget.
 - The dispatch expectations could all pass vacuously if capture returns an empty list. Task 2 and Task 3 each carry a negative case in their clause.
 
 ---
