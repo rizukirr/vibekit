@@ -170,6 +170,21 @@ post-run assertion encodes:
 A threshold is derivable because the plan author chooses it; a predicted value
 is not, because the runtime chooses it. That is the line the allowlist encodes.
 
+Two clarifications, both added during execution after the check proved
+miscalibrated against this project's own first plan, and both approved by the
+user before the code was written:
+
+- **A spelled-out number is a number.** Task 3's clause in the plan claimed
+  "the four new path-set cases" where three existed. A digits-only check passes
+  that through, so the exact defect class this design targets escaped its own
+  falsification test on the first artefact written under it. The check rejects
+  number words as well as digits, with the threshold allowlist widened to match
+  (`at least one match` stays legal).
+- **A backticked command is not a quoted string.** Rejecting backticks would
+  have flagged every clause in this repo's own plans, all of which name their
+  command in a code span. Only straight quotes are the tell, because that is how
+  a predicted transcript arrives.
+
 Any other number in a clause is a predicted value and fails the assertion. The
 allowlist is deliberately short: each entry names a property of the runtime
 rather than of the code under test, which is what makes it derivable without

@@ -330,7 +330,7 @@ git commit -m "eval: score expectations over produced file paths"
 
 ---
 
-### Task 4: Predicate expectation over verify clauses → verify: `node --test tests/eval-score.test.mjs` exits 0 with the predicate cases passing, including one asserting a bare three-digit number is rejected
+### Task 4: Predicate expectation over verify clauses → verify: `node --test tests/eval-score.test.mjs` exits 0 and every new predicate case passes
 
 **Files:**
 - Modify: `evals/score.mjs`
@@ -357,11 +357,32 @@ test('predicate clauses pass', () => {
 
 test('a quoted string in a clause is a predicted transcript', () => {
   assert.equal(rateOf(planWith('test fails with "fn is not defined"')), 0)
+  assert.equal(rateOf(planWith("test fails with 'fn is not defined'")), 0)
+})
+
+// Every clause in this repo's own plans names its command in a code span.
+// Rejecting backticks would flag all of them and measure nothing.
+test('a backticked command is not a quoted string', () => {
+  assert.equal(rateOf(planWith('`npm test` exits 0')), 1)
 })
 
 test('a bare number is a predicted value, even a three-digit one', () => {
   assert.equal(rateOf(planWith('the file is 214 lines long')), 0)
   assert.equal(rateOf(planWith('the file is 42 lines long')), 0)
+})
+
+// Added after Task 3: this plan's own Task 3 clause said "the four new
+// path-set cases" when there were three. A digits-only check passes that
+// straight through, so the defect the design exists to catch escaped its own
+// falsification test on the first artefact written under it.
+test('a spelled-out number is a predicted value too', () => {
+  assert.equal(rateOf(planWith('the four new path-set cases pass')), 0)
+  assert.equal(rateOf(planWith('two files are created')), 0)
+})
+
+test('a spelled-out threshold is still a predicate', () => {
+  assert.equal(rateOf(planWith('grep finds at least one match')), 1)
+  assert.equal(rateOf(planWith('no more than two files change')), 1)
 })
 
 test('clauses in seeded files are not scored', () => {
@@ -394,11 +415,20 @@ const VERIFY = '→ verify:'
 // without having run anything. A bare number is a predicted value — and a bare
 // three-digit number is exactly the wrong-`wc -l` defect this check exists to
 // catch, so an HTTP status has to be introduced by a context word to count.
+// Spelled-out numbers count. This plan's own Task 3 clause claimed "the four
+// new path-set cases" when Step 1 defined three — a wrong count that a
+// digits-only check waves through, which is how the defect class this skill
+// targets escaped its own test on the very first plan written under it.
+const WORD = 'one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|twenty|thirty|forty|fifty|hundred|thousand'
+const THRESHOLD = 'at least|at most|no more than|no fewer than|fewer than|under|over|below|above'
+
 const ALLOWED_NUMERIC = [
   /\bexit\s+\d+/gi,
   /\b(?:status|http|returns)\s+\d{3}\b/gi,
-  /\b(?:at least|at most|no more than|fewer than|under|over|below|above)\s+\d+/gi,
+  new RegExp(`\\b(?:${THRESHOLD})\\s+(?:\\d+|${WORD})\\b`, 'gi'),
 ]
+
+const BARE_WORD_NUMBER = new RegExp(`\\b(?:${WORD})\\b`, 'i')
 
 export function verifyClauses(text) {
   return text
@@ -408,10 +438,13 @@ export function verifyClauses(text) {
 }
 
 export function isPredicate(clause) {
-  if (/["'`]/.test(clause)) return false
+  // Backticks are not quotes here: a clause names its command in a code span,
+  // and every clause in this repo's own plans does. Straight quotes are the
+  // tell — a predicted transcript arrives as "FAIL with ...".
+  if (/["']/.test(clause)) return false
   let rest = clause
   for (const re of ALLOWED_NUMERIC) rest = rest.replace(re, '')
-  return !/\d/.test(rest)
+  return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
 }
 ```
 
@@ -551,10 +584,16 @@ executing agent cannot tell whether the code failed or the plan lied — and it
 will assume the code.
 
 A number is not itself the tell; three forms carry one legitimately — an exit
-status, an HTTP status, and a threshold in either direction ("at least 1
-match", "under 120 lines"). Any other number in a clause is a predicted value.
-A threshold is derivable because you chose it; a predicted value is not, because
-the runtime chooses it.
+status, an HTTP status, and a threshold in either direction (at least 1 match,
+under 120 lines). Any other number in a clause is a predicted value. A threshold
+is derivable because you chose it; a predicted value is not, because the runtime
+chooses it.
+
+Spelling a number out does not launder it. "The four cases pass" is a count, and
+the first plan written under this rule got that count wrong.
+
+Naming your command in a code span is not quoting. Backticks delimit what to
+run; straight quotes are how a predicted transcript gets in.
 
 If a specific value is genuinely load-bearing, the task's first step **observes
 it**, and the clause refers to the observation instead of a guess.
