@@ -103,6 +103,20 @@ A halt leaves the branch as it was at the last completed task.
   has to change first.
 - Never batch commits across tasks.
 
+## Name the model
+
+Every dispatch names its model explicitly. An omitted model inherits this
+session's, which is usually the most expensive one available, on tasks that
+rarely need it.
+
+Choose by task shape, not by importance:
+
+- **Cheap tier** — the brief carries the full code and the steps are mechanical.
+- **Standard tier** — the steps require judgement the brief cannot spell out.
+
+Naming it is the point. A dispatch with no model is a cost decision made by
+accident.
+
 ## Handoff
 
 When every task is complete, the plan file is fully ticked and the branch holds
