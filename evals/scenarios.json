@@ -40,5 +40,30 @@
     "expect": { "skill": "vibekit:terse", "after": ["vibekit:brainstorm"] },
     "n": 5,
     "model": "sonnet"
+  },
+  {
+    "id": "plan-fires",
+    "prompt": "The spec at docs/specs/2026-08-05-slug-command-design.md is approved. Write the implementation plan for it.",
+    "files": {
+      "docs/specs/2026-08-05-slug-command-design.md": "---\ntitle: slug command\ndate: 2026-08-05\nstatus: approved\n---\n\n# slug command — Design\n\n## Problem\n\nPost titles are turned into URL slugs by hand, inconsistently.\n\n## Goals\n\n- A `slugify` function turns a title into a lowercase hyphenated slug.\n- Repeated separators collapse to one hyphen.\n\n## Non-goals\n\n- Unicode transliteration.\n\n## Constraints\n\n- No dependencies.\n\n## Approach\n\nOne exported function in `src/slugify.js`, with unit tests.\n\n## Testing\n\nUnit tests only.\n\n## Open questions\n\nNone.\n"
+    },
+    "expect": { "skill": "vibekit:plan" },
+    "n": 5,
+    "model": "sonnet"
+  },
+  {
+    "id": "plan-no-predicted-output",
+    "prompt": "The spec at docs/specs/2026-08-05-slug-command-design.md is approved. Write the implementation plan for it.",
+    "files": {
+      "docs/specs/2026-08-05-slug-command-design.md": "---\ntitle: slug command\ndate: 2026-08-05\nstatus: approved\n---\n\n# slug command — Design\n\n## Problem\n\nPost titles are turned into URL slugs by hand, inconsistently.\n\n## Goals\n\n- A `slugify` function turns a title into a lowercase hyphenated slug.\n- Repeated separators collapse to one hyphen.\n\n## Non-goals\n\n- Unicode transliteration.\n\n## Constraints\n\n- No dependencies.\n\n## Approach\n\nOne exported function in `src/slugify.js`, with unit tests.\n\n## Testing\n\nUnit tests only.\n\n## Open questions\n\nNone.\n"
+    },
+    "expect": {
+      "fileMatching": "^docs/plans/.*\\.md$",
+      "onlyNewFilesMatching": "^docs/plans/",
+      "tasksHaveVerify": true,
+      "verifyClauses": "predicate"
+    },
+    "n": 5,
+    "model": "sonnet"
   }
 ]
