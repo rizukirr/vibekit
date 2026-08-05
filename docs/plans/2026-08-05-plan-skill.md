@@ -152,7 +152,7 @@ git commit -m "eval: seed scenario fixture files into the session cwd"
 - Modify: `evals/session.mjs`
 - Test: `tests/eval-session.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-session.test.mjs`:
 
@@ -191,11 +191,11 @@ Add to the `node:fs` imports at the top of the test file:
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-session.test.mjs`
 
-- [ ] **Step 3: Implement collection**
+- [x] **Step 3: Implement collection**
 
 In `evals/session.mjs`, widen the imports and add the helper next to `seedFiles`:
 
@@ -234,11 +234,11 @@ Replace the `return` statement inside `runSession` with:
     return { ...parsed, raw: stdout, files, seeded: scenario.files ?? {}, contains: needle => stdout.includes(needle) }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-session.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/session.mjs tests/eval-session.test.mjs
