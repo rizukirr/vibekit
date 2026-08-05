@@ -330,7 +330,7 @@ git commit -m "eval: expectations over how work is dispatched"
 
 This task ships the skill **without model guidance**, so the commit can be tagged as the control arm for the A/B in Task 5. The 2026-07-31 model-tier attempt measured 0/5 in both arms and was abandoned; running the control first is what caught it.
 
-- [ ] **Step 1: Write the skill**
+- [x] **Step 1: Write the skill**
 
 Create `skills/exec/SKILL.md`:
 
@@ -447,21 +447,21 @@ one or more commits per task. The next skill is `verify`. Say plainly what ran
 and what remains unproven.
 ````
 
-- [ ] **Step 2: Regenerate derived surfaces**
+- [x] **Step 2: Regenerate derived surfaces**
 
 Run: `npm run generate`
 
-- [ ] **Step 3: Check the tree and the tests**
+- [x] **Step 3: Check the tree and the tests**
 
 Run: `npm run check && npm test`
 
-- [ ] **Step 4: Check the two budget properties**
+- [x] **Step 4: Check the two budget properties**
 
 Run: `grep -ci model skills/exec/SKILL.md; wc -l < skills/exec/SKILL.md`
 
 The first finding no match and the second reporting a value under 160 are this task's criteria. Do not reflow the body to pass the count — the count is a content budget. If the body genuinely exceeds it, cut content or stop and report.
 
-- [ ] **Step 5: Commit and tag the control arm**
+- [x] **Step 5: Commit and tag the control arm**
 
 ```bash
 git add skills/exec/SKILL.md CLAUDE.md README.md AGENTS.md
