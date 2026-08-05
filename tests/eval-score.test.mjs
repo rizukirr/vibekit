@@ -277,3 +277,22 @@ test('tasksHaveVerify matches the heading levels agents actually use', () => {
     assert.equal(scoreScenario(s, produced(bad, {})).rate, 0, `${h} bad`)
   }
 })
+
+// A real plan documented its own compliance — "one of the three permitted
+// predicate forms" — and the word three was read as a stale count. Clauses
+// live in task headers; anything else mentioning the marker is prose.
+test('prose about the rule is not a clause', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const doc = {
+    'docs/plans/a.md':
+      '### Task 1: thing → verify: `npm test` exit status 0\n\n' +
+      '3. **Clauses.** The single `→ verify:` clause is one of the three permitted forms.\n',
+  }
+  assert.equal(scoreScenario(s, produced(doc, {})).rate, 1)
+})
+
+test('a bad clause in a task header is still caught', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const doc = { 'docs/plans/a.md': '### Task 1: thing → verify: fails with "boom"\n' }
+  assert.equal(scoreScenario(s, produced(doc, {})).rate, 0)
+})

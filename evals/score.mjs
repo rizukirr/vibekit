@@ -1,6 +1,8 @@
 // evals/score.mjs
 
 const VERIFY = '→ verify:'
+// Heading level is cosmetic and agents pick their own.
+const TASK_HEADER = /^#{2,4}\s+Task\s+\d+/
 
 // The three numeric forms a clause may carry. Each names a property of the
 // runtime rather than of the code under test, which is what makes it derivable
@@ -43,7 +45,13 @@ export function verifyClauses(text) {
       continue
     }
     if (depth > 0) continue
-    if (line.includes(VERIFY)) out.push(line.slice(line.indexOf(VERIFY) + VERIFY.length))
+    // A clause lives in a task header — that is where the skill's template puts
+    // it. Anything else mentioning the marker is prose about the rule, and a
+    // plan that documents its own compliance ("one of the three permitted
+    // forms") was flagged for the word three. Documentation is not a clause.
+    if (TASK_HEADER.test(line) && line.includes(VERIFY)) {
+      out.push(line.slice(line.indexOf(VERIFY) + VERIFY.length))
+    }
   }
   return out
 }
@@ -130,13 +138,12 @@ function unsatisfiedReason(scenario, run) {
 
   if (expect.tasksHaveVerify) {
     for (const [path, contents] of written) {
-      // Heading level is cosmetic and agents pick their own: a real plan came
-      // back with `## Task 1:` while this check only matched `###`, so it
-      // found no headers at all and passed vacuously. A check that cannot fail
-      // is not a check.
+      // A real plan came back with `## Task 1:` while this check matched only
+      // `###`, so it found no headers at all and passed vacuously. A check that
+      // cannot fail is not a check.
       const bad = contents
         .split('\n')
-        .filter(line => /^#{2,4}\s+Task\s+\d+/.test(line))
+        .filter(line => TASK_HEADER.test(line))
         .find(line => !line.includes(VERIFY))
       if (bad !== undefined) return `task header without a verify clause in ${path}: ${bad.trim()}`
     }
