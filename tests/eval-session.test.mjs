@@ -3,6 +3,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { runSession } from '../evals/session.mjs'
 
 const transcript = readFileSync('evals/fixtures/skill-fired.jsonl', 'utf8')
@@ -58,4 +59,35 @@ test('returns the parsed transcript', () => {
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
   assert.equal(result.ok, true)
   assert.equal(result.skills[0].name, 'vibekit:example-plain')
+})
+
+test('seeds scenario files into the session cwd before the run', () => {
+  const calls = []
+  const seeded = { 'docs/specs/x-design.md': '---\nstatus: approved\n---\n' }
+  const spawn = (cmd, args, opts) => {
+    calls.push({ cmd, args, opts })
+    // Read inside the spawn stub: this is the only moment the cwd is alive
+    // and the session would be looking at it.
+    calls[0].seen = readFileSync(join(opts.cwd, 'docs/specs/x-design.md'), 'utf8')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  runSession({ ...scenario, files: seeded }, '/plugins/candidate', spawn)
+  assert.equal(calls[0].seen, seeded['docs/specs/x-design.md'])
+})
+
+test('creates parent directories for seeded files', () => {
+  const calls = []
+  const spawn = (cmd, args, opts) => {
+    calls.push({ opts })
+    calls[0].ok = existsSync(join(opts.cwd, 'a/b/c/deep.md'))
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  runSession({ ...scenario, files: { 'a/b/c/deep.md': 'x' } }, '/plugins/candidate', spawn)
+  assert.equal(calls[0].ok, true)
+})
+
+test('a scenario with no files still runs', () => {
+  const calls = []
+  const result = runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
+  assert.equal(result.ok, true)
 })

@@ -1,9 +1,20 @@
 // evals/session.mjs
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { parseTranscript } from './parse.mjs'
+
+// A skill whose precondition is a file on disk cannot be measured in an empty
+// directory. Seeding is what makes `plan` reachable at all: its gate is an
+// approved spec, and the session starts with nothing.
+export function seedFiles(root, files = {}) {
+  for (const [rel, contents] of Object.entries(files)) {
+    const dest = join(root, rel)
+    mkdirSync(dirname(dest), { recursive: true })
+    writeFileSync(dest, contents)
+  }
+}
 
 // Sessions run with edits permitted, because "did the agent write code before
 // invoking the skill" is the thing being measured — plan mode would block the
@@ -12,6 +23,7 @@ import { parseTranscript } from './parse.mjs'
 export function runSession(scenario, pluginDir, spawn = spawnSync) {
   const cwd = mkdtempSync(join(tmpdir(), 'vibekit-eval-'))
   try {
+    seedFiles(cwd, scenario.files)
     const args = [
       '-p', scenario.prompt,
       '--output-format', 'stream-json',
