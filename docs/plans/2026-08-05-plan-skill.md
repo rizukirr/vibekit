@@ -667,7 +667,7 @@ git commit -m "feat: plan skill"
 **Files:**
 - Modify: `evals/scenarios.json:43`
 
-- [ ] **Step 1: Append the two scenarios**
+- [x] **Step 1: Append the two scenarios**
 
 In `evals/scenarios.json`, add these two objects to the end of the array, after the `terse-reachable` entry:
 
@@ -699,17 +699,17 @@ In `evals/scenarios.json`, add these two objects to the end of the array, after 
   }
 ```
 
-- [ ] **Step 2: Check the file parses and the suite is green**
+- [x] **Step 2: Check the file parses and the suite is green**
 
 Run: `node -e "JSON.parse(require('fs').readFileSync('evals/scenarios.json','utf8'))" && npm test`
 
-- [ ] **Step 3: Confirm every expectation key is one the scorer implements**
+- [x] **Step 3: Confirm every expectation key is one the scorer implements**
 
 Run: `grep -o 'expect\.[a-zA-Z]*' evals/score.mjs | sort -u`
 
 Every key used in the two new scenarios must appear in that output. A key that does not is silently ignored at scoring time, which would make the scenario pass without testing anything.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add evals/scenarios.json
