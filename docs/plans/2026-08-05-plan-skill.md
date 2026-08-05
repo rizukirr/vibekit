@@ -423,7 +423,9 @@ const WORD = 'one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|doz
 const THRESHOLD = 'at least|at most|no more than|no fewer than|fewer than|under|over|below|above'
 
 const ALLOWED_NUMERIC = [
-  /\bexit\s+\d+/gi,
+  // `exits?` — clauses say "exits 0" far more often than "exit 0"; a singular-
+  // only pattern left a bare 0 behind and flagged its own plan.
+  /\bexits?\s+\d+/gi,
   /\b(?:status|http|returns)\s+\d{3}\b/gi,
   new RegExp(`\\b(?:${THRESHOLD})\\s+(?:\\d+|${WORD})\\b`, 'gi'),
 ]
@@ -709,6 +711,96 @@ git commit -m "eval: plan-fires and plan-no-predicted-output scenarios"
 ```
 
 **Not covered by this task:** the scenarios are committed, not run. Executing them costs money and is a separate, explicitly gated decision. A green Task 6 means the scenarios are well-formed — it does not mean the skill is measured.
+
+---
+
+### Task 7: Run the checker over this repo's own plans → verify: `npm test` exits 0, and `tests/plan-clauses.test.mjs` fails when a clause containing a straight-quoted string is added to a plan under `docs/plans/`
+
+**Added during execution, after three miscalibrations in one run.** The check
+rejected a spelled-out count, then backticked commands, then `exits 0` — and
+every one was found by an implementer or a reviewer rather than by running the
+checker. All three would have been caught by executing `isPredicate` over this
+plan file once. That execution exists nowhere in the plan, so the rule is prose
+where it should be an invariant. This task makes the repo eat its own rule in
+free CI, which is also the strongest available evidence that the rule is
+calibrated: if it cannot pass the plans this project actually writes, it is
+wrong.
+
+**Files:**
+- Create: `tests/plan-clauses.test.mjs`
+- Modify: `docs/plans/2026-08-05-plan-skill.md` — reword this plan's own clauses that the checker rejects.
+
+- [ ] **Step 1: Write the test**
+
+Create `tests/plan-clauses.test.mjs`:
+
+```js
+// tests/plan-clauses.test.mjs
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { verifyClauses, isPredicate } from '../evals/score.mjs'
+
+// The rule the `plan` skill states in prose, enforced against the plans this
+// repo actually writes. A checker that cannot pass its own project's plans is
+// miscalibrated, and prose alone never surfaces that.
+const DIR = 'docs/plans'
+
+test('every verify clause in this repo is a predicate', () => {
+  const offenders = []
+  for (const name of readdirSync(DIR).filter(f => f.endsWith('.md'))) {
+    for (const clause of verifyClauses(readFileSync(join(DIR, name), 'utf8'))) {
+      if (!isPredicate(clause)) offenders.push(`${name}: ${clause.trim()}`)
+    }
+  }
+  assert.deepEqual(offenders, [])
+})
+
+test('a straight-quoted string is caught', () => {
+  assert.equal(isPredicate(' test fails with "fn is not defined"'), false)
+})
+
+test('a spelled-out count is caught', () => {
+  assert.equal(isPredicate(' the four new cases pass'), false)
+})
+```
+
+- [ ] **Step 2: Run the test to see which of this plan's clauses fail**
+
+Run: `node --test tests/plan-clauses.test.mjs`
+
+The failure message lists every offending clause verbatim. That list is the
+work item for Step 3 — do not guess at it in advance, read it.
+
+- [ ] **Step 3: Reword each offending clause in this plan**
+
+For every clause the previous step named, edit its `### Task N:` header in
+`docs/plans/2026-08-05-plan-skill.md` so the clause states the same criterion
+without a straight-quoted string or a bare count. Rules to apply:
+
+- Replace a count with the property that count stood for. "the three new
+  path-set cases pass" becomes "every new path-set case passes".
+- Move a quoted literal into a backticked code span. `grep -c 'Expected:'`
+  becomes `grep -c Expected:`.
+- Replace an inline `node -e "..."` command with a backticked reference to what
+  it checks, or move the command into the step body and leave the clause
+  describing the outcome.
+
+Do not weaken a criterion to make it pass. If a clause cannot be reworded
+without losing what it checked, stop and report it in `unexpected` — that is a
+finding about the rule, not about the clause.
+
+- [ ] **Step 4: Run the full suite**
+
+Run: `npm test`
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add tests/plan-clauses.test.mjs docs/plans/2026-08-05-plan-skill.md
+git commit -m "test: enforce the predicate rule against this repo's own plans"
+```
 
 ---
 
