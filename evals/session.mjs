@@ -1,8 +1,8 @@
 // evals/session.mjs
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, join, relative, sep } from 'node:path'
 import { parseTranscript } from './parse.mjs'
 
 // A skill whose precondition is a file on disk cannot be measured in an empty
@@ -14,6 +14,28 @@ export function seedFiles(root, files = {}) {
     mkdirSync(dirname(dest), { recursive: true })
     writeFileSync(dest, contents)
   }
+}
+
+const SKIP_DIRS = new Set(['node_modules', '.git'])
+const MAX_FILE_BYTES = 256 * 1024
+
+// Transcript-only scoring can see that a skill fired; it cannot see what the
+// skill wrote. The design this harness exists to test is a claim about the
+// content of a produced file, so the file has to come back.
+export function collectFiles(root) {
+  const out = {}
+  const walk = dir => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) {
+        if (!SKIP_DIRS.has(entry.name)) walk(full)
+      } else if (entry.isFile() && statSync(full).size <= MAX_FILE_BYTES) {
+        out[relative(root, full).split(sep).join('/')] = readFileSync(full, 'utf8')
+      }
+    }
+  }
+  walk(root)
+  return out
 }
 
 // Sessions run with edits permitted, because "did the agent write code before
@@ -42,7 +64,9 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
     const parsed = parseTranscript(stdout)
     // `raw` is what the opt-in judge grades; `contains` backs the
     // transcriptContains expectation without re-reading the stream.
-    return { ...parsed, raw: stdout, contains: needle => stdout.includes(needle) }
+    // Collected inside the try, before the finally removes the directory.
+    const files = collectFiles(cwd)
+    return { ...parsed, raw: stdout, files, seeded: scenario.files ?? {}, contains: needle => stdout.includes(needle) }
   } finally {
     rmSync(cwd, { recursive: true, force: true })
   }

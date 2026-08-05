@@ -1,7 +1,7 @@
 // tests/eval-session.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { runSession } from '../evals/session.mjs'
@@ -90,4 +90,31 @@ test('a scenario with no files still runs', () => {
   const calls = []
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
   assert.equal(result.ok, true)
+})
+
+test('returns files the session produced, keyed by relative path', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'docs/plans'), { recursive: true })
+    writeFileSync(join(opts.cwd, 'docs/plans/2026-08-05-thing.md'), '# Plan\n')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.equal(result.files['docs/plans/2026-08-05-thing.md'], '# Plan\n')
+})
+
+test('returns seeded files alongside produced ones, and records what was seeded', () => {
+  const files = { 'docs/specs/x-design.md': 'seed\n' }
+  const result = runSession({ ...scenario, files }, '/plugins/candidate', fakeSpawn([]))
+  assert.equal(result.files['docs/specs/x-design.md'], 'seed\n')
+  assert.equal(result.seeded['docs/specs/x-design.md'], 'seed\n')
+})
+
+test('skips node_modules so a pathological session cannot blow up the read', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'node_modules/pkg'), { recursive: true })
+    writeFileSync(join(opts.cwd, 'node_modules/pkg/index.js'), 'x')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.deepEqual(Object.keys(result.files), [])
 })
