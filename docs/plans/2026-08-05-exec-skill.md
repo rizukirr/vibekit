@@ -229,7 +229,14 @@ Append to `tests/eval-score.test.mjs`:
 
 ```js
 const dispatched = list => [{ ok: true, skills: [], tools: [], dispatches: list, files: {}, seeded: {}, contains: () => false, raw: '' }]
-const call = (over = {}) => ({ name: 'Task', index: 0, model: 'haiku', prompt: 'read docs/briefs/task-1.md', promptLength: 34, ...over })
+// promptLength is derived, never written by hand. A hand-counted length that
+// disagrees with the prompt reads as truncation and makes the fixture
+// unsatisfiable — which is exactly what happened on the first attempt at this
+// task.
+const call = (over = {}) => {
+  const prompt = over.prompt ?? 'read docs/briefs/task-1.md'
+  return { name: 'Task', index: 0, model: 'haiku', promptLength: prompt.length, ...over, prompt }
+}
 
 test('dispatchModelNamed requires every dispatch to name a model', () => {
   const s = { id: 'p', expect: { dispatchModelNamed: true } }
@@ -251,9 +258,12 @@ test('dispatchPromptMatches and dispatchPromptOmits judge every dispatch', () =>
 })
 
 // A capped prompt could pass an "omits" assertion on text that was cut off.
+// promptLength is passed explicitly here to simulate truncation, which is the
+// one place a hand-written length is correct.
 test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
   const s = { id: 'p', expect: { dispatchPromptOmits: '```' } }
-  assert.equal(scoreScenario(s, dispatched([call({ promptLength: 9999 })])).rate, 0)
+  const truncated = { ...call(), promptLength: 9999 }
+  assert.equal(scoreScenario(s, dispatched([truncated])).rate, 0)
 })
 ```
 
