@@ -1,8 +1,9 @@
 // tests/eval-session.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { runSession } from '../evals/session.mjs'
 
 const transcript = readFileSync('evals/fixtures/skill-fired.jsonl', 'utf8')
@@ -58,4 +59,84 @@ test('returns the parsed transcript', () => {
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
   assert.equal(result.ok, true)
   assert.equal(result.skills[0].name, 'vibekit:example-plain')
+})
+
+test('seeds scenario files into the session cwd before the run', () => {
+  const calls = []
+  const seeded = { 'docs/specs/x-design.md': '---\nstatus: approved\n---\n' }
+  const spawn = (cmd, args, opts) => {
+    calls.push({ cmd, args, opts })
+    // Read inside the spawn stub: this is the only moment the cwd is alive
+    // and the session would be looking at it.
+    calls[0].seen = readFileSync(join(opts.cwd, 'docs/specs/x-design.md'), 'utf8')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  runSession({ ...scenario, files: seeded }, '/plugins/candidate', spawn)
+  assert.equal(calls[0].seen, seeded['docs/specs/x-design.md'])
+})
+
+test('creates parent directories for seeded files', () => {
+  const calls = []
+  const spawn = (cmd, args, opts) => {
+    calls.push({ opts })
+    calls[0].ok = existsSync(join(opts.cwd, 'a/b/c/deep.md'))
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  runSession({ ...scenario, files: { 'a/b/c/deep.md': 'x' } }, '/plugins/candidate', spawn)
+  assert.equal(calls[0].ok, true)
+})
+
+test('a scenario with no files still runs', () => {
+  const calls = []
+  const result = runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
+  assert.equal(result.ok, true)
+})
+
+test('returns files the session produced, keyed by relative path', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'docs/plans'), { recursive: true })
+    writeFileSync(join(opts.cwd, 'docs/plans/2026-08-05-thing.md'), '# Plan\n')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.equal(result.files['docs/plans/2026-08-05-thing.md'], '# Plan\n')
+})
+
+test('returns seeded files alongside produced ones, and records what was seeded', () => {
+  const files = { 'docs/specs/x-design.md': 'seed\n' }
+  const result = runSession({ ...scenario, files }, '/plugins/candidate', fakeSpawn([]))
+  assert.equal(result.files['docs/specs/x-design.md'], 'seed\n')
+  assert.equal(result.seeded['docs/specs/x-design.md'], 'seed\n')
+})
+
+test('skips node_modules so a pathological session cannot blow up the read', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'node_modules/pkg'), { recursive: true })
+    writeFileSync(join(opts.cwd, 'node_modules/pkg/index.js'), 'x')
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.deepEqual(Object.keys(result.files), [])
+})
+
+// A per-file cap does not bound the total. Many medium files each pass the
+// per-file guard and still exhaust memory together.
+test('collection stops at the aggregate ceiling and says so', () => {
+  const spawn = (cmd, args, opts) => {
+    mkdirSync(join(opts.cwd, 'big'), { recursive: true })
+    // 40 files x 250KB each = 10MB, every one under the 256KB per-file cap.
+    for (let i = 0; i < 40; i++) {
+      writeFileSync(join(opts.cwd, `big/f${i}.txt`), 'x'.repeat(250 * 1024))
+    }
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const result = runSession(scenario, '/plugins/candidate', spawn)
+  assert.equal(result.filesTruncated, true)
+  const bytes = Object.values(result.files).reduce((n, c) => n + c.length, 0)
+  assert.ok(bytes <= 8 * 1024 * 1024, `collected ${bytes} bytes`)
+})
+
+test('a small session is not marked truncated', () => {
+  const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
+  assert.equal(result.filesTruncated, false)
 })

@@ -11,6 +11,10 @@ export function parseTranscript(text) {
   let isError = null
   let initSkills = []
   let toolIndex = 0
+  // The last thing the agent said. A session that fires a skill and then
+  // produces no artefact is either stalling or correctly stopping to ask, and
+  // nothing else in this parse can tell those apart.
+  let finalText = ''
 
   for (const line of text.split('\n')) {
     if (line.trim() === '') continue
@@ -25,6 +29,7 @@ export function parseTranscript(text) {
       initSkills = event.skills ?? []
     } else if (event.type === 'assistant') {
       for (const block of event.message?.content ?? []) {
+        if (block.type === 'text' && block.text?.trim()) finalText = block.text
         if (block.type !== 'tool_use') continue
         const index = toolIndex++
         tools.push({ name: block.name, index })
@@ -44,7 +49,7 @@ export function parseTranscript(text) {
   // "the skill did not fire" would let an API failure masquerade as a
   // behavioural regression, so it is an error instead.
   if (subtype === null) {
-    return { ok: false, error: 'no result event', skills, tools, usage, cost, subtype, initSkills }
+    return { ok: false, error: 'no result event', skills, tools, usage, cost, subtype, initSkills, finalText }
   }
 
   return {
@@ -56,5 +61,6 @@ export function parseTranscript(text) {
     cost,
     subtype,
     initSkills,
+    finalText,
   }
 }

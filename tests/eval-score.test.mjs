@@ -1,7 +1,7 @@
 // tests/eval-score.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { scoreScenario, compare } from '../evals/score.mjs'
+import { scoreScenario, compare, verifyClauses, isPredicate } from '../evals/score.mjs'
 
 const ok = (skills = [], tools = []) => ({ ok: true, skills, tools, usage: { cache_creation_input_tokens: 100, output_tokens: 10 }, cost: 0.01 })
 const fired = () => ok([{ name: 'vibekit:example-plain', index: 0 }], [{ name: 'Skill', index: 0 }])
@@ -120,4 +120,179 @@ test('after expectation fails when the prerequisite fired later', () => {
     [{ name: 'Skill', index: 0 }, { name: 'Skill', index: 1 }],
   )
   assert.equal(scoreScenario(chain, [run]).rate, 0)
+})
+
+const produced = (files, seeded = {}) => [{ ok: true, skills: [], tools: [], files, seeded }]
+
+test('fileMatching requires at least one produced file on the path', () => {
+  const scenario = { id: 'p', expect: { fileMatching: '^docs/plans/.*\\.md$' } }
+  assert.equal(scoreScenario(scenario, produced({ 'docs/plans/a.md': 'x' })).rate, 1)
+  assert.equal(scoreScenario(scenario, produced({ 'notes.md': 'x' })).rate, 0)
+})
+
+test('onlyNewFilesMatching fails on a new file outside the allowed path', () => {
+  const scenario = { id: 'p', expect: { onlyNewFilesMatching: '^docs/plans/' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const okFiles = { 'docs/specs/s.md': 'seed', 'docs/plans/a.md': 'x' }
+  const badFiles = { 'docs/specs/s.md': 'seed', 'src/index.js': 'x' }
+  assert.equal(scoreScenario(scenario, produced(okFiles, seeded)).rate, 1)
+  assert.equal(scoreScenario(scenario, produced(badFiles, seeded)).rate, 0)
+})
+
+test('onlyNewFilesMatching fails when a seeded file was modified', () => {
+  const scenario = { id: 'p', expect: { onlyNewFilesMatching: '^docs/plans/' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const edited = { 'docs/specs/s.md': 'seed, edited' }
+  assert.equal(scoreScenario(scenario, produced(edited, seeded)).rate, 0)
+})
+
+const planWith = clause => ({ 'docs/plans/a.md': `### Task 1: thing → verify: ${clause}\n\nbody\n` })
+const scenario4 = { id: 'p', expect: { verifyClauses: 'predicate' } }
+const rateOf = files => scoreScenario(scenario4, produced(files, {})).rate
+
+test('predicate clauses pass', () => {
+  assert.equal(rateOf(planWith('npm test exits 0')), 1)
+  assert.equal(rateOf(planWith('the file exists')), 1)
+  assert.equal(rateOf(planWith('grep finds at least 1 match')), 1)
+  assert.equal(rateOf(planWith('the endpoint returns 200')), 1)
+  assert.equal(rateOf(planWith('the file is under 120 lines')), 1)
+})
+
+test('a quoted string in a clause is a predicted transcript', () => {
+  assert.equal(rateOf(planWith('test fails with "fn is not defined"')), 0)
+  assert.equal(rateOf(planWith("test fails with 'fn is not defined'")), 0)
+})
+
+// Every clause in this repo's own plans names its command in a code span.
+// Rejecting backticks would flag all of them and measure nothing.
+test('a backticked command is not a quoted string', () => {
+  assert.equal(rateOf(planWith('`npm test` exits 0')), 1)
+})
+
+test('a bare number is a predicted value, even a three-digit one', () => {
+  assert.equal(rateOf(planWith('the file is 214 lines long')), 0)
+  assert.equal(rateOf(planWith('the file is 42 lines long')), 0)
+})
+
+// Added after Task 3: this plan's own Task 3 clause said "the four new
+// path-set cases" when there were three. A digits-only check passes that
+// straight through, so the defect the design exists to catch escaped its own
+// falsification test on the first artefact written under it.
+test('a spelled-out number is a predicted value too', () => {
+  assert.equal(rateOf(planWith('the four new path-set cases pass')), 0)
+  assert.equal(rateOf(planWith('two files are created')), 0)
+})
+
+test('a spelled-out threshold is still a predicate', () => {
+  assert.equal(rateOf(planWith('grep finds at least one match')), 1)
+  assert.equal(rateOf(planWith('no more than two files change')), 1)
+})
+
+test('clauses in seeded files are not scored', () => {
+  const seeded = { 'docs/specs/s.md': '### Task 1: x → verify: "quoted"\n' }
+  assert.equal(scoreScenario(scenario4, produced({ ...seeded }, seeded)).rate, 1)
+})
+
+test('tasksHaveVerify fails a task header with no clause', () => {
+  const s = { id: 'p', expect: { tasksHaveVerify: true } }
+  const good = { 'docs/plans/a.md': '### Task 1: thing → verify: npm test exits 0\n' }
+  const bad = { 'docs/plans/a.md': '### Task 1: thing\n' }
+  assert.equal(scoreScenario(s, produced(good, {})).rate, 1)
+  assert.equal(scoreScenario(s, produced(bad, {})).rate, 0)
+})
+
+test('a clause inside a fenced block is documentation, not a clause', () => {
+  const doc = '### Task 1: real → verify: `npm test` exits 0\n\n```\n### Task 9: fake → verify: fails with "boom"\n```\n'
+  assert.deepEqual(verifyClauses(doc).length, 1)
+})
+
+// A bare rate says one run in five broke a rule without saying which. The
+// reason is the whole question when the rule itself is under test.
+test('a sub-1.00 rate names the expectation that failed', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const bad = { 'docs/plans/a.md': '### Task 1: x → verify: fails with "boom"\n' }
+  const result = scoreScenario(s, [...produced(bad, {}), ...produced(planWith('`npm test` exits 0'), {})])
+  assert.equal(result.rate, 0.5)
+  assert.deepEqual(result.failures, ['non-predicate clause in docs/plans/a.md: fails with "boom"'])
+})
+
+test('a satisfied scenario reports no failures', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  assert.deepEqual(scoreScenario(s, produced(planWith('`npm test` exits 0'), {})).failures, [])
+})
+
+// Measured, not imagined: three of three failures in the first real eval run
+// were the checker rejecting these phrasings, and none was a predicted
+// transcript. Widening admits only clauses that were always predicates.
+test('exit status phrasings are predicates', () => {
+  for (const c of ['exit 0', 'exits 0', 'exit code 1', 'exit status 0', 'exit status of `node --test test/` is 0']) {
+    assert.equal(isPredicate(` ${c}`), true, c)
+  }
+})
+
+test('widening exit status did not admit predicted output', () => {
+  assert.equal(isPredicate(' exit status 0 with "fn is not defined"'), false)
+  assert.equal(isPredicate(' exit status 0 and 214 lines'), false)
+})
+
+// A failure reason names the rule; the artefact shows the text that broke it.
+// The session directory is deleted, so without this a disputed false positive
+// can only ever be argued about.
+test('a failing run keeps the artefact that failed', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const bad = { 'docs/plans/a.md': '### Task 1: x → verify: fails with "boom"\n' }
+  const r = scoreScenario(s, produced(bad, {}))
+  assert.deepEqual(r.failedArtifacts, [bad])
+})
+
+test('passing runs and seeded fixtures are not stored', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const files = { ...seeded, 'docs/plans/a.md': '### Task 1: x → verify: `npm test` exits 0\n' }
+  assert.deepEqual(scoreScenario(s, produced(files, seeded)).failedArtifacts, [])
+})
+
+// Measured on an agent-written plan: a clause held a `node -e "..."` command
+// whose quotes belong to the command, not to a predicted transcript. A code
+// span is what you run; prose is what you claim.
+test('quotes inside a code span belong to the command', () => {
+  const clause = ' `node -e "const a=require(\'node:assert\');a.strictEqual(p.type,\'module\')"` exits 0'
+  assert.equal(isPredicate(clause), true)
+})
+
+test('stripping spans did not stop quotes in prose being caught', () => {
+  assert.equal(isPredicate(' `npm test` fails with "fn is not defined"'), false)
+  assert.equal(isPredicate(' `wc -l` reports 214 lines'), false)
+})
+
+// A real agent-written plan used `## Task 1:` while the check matched only
+// `###`, so it found no headers and passed vacuously. A check that cannot fail
+// is not a check.
+test('tasksHaveVerify matches the heading levels agents actually use', () => {
+  const s = { id: 'p', expect: { tasksHaveVerify: true } }
+  for (const h of ['##', '###', '####']) {
+    const good = { 'docs/plans/a.md': `${h} Task 1: x → verify: \`npm test\` exits 0\n` }
+    const bad = { 'docs/plans/a.md': `${h} Task 1: x\n` }
+    assert.equal(scoreScenario(s, produced(good, {})).rate, 1, `${h} good`)
+    assert.equal(scoreScenario(s, produced(bad, {})).rate, 0, `${h} bad`)
+  }
+})
+
+// A real plan documented its own compliance — "one of the three permitted
+// predicate forms" — and the word three was read as a stale count. Clauses
+// live in task headers; anything else mentioning the marker is prose.
+test('prose about the rule is not a clause', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const doc = {
+    'docs/plans/a.md':
+      '### Task 1: thing → verify: `npm test` exit status 0\n\n' +
+      '3. **Clauses.** The single `→ verify:` clause is one of the three permitted forms.\n',
+  }
+  assert.equal(scoreScenario(s, produced(doc, {})).rate, 1)
+})
+
+test('a bad clause in a task header is still caught', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const doc = { 'docs/plans/a.md': '### Task 1: thing → verify: fails with "boom"\n' }
+  assert.equal(scoreScenario(s, produced(doc, {})).rate, 0)
 })
