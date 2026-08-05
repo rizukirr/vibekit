@@ -296,3 +296,18 @@ test('a bad clause in a task header is still caught', () => {
   const doc = { 'docs/plans/a.md': '### Task 1: thing → verify: fails with "boom"\n' }
   assert.equal(scoreScenario(s, produced(doc, {})).rate, 0)
 })
+
+// `transcriptContains` needs an exact string, and an agent's phrasing varies.
+// A rejection scenario has to match the shape of a refusal, not a fixed
+// sentence, or it will fail for the wrong reason.
+const spoke = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: n => text.includes(n), raw: text }]
+
+test('transcriptMatches accepts a regex', () => {
+  const s = { id: 'p', expect: { transcriptMatches: 'Task 3[^.]*no .verify' } }
+  assert.equal(scoreScenario(s, spoke('Stopping: Task 3 has no →verify clause.')).rate, 1)
+})
+
+test('transcriptMatches fails when the transcript does not match', () => {
+  const s = { id: 'p', expect: { transcriptMatches: 'Task 3[^.]*no .verify' } }
+  assert.equal(scoreScenario(s, spoke('All tasks complete.')).rate, 0)
+})

@@ -98,6 +98,11 @@ function unsatisfiedReason(scenario, run) {
     return `transcript missing ${JSON.stringify(expect.transcriptContains)}`
   }
 
+  if (expect.transcriptMatches !== undefined) {
+    const re = new RegExp(expect.transcriptMatches)
+    if (!re.test(run.raw ?? '')) return `transcript did not match /${expect.transcriptMatches}/`
+  }
+
   // Expectations over what the session wrote, not what it said. `plan`'s
   // observable criteria are properties of a file on disk, and a transcript
   // cannot carry them.
