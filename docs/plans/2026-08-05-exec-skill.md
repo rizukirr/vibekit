@@ -223,7 +223,7 @@ git commit -m "eval: match a transcript by regex, not only by exact string"
 - Modify: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -267,11 +267,11 @@ test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the expectations**
+- [x] **Step 3: Implement the expectations**
 
 In `evals/score.mjs`, inside `unsatisfiedReason`, after the `transcriptMatches` block:
 
@@ -309,11 +309,11 @@ In `evals/score.mjs`, inside `unsatisfiedReason`, after the `transcriptMatches` 
   }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
