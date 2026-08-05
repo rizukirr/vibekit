@@ -693,7 +693,7 @@ treatment arm would credit generic dispatch behaviour to this skill.
 - Modify: `evals/scenarios.json`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -716,11 +716,11 @@ test('finalTextMatches is not satisfied by transcript contents', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the expectation**
+- [x] **Step 3: Implement the expectation**
 
 In `evals/score.mjs`, add `finalTextMatches` to the `KNOWN_EXPECTATIONS` set, and add this block inside `unsatisfiedReason` immediately after the `transcriptMatches` block:
 
@@ -733,7 +733,7 @@ In `evals/score.mjs`, add `finalTextMatches` to the `KNOWN_EXPECTATIONS` set, an
   }
 ```
 
-- [ ] **Step 4: Repair the two scenarios**
+- [x] **Step 4: Repair the two scenarios**
 
 In `evals/scenarios.json`, change the `expect` object of `exec-rejects-clauseless-plan` to:
 
@@ -756,11 +756,11 @@ and the `expect` object of `exec-names-a-model` to:
 
 Change nothing else in either scenario, and do not reformat the file.
 
-- [ ] **Step 5: Run the suite**
+- [x] **Step 5: Run the suite**
 
 Run: `npm test`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add evals/score.mjs evals/scenarios.json tests/eval-score.test.mjs
