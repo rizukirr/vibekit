@@ -67,7 +67,7 @@ Regenerated, never hand-edited:
 - Modify: `evals/parse.mjs`
 - Test: `tests/eval-parse.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-parse.test.mjs`:
 
@@ -108,11 +108,11 @@ test('caps a stored prompt and records the original length', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-parse.test.mjs`
 
-- [ ] **Step 3: Implement capture**
+- [x] **Step 3: Implement capture**
 
 In `evals/parse.mjs`, above `parseTranscript`:
 
@@ -149,11 +149,11 @@ In the `tool_use` branch, after `tools.push(...)`:
 
 Add `dispatches` to both return objects, beside `skills` and `tools`.
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-parse.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/parse.mjs tests/eval-parse.test.mjs
