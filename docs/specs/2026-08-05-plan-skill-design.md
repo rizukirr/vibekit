@@ -62,9 +62,24 @@ guidance of this shape does not reach the behaviour.
   resulting diff touches exactly one file, in that directory.
 
 - **The skill is smaller than both predecessors.** Observable: `SKILL.md` is
-  under 120 lines, against v1's 342 and the reference's 168. Stated as a
+  under 168 lines, against v1's 342 and the reference's 168. Stated as a
   criterion because the smaller framing was the approved approach, and a skill
   that grows past its predecessors has silently abandoned it.
+  <!-- Amended 2026-08-05, during execution, after the body came out at 135
+  against an original criterion of 120. Recorded because raising a bar you have
+  just missed is normally how a criterion dies. Two things make this the right
+  call rather than a retreat. The 120 was estimated before the body existed,
+  while the goal it serves — smaller than both predecessors — is a real
+  comparison and is met with room. And the 15 lines over came from three
+  defects found mid-run and fixed with user approval (a spelled-out count,
+  backticked commands, `exits` versus `exit`), so the body is longer because of
+  evidence, not drift. The rejected alternative was reflowing the prose to a
+  wider column, which would have left the content identical and moved only the
+  number — adjusting the measurement to change the result, which this project
+  forbids for paid runs and should equally forbid for its own criteria. -->
+
+  The criterion is a line count and therefore gameable by rewrapping. It is
+  read as a content budget: reflowing to pass it is a violation, not a fix.
 
 ## Non-goals
 

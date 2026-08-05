@@ -485,7 +485,7 @@ git commit -m "eval: reject predicted output in verify clauses"
 
 ---
 
-### Task 5: The plan skill → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c 'Expected:' skills/plan/SKILL.md` finds no match, and `wc -l < skills/plan/SKILL.md` is under 120
+### Task 5: The plan skill → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c Expected: skills/plan/SKILL.md` finds no match, and `wc -l < skills/plan/SKILL.md` is under 168
 
 **Files:**
 - Create: `skills/plan/SKILL.md`
@@ -645,7 +645,9 @@ Run: `npm run check && npm test`
 
 Run: `grep -c 'Expected:' skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
 
-The first command finding no match and the second reporting a value under 120 are the task's criteria. If either fails, fix `SKILL.md` and repeat Step 2.
+The first command finding no match and the second reporting a value under 168 are the task's criteria. If either fails, fix `SKILL.md` and repeat Step 2.
+
+Do not reflow or rewrap the body to pass the line count. The count is a content budget; rewrapping leaves the content identical and moves only the number. If the body genuinely exceeds the budget, cut content or stop and report it.
 
 - [ ] **Step 5: Commit**
 
