@@ -184,6 +184,12 @@ export function scoreScenario(scenario, runs) {
           .filter(([path]) => !(path in (r.seeded ?? {})))
           .map(([path, contents]) => [path, contents.slice(0, ARTIFACT_CAP)]),
       )),
+    // When the artefact is missing entirely there is nothing to store above,
+    // and the last thing the agent said is the only evidence of whether it
+    // stalled or correctly stopped to ask.
+    failedFinalText: good
+      .filter(r => unsatisfiedReason(scenario, r) !== null)
+      .map(r => (r.finalText ?? '').slice(0, ARTIFACT_CAP)),
     incomplete: false,
     successful: good.length,
     errored,

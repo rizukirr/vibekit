@@ -52,3 +52,14 @@ test('an unparseable transcript is an error, never a silent non-firing run', () 
   assert.equal(t.ok, false)
   assert.match(t.error, /no result event/)
 })
+
+// A session that fires a skill and writes nothing is either stalling or
+// correctly stopping to ask. The last thing it said is the only evidence.
+test('captures the final assistant text', () => {
+  const jsonl = [
+    JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: 'first' }] } }),
+    JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: 'Which retention count do you want?' }] } }),
+    JSON.stringify({ type: 'result', subtype: 'success', is_error: false }),
+  ].join('\n')
+  assert.equal(parseTranscript(jsonl).finalText, 'Which retention count do you want?')
+})
