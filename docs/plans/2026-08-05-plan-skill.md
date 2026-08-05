@@ -60,7 +60,7 @@ Regenerated, never hand-edited:
 - Modify: `evals/session.mjs:1-37`
 - Test: `tests/eval-session.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-session.test.mjs`:
 
@@ -103,11 +103,11 @@ Add `join` to the existing `node:path` imports at the top of the file, and `read
 import { join } from 'node:path'
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-session.test.mjs`
 
-- [ ] **Step 3: Implement seeding**
+- [x] **Step 3: Implement seeding**
 
 In `evals/session.mjs`, widen the `node:fs` import and add the helper above `runSession`:
 
@@ -133,11 +133,11 @@ Inside `runSession`, immediately after the `try {` line:
     seedFiles(cwd, scenario.files)
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-session.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/session.mjs tests/eval-session.test.mjs
