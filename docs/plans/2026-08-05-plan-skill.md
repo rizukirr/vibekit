@@ -752,7 +752,7 @@ evidence the attempt produced:
 - Modify: `tests/eval-score.test.mjs` — a case for the fence rule.
 - Modify: `docs/plans/2026-08-05-plan-skill.md` — reword this plan's own clauses that the checker rejects.
 
-- [ ] **Step 1: Skip fenced code in the checker**
+- [x] **Step 1: Skip fenced code in the checker**
 
 In `evals/score.mjs`, replace `verifyClauses` with:
 
@@ -789,7 +789,7 @@ test('a clause inside a fenced block is documentation, not a clause', () => {
 
 Add `verifyClauses` to the import at the top of `tests/eval-score.test.mjs` if it is not already there.
 
-- [ ] **Step 2: Write the test**
+- [x] **Step 2: Write the test**
 
 Create `tests/plan-clauses.test.mjs`:
 
@@ -831,14 +831,14 @@ test('a spelled-out count is caught', () => {
 })
 ```
 
-- [ ] **Step 3: Run the test to see which of this plan's clauses fail**
+- [x] **Step 3: Run the test to see which of this plan's clauses fail**
 
 Run: `node --test tests/plan-clauses.test.mjs`
 
 The failure message lists every offending clause verbatim. That list is the
 work item for Step 3 — do not guess at it in advance, read it.
 
-- [ ] **Step 4: Reword each offending clause in this plan**
+- [x] **Step 4: Reword each offending clause in this plan**
 
 For every clause the previous step named, edit its `### Task N:` header in
 `docs/plans/2026-08-05-plan-skill.md` so the clause states the same criterion
@@ -856,11 +856,11 @@ Do not weaken a criterion to make it pass. If a clause cannot be reworded
 without losing what it checked, stop and report it in `unexpected` — that is a
 finding about the rule, not about the clause.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `npm test`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add tests/plan-clauses.test.mjs evals/score.mjs tests/eval-score.test.mjs docs/plans/2026-08-05-plan-skill.md
