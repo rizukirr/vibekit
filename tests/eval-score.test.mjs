@@ -205,3 +205,18 @@ test('a clause inside a fenced block is documentation, not a clause', () => {
   const doc = '### Task 1: real → verify: `npm test` exits 0\n\n```\n### Task 9: fake → verify: fails with "boom"\n```\n'
   assert.deepEqual(verifyClauses(doc).length, 1)
 })
+
+// A bare rate says one run in five broke a rule without saying which. The
+// reason is the whole question when the rule itself is under test.
+test('a sub-1.00 rate names the expectation that failed', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  const bad = { 'docs/plans/a.md': '### Task 1: x → verify: fails with "boom"\n' }
+  const result = scoreScenario(s, [...produced(bad, {}), ...produced(planWith('`npm test` exits 0'), {})])
+  assert.equal(result.rate, 0.5)
+  assert.deepEqual(result.failures, ['non-predicate clause in docs/plans/a.md: fails with "boom"'])
+})
+
+test('a satisfied scenario reports no failures', () => {
+  const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
+  assert.deepEqual(scoreScenario(s, produced(planWith('`npm test` exits 0'), {})).failures, [])
+})

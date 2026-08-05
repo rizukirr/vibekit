@@ -54,14 +54,20 @@ export function isPredicate(clause) {
   return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
 }
 
-function satisfied(scenario, run) {
+// Returns null when the run satisfies the scenario, else a short string naming
+// the expectation that failed. A bare rate says one run in five broke a rule
+// without saying which, and "which" is the whole question when a rule is under
+// test. Reporting the reason cannot change a rate — every return here maps to
+// the boolean the previous version returned — so this is observability, not an
+// adjustment.
+export function unsatisfiedReason(scenario, run) {
   const expect = scenario.expect ?? {}
   if (expect.skill !== undefined) {
     const hit = run.skills.find(s => s.name === expect.skill)
-    if (!hit) return false
+    if (!hit) return `skill ${expect.skill} never fired`
     for (const forbidden of expect.before ?? []) {
       const earlier = run.tools.find(t => t.name === forbidden && t.index < hit.index)
-      if (earlier) return false
+      if (earlier) return `${forbidden} used before ${expect.skill}`
     }
     // `after` is `before`'s mirror over skills: each named skill must already
     // have fired. Without it a delegation scenario cannot tell "brainstorm
@@ -70,11 +76,11 @@ function satisfied(scenario, run) {
     // under test.
     for (const required of expect.after ?? []) {
       const earlier = run.skills.find(s => s.name === required && s.index < hit.index)
-      if (!earlier) return false
+      if (!earlier) return `${required} did not fire before ${expect.skill}`
     }
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
-    return false
+    return `transcript missing ${JSON.stringify(expect.transcriptContains)}`
   }
 
   // Expectations over what the session wrote, not what it said. `plan`'s
@@ -85,7 +91,9 @@ function satisfied(scenario, run) {
 
   if (expect.fileMatching !== undefined) {
     const re = new RegExp(expect.fileMatching)
-    if (!Object.keys(produced).some(p => re.test(p))) return false
+    if (!Object.keys(produced).some(p => re.test(p))) {
+      return `no produced file matched ${expect.fileMatching} (produced: ${Object.keys(produced).join(', ') || 'nothing'})`
+    }
   }
 
   if (expect.onlyNewFilesMatching !== undefined) {
@@ -94,10 +102,10 @@ function satisfied(scenario, run) {
       // A modified seed counts as writing outside the allowed path, since the
       // approved artefact is the one thing a planning skill must not edit.
       if (path in seeded) {
-        if (seeded[path] !== contents) return false
+        if (seeded[path] !== contents) return `seeded file modified: ${path}`
         continue
       }
-      if (!re.test(path)) return false
+      if (!re.test(path)) return `wrote outside ${expect.onlyNewFilesMatching}: ${path}`
     }
   }
 
@@ -107,19 +115,25 @@ function satisfied(scenario, run) {
   const written = Object.entries(produced).filter(([path]) => !(path in seeded))
 
   if (expect.verifyClauses === 'predicate') {
-    for (const [, contents] of written) {
-      if (!verifyClauses(contents).every(isPredicate)) return false
+    for (const [path, contents] of written) {
+      const bad = verifyClauses(contents).find(c => !isPredicate(c))
+      if (bad !== undefined) return `non-predicate clause in ${path}: ${bad.trim()}`
     }
   }
 
   if (expect.tasksHaveVerify) {
-    for (const [, contents] of written) {
-      const headers = contents.split('\n').filter(line => /^###\s+Task\s+\d+/.test(line))
-      if (!headers.every(line => line.includes(VERIFY))) return false
+    for (const [path, contents] of written) {
+      const bad = contents
+        .split('\n')
+        .filter(line => /^###\s+Task\s+\d+/.test(line))
+        .find(line => !line.includes(VERIFY))
+      if (bad !== undefined) return `task header without a verify clause in ${path}: ${bad.trim()}`
     }
   }
-  return true
+  return null
 }
+
+const satisfied = (scenario, run) => unsatisfiedReason(scenario, run) === null
 
 const mean = xs => (xs.length === 0 ? null : xs.reduce((a, b) => a + b, 0) / xs.length)
 
@@ -149,6 +163,8 @@ export function scoreScenario(scenario, runs) {
   return {
     id: scenario.id,
     rate: good.filter(r => satisfied(scenario, r)).length / good.length,
+    // Kept so a sub-1.00 rate names what broke instead of only how often.
+    failures: good.map(r => unsatisfiedReason(scenario, r)).filter(Boolean),
     incomplete: false,
     successful: good.length,
     errored,
