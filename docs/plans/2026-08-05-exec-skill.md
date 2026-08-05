@@ -521,7 +521,7 @@ git commit -m "feat: name the model on every dispatch"
 **Files:**
 - Modify: `evals/scenarios.json`
 
-- [ ] **Step 1: Append the three scenarios**
+- [x] **Step 1: Append the three scenarios**
 
 Append to the array in `evals/scenarios.json`, after the last entry. Both seeded plans are deliberately short; the second is identical to the first except that its third task has no clause.
 
@@ -561,17 +561,17 @@ Append to the array in `evals/scenarios.json`, after the last entry. Both seeded
   }
 ```
 
-- [ ] **Step 2: Check the file parses and the suite is green**
+- [x] **Step 2: Check the file parses and the suite is green**
 
 Run: `node -e "JSON.parse(require('fs').readFileSync('evals/scenarios.json','utf8'))" && npm test`
 
-- [ ] **Step 3: Confirm every expectation key is implemented**
+- [x] **Step 3: Confirm every expectation key is implemented**
 
 Run: `grep -o 'expect\.[a-zA-Z]*' evals/score.mjs | sort -u`
 
 Every key used above — `skill`, `transcriptMatches`, `dispatchModelNamed` — must appear in that output. A key that does not is ignored at scoring time, which makes the scenario pass without testing anything.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add evals/scenarios.json
