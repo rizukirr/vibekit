@@ -728,15 +728,68 @@ every one was found by an implementer or a reviewer rather than by running the
 checker. All three would have been caught by executing `isPredicate` over this
 plan file once. That execution exists nowhere in the plan, so the rule is prose
 where it should be an invariant. This task makes the repo eat its own rule in
-free CI, which is also the strongest available evidence that the rule is
-calibrated: if it cannot pass the plans this project actually writes, it is
-wrong.
+free CI.
+
+**Amended after the first attempt measured it.** Two corrections, both from
+evidence the attempt produced:
+
+- The original rationale said the rule is wrong "if it cannot pass the plans
+  this project actually writes". Measured, 30 of 32 offending clauses came from
+  three plans written before the rule existed. Those are records of completed
+  runs; rewriting them to satisfy a later rule would falsify history, and
+  judging the rule by them indicts it on evidence that predates it. The test
+  scans plans dated from the rule onward.
+- `verifyClauses` does not skip fenced code, so a plan that documents this rule
+  by quoting a bad clause fails its own check — Task 4's committed test
+  fixtures were the first instance. That is a defect in the shipped checker,
+  not in the test: the `plan-no-predicted-output` scenario calls the same
+  function against agent-written plans and would misfire the same way. Fixed in
+  `evals/score.mjs`, in Step 1 below.
 
 **Files:**
 - Create: `tests/plan-clauses.test.mjs`
+- Modify: `evals/score.mjs` — skip fenced code in `verifyClauses`.
+- Modify: `tests/eval-score.test.mjs` — a case for the fence rule.
 - Modify: `docs/plans/2026-08-05-plan-skill.md` — reword this plan's own clauses that the checker rejects.
 
-- [ ] **Step 1: Write the test**
+- [ ] **Step 1: Skip fenced code in the checker**
+
+In `evals/score.mjs`, replace `verifyClauses` with:
+
+```js
+// Fenced code is documentation, not a clause. A plan that teaches this rule
+// quotes a bad clause to show what one looks like, and the checker must not
+// count that as the plan committing the defect. Fence depth is tracked so a
+// ````markdown block wrapping ``` blocks closes at the right level.
+export function verifyClauses(text) {
+  const out = []
+  let depth = 0
+  for (const line of text.split('\n')) {
+    const fence = line.match(/^\s*(`{3,})/)
+    if (fence) {
+      if (depth === 0) depth = fence[1].length
+      else if (fence[1].length >= depth) depth = 0
+      continue
+    }
+    if (depth > 0) continue
+    if (line.includes(VERIFY)) out.push(line.slice(line.indexOf(VERIFY) + VERIFY.length))
+  }
+  return out
+}
+```
+
+Append to `tests/eval-score.test.mjs`:
+
+```js
+test('a clause inside a fenced block is documentation, not a clause', () => {
+  const doc = '### Task 1: real → verify: `npm test` exits 0\n\n```\n### Task 9: fake → verify: fails with "boom"\n```\n'
+  assert.deepEqual(verifyClauses(doc).length, 1)
+})
+```
+
+Add `verifyClauses` to the import at the top of `tests/eval-score.test.mjs` if it is not already there.
+
+- [ ] **Step 2: Write the test**
 
 Create `tests/plan-clauses.test.mjs`:
 
@@ -753,9 +806,15 @@ import { verifyClauses, isPredicate } from '../evals/score.mjs'
 // miscalibrated, and prose alone never surfaces that.
 const DIR = 'docs/plans'
 
+// Plans dated before the rule existed are records of completed runs. Editing
+// them to satisfy a later rule would falsify history, and judging the rule by
+// them would indict it on evidence that predates it. New plans are picked up
+// automatically by the date prefix, so this needs no maintenance.
+const RULE_FROM = '2026-08-05'
+
 test('every verify clause in this repo is a predicate', () => {
   const offenders = []
-  for (const name of readdirSync(DIR).filter(f => f.endsWith('.md'))) {
+  for (const name of readdirSync(DIR).filter(f => f.endsWith('.md') && f.slice(0, 10) >= RULE_FROM)) {
     for (const clause of verifyClauses(readFileSync(join(DIR, name), 'utf8'))) {
       if (!isPredicate(clause)) offenders.push(`${name}: ${clause.trim()}`)
     }
@@ -772,14 +831,14 @@ test('a spelled-out count is caught', () => {
 })
 ```
 
-- [ ] **Step 2: Run the test to see which of this plan's clauses fail**
+- [ ] **Step 3: Run the test to see which of this plan's clauses fail**
 
 Run: `node --test tests/plan-clauses.test.mjs`
 
 The failure message lists every offending clause verbatim. That list is the
 work item for Step 3 — do not guess at it in advance, read it.
 
-- [ ] **Step 3: Reword each offending clause in this plan**
+- [ ] **Step 4: Reword each offending clause in this plan**
 
 For every clause the previous step named, edit its `### Task N:` header in
 `docs/plans/2026-08-05-plan-skill.md` so the clause states the same criterion
@@ -797,14 +856,14 @@ Do not weaken a criterion to make it pass. If a clause cannot be reworded
 without losing what it checked, stop and report it in `unexpected` — that is a
 finding about the rule, not about the clause.
 
-- [ ] **Step 4: Run the full suite**
+- [ ] **Step 5: Run the full suite**
 
 Run: `npm test`
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add tests/plan-clauses.test.mjs docs/plans/2026-08-05-plan-skill.md
+git add tests/plan-clauses.test.mjs evals/score.mjs tests/eval-score.test.mjs docs/plans/2026-08-05-plan-skill.md
 git commit -m "test: enforce the predicate rule against this repo's own plans"
 ```
 
