@@ -336,7 +336,7 @@ git commit -m "eval: score expectations over produced file paths"
 - Modify: `evals/score.mjs`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`. These cases reuse the `produced` helper
 added by Task 3 in the same file; if it is not there, Task 3 has not been done
@@ -399,11 +399,11 @@ test('tasksHaveVerify fails a task header with no clause', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the predicate check**
+- [x] **Step 3: Implement the predicate check**
 
 At the top of `evals/score.mjs`, below the header comment:
 
@@ -472,11 +472,11 @@ Inside `satisfied`, after the `onlyNewFilesMatching` block:
   }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
