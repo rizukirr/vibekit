@@ -121,3 +121,27 @@ test('after expectation fails when the prerequisite fired later', () => {
   )
   assert.equal(scoreScenario(chain, [run]).rate, 0)
 })
+
+const produced = (files, seeded = {}) => [{ ok: true, skills: [], tools: [], files, seeded }]
+
+test('fileMatching requires at least one produced file on the path', () => {
+  const scenario = { id: 'p', expect: { fileMatching: '^docs/plans/.*\\.md$' } }
+  assert.equal(scoreScenario(scenario, produced({ 'docs/plans/a.md': 'x' })).rate, 1)
+  assert.equal(scoreScenario(scenario, produced({ 'notes.md': 'x' })).rate, 0)
+})
+
+test('onlyNewFilesMatching fails on a new file outside the allowed path', () => {
+  const scenario = { id: 'p', expect: { onlyNewFilesMatching: '^docs/plans/' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const okFiles = { 'docs/specs/s.md': 'seed', 'docs/plans/a.md': 'x' }
+  const badFiles = { 'docs/specs/s.md': 'seed', 'src/index.js': 'x' }
+  assert.equal(scoreScenario(scenario, produced(okFiles, seeded)).rate, 1)
+  assert.equal(scoreScenario(scenario, produced(badFiles, seeded)).rate, 0)
+})
+
+test('onlyNewFilesMatching fails when a seeded file was modified', () => {
+  const scenario = { id: 'p', expect: { onlyNewFilesMatching: '^docs/plans/' } }
+  const seeded = { 'docs/specs/s.md': 'seed' }
+  const edited = { 'docs/specs/s.md': 'seed, edited' }
+  assert.equal(scoreScenario(scenario, produced(edited, seeded)).rate, 0)
+})

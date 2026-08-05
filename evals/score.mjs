@@ -22,6 +22,30 @@ function satisfied(scenario, run) {
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return false
   }
+
+  // Expectations over what the session wrote, not what it said. `plan`'s
+  // observable criteria are properties of a file on disk, and a transcript
+  // cannot carry them.
+  const produced = run.files ?? {}
+  const seeded = run.seeded ?? {}
+
+  if (expect.fileMatching !== undefined) {
+    const re = new RegExp(expect.fileMatching)
+    if (!Object.keys(produced).some(p => re.test(p))) return false
+  }
+
+  if (expect.onlyNewFilesMatching !== undefined) {
+    const re = new RegExp(expect.onlyNewFilesMatching)
+    for (const [path, contents] of Object.entries(produced)) {
+      // A modified seed counts as writing outside the allowed path, since the
+      // approved artefact is the one thing a planning skill must not edit.
+      if (path in seeded) {
+        if (seeded[path] !== contents) return false
+        continue
+      }
+      if (!re.test(path)) return false
+    }
+  }
   return true
 }
 
