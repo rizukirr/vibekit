@@ -247,13 +247,13 @@ git commit -m "eval: return the files a session produced"
 
 ---
 
-### Task 3: Path-set expectations in the scorer → verify: `node --test tests/eval-score.test.mjs` exits 0 with the four new path-set cases passing
+### Task 3: Path-set expectations in the scorer → verify: `node --test tests/eval-score.test.mjs` exits 0 with the three new path-set cases passing
 
 **Files:**
 - Modify: `evals/score.mjs:3-26`
 - Test: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/eval-score.test.mjs`:
 
@@ -283,11 +283,11 @@ test('onlyNewFilesMatching fails when a seeded file was modified', () => {
 })
 ```
 
-- [ ] **Step 2: Run the tests**
+- [x] **Step 2: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 3: Implement the expectations**
+- [x] **Step 3: Implement the expectations**
 
 In `evals/score.mjs`, inside `satisfied`, immediately before the closing `return true`:
 
@@ -317,11 +317,11 @@ In `evals/score.mjs`, inside `satisfied`, immediately before the closing `return
   }
 ```
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `node --test tests/eval-score.test.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
