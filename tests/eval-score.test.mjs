@@ -145,3 +145,58 @@ test('onlyNewFilesMatching fails when a seeded file was modified', () => {
   const edited = { 'docs/specs/s.md': 'seed, edited' }
   assert.equal(scoreScenario(scenario, produced(edited, seeded)).rate, 0)
 })
+
+const planWith = clause => ({ 'docs/plans/a.md': `### Task 1: thing → verify: ${clause}\n\nbody\n` })
+const scenario4 = { id: 'p', expect: { verifyClauses: 'predicate' } }
+const rateOf = files => scoreScenario(scenario4, produced(files, {})).rate
+
+test('predicate clauses pass', () => {
+  assert.equal(rateOf(planWith('npm test exits 0')), 1)
+  assert.equal(rateOf(planWith('the file exists')), 1)
+  assert.equal(rateOf(planWith('grep finds at least 1 match')), 1)
+  assert.equal(rateOf(planWith('the endpoint returns 200')), 1)
+  assert.equal(rateOf(planWith('the file is under 120 lines')), 1)
+})
+
+test('a quoted string in a clause is a predicted transcript', () => {
+  assert.equal(rateOf(planWith('test fails with "fn is not defined"')), 0)
+  assert.equal(rateOf(planWith("test fails with 'fn is not defined'")), 0)
+})
+
+// Every clause in this repo's own plans names its command in a code span.
+// Rejecting backticks would flag all of them and measure nothing.
+test('a backticked command is not a quoted string', () => {
+  assert.equal(rateOf(planWith('`npm test` exits 0')), 1)
+})
+
+test('a bare number is a predicted value, even a three-digit one', () => {
+  assert.equal(rateOf(planWith('the file is 214 lines long')), 0)
+  assert.equal(rateOf(planWith('the file is 42 lines long')), 0)
+})
+
+// Added after Task 3: this plan's own Task 3 clause said "the four new
+// path-set cases" when there were three. A digits-only check passes that
+// straight through, so the defect the design exists to catch escaped its own
+// falsification test on the first artefact written under it.
+test('a spelled-out number is a predicted value too', () => {
+  assert.equal(rateOf(planWith('the four new path-set cases pass')), 0)
+  assert.equal(rateOf(planWith('two files are created')), 0)
+})
+
+test('a spelled-out threshold is still a predicate', () => {
+  assert.equal(rateOf(planWith('grep finds at least one match')), 1)
+  assert.equal(rateOf(planWith('no more than two files change')), 1)
+})
+
+test('clauses in seeded files are not scored', () => {
+  const seeded = { 'docs/specs/s.md': '### Task 1: x → verify: "quoted"\n' }
+  assert.equal(scoreScenario(scenario4, produced({ ...seeded }, seeded)).rate, 1)
+})
+
+test('tasksHaveVerify fails a task header with no clause', () => {
+  const s = { id: 'p', expect: { tasksHaveVerify: true } }
+  const good = { 'docs/plans/a.md': '### Task 1: thing → verify: npm test exits 0\n' }
+  const bad = { 'docs/plans/a.md': '### Task 1: thing\n' }
+  assert.equal(scoreScenario(s, produced(good, {})).rate, 1)
+  assert.equal(scoreScenario(s, produced(bad, {})).rate, 0)
+})

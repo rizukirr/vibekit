@@ -1,5 +1,46 @@
 // evals/score.mjs
 
+const VERIFY = '→ verify:'
+
+// The three numeric forms a clause may carry. Each names a property of the
+// runtime rather than of the code under test, which is what makes it derivable
+// without having run anything. A bare number is a predicted value — and a bare
+// three-digit number is exactly the wrong-`wc -l` defect this check exists to
+// catch, so an HTTP status has to be introduced by a context word to count.
+// Spelled-out numbers count. This plan's own Task 3 clause claimed "the four
+// new path-set cases" when Step 1 defined three — a wrong count that a
+// digits-only check waves through, which is how the defect class this skill
+// targets escaped its own test on the very first plan written under it.
+const WORD = 'one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|twenty|thirty|forty|fifty|hundred|thousand'
+const THRESHOLD = 'at least|at most|no more than|no fewer than|fewer than|under|over|below|above'
+
+const ALLOWED_NUMERIC = [
+  // `exits?` — clauses say "exits 0" far more often than "exit 0"; a singular-
+  // only pattern left a bare 0 behind and flagged its own plan.
+  /\bexits?\s+\d+/gi,
+  /\b(?:status|http|returns)\s+\d{3}\b/gi,
+  new RegExp(`\\b(?:${THRESHOLD})\\s+(?:\\d+|${WORD})\\b`, 'gi'),
+]
+
+const BARE_WORD_NUMBER = new RegExp(`\\b(?:${WORD})\\b`, 'i')
+
+export function verifyClauses(text) {
+  return text
+    .split('\n')
+    .filter(line => line.includes(VERIFY))
+    .map(line => line.slice(line.indexOf(VERIFY) + VERIFY.length))
+}
+
+export function isPredicate(clause) {
+  // Backticks are not quotes here: a clause names its command in a code span,
+  // and every clause in this repo's own plans does. Straight quotes are the
+  // tell — a predicted transcript arrives as "FAIL with ...".
+  if (/["']/.test(clause)) return false
+  let rest = clause
+  for (const re of ALLOWED_NUMERIC) rest = rest.replace(re, '')
+  return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
+}
+
 function satisfied(scenario, run) {
   const expect = scenario.expect ?? {}
   if (expect.skill !== undefined) {
@@ -44,6 +85,24 @@ function satisfied(scenario, run) {
         continue
       }
       if (!re.test(path)) return false
+    }
+  }
+
+  // Seeded files are excluded throughout: they are the fixture, not the work,
+  // and a spec that discusses verify clauses in prose would otherwise fail a
+  // check aimed at the plan the session wrote.
+  const written = Object.entries(produced).filter(([path]) => !(path in seeded))
+
+  if (expect.verifyClauses === 'predicate') {
+    for (const [, contents] of written) {
+      if (!verifyClauses(contents).every(isPredicate)) return false
+    }
+  }
+
+  if (expect.tasksHaveVerify) {
+    for (const [, contents] of written) {
+      const headers = contents.split('\n').filter(line => /^###\s+Task\s+\d+/.test(line))
+      if (!headers.every(line => line.includes(VERIFY))) return false
     }
   }
   return true
