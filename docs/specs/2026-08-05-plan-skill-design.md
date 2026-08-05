@@ -155,8 +155,20 @@ A number is not itself the tell — some permitted forms carry one. The
 post-run assertion encodes:
 
 - an exit status, `exit 0` or `exit non-zero`;
-- a three-digit HTTP status;
-- a threshold introduced by `at least`, as in `at least 1 match`.
+- a three-digit HTTP status, introduced by a context word (`status`, `http`,
+  `returns`) so that a bare three-digit number — the wrong-`wc -l` defect — is
+  not admitted by accident;
+- a threshold, in either direction: `at least`, `at most`, `no more than`,
+  `fewer than`, `under`, `over`, `below`, `above`.
+  <!-- Amended 2026-08-05, during plan self-review, before any measurement. The
+  original permitted only `at least`. The first task written under this design
+  needed the clause "wc -l is under 120" — a real threshold, derivable without
+  running anything, and rejected by the narrower wording. A rule whose own first
+  artefact violates it is miscalibrated, not vindicated. Direction was never the
+  property that distinguishes a threshold from a predicted value. -->
+
+A threshold is derivable because the plan author chooses it; a predicted value
+is not, because the runtime chooses it. That is the line the allowlist encodes.
 
 Any other number in a clause is a predicted value and fails the assertion. The
 allowlist is deliberately short: each entry names a property of the runtime
