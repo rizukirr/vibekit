@@ -264,3 +264,16 @@ test('stripping spans did not stop quotes in prose being caught', () => {
   assert.equal(isPredicate(' `npm test` fails with "fn is not defined"'), false)
   assert.equal(isPredicate(' `wc -l` reports 214 lines'), false)
 })
+
+// A real agent-written plan used `## Task 1:` while the check matched only
+// `###`, so it found no headers and passed vacuously. A check that cannot fail
+// is not a check.
+test('tasksHaveVerify matches the heading levels agents actually use', () => {
+  const s = { id: 'p', expect: { tasksHaveVerify: true } }
+  for (const h of ['##', '###', '####']) {
+    const good = { 'docs/plans/a.md': `${h} Task 1: x → verify: \`npm test\` exits 0\n` }
+    const bad = { 'docs/plans/a.md': `${h} Task 1: x\n` }
+    assert.equal(scoreScenario(s, produced(good, {})).rate, 1, `${h} good`)
+    assert.equal(scoreScenario(s, produced(bad, {})).rate, 0, `${h} bad`)
+  }
+})

@@ -130,9 +130,13 @@ function unsatisfiedReason(scenario, run) {
 
   if (expect.tasksHaveVerify) {
     for (const [path, contents] of written) {
+      // Heading level is cosmetic and agents pick their own: a real plan came
+      // back with `## Task 1:` while this check only matched `###`, so it
+      // found no headers at all and passed vacuously. A check that cannot fail
+      // is not a check.
       const bad = contents
         .split('\n')
-        .filter(line => /^###\s+Task\s+\d+/.test(line))
+        .filter(line => /^#{2,4}\s+Task\s+\d+/.test(line))
         .find(line => !line.includes(VERIFY))
       if (bad !== undefined) return `task header without a verify clause in ${path}: ${bad.trim()}`
     }
