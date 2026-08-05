@@ -74,7 +74,7 @@ export function isPredicate(clause) {
 // asserting nothing. Throwing is correct: a silent pass is the worse failure.
 const KNOWN_EXPECTATIONS = new Set([
   'skill', 'before', 'after',
-  'transcriptContains', 'transcriptMatches',
+  'transcriptContains', 'transcriptMatches', 'finalTextMatches',
   'fileMatching', 'onlyNewFilesMatching',
   'verifyClauses', 'tasksHaveVerify',
   'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
@@ -117,6 +117,13 @@ function unsatisfiedReason(scenario, run) {
   if (expect.transcriptMatches !== undefined) {
     const re = new RegExp(expect.transcriptMatches)
     if (!re.test(run.raw ?? '')) return `transcript did not match /${expect.transcriptMatches}/`
+  }
+
+  if (expect.finalTextMatches !== undefined) {
+    const re = new RegExp(expect.finalTextMatches)
+    if (!re.test(run.finalText ?? '')) {
+      return `final message did not match /${expect.finalTextMatches}/`
+    }
   }
 
   // Expectations over how work was handed to a fresh context. Each requires at

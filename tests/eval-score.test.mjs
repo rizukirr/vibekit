@@ -371,3 +371,20 @@ test('every implemented key is accepted', () => {
   }
   assert.doesNotThrow(() => scoreScenario(s, [ok()]))
 })
+
+// raw is the whole stdout, tool results included, so a fixture can satisfy an
+// assertion about itself. finalText is the last thing the agent said — a
+// refusal shows there and a file it read does not.
+const said = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => false, raw: 'irrelevant', finalText: text }]
+
+test('finalTextMatches judges the final message, not the transcript', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  assert.equal(scoreScenario(s, said('Stopping: Task 3 carries no verify clause.')).rate, 1)
+  assert.equal(scoreScenario(s, said('All three tasks are complete.')).rate, 0)
+})
+
+test('finalTextMatches is not satisfied by transcript contents', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: '### Task 3: shout function', finalText: 'Done.' }]
+  assert.equal(scoreScenario(s, run).rate, 0)
+})
