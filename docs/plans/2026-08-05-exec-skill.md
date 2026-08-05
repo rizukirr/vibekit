@@ -477,7 +477,7 @@ git tag exec-control
 - Modify: `skills/exec/SKILL.md`
 - Regenerated: `CLAUDE.md`, `README.md`, `AGENTS.md`
 
-- [ ] **Step 1: Add the model section**
+- [x] **Step 1: Add the model section**
 
 In `skills/exec/SKILL.md`, insert this section immediately before `## Handoff`:
 
@@ -497,17 +497,17 @@ Naming it is the point. A dispatch with no model is a cost decision made by
 accident.
 ```
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Confirm both arms exist**
+- [x] **Step 3: Confirm both arms exist**
 
 Run: `git rev-parse exec-control; grep -ci model skills/exec/SKILL.md`
 
 The tag resolving and the grep finding at least one match are this task's criteria: the control arm must remain reachable for the A/B.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/exec/SKILL.md CLAUDE.md README.md AGENTS.md
