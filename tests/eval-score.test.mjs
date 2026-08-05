@@ -1,7 +1,7 @@
 // tests/eval-score.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { scoreScenario, compare } from '../evals/score.mjs'
+import { scoreScenario, compare, verifyClauses } from '../evals/score.mjs'
 
 const ok = (skills = [], tools = []) => ({ ok: true, skills, tools, usage: { cache_creation_input_tokens: 100, output_tokens: 10 }, cost: 0.01 })
 const fired = () => ok([{ name: 'vibekit:example-plain', index: 0 }], [{ name: 'Skill', index: 0 }])
@@ -199,4 +199,9 @@ test('tasksHaveVerify fails a task header with no clause', () => {
   const bad = { 'docs/plans/a.md': '### Task 1: thing\n' }
   assert.equal(scoreScenario(s, produced(good, {})).rate, 1)
   assert.equal(scoreScenario(s, produced(bad, {})).rate, 0)
+})
+
+test('a clause inside a fenced block is documentation, not a clause', () => {
+  const doc = '### Task 1: real → verify: `npm test` exits 0\n\n```\n### Task 9: fake → verify: fails with "boom"\n```\n'
+  assert.deepEqual(verifyClauses(doc).length, 1)
 })

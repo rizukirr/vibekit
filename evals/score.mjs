@@ -24,11 +24,24 @@ const ALLOWED_NUMERIC = [
 
 const BARE_WORD_NUMBER = new RegExp(`\\b(?:${WORD})\\b`, 'i')
 
+// Fenced code is documentation, not a clause. A plan that teaches this rule
+// quotes a bad clause to show what one looks like, and the checker must not
+// count that as the plan committing the defect. Fence depth is tracked so a
+// ````markdown block wrapping ``` blocks closes at the right level.
 export function verifyClauses(text) {
-  return text
-    .split('\n')
-    .filter(line => line.includes(VERIFY))
-    .map(line => line.slice(line.indexOf(VERIFY) + VERIFY.length))
+  const out = []
+  let depth = 0
+  for (const line of text.split('\n')) {
+    const fence = line.match(/^\s*(`{3,})/)
+    if (fence) {
+      if (depth === 0) depth = fence[1].length
+      else if (fence[1].length >= depth) depth = 0
+      continue
+    }
+    if (depth > 0) continue
+    if (line.includes(VERIFY)) out.push(line.slice(line.indexOf(VERIFY) + VERIFY.length))
+  }
+  return out
 }
 
 export function isPredicate(clause) {

@@ -251,7 +251,7 @@ git commit -m "eval: return the files a session produced"
 
 ---
 
-### Task 3: Path-set expectations in the scorer → verify: `node --test tests/eval-score.test.mjs` exits 0 with the three new path-set cases passing
+### Task 3: Path-set expectations in the scorer → verify: `node --test tests/eval-score.test.mjs` exits 0 with every new path-set case passing
 
 **Files:**
 - Modify: `evals/score.mjs:3-26`
@@ -662,7 +662,7 @@ git commit -m "feat: plan skill"
 
 ---
 
-### Task 6: Eval scenarios → verify: `node -e "JSON.parse(require('fs').readFileSync('evals/scenarios.json','utf8'))"` exits 0, and `npm test` exits 0
+### Task 6: Eval scenarios → verify: `evals/scenarios.json` parses as JSON, and `npm test` exits 0
 
 **Files:**
 - Modify: `evals/scenarios.json:43`
