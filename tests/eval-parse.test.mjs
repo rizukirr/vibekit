@@ -63,3 +63,38 @@ test('captures the final assistant text', () => {
   ].join('\n')
   assert.equal(parseTranscript(jsonl).finalText, 'Which retention count do you want?')
 })
+
+// A dispatch is the unit exec is judged on. Tool names alone cannot say which
+// model was chosen or whether the prompt handed over a path or pasted text.
+const dispatchLine = (name, input) =>
+  JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', name, input }] } })
+const resultLine = JSON.stringify({ type: 'result', subtype: 'success', is_error: false })
+
+test('captures dispatch calls with model and prompt', () => {
+  const jsonl = [
+    dispatchLine('Task', { model: 'haiku', prompt: 'read docs/briefs/task-1.md' }),
+    resultLine,
+  ].join('\n')
+  const parsed = parseTranscript(jsonl)
+  assert.equal(parsed.dispatches.length, 1)
+  assert.equal(parsed.dispatches[0].model, 'haiku')
+  assert.equal(parsed.dispatches[0].prompt, 'read docs/briefs/task-1.md')
+})
+
+test('records a dispatch with no model as null, not missing', () => {
+  const jsonl = [dispatchLine('Agent', { prompt: 'do the thing' }), resultLine].join('\n')
+  assert.equal(parseTranscript(jsonl).dispatches[0].model, null)
+})
+
+test('a transcript with no dispatch has an empty list, not undefined', () => {
+  const jsonl = [dispatchLine('Read', { file_path: '/x' }), resultLine].join('\n')
+  assert.deepEqual(parseTranscript(jsonl).dispatches, [])
+})
+
+test('caps a stored prompt and records the original length', () => {
+  const long = 'x'.repeat(5000)
+  const jsonl = [dispatchLine('Task', { prompt: long }), resultLine].join('\n')
+  const d = parseTranscript(jsonl).dispatches[0]
+  assert.equal(d.prompt.length, 4000)
+  assert.equal(d.promptLength, 5000)
+})

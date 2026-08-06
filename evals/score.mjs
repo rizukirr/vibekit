@@ -69,6 +69,17 @@ export function isPredicate(clause) {
   return !/\d/.test(rest) && !BARE_WORD_NUMBER.test(rest)
 }
 
+// Every key the scorer implements. A key not on this list is a typo or an
+// expectation nobody built, and either way the scenario would score 1.00 while
+// asserting nothing. Throwing is correct: a silent pass is the worse failure.
+const KNOWN_EXPECTATIONS = new Set([
+  'skill', 'before', 'after',
+  'transcriptContains', 'transcriptMatches', 'finalTextMatches',
+  'fileMatching', 'onlyNewFilesMatching',
+  'verifyClauses', 'tasksHaveVerify',
+  'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
+])
+
 // Returns null when the run satisfies the scenario, else a short string naming
 // the expectation that failed. A bare rate says one run in five broke a rule
 // without saying which, and "which" is the whole question when a rule is under
@@ -77,6 +88,11 @@ export function isPredicate(clause) {
 // adjustment.
 function unsatisfiedReason(scenario, run) {
   const expect = scenario.expect ?? {}
+  for (const key of Object.keys(expect)) {
+    if (!KNOWN_EXPECTATIONS.has(key)) {
+      throw new Error(`unknown expectation '${key}' in scenario '${scenario.id}'`)
+    }
+  }
   if (expect.skill !== undefined) {
     const hit = run.skills.find(s => s.name === expect.skill)
     if (!hit) return `skill ${expect.skill} never fired`
@@ -96,6 +112,50 @@ function unsatisfiedReason(scenario, run) {
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return `transcript missing ${JSON.stringify(expect.transcriptContains)}`
+  }
+
+  if (expect.transcriptMatches !== undefined) {
+    const re = new RegExp(expect.transcriptMatches)
+    if (!re.test(run.raw ?? '')) return `transcript did not match /${expect.transcriptMatches}/`
+  }
+
+  if (expect.finalTextMatches !== undefined) {
+    const re = new RegExp(expect.finalTextMatches)
+    if (!re.test(run.finalText ?? '')) {
+      return `final message did not match /${expect.finalTextMatches}/`
+    }
+  }
+
+  // Expectations over how work was handed to a fresh context. Each requires at
+  // least one dispatch: a session that dispatched nothing must fail rather than
+  // pass over an empty list.
+  const dispatches = run.dispatches ?? []
+  const needsDispatch =
+    expect.dispatchModelNamed !== undefined ||
+    expect.dispatchPromptMatches !== undefined ||
+    expect.dispatchPromptOmits !== undefined
+  if (needsDispatch && dispatches.length === 0) return 'no dispatch was made'
+
+  if (expect.dispatchModelNamed) {
+    const bare = dispatches.find(d => !d.model)
+    if (bare) return `dispatch ${bare.index} named no model`
+  }
+
+  if (expect.dispatchPromptMatches !== undefined) {
+    const re = new RegExp(expect.dispatchPromptMatches)
+    const miss = dispatches.find(d => !re.test(d.prompt ?? ''))
+    if (miss) return `dispatch ${miss.index} did not match /${expect.dispatchPromptMatches}/`
+  }
+
+  if (expect.dispatchPromptOmits !== undefined) {
+    const re = new RegExp(expect.dispatchPromptOmits)
+    for (const d of dispatches) {
+      // A capped prompt is not evidence of absence.
+      if ((d.promptLength ?? 0) > (d.prompt ?? '').length) {
+        return `dispatch ${d.index} prompt was truncated; omission cannot be established`
+      }
+      if (re.test(d.prompt ?? '')) return `dispatch ${d.index} contained /${expect.dispatchPromptOmits}/`
+    }
   }
 
   // Expectations over what the session wrote, not what it said. `plan`'s

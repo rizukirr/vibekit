@@ -296,3 +296,95 @@ test('a bad clause in a task header is still caught', () => {
   const doc = { 'docs/plans/a.md': '### Task 1: thing → verify: fails with "boom"\n' }
   assert.equal(scoreScenario(s, produced(doc, {})).rate, 0)
 })
+
+// `transcriptContains` needs an exact string, and an agent's phrasing varies.
+// A rejection scenario has to match the shape of a refusal, not a fixed
+// sentence, or it will fail for the wrong reason.
+const spoke = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: n => text.includes(n), raw: text }]
+
+test('transcriptMatches accepts a regex', () => {
+  const s = { id: 'p', expect: { transcriptMatches: 'Task 3[^.]*no .verify' } }
+  assert.equal(scoreScenario(s, spoke('Stopping: Task 3 has no →verify clause.')).rate, 1)
+})
+
+test('transcriptMatches fails when the transcript does not match', () => {
+  const s = { id: 'p', expect: { transcriptMatches: 'Task 3[^.]*no .verify' } }
+  assert.equal(scoreScenario(s, spoke('All tasks complete.')).rate, 0)
+})
+
+const dispatched = list => [{ ok: true, skills: [], tools: [], dispatches: list, files: {}, seeded: {}, contains: () => false, raw: '' }]
+// promptLength is derived, never written by hand. A hand-counted length that
+// disagrees with the prompt reads as truncation and makes the fixture
+// unsatisfiable — which is exactly what happened on the first attempt at this
+// task.
+const call = (over = {}) => {
+  const prompt = over.prompt ?? 'read docs/briefs/task-1.md'
+  return { name: 'Task', index: 0, model: 'haiku', promptLength: prompt.length, ...over, prompt }
+}
+
+test('dispatchModelNamed requires every dispatch to name a model', () => {
+  const s = { id: 'p', expect: { dispatchModelNamed: true } }
+  assert.equal(scoreScenario(s, dispatched([call()])).rate, 1)
+  assert.equal(scoreScenario(s, dispatched([call(), call({ model: null })])).rate, 0)
+})
+
+// Without this the expectation passes on a session that never dispatched at
+// all, which is the vacuous-check failure this repo already shipped once.
+test('dispatchModelNamed fails when nothing was dispatched', () => {
+  const s = { id: 'p', expect: { dispatchModelNamed: true } }
+  assert.equal(scoreScenario(s, dispatched([])).rate, 0)
+})
+
+test('dispatchPromptMatches and dispatchPromptOmits judge every dispatch', () => {
+  const s = { id: 'p', expect: { dispatchPromptMatches: 'docs/briefs/', dispatchPromptOmits: '```' } }
+  assert.equal(scoreScenario(s, dispatched([call()])).rate, 1)
+  assert.equal(scoreScenario(s, dispatched([call({ prompt: 'here is the code:\n```js\nx\n```' })])).rate, 0)
+})
+
+// A capped prompt could pass an "omits" assertion on text that was cut off.
+// promptLength is passed explicitly here to simulate truncation, which is the
+// one place a hand-written length is correct.
+test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
+  const s = { id: 'p', expect: { dispatchPromptOmits: '```' } }
+  const truncated = { ...call(), promptLength: 9999 }
+  assert.equal(scoreScenario(s, dispatched([truncated])).rate, 0)
+})
+
+// A misspelled expectation key is silently ignored by a guard chain, so the
+// scenario scores 1.00 while testing nothing. A check that cannot fail is not
+// a check — and this one hides other checks that cannot fail.
+test('an unknown expectation key is an error, not a silent pass', () => {
+  const s = { id: 'p', expect: { transcriptMatchs: 'typo' } }
+  assert.throws(() => scoreScenario(s, [ok()]), /unknown expectation/i)
+})
+
+test('every implemented key is accepted', () => {
+  const s = {
+    id: 'p',
+    expect: {
+      skill: 'vibekit:example-plain', before: [], after: [],
+      transcriptContains: '', transcriptMatches: '',
+      fileMatching: '.', onlyNewFilesMatching: '.',
+      verifyClauses: 'predicate', tasksHaveVerify: true,
+      dispatchModelNamed: false,
+    },
+  }
+  assert.doesNotThrow(() => scoreScenario(s, [ok()]))
+})
+
+// raw is the whole stdout, tool results included, so a fixture can satisfy an
+// assertion about itself. finalText is the last thing the agent said — a
+// refusal shows there and a file it read does not.
+const said = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => false, raw: 'irrelevant', finalText: text }]
+
+test('finalTextMatches judges the final message, not the transcript', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  assert.equal(scoreScenario(s, said('Stopping: Task 3 carries no verify clause.')).rate, 1)
+  assert.equal(scoreScenario(s, said('All three tasks are complete.')).rate, 0)
+})
+
+test('finalTextMatches is not satisfied by transcript contents', () => {
+  const s = { id: 'p', expect: { finalTextMatches: 'Task 3' } }
+  const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: '### Task 3: shout function', finalText: 'Done.' }]
+  assert.equal(scoreScenario(s, run).rate, 0)
+})

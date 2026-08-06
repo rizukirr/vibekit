@@ -7,7 +7,10 @@ import { join } from 'node:path'
 // vibekit absorbs ideas from the projects in external/; it never depends on them.
 // Naming one in a shipped file implies a dependency the user does not have, and
 // external/ is gitignored so the reference could never resolve.
-const BORROWED_FROM = ['caveman', 'ponytail', 'superpowers', 'karpathy', 'prompt-engineering-guide']
+// Hand-maintained: external/ is gitignored, so the guard cannot derive this from
+// the directory listing and stay green in CI. Add a name here when a reference is
+// cloned — this list went stale the moment spec-kit landed.
+const BORROWED_FROM = ['caveman', 'ponytail', 'superpowers', 'karpathy', 'prompt-engineering-guide', 'spec-kit', 'speckit']
 
 function shippedFiles() {
   const skills = readdirSync('skills', { withFileTypes: true })
