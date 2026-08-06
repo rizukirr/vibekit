@@ -166,7 +166,7 @@ outside a clause.
 **Files:**
 - Modify: `skills/plan/SKILL.md`
 
-- [ ] **Step 1: Close the section with the general case**
+- [x] **Step 1: Close the section with the general case**
 
 In `skills/plan/SKILL.md`, replace exactly this:
 
@@ -189,15 +189,15 @@ or chosen. None may be recalled.
 
 Change nothing else.
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Check the derived properties**
+- [x] **Step 3: Check the derived properties**
 
 Run: `grep -ci outside skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/plan/SKILL.md

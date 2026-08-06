@@ -153,10 +153,16 @@ change converts an unanswerable self-check into a trivial one.
 
 ### What this costs and does not cost
 
-A net 13 lines — edit 1 replaces 5 with 15, edit 2 adds 3 — taking the file from
-135 to 148 against a budget of 168. Derived by counting the blocks above against
-the current file, not estimated; an earlier draft of this spec said "roughly
-fifteen", which was the exact habit this design exists to stop. Nothing per plan
+Measured after the fact: 135 to 154 against a budget of 168, across three edits
+(a third was added mid-execution when a reviewer found the first two left the
+clause section still teaching a narrow reading).
+
+This number has now been wrong twice, which is worth recording in the spec that
+proposes the rule. The first draft said "roughly fifteen lines" — estimated. The
+second said 148 — computed by a script that counted a replaced range including
+its blank lines, where git replaced three content lines, not five. **Running a
+computation over an assumed model is not observing the operation.** The only
+value that was never wrong is the one stated as a property: under 168. Nothing per plan
 at runtime: no dispatch, no extra tokens, no added latency. The recurring cost is
 a sweep the author performs while already reviewing.
 
