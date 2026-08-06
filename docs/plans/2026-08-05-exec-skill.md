@@ -859,7 +859,7 @@ prompt. Two structural problems, both raised by the reviewer and both correct:
 **Files:**
 - Modify: `skills/exec/SKILL.md`
 
-- [ ] **Step 1: Move the instruction into the brief**
+- [x] **Step 1: Move the instruction into the brief**
 
 In `skills/exec/SKILL.md`, in the task loop's step 2, replace:
 
@@ -885,7 +885,7 @@ The line goes in the brief, not beside it. The brief is what the implementer
 treats as its requirements; anything else is framing it may reasonably ignore.
 ```
 
-- [ ] **Step 2: Keep the means to obey it**
+- [x] **Step 2: Keep the means to obey it**
 
 In the same file, in step 3, replace:
 
@@ -904,15 +904,15 @@ instruction it has no means to obey is worse than no instruction. A constraint
 the runtime enforces cannot be talked past; a constraint in prose can.
 ```
 
-- [ ] **Step 3: Regenerate and check**
+- [x] **Step 3: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 4: Check the budget properties**
+- [x] **Step 4: Check the budget properties**
 
 Run: `grep -c lazy skills/exec/SKILL.md; wc -l < skills/exec/SKILL.md`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add skills/exec/SKILL.md
