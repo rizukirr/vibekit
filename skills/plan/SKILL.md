@@ -116,6 +116,11 @@ it**, and the clause refers to the observation instead of a guess.
 A clause must be satisfiable by the task it belongs to. If you cannot say what
 would make it true, the task boundary is wrong, not the clause.
 
+**Outside a clause the rule still holds, and there is no allowlist.** A line
+count in a task title, a path in a Files block, a version in Global constraints,
+a reference to another task by number — each is a value, so each was read, run,
+or chosen. None may be recalled.
+
 ## No placeholders
 
 `TBD`, `TODO`, "add error handling", "similar to Task N", and any reference to a
