@@ -68,6 +68,22 @@ contradictions while writing them.
   halts and writes no fix. Asserted as absence of edits to source files after a
   seeded failing return.
 
+- **Every dispatch instructs the implementer to invoke `lazy` before writing
+  code.** Observable: the dispatch prompt matches `lazy`, asserted by
+  `dispatchPromptMatches`. Stated as a goal because a dispatched agent does not
+  inherit this session's modifiers — the bootstrap explicitly tells subagents to
+  skip the orchestration discipline — so what the parent knows about how much to
+  build reaches the implementer only if the brief carries it.
+  <!-- Added 2026-08-06 at the user's request, after verification. Until now the
+  design compensated for this by making plans prescriptive enough that the
+  implementer transcribes code rather than deciding how much to write:
+  seventeen dispatches across two cycles, none requiring a design choice. That
+  compensation is a real coupling between `plan`'s thoroughness and `exec`'s
+  safety, and it was written down nowhere. A plan that says "add validation
+  here" instead of shipping the code hands the decision to an agent that has
+  never read the ladder. The brief references the `lazy` skill rather than
+  restating its content, so the ladder stays one fact in one place. -->
+
 - **The skill is smaller than every reference that does the same job.**
   Observable: `SKILL.md` under 160 lines, against 503 for the nearest reference
   implementation and 764 for vibekit v1's three-skill dispatch cluster. Read as
