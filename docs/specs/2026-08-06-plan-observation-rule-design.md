@@ -153,9 +153,12 @@ change converts an unanswerable self-check into a trivial one.
 
 ### What this costs and does not cost
 
-Roughly fifteen lines added to a 135-line file. Nothing per plan at runtime: no
-dispatch, no extra tokens, no added latency. The recurring cost is a sweep the
-author performs while already reviewing.
+A net 13 lines — edit 1 replaces 5 with 15, edit 2 adds 3 — taking the file from
+135 to 148 against a budget of 168. Derived by counting the blocks above against
+the current file, not estimated; an earlier draft of this spec said "roughly
+fifteen", which was the exact habit this design exists to stop. Nothing per plan
+at runtime: no dispatch, no extra tokens, no added latency. The recurring cost is
+a sweep the author performs while already reviewing.
 
 ### Pushback and response
 
