@@ -128,6 +128,9 @@ tasks get read out of order.
 2. **Placeholders.** Scan for the patterns above. Fix them.
 3. **Clauses.** Scan every `→ verify:` for a quoted string, or a number outside
    the three permitted forms. Both are predicted output. Fix them.
+4. **Provenance.** For every number, path, count and cross-reference in the
+   plan, name where it came from. "I ran it" and "I read it" pass. "I knew it"
+   is a guess — derive it, or state a property instead.
 
 Fix inline. No re-review.
 
