@@ -74,10 +74,21 @@ with an independently testable deliverable and one commit.
 Steps that change code carry the actual code. A step that runs a command names
 the command and stops there.
 
-## You may not write output you have not observed
+## You may not write a value you have not observed
 
-A `→ verify:` clause states a predicate — something checkable by a reader of the
-plan, before anything runs. Not a transcript.
+Every value this plan states — a number, a path, a count, a cross-reference —
+must be one you observed. You read it, you ran it, or you chose it as a
+threshold. A value you recalled is a guess, and a guess in a plan is a defect a
+fresh implementer pays for: they follow the plan exactly, hit a contradiction,
+and stop.
+
+Two ways to satisfy it. Derive the value before writing it — usually one command
+and a few seconds. Or state the property instead of the value: "every new case
+passes" rather than "three cases pass".
+
+**A clause is the strictest case.** A `→ verify:` clause states a predicate —
+something checkable by a reader of the plan, before anything runs. Not a
+transcript.
 
 **Predicates:** exit status, pass or fail, a file exists, a match count at or
 above a threshold, an HTTP status.
@@ -105,6 +116,11 @@ it**, and the clause refers to the observation instead of a guess.
 A clause must be satisfiable by the task it belongs to. If you cannot say what
 would make it true, the task boundary is wrong, not the clause.
 
+**Outside a clause the rule still holds, and there is no allowlist.** A line
+count in a task title, a path in a Files block, a version in Global constraints,
+a reference to another task by number — each is a value, so each was read, run,
+or chosen. None may be recalled.
+
 ## No placeholders
 
 `TBD`, `TODO`, "add error handling", "similar to Task N", and any reference to a
@@ -117,6 +133,9 @@ tasks get read out of order.
 2. **Placeholders.** Scan for the patterns above. Fix them.
 3. **Clauses.** Scan every `→ verify:` for a quoted string, or a number outside
    the three permitted forms. Both are predicted output. Fix them.
+4. **Provenance.** For every number, path, count and cross-reference in the
+   plan, name where it came from. "I ran it" and "I read it" pass. "I knew it"
+   is a guess — derive it, or state a property instead.
 
 Fix inline. No re-review.
 
