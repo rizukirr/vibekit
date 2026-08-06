@@ -52,7 +52,7 @@ Not modified, and checked to confirm it: `CLAUDE.md`, `README.md`, `AGENTS.md`.
 **Files:**
 - Modify: `skills/plan/SKILL.md`
 
-- [ ] **Step 1: Replace the heading and opening paragraph**
+- [x] **Step 1: Replace the heading and opening paragraph**
 
 In `skills/plan/SKILL.md`, replace exactly this:
 
@@ -85,15 +85,15 @@ transcript.
 
 Change nothing else in the file. Every paragraph below this point stays exactly as it is.
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Check the derived properties**
+- [x] **Step 3: Check the derived properties**
 
 Run: `grep -c observed skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/plan/SKILL.md
