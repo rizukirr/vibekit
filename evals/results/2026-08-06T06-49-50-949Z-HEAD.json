@@ -1,0 +1,98 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": false,
+    "dryRun": false,
+    "scenarios": [
+      "exec-fires",
+      "exec-rejects-clauseless-plan",
+      "exec-names-a-model"
+    ],
+    "n": 10
+  },
+  "candidate": {
+    "exec-fires": {
+      "id": "exec-fires",
+      "rate": 1,
+      "failures": [],
+      "failedArtifacts": [],
+      "failedFinalText": [],
+      "incomplete": false,
+      "successful": 10,
+      "errored": 0,
+      "inputFootprint": 18279.1,
+      "outputTokens": 869,
+      "cost": 0.21141931499999997,
+      "judge": null
+    },
+    "exec-rejects-clauseless-plan": {
+      "id": "exec-rejects-clauseless-plan",
+      "rate": 1,
+      "failures": [],
+      "failedArtifacts": [],
+      "failedFinalText": [],
+      "incomplete": false,
+      "successful": 10,
+      "errored": 0,
+      "inputFootprint": 16274.2,
+      "outputTokens": 782.7,
+      "cost": 0.14284230000000003,
+      "judge": null
+    },
+    "exec-names-a-model": {
+      "id": "exec-names-a-model",
+      "rate": 0,
+      "failures": [
+        "no dispatch was made",
+        "no dispatch was made",
+        "no dispatch was made",
+        "dispatch 4 named no model",
+        "no dispatch was made",
+        "no dispatch was made",
+        "no dispatch was made",
+        "dispatch 5 named no model",
+        "no dispatch was made",
+        "no dispatch was made"
+      ],
+      "failedArtifacts": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ],
+      "failedFinalText": [
+        "I checked the plan's whole-plan gate before dispatching anything, and it fails on multiple required conditions:\n\n- **Not a git repository at all** — the environment reports this directory isn't a git repo, so there's no \"plan file is committed,\" no \"clean working tree,\" and no \"dedicated branch/worktree\" to speak of.\n- The plan (`docs/plans/2026-08-05-greeting.md`) does reference an approved spec and Task 1 does carry a `→ verify:` clause, so that part is fine.\n\nPer the `exec` skill, a plan missing even one gate condition is rejected whole rather than partially executed. Since there's no git history here, I can't verify the plan was committed or run this on a dedicated branch — and `exec` explicitly says it does not create the workspace itself.\n\nTo proceed I need you to either:\n1. Confirm this directory should be a git repo, and let me run `git init`, commit the current state (including the plan/spec), and create a dedicated branch, or\n2. Point me to the actual git repo this work belongs in.\n\nWhich would you like?",
+        "The exec skill's whole-plan gate requires the work to happen on a dedicated git branch or worktree — but this directory isn't a git repository at all (confirmed by the environment info: \"Is a git repository: false\"). I can't proceed with execution until that's in place.\n\nCould you initialize a git repo here (and commit the plan/spec files), or point me to the repo this plan belongs to? Once there's a git history and a dedicated branch/worktree to work on, I can dispatch the task per the exec skill's process.",
+        "The environment isn't a git repository at all (per the system info: \"Is a git repository: false\"), so the `exec` skill's whole-plan gate can't be satisfied — there's no committed plan, no clean working tree, and no dedicated branch/worktree to run on.\n\nI can't proceed with dispatch until that's set up. Would you like me to `git init` this directory, commit the current state (including the plan/spec), and create a dedicated branch to execute on?",
+        "This isn't a git repository, which fails the `exec` skill's whole-plan gate outright — it requires the plan to be committed and the run to happen on a dedicated branch/worktree, neither of which is possible without git.\n\nThe spec (`docs/specs/2026-08-05-greeting-design.md`) does have `status: approved`, and the plan file exists with a valid `→ verify:` clause, but there's no version control here at all.\n\nI need you to decide how to proceed — options:\n1. Run `git init`, commit the existing files, and continue on a dedicated branch, then execute the plan.\n2. Skip the git requirement and have me implement directly (bypasses the skill's guardrail — your call).\n\nWhich would you like?",
+        "The working directory isn't a git repository (confirmed by the environment info), so there's no dedicated branch or worktree to run this on. Per the `exec` skill's gate, exec doesn't create the workspace — it requires the run to already be on a dedicated branch/worktree, never the base branch, and a clean, git-tracked working tree.\n\nBefore I can execute the plan, you'll need to either:\n- `git init` this directory and commit the current plan/spec files, then create a branch or worktree, or\n- tell me if this should happen in a different (already git-initialized) location.\n\nLet me know how you'd like to proceed — I can run `git init` and set up a dedicated branch if you confirm that's fine to do here.",
+        "This is not a git repository, so the whole-plan gate can't be satisfied — the skill requires the plan to be committed and the run to happen on a dedicated branch/worktree. I need to stop and ask rather than proceed.\n\nThere's no git repository at `/tmp/vibekit-eval-DE0Gz5`, so I can't satisfy the exec skill's gate (plan must be committed, work must happen on a dedicated branch/worktree). Would you like me to `git init` this directory first (and commit the existing plan/spec files), so I can then execute the plan on a dedicated branch?",
+        "No `.git` directory in `/tmp/vibekit-eval-huQOwe` — this isn't a git repository, confirming the environment metadata.\n\nThe `exec` skill's whole-plan gate requires the run to be on a dedicated branch or worktree, and exec explicitly does not create that workspace itself. Since this directory isn't a git repository at all, that precondition isn't met, so I can't proceed with dispatching tasks.\n\nTo move forward, you'd need to `git init` this directory (and commit the existing plan/spec files) so we have a repo to branch from. Want me to set that up, or is there a different repo this should live in?",
+        "This isn't a git repository, so the exec skill's whole-plan gate can't be satisfied: there's no dedicated branch or worktree, no clean working tree to verify, and no commit to record as BASE. I can't proceed with dispatch-per-task execution as the skill requires.\n\nTo move forward, I need you to either:\n1. Confirm you want me to `git init` this directory and set up a dedicated branch first, or\n2. Confirm the plan should be executed without git (in which case I'd be stepping outside the `exec` skill's gate, so let me know explicitly if that's acceptable).\n\nWhich would you like?",
+        "The exec skill's whole-plan gate requires the run to happen on a dedicated branch or git worktree, and that the plan file be committed. This directory isn't a git repository (confirmed by the environment banner), and there's no shell/Bash tool available in this session to run `git init` or any git commands — the only git-related tool is `EnterWorktree`, which itself requires an existing git repo (or configured worktree hooks, which aren't set up here).\n\nI can't satisfy the gate as a result, so per the skill I need to stop rather than execute the plan outside a proper workspace.\n\nTo proceed, one of these needs to happen:\n1. You initialize a git repo in `/tmp/vibekit-eval-bYsKQ8` yourself (or grant shell access so I can), then I create a branch/worktree and commit the plan, or\n2. You explicitly tell me to skip the branch/worktree requirement and implement directly against the working tree (overriding the skill's gate).\n\nHow would you like to proceed?",
+        "The whole-plan gate requires the run to be on a dedicated git branch or worktree — but this directory isn't a git repository at all. I need to stop and flag this rather than proceed.\n\nThe working directory `/tmp/vibekit-eval-4aif3W` is not a git repository, so there's no clean working tree, no branch, and no way to isolate this work on a dedicated branch/worktree as the exec gate requires. I can't proceed with dispatching tasks until that's resolved.\n\nWould you like me to `git init` this directory (and commit the existing plan/spec files) so we have a base to branch from, or is there an existing repo elsewhere I should be working in instead?"
+      ],
+      "incomplete": false,
+      "successful": 10,
+      "errored": 0,
+      "inputFootprint": 24182.1,
+      "outputTokens": 1148.7,
+      "cost": 0.239691675,
+      "judge": null
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": false,
+    "failures": [
+      "exec-names-a-model: rate 0.00 below floor 0.8"
+    ]
+  }
+}
