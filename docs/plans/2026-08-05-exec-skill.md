@@ -769,6 +769,77 @@ git commit -m "eval: assert on the final message, and stop the A/B crediting gen
 
 ---
 
+### Task 9: Carry the laziness ladder into every dispatch → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c lazy skills/exec/SKILL.md` finds at least 1 match, and `wc -l < skills/exec/SKILL.md` is under 160
+
+**Added after verification, at the user's request.** `exec`'s dispatch prompt
+carried five things and none of them told the implementer how much to build. A
+dispatched agent does not inherit the parent's modifiers — the bootstrap tells
+subagents to skip the orchestration discipline — so every implementer across two
+cycles ran unaware of the laziness ladder.
+
+The brief references the `lazy` skill rather than restating the ladder. Copying
+its content into `exec` would put one fact in two places, which is the defect
+vibekit v2 exists to remove.
+
+**Files:**
+- Modify: `skills/exec/SKILL.md`
+- Regenerated: `CLAUDE.md`, `README.md`, `AGENTS.md`
+
+- [ ] **Step 1: Extend what the dispatch carries**
+
+In `skills/exec/SKILL.md`, in the task loop's step 3, replace this sentence:
+
+```markdown
+**3. Dispatch one fresh subagent.** Its prompt carries: one line on where the
+task sits, the brief path introduced as its requirements to use verbatim, repo
+state it cannot infer, interfaces earlier tasks produced that its brief cannot
+know, and the return contract below. Restrict its tools to what the task needs —
+a constraint the runtime enforces cannot be talked past, and a constraint in
+prose can.
+```
+
+with:
+
+```markdown
+**3. Dispatch one fresh subagent.** Its prompt carries: one line on where the
+task sits, the brief path introduced as its requirements to use verbatim, repo
+state it cannot infer, interfaces earlier tasks produced that its brief cannot
+know, an instruction to invoke `lazy` before writing any code, and the return
+contract below. Restrict its tools to what the task needs — a constraint the
+runtime enforces cannot be talked past, and a constraint in prose can.
+
+A dispatched agent inherits none of this session's modifiers; it starts unaware
+of them. What you know about how much to build reaches the implementer only if
+the brief says so, and naming the skill beats restating it — the ladder has one
+home.
+```
+
+- [ ] **Step 2: Regenerate and check**
+
+Run: `npm run generate && npm run check && npm test`
+
+- [ ] **Step 3: Check the budget properties**
+
+Run: `grep -c lazy skills/exec/SKILL.md; wc -l < skills/exec/SKILL.md`
+
+The grep finding at least one match and the line count staying under 160 are
+this task's criteria. Do not reflow to pass the count.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add skills/exec/SKILL.md CLAUDE.md README.md AGENTS.md
+git commit -m "feat: carry the laziness ladder into every dispatch"
+```
+
+**Not covered by this task:** no scenario asserts the new goal. `exec` in a
+Bash-less eval session halts at its own git-based gate before dispatching, so a
+`dispatchPromptMatches` assertion would fail for a reason unrelated to the
+guidance. The goal is measurable in principle and unmeasured in practice, which
+the verification report must say rather than imply otherwise.
+
+---
+
 ## After the plan
 
 The A/B is the next decision, not the next task. The model-selection arm is
