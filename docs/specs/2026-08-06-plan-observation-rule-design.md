@@ -1,7 +1,7 @@
 ---
 title: plan observation rule
 date: 2026-08-06
-status: draft
+status: approved
 ---
 
 # plan observation rule — Design
