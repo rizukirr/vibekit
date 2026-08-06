@@ -54,9 +54,14 @@ session and is re-read on every later turn.
 **3. Dispatch one fresh subagent.** Its prompt carries: one line on where the
 task sits, the brief path introduced as its requirements to use verbatim, repo
 state it cannot infer, interfaces earlier tasks produced that its brief cannot
-know, and the return contract below. Restrict its tools to what the task needs —
-a constraint the runtime enforces cannot be talked past, and a constraint in
-prose can.
+know, an instruction to invoke `lazy` before writing any code, and the return
+contract below. Restrict its tools to what the task needs — a constraint the
+runtime enforces cannot be talked past, and a constraint in prose can.
+
+A dispatched agent inherits none of this session's modifiers; it starts unaware
+of them. What you know about how much to build reaches the implementer only if
+the brief says so, and naming the skill beats restating it — the ladder has one
+home.
 
 **4. Run the clause.** Execute the task's `→ verify:` command yourself. Its exit
 status decides. This is the gate; there is no reviewer.
