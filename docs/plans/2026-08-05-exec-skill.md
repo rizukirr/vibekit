@@ -899,7 +899,7 @@ with:
 
 ```markdown
 know, and the return contract below. Restrict its tools to what the task needs,
-plus whatever loads a skill — the brief tells it to invoke one, and an
+plus whatever loads a skill — the brief tells it to invoke `lazy`, and an
 instruction it has no means to obey is worse than no instruction. A constraint
 the runtime enforces cannot be talked past; a constraint in prose can.
 ```
