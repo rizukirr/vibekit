@@ -785,7 +785,7 @@ vibekit v2 exists to remove.
 - Modify: `skills/exec/SKILL.md`
 - Regenerated: `CLAUDE.md`, `README.md`, `AGENTS.md`
 
-- [ ] **Step 1: Extend what the dispatch carries**
+- [x] **Step 1: Extend what the dispatch carries**
 
 In `skills/exec/SKILL.md`, in the task loop's step 3, replace this sentence:
 
@@ -814,18 +814,18 @@ the brief says so, and naming the skill beats restating it — the ladder has on
 home.
 ```
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Check the budget properties**
+- [x] **Step 3: Check the budget properties**
 
 Run: `grep -c lazy skills/exec/SKILL.md; wc -l < skills/exec/SKILL.md`
 
 The grep finding at least one match and the line count staying under 160 are
 this task's criteria. Do not reflow to pass the count.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/exec/SKILL.md CLAUDE.md README.md AGENTS.md
@@ -837,6 +837,92 @@ Bash-less eval session halts at its own git-based gate before dispatching, so a
 `dispatchPromptMatches` assertion would fail for a reason unrelated to the
 guidance. The goal is measurable in principle and unmeasured in practice, which
 the verification report must say rather than imply otherwise.
+
+---
+
+### Task 10: Put the ladder in the brief, not beside it → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c lazy skills/exec/SKILL.md` finds at least 2 matches, and `wc -l < skills/exec/SKILL.md` is under 160
+
+**Added after Gate 2 on Task 9.** Task 9 put the instruction in the dispatch
+prompt. Two structural problems, both raised by the reviewer and both correct:
+
+- The implementer's operative source of truth is the brief file. `exec`
+  introduces it as *"its requirements to use verbatim"*, and the bootstrap tells
+  every subagent to *"skip this and follow your brief"*. An instruction beside
+  the brief is framing a compliant agent may treat as ambient. Task 9's own
+  prose says the guidance reaches the implementer *"only if the brief says so"*
+  — which the implementation did not arrange.
+- The same paragraph tells the orchestrator to restrict the subagent's tools. If
+  skill loading is not in the allowed set, the agent is told to invoke something
+  it cannot load, and the instruction degrades to a description-line reference —
+  measured at a zero fire rate in this project.
+
+**Files:**
+- Modify: `skills/exec/SKILL.md`
+
+- [ ] **Step 1: Move the instruction into the brief**
+
+In `skills/exec/SKILL.md`, in the task loop's step 2, replace:
+
+```markdown
+**2. Write the brief to a file.** Extract this task's section from the plan
+verbatim — heading, files, every step, the clause — into a scratch file. Pass the
+path. Never paste the task into the prompt, and never hand over the whole plan.
+Everything pasted into a dispatch stays in your context for the rest of the
+session and is re-read on every later turn.
+```
+
+with:
+
+```markdown
+**2. Write the brief to a file.** Extract this task's section from the plan
+verbatim — heading, files, every step, the clause — into a scratch file, and add
+one line to it: invoke `lazy` before writing any code. Pass the path. Never
+paste the task into the prompt, and never hand over the whole plan. Everything
+pasted into a dispatch stays in your context for the rest of the session and is
+re-read on every later turn.
+
+The line goes in the brief, not beside it. The brief is what the implementer
+treats as its requirements; anything else is framing it may reasonably ignore.
+```
+
+- [ ] **Step 2: Keep the means to obey it**
+
+In the same file, in step 3, replace:
+
+```markdown
+know, an instruction to invoke `lazy` before writing any code, and the return
+contract below. Restrict its tools to what the task needs — a constraint the
+runtime enforces cannot be talked past, and a constraint in prose can.
+```
+
+with:
+
+```markdown
+know, and the return contract below. Restrict its tools to what the task needs,
+plus whatever loads a skill — the brief tells it to invoke one, and an
+instruction it has no means to obey is worse than no instruction. A constraint
+the runtime enforces cannot be talked past; a constraint in prose can.
+```
+
+- [ ] **Step 3: Regenerate and check**
+
+Run: `npm run generate && npm run check && npm test`
+
+- [ ] **Step 4: Check the budget properties**
+
+Run: `grep -c lazy skills/exec/SKILL.md; wc -l < skills/exec/SKILL.md`
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add skills/exec/SKILL.md
+git commit -m "fix: put the laziness instruction in the brief, not beside it"
+```
+
+**Still not covered:** no scenario asserts any of this. A `grep` proves a
+sentence exists in a file, not that the ladder reaches an implementer. The
+verification report must say so rather than count the grep as evidence of
+effect.
 
 ---
 
