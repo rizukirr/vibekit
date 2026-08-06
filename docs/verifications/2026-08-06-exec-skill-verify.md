@@ -148,3 +148,44 @@ rejection scenario described under G2.
 
 The pattern is now three cycles old and worth stating plainly: the implementers
 do not fail. The plan and the instrument do.
+
+---
+
+## Addendum — Tasks 9 and 10, after this report was written
+
+At the user's request, `exec` gained a requirement after verification ran: every
+dispatch must instruct the implementer to invoke `lazy`. Two commits landed
+after the report above.
+
+**What changed.** Task 9 added the instruction to the dispatch prompt. Gate 2
+found that structurally unsound on two counts, both correct: the implementer's
+operative source of truth is the brief file — `exec` introduces it as *"its
+requirements to use verbatim"* and the bootstrap tells subagents to *"skip this
+and follow your brief"* — so an instruction beside the brief is framing a
+compliant agent may ignore; and the same paragraph's tool restriction could
+remove the means to load the skill it named. Both reduce the change to a
+description-line reference, which this project has measured at a zero fire rate.
+Task 10 moved the line into the brief and put the tool carve-out in the same
+sentence as the restriction. Gate 2 re-judged both warns closed, verbatim.
+
+**Effect on this report's verdicts.**
+
+- **R1 (line budget) — still satisfied.** `wc -l` moved 124 → 134, against a
+  budget of 160. The three passes judged the 124-line file; the ten added lines
+  are the two replacements, and the reflow question they examined is unaffected.
+  Re-dispatch was not run for this, which is a declared gap rather than a
+  claim.
+- **New goal — not satisfied, unmeasured.** No scenario asserts the dispatch
+  prompt or brief mentions `lazy`. `grep -c lazy skills/exec/SKILL.md` = 2
+  proves two lines exist in a file; it says nothing about whether the ladder
+  reaches an implementer. Given the measured zero fire rate for
+  referenced-but-uninvoked modifiers, that distinction is the whole question.
+- **Overall verdict — unchanged: not ready.** One more unmeasured goal joins the
+  four already listed.
+
+**Defect count for the cycle rises to eleven, still none in an implementation.**
+Task 10's own verify clause required `grep -c lazy` to find at least two
+matches, but its two prescribed replacements were net-neutral on the word — one
+added, one removed — and `grep -c` counts matching lines rather than matches.
+A predicted count, not derived. Caught by the implementer, which halted before
+committing a task that failed its own gate.
