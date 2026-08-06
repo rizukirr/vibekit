@@ -107,7 +107,7 @@ git commit -m "feat: widen the observation rule past the verify clause"
 **Files:**
 - Modify: `skills/plan/SKILL.md`
 
-- [ ] **Step 1: Add a fourth self-review item**
+- [x] **Step 1: Add a fourth self-review item**
 
 In `skills/plan/SKILL.md`, replace exactly this:
 
@@ -132,19 +132,76 @@ Fix inline. No re-review.
 
 Change nothing else.
 
+- [x] **Step 2: Regenerate and check**
+
+Run: `npm run generate && npm run check && npm test`
+
+- [x] **Step 3: Check the derived properties**
+
+Run: `grep -ci provenance skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
+
+- [x] **Step 4: Commit**
+
+```bash
+git add skills/plan/SKILL.md
+git commit -m "feat: self-review asks where each value came from"
+```
+
+---
+
+### Task 3: Say the rule applies outside a clause → verify: `npm run check` exits 0, `npm test` exits 0, `grep -ci outside skills/plan/SKILL.md` finds at least 2 matches, and `wc -l < skills/plan/SKILL.md` is under 168
+
+**Added after Gate 2 on Task 2.** The spec's first goal requires that "the clause
+rules read as its strictest case rather than as the whole rule". They do not yet.
+Gate 2, verbatim: *"while writing the plan, the mechanical reader still applies
+the rule only to `→ verify:` clauses — unchanged from before Task 1"*, because
+the thirty lines beneath the widened opening are entirely clause-scoped and
+"nothing between line 89 and 118 says anything about a number in a Global
+constraints line, a line count in a task title, or a path in a Files block".
+
+Task 2's provenance item catches those at self-review, after the plan is written.
+This closes the authoring half: the section ends by naming where the rule applies
+outside a clause.
+
+**Files:**
+- Modify: `skills/plan/SKILL.md`
+
+- [ ] **Step 1: Close the section with the general case**
+
+In `skills/plan/SKILL.md`, replace exactly this:
+
+```markdown
+A clause must be satisfiable by the task it belongs to. If you cannot say what
+would make it true, the task boundary is wrong, not the clause.
+```
+
+with exactly this:
+
+```markdown
+A clause must be satisfiable by the task it belongs to. If you cannot say what
+would make it true, the task boundary is wrong, not the clause.
+
+**Outside a clause the rule still holds, and there is no allowlist.** A line
+count in a task title, a path in a Files block, a version in Global constraints,
+a reference to another task by number — each is a value, so each was read, run,
+or chosen. None may be recalled.
+```
+
+Change nothing else.
+
 - [ ] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
 - [ ] **Step 3: Check the derived properties**
 
-Run: `grep -ci provenance skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
+Run: `grep -ci outside skills/plan/SKILL.md; wc -l < skills/plan/SKILL.md`
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add skills/plan/SKILL.md
-git commit -m "feat: self-review asks where each value came from"
+git commit -m "feat: name where the rule applies outside a clause"
 ```
 
 ---
