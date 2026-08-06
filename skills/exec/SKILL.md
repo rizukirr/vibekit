@@ -46,17 +46,22 @@ measures against it. Never `HEAD~1` — a task making three commits would have t
 escape the scope check silently.
 
 **2. Write the brief to a file.** Extract this task's section from the plan
-verbatim — heading, files, every step, the clause — into a scratch file. Pass the
-path. Never paste the task into the prompt, and never hand over the whole plan.
-Everything pasted into a dispatch stays in your context for the rest of the
-session and is re-read on every later turn.
+verbatim — heading, files, every step, the clause — into a scratch file, and add
+one line to it: invoke `lazy` before writing any code. Pass the path. Never
+paste the task into the prompt, and never hand over the whole plan. Everything
+pasted into a dispatch stays in your context for the rest of the session and is
+re-read on every later turn.
+
+The line goes in the brief, not beside it. The brief is what the implementer
+treats as its requirements; anything else is framing it may reasonably ignore.
 
 **3. Dispatch one fresh subagent.** Its prompt carries: one line on where the
 task sits, the brief path introduced as its requirements to use verbatim, repo
 state it cannot infer, interfaces earlier tasks produced that its brief cannot
-know, an instruction to invoke `lazy` before writing any code, and the return
-contract below. Restrict its tools to what the task needs — a constraint the
-runtime enforces cannot be talked past, and a constraint in prose can.
+know, and the return contract below. Restrict its tools to what the task needs,
+plus whatever loads a skill — the brief tells it to invoke `lazy`, and an
+instruction it has no means to obey is worse than no instruction. A constraint
+the runtime enforces cannot be talked past; a constraint in prose can.
 
 A dispatched agent inherits none of this session's modifiers; it starts unaware
 of them. What you know about how much to build reaches the implementer only if
