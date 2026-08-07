@@ -123,6 +123,28 @@ fires on nothing.
 if fixing it cannot change behaviour.** A `nit` whose fix would alter behaviour
 still reaches the user, and a `blocker` that is a pure rename does not.
 
+## 5. The bounded fix loop
+
+If any finding is auto-fixable, dispatch **one** fresh subagent carrying all of
+them in a single brief. Never one dispatch per finding — two implementers on one
+diff conflict.
+
+Confine the fix agent to files already in the diff. A fix reaching outside it is
+a `blocker`, not a fix: the fix belongs to no task's `Files` block, so without
+the confinement it trips the sweep's scope check on the next round.
+
+Then run the sweep and the ladder again from the top. **The re-run is the gate on
+the fix.** A fix that breaks a test comes back as a failed check, which is a
+`blocker` — no special handling, and no way for a repair to slip past unchecked.
+
+Stop at the first of these: a round produced no new findings, or one round
+completed. Anything still open is carried to the ending as information, never
+retried. A ladder finding has no exit status to converge on, so the bound is what
+makes stopping a property rather than a hope.
+
+If the fix agent returns anything but success, the loop ends and its findings
+stay open. Do not answer its question yourself.
+
 ## Verdict
 
 Report in the conversation. Write nothing, commit nothing.
@@ -130,23 +152,36 @@ Report in the conversation. Write nothing, commit nothing.
 ```
 Sweep:   one line per check, with what it returned
 Goals:   one line per goal — verdict, then the evidence
-Lazy:    one line per violation, or none
+Fixed:   what the loop fixed, or none
+Open:    remaining warns and nits, each with its severity
 Unseen:  what you could not observe, and why
 Verdict: ready | not ready
 ```
 
-`not ready` names its blockers. There is no `ready with caveats` — a caveat is a
+`not ready` requires a blocker. There is no `ready with caveats` — a caveat is a
 blocker looking for a waiver.
 
-## Repair nothing
+## The ending
 
-A failing test or build goes to `debug`. A goal this plan cannot satisfy goes
-back to `plan`. A ladder violation goes back to `exec` as a new task.
+Both exits end with the user. Present, then wait.
 
-Fixing what you find makes you the author of the change you are gating, and then
-there is no gate.
+**On `ready`** — the `git diff --stat` summary, the open warns and nits, and
+three ways this change could be wrong that the tests would not catch. Then:
+approve, fix, or abort. Approval is always available. Only the user blocks: the
+risk list is judgement with nothing behind it, and letting an unevidenced guess
+veto the person whose code it is inverts who decides.
+
+**On `not ready`** — every blocker with its evidence, then the routing choice. A
+failing test or build belongs to `debug`. A goal this plan cannot satisfy belongs
+to `plan`. A ladder violation belongs to `exec` as a new task. The user picks,
+and may override with the gap named and on the record.
+
+## Repair nothing yourself
+
+The loop dispatches; you do not edit. Fixing what you find makes you the author
+of the change you are gating, and then there is no gate.
 
 ## Handoff
 
-On `ready`, the next skill is `review`. On `not ready`, nothing downstream runs
-until every blocker is closed and `verify` runs again from the top.
+On approval, the next skill is `finish`. Otherwise nothing downstream runs until
+every blocker is closed and `verify` runs again from the top.
