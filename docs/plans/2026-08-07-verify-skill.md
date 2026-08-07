@@ -321,7 +321,7 @@ git commit -m "feat: verify skill, the whole-change gate"
 
 - Modify: `evals/scenarios.json`
 
-- [ ] **Step 1: Append the three entries**
+- [x] **Step 1: Append the three entries**
 
 `evals/scenarios.json` is a top-level JSON array. Append these three objects to the end of the array, as a text edit — do **not** parse and reserialise the file, because that rewrites every unrelated entry and buries the change:
 
@@ -371,7 +371,7 @@ git commit -m "feat: verify skill, the whole-change gate"
   }
 ```
 
-- [ ] **Step 2: Assert the shape**
+- [x] **Step 2: Assert the shape**
 
 Run this exactly:
 
@@ -391,11 +391,11 @@ if (new Set(all.map(x => x.id)).size !== all.length) throw new Error("duplicate 
 '
 ```
 
-- [ ] **Step 3: Run the checks**
+- [x] **Step 3: Run the checks**
 
 Run: `npm test && npm run check`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add evals/scenarios.json
