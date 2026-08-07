@@ -1,0 +1,126 @@
+---
+name: verify
+description: Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen.
+trigger: Implementation complete, before any claim that work is done
+gate: hard
+---
+
+# verify
+
+Does this change satisfy its spec? Answer with evidence, or do not answer.
+
+`exec` ran every task's clause, so per-task mechanics are already covered. This
+is the whole-change gate. Seeing one task at a time is what makes `exec` safe,
+and it is also why nothing there can notice Task 2 undoing Task 1.
+
+## HARD-GATE
+
+Do NOT claim work is done, fixed, complete or passing, and do not invoke
+`review` or any outward-facing skill, until this returns `ready`.
+
+## Three rules
+
+**Evidence or it did not happen.** A check with no output to show is not a
+check. Every verdict below names what you ran or read.
+
+**Unmeasured is not satisfied.** A goal whose criterion is a run that never ran
+is `not satisfied`. Reading the code is not a substitute for running it, and no
+amount of re-reading turns unmeasured into satisfied.
+
+**Report what you could not observe.** A verdict that hides its gaps reads as
+evidence while proving nothing — the instrument is wrong at least as often as
+the change is. Say what you could not check, every time, inside the verdict.
+
+## 1. Preconditions
+
+- An approved spec with a `## Goals` section.
+- A plan whose tasks are all ticked.
+- A clean working tree.
+
+Any of them missing: stop and name it. Do not partially verify an unfinished
+run.
+
+| Input | Source |
+|---|---|
+| spec | `exec`'s handoff, else the newest approved spec under `docs/specs/` |
+| plan | the spec's matching plan |
+| `BASE` | `git merge-base` of this branch and the base branch |
+| diff | `git diff BASE..HEAD` |
+
+If the handoff did not carry the paths, derive them and say which you derived. A
+verdict against the wrong spec is worse than no verdict.
+
+## 2. Repo-level sweep
+
+The checks no single task could make:
+
+- The full test suite.
+- The project's build or check command, if it has one.
+- `git status --porcelain` is empty.
+- Every file in the diff appears in some task's `Files` block.
+
+The last one is the cross-task check with no other home. A changed file that no
+task claimed is either scope creep or one task quietly editing another's work.
+
+A command that errors rather than fails — a missing script, a binary that is not
+installed — is unobserved, not passed. Say so.
+
+## 3. Goals walk
+
+Every goal in the spec, one at a time, with the evidence behind it.
+
+- **`satisfied`** — you observed the criterion hold.
+- **`not satisfied`** — you observed it fail, or its criterion never ran.
+- **`partial`** — the criterion has parts, some observed, the rest named.
+
+`partial` is for a criterion that genuinely splits, never a hedge on one you
+skipped. That one is `not satisfied`.
+
+A goal with no observable criterion is `not satisfied`, reason: no observable
+criterion. Do not invent one. A criterion written at verify time grades the
+change against a spec nobody approved.
+
+Non-goals get the same walk inverted: anything the spec ruled out and the diff
+built is a blocker.
+
+## 4. The lazy read
+
+Walk `lazy`'s ladder against the diff. The rungs, as questions:
+
+- Does anything added already exist in this codebase?
+- Was a dependency added where a few lines would do?
+- Is there an interface with one implementation, or a factory for one product?
+- Is there scaffolding for a need that has not arrived?
+- Does every deliberate shortcut carry a `vibekit:` comment naming its ceiling?
+
+Report each violation as `file:line` and the rung it breaks. This is a judgement,
+and it is not self-grading: `exec` dispatched the implementer, so the code you
+are reading is not code you wrote.
+
+## Verdict
+
+Report in the conversation. Write nothing, commit nothing.
+
+```
+Sweep:   one line per check, with what it returned
+Goals:   one line per goal — verdict, then the evidence
+Lazy:    one line per violation, or none
+Unseen:  what you could not observe, and why
+Verdict: ready | not ready
+```
+
+`not ready` names its blockers. There is no `ready with caveats` — a caveat is a
+blocker looking for a waiver.
+
+## Repair nothing
+
+A failing test or build goes to `debug`. A goal this plan cannot satisfy goes
+back to `plan`. A ladder violation goes back to `exec` as a new task.
+
+Fixing what you find makes you the author of the change you are gating, and then
+there is no gate.
+
+## Handoff
+
+On `ready`, the next skill is `review`. On `not ready`, nothing downstream runs
+until every blocker is closed and `verify` runs again from the top.

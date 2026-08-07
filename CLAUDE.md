@@ -15,6 +15,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | Spec approved, implementation not yet started | `plan` | hard |
 | First response of the session — invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
+| Implementation complete, before any claim that work is done | `verify` | hard |
 <!-- /vibekit:generated -->
 
 ## Contributing
