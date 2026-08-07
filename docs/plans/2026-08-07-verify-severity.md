@@ -60,7 +60,7 @@ Not modified, and checked to confirm it: `CLAUDE.md`, `README.md`, `AGENTS.md`.
 
 - Modify: `skills/verify/SKILL.md`
 
-- [ ] **Step 1: Point the hard gate at a skill that will exist**
+- [x] **Step 1: Point the hard gate at a skill that will exist**
 
 In `skills/verify/SKILL.md`, replace exactly this:
 
@@ -77,7 +77,7 @@ Do NOT claim work is done, fixed, complete or passing, and do not invoke
 has signed off.
 ```
 
-- [ ] **Step 2: Classify findings by severity**
+- [x] **Step 2: Classify findings by severity**
 
 In `skills/verify/SKILL.md`, replace exactly this:
 
@@ -114,15 +114,15 @@ if fixing it cannot change behaviour.** A `nit` whose fix would alter behaviour
 still reaches the user, and a `blocker` that is a pure rename does not.
 ```
 
-- [ ] **Step 3: Regenerate and check**
+- [x] **Step 3: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 4: Check the derived properties**
+- [x] **Step 4: Check the derived properties**
 
 Run: `grep -ci nit skills/verify/SKILL.md; grep -ci review skills/verify/SKILL.md; wc -l < skills/verify/SKILL.md`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add skills/verify/SKILL.md
