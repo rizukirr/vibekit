@@ -115,6 +115,10 @@ question as a goal's verdict, which is about evidence.
   `partial` goal.
 - **`nit`** — a ladder violation whose fix cannot change behaviour.
 
+**An unobserved part is a `blocker` even inside a `partial` goal.** A goal whose
+criterion has several parts, one of them never run, is not laundered into a
+`warn` by the parts that passed. Unmeasured gates regardless of its company.
+
 A `warn` or a `nit` never gates. Treating one as a blocker halts a pipeline over
 a name, and a gate that fires on everything is ignored exactly like one that
 fires on nothing.
