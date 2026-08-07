@@ -131,7 +131,7 @@ git commit -m "feat: only evidence-backed findings gate"
 
 ---
 
-### Task 2: The bounded fix loop and the ending → verify: `npm run generate` exits 0, `npm run check` exits 0, `npm test` exits 0, `grep -ci "fix loop" skills/verify/SKILL.md` finds at least 1 match, `grep -ci "sign-off" skills/verify/SKILL.md` finds at least 1 match, `grep -ci review skills/verify/SKILL.md` finds no more than 0 matches, and `wc -l < skills/verify/SKILL.md` is at most 180
+### Task 2: The bounded fix loop and the ending → verify: `npm run generate` exits 0, `npm run check` exits 0, `npm test` exits 0, `grep -ci "fix loop" skills/verify/SKILL.md` finds at least 1 match, `grep -ci abort skills/verify/SKILL.md` finds at least 1 match, `grep -ci review skills/verify/SKILL.md` finds no more than 0 matches, and `wc -l < skills/verify/SKILL.md` is at most 200
 
 **Files:**
 
@@ -244,7 +244,7 @@ Run: `npm run generate && npm run check && npm test`
 
 - [ ] **Step 3: Check the derived properties**
 
-Run: `grep -ci "fix loop" skills/verify/SKILL.md; grep -ci "sign-off" skills/verify/SKILL.md; wc -l < skills/verify/SKILL.md`
+Run: `grep -ci "fix loop" skills/verify/SKILL.md; grep -ci abort skills/verify/SKILL.md; grep -ci review skills/verify/SKILL.md; wc -l < skills/verify/SKILL.md`
 
 - [ ] **Step 4: Commit**
 

@@ -58,10 +58,22 @@ section, not a skill.
   as a next skill; `verify`'s handoff names `finish`.
 
 - **The skill stays under its budget.** Observable: `wc -l
-  skills/verify/SKILL.md` is at most 180. Read as a content budget: reflowing to
-  pass it is a violation, not a fix. The ceiling is chosen rather than predicted
-  — this project has estimated a line delta twice and been wrong twice, once by
-  estimating and once by computing over an assumed model.
+  skills/verify/SKILL.md` is at most 200. Read as a content budget: reflowing to
+  pass it is a violation, not a fix.
+
+  **Amended mid-execution, 2026-08-07.** This goal originally said 180. The
+  approved content measured 187 — observed on a scratch copy, not estimated —
+  and the implementer halted rather than cut it. The ceiling was raised to 200
+  because the content is what was approved, unwrapped and uncut; the alternative
+  was deleting an approved section to satisfy a number invented before the text
+  existed.
+
+  The original wording claimed the ceiling was *"chosen rather than predicted —
+  this project has estimated a line delta twice and been wrong twice."* It was
+  then wrong a third time, in the spec that said so. **A ceiling chosen before
+  the content exists is a prediction wearing a different word.** The durable fix
+  is to derive the number after drafting, or to state the budget as a property.
+  Three failures from one habit.
 
 ## Non-goals
 
