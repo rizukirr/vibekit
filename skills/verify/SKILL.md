@@ -57,10 +57,16 @@ The checks no single task could make:
 - The full test suite.
 - The project's build or check command, if it has one.
 - `git status --porcelain` is empty.
-- Every file in the diff appears in some task's `Files` block.
+- Every file in the diff appears in some task's `Files` block, except this run's
+  own spec and plan.
 
 The last one is the cross-task check with no other home. A changed file that no
 task claimed is either scope creep or one task quietly editing another's work.
+
+The exemption is not a loophole. `exec` ticks checkboxes and commits the plan as
+it goes, so the plan is changed by every run and claimed by no task. Without the
+exemption this check fires every time, and a check that always fires is ignored
+exactly like one that never fires.
 
 A command that errors rather than fails — a missing script, a binary that is not
 installed — is unobserved, not passed. Say so.
