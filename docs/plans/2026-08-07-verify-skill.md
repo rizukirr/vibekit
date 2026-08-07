@@ -63,7 +63,7 @@ Modified:
 - Modify: `evals/score.mjs`
 - Modify: `tests/eval-score.test.mjs`
 
-- [ ] **Step 1: Register the key**
+- [x] **Step 1: Register the key**
 
 In `evals/score.mjs`, replace exactly this:
 
@@ -77,7 +77,7 @@ with exactly this:
   'transcriptContains', 'transcriptMatches', 'finalTextMatches', 'finalTextOmits',
 ```
 
-- [ ] **Step 2: Add the check**
+- [x] **Step 2: Add the check**
 
 In `evals/score.mjs`, replace exactly this:
 
@@ -111,7 +111,7 @@ with exactly this:
   }
 ```
 
-- [ ] **Step 3: Add the test**
+- [x] **Step 3: Add the test**
 
 In `tests/eval-score.test.mjs`, replace exactly this:
 
@@ -145,11 +145,11 @@ test('finalTextOmits reads the final message, not the transcript', () => {
 })
 ```
 
-- [ ] **Step 4: Run the checks**
+- [x] **Step 4: Run the checks**
 
 Run: `npm test && grep -c finalTextOmits evals/score.mjs`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add evals/score.mjs tests/eval-score.test.mjs
