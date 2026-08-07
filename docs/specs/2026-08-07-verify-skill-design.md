@@ -1,7 +1,7 @@
 ---
 title: verify skill
 date: 2026-08-07
-status: draft
+status: approved
 ---
 
 # verify skill — Design
