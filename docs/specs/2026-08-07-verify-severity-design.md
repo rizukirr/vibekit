@@ -1,7 +1,7 @@
 ---
 title: verify severity and the bounded fix loop
 date: 2026-08-07
-status: draft
+status: approved
 ---
 
 # verify severity and the bounded fix loop — Design
