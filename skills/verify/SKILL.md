@@ -16,7 +16,8 @@ and it is also why nothing there can notice Task 2 undoing Task 1.
 ## HARD-GATE
 
 Do NOT claim work is done, fixed, complete or passing, and do not invoke
-`review` or any outward-facing skill, until this returns `ready`.
+`finish` or any outward-facing skill, until this returns `ready` and the user
+has signed off.
 
 ## Three rules
 
@@ -102,6 +103,25 @@ Walk `lazy`'s ladder against the diff. The rungs, as questions:
 Report each violation as `file:line` and the rung it breaks. This is a judgement,
 and it is not self-grading: `exec` dispatched the implementer, so the code you
 are reading is not code you wrote.
+
+## Severity
+
+Every finding carries one. Severity is about consequence, and it is not the same
+question as a goal's verdict, which is about evidence.
+
+- **`blocker`** — a failed sweep check, a goal observed to fail, an unmeasured
+  goal, a non-goal the diff built. **Only a blocker produces `not ready`.**
+- **`warn`** — a ladder violation whose fix would change behaviour, or a
+  `partial` goal.
+- **`nit`** — a ladder violation whose fix cannot change behaviour.
+
+A `warn` or a `nit` never gates. Treating one as a blocker halts a pipeline over
+a name, and a gate that fires on everything is ignored exactly like one that
+fires on nothing.
+
+**Fixability is a second, independent question: a finding is auto-fixable only
+if fixing it cannot change behaviour.** A `nit` whose fix would alter behaviour
+still reaches the user, and a `blocker` that is a pure rename does not.
 
 ## Verdict
 
