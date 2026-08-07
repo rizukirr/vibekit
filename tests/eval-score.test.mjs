@@ -388,3 +388,15 @@ test('finalTextMatches is not satisfied by transcript contents', () => {
   const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: '### Task 3: shout function', finalText: 'Done.' }]
   assert.equal(scoreScenario(s, run).rate, 0)
 })
+
+test('finalTextOmits fails a run whose final message contains the pattern', () => {
+  const s = { id: 'p', expect: { finalTextOmits: '\\bready\\b' } }
+  assert.equal(scoreScenario(s, said('Verdict: ready')).rate, 0)
+  assert.equal(scoreScenario(s, said('Cannot verify: no way to run the suite.')).rate, 1)
+})
+
+test('finalTextOmits reads the final message, not the transcript', () => {
+  const s = { id: 'p', expect: { finalTextOmits: '\\bready\\b' } }
+  const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: 'the plan says ready', finalText: 'Blocked.' }]
+  assert.equal(scoreScenario(s, run).rate, 1)
+})

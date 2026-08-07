@@ -74,7 +74,7 @@ export function isPredicate(clause) {
 // asserting nothing. Throwing is correct: a silent pass is the worse failure.
 const KNOWN_EXPECTATIONS = new Set([
   'skill', 'before', 'after',
-  'transcriptContains', 'transcriptMatches', 'finalTextMatches',
+  'transcriptContains', 'transcriptMatches', 'finalTextMatches', 'finalTextOmits',
   'fileMatching', 'onlyNewFilesMatching',
   'verifyClauses', 'tasksHaveVerify',
   'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
@@ -123,6 +123,16 @@ function unsatisfiedReason(scenario, run) {
     const re = new RegExp(expect.finalTextMatches)
     if (!re.test(run.finalText ?? '')) {
       return `final message did not match /${expect.finalTextMatches}/`
+    }
+  }
+
+  // The mirror of finalTextMatches, for asserting a session did NOT claim
+  // something. Safe without the truncation guard dispatchPromptOmits needs:
+  // finalText is stored whole, only dispatch prompts are capped.
+  if (expect.finalTextOmits !== undefined) {
+    const re = new RegExp(expect.finalTextOmits)
+    if (re.test(run.finalText ?? '')) {
+      return `final message contained /${expect.finalTextOmits}/`
     }
   }
 
