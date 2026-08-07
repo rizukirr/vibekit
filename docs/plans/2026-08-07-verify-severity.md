@@ -137,7 +137,7 @@ git commit -m "feat: only evidence-backed findings gate"
 
 - Modify: `skills/verify/SKILL.md`
 
-- [ ] **Step 1: Replace the verdict, the routing and the handoff**
+- [x] **Step 1: Replace the verdict, the routing and the handoff**
 
 In `skills/verify/SKILL.md`, replace exactly this:
 
@@ -238,15 +238,15 @@ On approval, the next skill is `finish`. Otherwise nothing downstream runs until
 every blocker is closed and `verify` runs again from the top.
 ````
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Check the derived properties**
+- [x] **Step 3: Check the derived properties**
 
 Run: `grep -ci "fix loop" skills/verify/SKILL.md; grep -ci abort skills/verify/SKILL.md; grep -ci review skills/verify/SKILL.md; wc -l < skills/verify/SKILL.md`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/verify/SKILL.md
