@@ -165,7 +165,7 @@ git commit -m "feat: finalTextOmits expectation for asserting a session claimed 
 - Create: `skills/verify/SKILL.md`
 - Modify: `CLAUDE.md`, `README.md`, `AGENTS.md` (by `npm run generate` only — never by hand)
 
-- [ ] **Step 1: Create the skill**
+- [x] **Step 1: Create the skill**
 
 Create `skills/verify/SKILL.md` with exactly this content:
 
@@ -298,15 +298,15 @@ On `ready`, the next skill is `review`. On `not ready`, nothing downstream runs
 until every blocker is closed and `verify` runs again from the top.
 ````
 
-- [ ] **Step 2: Regenerate and check**
+- [x] **Step 2: Regenerate and check**
 
 Run: `npm run generate && npm run check && npm test`
 
-- [ ] **Step 3: Check the derived properties**
+- [x] **Step 3: Check the derived properties**
 
 Run: `wc -l < skills/verify/SKILL.md; ls skills/verify`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add skills/verify/SKILL.md CLAUDE.md README.md AGENTS.md
