@@ -1,7 +1,7 @@
 ---
 title: verify integration and the end of the pipeline
 date: 2026-08-08
-status: draft
+status: approved
 ---
 
 # verify integration and the end of the pipeline — Design
