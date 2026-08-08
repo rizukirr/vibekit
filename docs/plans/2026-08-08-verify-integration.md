@@ -106,7 +106,7 @@ closed and `verify` runs again from the top.
 
 This task makes five independent replacements in one file. Each quotes the text to find and the text to put in its place. Apply all five. Do not reflow any surrounding paragraph.
 
-- [ ] Step 1: In the `## 1. Preconditions` table, replace:
+- [x] Step 1: In the `## 1. Preconditions` table, replace:
 
 ```markdown
 | plan | the spec's matching plan |
@@ -123,7 +123,7 @@ with:
 | diff | `git diff BASE..HEAD` |
 ```
 
-- [ ] Step 2: At the opening of `## 2. Repo-level sweep`, replace:
+- [x] Step 2: At the opening of `## 2. Repo-level sweep`, replace:
 
 ```markdown
 The checks no single task could make:
@@ -142,7 +142,7 @@ The checks no single task could make:
 - The full test suite.
 ```
 
-- [ ] Step 3: In the verdict template under `## Verdict`, replace:
+- [x] Step 3: In the verdict template under `## Verdict`, replace:
 
 ```markdown
 Sweep:   one line per check, with what it returned
@@ -155,7 +155,7 @@ Swept:   the HEAD every check below ran against
 Sweep:   one line per check, with what it returned
 ```
 
-- [ ] Step 4: In `## 6. Integration`, replace the staleness paragraph:
+- [x] Step 4: In `## 6. Integration`, replace the staleness paragraph:
 
 ```markdown
 Before any of them, two checks: the tree is clean, and `HEAD` is what the sweep
@@ -173,7 +173,7 @@ shipping what nothing checked. Compare the written value, never a remembered
 one.
 ```
 
-- [ ] Step 5: At the end of `## Repair nothing yourself`, replace:
+- [x] Step 5: At the end of `## Repair nothing yourself`, replace:
 
 ```markdown
 The loop dispatches; you do not edit. Fixing what you find makes you the author
@@ -190,6 +190,6 @@ Integrating is not repairing. A merge the user asked for adds no line you wrote
 and happens after the verdict rather than in order to reach one.
 ```
 
-- [ ] Step 6: Run `npm run generate`
-- [ ] Step 7: Run `npm test`
-- [ ] Step 8: Commit
+- [x] Step 6: Run `npm run generate`
+- [x] Step 7: Run `npm test`
+- [x] Step 8: Commit
