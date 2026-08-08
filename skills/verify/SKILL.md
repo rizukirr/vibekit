@@ -44,6 +44,7 @@ run.
 |---|---|
 | spec | `exec`'s handoff, else the newest approved spec under `docs/specs/` |
 | plan | the spec's matching plan |
+| base branch | the branch this one was cut from, which is not always the repo's default |
 | `BASE` | `git merge-base` of this branch and the base branch |
 | diff | `git diff BASE..HEAD` |
 
@@ -51,6 +52,9 @@ If the handoff did not carry the paths, derive them and say which you derived. A
 verdict against the wrong spec is worse than no verdict.
 
 ## 2. Repo-level sweep
+
+Record `git rev-parse HEAD` first and report it. Everything below measures that
+commit, and the integration step refuses to ship against any other.
 
 The checks no single task could make:
 
@@ -153,6 +157,7 @@ stay open. Do not answer its question yourself.
 Report in the conversation. Write nothing, commit nothing.
 
 ```
+Swept:   the HEAD every check below ran against
 Sweep:   one line per check, with what it returned
 Goals:   one line per goal — verdict, then the evidence
 Fixed:   what the loop fixed, or none
@@ -193,9 +198,11 @@ in one run — a second one is a second decision, made again.
   the plan, what the sweep ran, and the open warns and nits. Print the URL.
 - **Keep as is** — nothing runs. Say so in one line.
 
-Before any of them, two checks: the tree is clean, and `HEAD` is what the sweep
-ran against. A commit landing while the user decided makes the verdict stale, so
-say so and run again from the top rather than shipping what nothing checked.
+Before any of them, two checks: the tree is clean, and `git rev-parse HEAD`
+equals the `Swept:` line of the verdict. A commit landing while the user decided
+makes the verdict stale, so say so and run again from the top rather than
+shipping what nothing checked. Compare the written value, never a remembered
+one.
 
 Never force-push. Never delete a branch, local or remote. Never merge with a
 dirty tree. Never pass `--no-verify`.
@@ -204,6 +211,9 @@ dirty tree. Never pass `--no-verify`.
 
 The loop dispatches; you do not edit. Fixing what you find makes you the author
 of the change you are gating, and then there is no gate.
+
+Integrating is not repairing. A merge the user asked for adds no line you wrote
+and happens after the verdict rather than in order to reach one.
 
 ## Handoff
 
