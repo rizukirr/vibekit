@@ -56,8 +56,22 @@ project has measured more than any other. The user took the smallest version.
   line 19's `finish` reference is replaced by the outward actions themselves —
   push, merge, open a pull request.
 
+- **The base branch is a named input.** Observable: the `## 1. Preconditions`
+  table carries a `base branch` row, and the merge option in the integration
+  section switches to that input rather than to an unexplained placeholder.
+
+- **Integrating is distinguished from repairing.** Observable: `## Repair
+  nothing yourself` states that a merge the user asked for is not a repair, and
+  says why — it adds no line the skill wrote, and it follows the verdict rather
+  than producing one.
+
+- **The swept commit is written down, not remembered.** Observable: `## 2.
+  Repo-level sweep` records `git rev-parse HEAD` before running any check; the
+  verdict template carries a `Swept:` line; and the integration step compares
+  `git rev-parse HEAD` against that written line rather than against recall.
+
 - **The skill stays under its budget.** Observable: `wc -l
-  skills/verify/SKILL.md` is at most 215. Read as a content budget: reflowing to
+  skills/verify/SKILL.md` is at most 225. Read as a content budget: reflowing to
   pass it is a violation, not a fix.
 
   **This ceiling was derived, not chosen.** The four edits were drafted onto a
@@ -72,6 +86,14 @@ project has measured more than any other. The user took the smallest version.
   larger than `exec`*. It was unsatisfiable: `exec` is 134 lines and `verify` was
   already 191. Stating a budget as a property does not exempt it from being
   checked against the repo.
+
+  **Amended after the first verdict, 2026-08-08.** The ceiling was 215 and the
+  shipped file measured 211. The three goals added above came from `verify`'s own
+  risk critique, which the user chose to act on, and they do not fit. The new
+  ceiling of 225 was derived the same way as the old one: the three edits were
+  drafted onto a scratch copy first, that copy measured 221, and 225 is that
+  number plus margin. Raising a budget to hold approved content is legitimate;
+  cutting the content to hold the number would not be.
 
 ## Non-goals
 
@@ -165,6 +187,35 @@ them shipped.
 
 > None. Integration ends the pipeline. Nothing else runs until every blocker is
 > closed and `verify` runs again from the top.
+
+### Edits 4, 5 and 6 — added after the first verdict
+
+The first `verify` run returned `ready` and named three ways the change could be
+wrong that the tests would not catch. The user chose to fix all three. They are
+carried here, and through the plan, rather than patched into the skill directly —
+the first time this project has routed a post-verdict fix instead of overriding.
+
+**Edit 4 — the base branch becomes an input.** The integration step tells the
+skill to switch to the base branch and never says how to find it. In this repo
+the base is `v2`, not the repo's default, and the first sweep of this very run
+derived it wrongly and swept 170 files. A `base branch` row joins the
+`## 1. Preconditions` table, above the `BASE` row that already depends on it.
+
+**Edit 5 — integrating is not repairing.** `## 6. Integration` can create a merge
+commit; `## Repair nothing yourself`, two sections below, says the skill never
+edits what it gates. Both are correct and the reconciliation was unstated, so a
+literal reader meets an apparent contradiction. Two sentences state it: the merge
+adds no line the skill wrote, and it follows the verdict rather than producing
+one.
+
+**Edit 6 — the swept commit is written down.** The staleness check compares
+`HEAD` against "what the sweep ran against", which nothing recorded. It therefore
+asked the agent to remember a commit across the user's decision — and this run
+demonstrated the failure directly, sending a fabricated SHA into a dispatch brief
+after observing only its short form. The sweep now records `git rev-parse HEAD`
+before any check, the verdict template carries a `Swept:` line, and the
+integration step compares against that written value. A check against memory is
+not a check.
 
 ### Pushback and response
 
