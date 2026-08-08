@@ -15,9 +15,8 @@ and it is also why nothing there can notice Task 2 undoing Task 1.
 
 ## HARD-GATE
 
-Do NOT claim work is done, fixed, complete or passing, and do not invoke
-`finish` or any outward-facing skill, until this returns `ready` and the user
-has signed off.
+Do NOT claim work is done, fixed, complete or passing, and do not push, merge or
+open a pull request, until this returns `ready` and the user has signed off.
 
 ## Three rules
 
@@ -208,5 +207,5 @@ of the change you are gating, and then there is no gate.
 
 ## Handoff
 
-On approval, the next skill is `finish`. Otherwise nothing downstream runs until
-every blocker is closed and `verify` runs again from the top.
+None. Integration ends the pipeline. Nothing else runs until every blocker is
+closed and `verify` runs again from the top.
