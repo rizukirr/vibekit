@@ -180,6 +180,27 @@ failing test or build belongs to `debug`. A goal this plan cannot satisfy belong
 to `plan`. A ladder violation belongs to `exec` as a new task. The user picks,
 and may override with the gap named and on the record.
 
+## 6. Integration
+
+Reachable only after approval, and only the one option the user picks. Never two
+in one run — a second one is a second decision, made again.
+
+- **Merge locally** — `git switch <base>`, then `git merge --no-ff <branch>`. No
+  push, and the branch stays. On conflict, stop and leave it conflicted: you did
+  not write this code, and resolving it here is the repair this skill refuses
+  everywhere else.
+- **Push and open a PR** — `git push -u origin <branch>`, then `gh pr create`.
+  Title from the spec's title, never the branch name. The body names the spec,
+  the plan, what the sweep ran, and the open warns and nits. Print the URL.
+- **Keep as is** — nothing runs. Say so in one line.
+
+Before any of them, two checks: the tree is clean, and `HEAD` is what the sweep
+ran against. A commit landing while the user decided makes the verdict stale, so
+say so and run again from the top rather than shipping what nothing checked.
+
+Never force-push. Never delete a branch, local or remote. Never merge with a
+dirty tree. Never pass `--no-verify`.
+
 ## Repair nothing yourself
 
 The loop dispatches; you do not edit. Fixing what you find makes you the author
