@@ -63,7 +63,7 @@ dirty tree. Never pass `--no-verify`.
 - Modify: `skills/verify/SKILL.md` — the `## Handoff` section, last two lines of the file
 - Modify: `CLAUDE.md`, `README.md`, `AGENTS.md` — only if `npm run generate` changes them
 
-- [ ] Step 1: In `skills/verify/SKILL.md`, replace these two lines under `## HARD-GATE`:
+- [x] Step 1: In `skills/verify/SKILL.md`, replace these two lines under `## HARD-GATE`:
 
 ```markdown
 Do NOT claim work is done, fixed, complete or passing, and do not invoke
@@ -78,7 +78,7 @@ Do NOT claim work is done, fixed, complete or passing, and do not push, merge or
 open a pull request, until this returns `ready` and the user has signed off.
 ```
 
-- [ ] Step 2: In `skills/verify/SKILL.md`, replace the body of the `## Handoff` section:
+- [x] Step 2: In `skills/verify/SKILL.md`, replace the body of the `## Handoff` section:
 
 ```markdown
 On approval, the next skill is `finish`. Otherwise nothing downstream runs until
@@ -92,7 +92,7 @@ None. Integration ends the pipeline. Nothing else runs until every blocker is
 closed and `verify` runs again from the top.
 ```
 
-- [ ] Step 3: Run `grep -rn '\bfinish\b' skills/`. Expect no output. The word boundary is deliberate — `unfinished` appears in `skills/lazy/SKILL.md` and in `skills/verify/SKILL.md` and must not be edited.
-- [ ] Step 4: Run `npm run generate`
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Commit
+- [x] Step 3: Run `grep -rn '\bfinish\b' skills/`. Expect no output. The word boundary is deliberate — `unfinished` appears in `skills/lazy/SKILL.md` and in `skills/verify/SKILL.md` and must not be edited.
+- [x] Step 4: Run `npm run generate`
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Commit
