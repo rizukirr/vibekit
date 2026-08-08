@@ -24,7 +24,7 @@ The file currently has `## The ending` closing at line 181, a blank line at 182,
 and may override with the gap named and on the record.
 ```
 
-- [ ] Step 1: Insert the following block into `skills/verify/SKILL.md` immediately after line 181, so that it sits between the end of `## The ending` and the start of `## Repair nothing yourself`. Insert it verbatim, including the blank line that separates it from the section above and the one that separates it from the section below.
+- [x] Step 1: Insert the following block into `skills/verify/SKILL.md` immediately after line 181, so that it sits between the end of `## The ending` and the start of `## Repair nothing yourself`. Insert it verbatim, including the blank line that separates it from the section above and the one that separates it from the section below.
 
 ```markdown
 
@@ -50,9 +50,9 @@ Never force-push. Never delete a branch, local or remote. Never merge with a
 dirty tree. Never pass `--no-verify`.
 ```
 
-- [ ] Step 2: Run `grep -n '^## ' skills/verify/SKILL.md` and confirm the section order is `## HARD-GATE`, `## Three rules`, `## 1. Preconditions`, `## 2. Repo-level sweep`, `## 3. Goals walk`, `## 4. The lazy read`, `## Severity`, `## 5. The bounded fix loop`, `## Verdict`, `## The ending`, `## 6. Integration`, `## Repair nothing yourself`, `## Handoff`. If `## 6. Integration` landed anywhere other than between `## The ending` and `## Repair nothing yourself`, move it.
-- [ ] Step 3: Run `npm run check`
-- [ ] Step 4: Commit
+- [x] Step 2: Run `grep -n '^## ' skills/verify/SKILL.md` and confirm the section order is `## HARD-GATE`, `## Three rules`, `## 1. Preconditions`, `## 2. Repo-level sweep`, `## 3. Goals walk`, `## 4. The lazy read`, `## Severity`, `## 5. The bounded fix loop`, `## Verdict`, `## The ending`, `## 6. Integration`, `## Repair nothing yourself`, `## Handoff`. If `## 6. Integration` landed anywhere other than between `## The ending` and `## Repair nothing yourself`, move it.
+- [x] Step 3: Run `npm run check`
+- [x] Step 4: Commit
 
 ---
 
