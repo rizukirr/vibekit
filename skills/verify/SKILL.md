@@ -15,9 +15,8 @@ and it is also why nothing there can notice Task 2 undoing Task 1.
 
 ## HARD-GATE
 
-Do NOT claim work is done, fixed, complete or passing, and do not invoke
-`finish` or any outward-facing skill, until this returns `ready` and the user
-has signed off.
+Do NOT claim work is done, fixed, complete or passing, and do not push, merge or
+open a pull request, until this returns `ready` and the user has signed off.
 
 ## Three rules
 
@@ -45,6 +44,7 @@ run.
 |---|---|
 | spec | `exec`'s handoff, else the newest approved spec under `docs/specs/` |
 | plan | the spec's matching plan |
+| base branch | the branch this one was cut from, which is not always the repo's default |
 | `BASE` | `git merge-base` of this branch and the base branch |
 | diff | `git diff BASE..HEAD` |
 
@@ -52,6 +52,9 @@ If the handoff did not carry the paths, derive them and say which you derived. A
 verdict against the wrong spec is worse than no verdict.
 
 ## 2. Repo-level sweep
+
+Record `git rev-parse HEAD` first and report it. Everything below measures that
+commit, and the integration step refuses to ship against any other.
 
 The checks no single task could make:
 
@@ -154,6 +157,7 @@ stay open. Do not answer its question yourself.
 Report in the conversation. Write nothing, commit nothing.
 
 ```
+Swept:   the HEAD every check below ran against
 Sweep:   one line per check, with what it returned
 Goals:   one line per goal — verdict, then the evidence
 Fixed:   what the loop fixed, or none
@@ -180,12 +184,38 @@ failing test or build belongs to `debug`. A goal this plan cannot satisfy belong
 to `plan`. A ladder violation belongs to `exec` as a new task. The user picks,
 and may override with the gap named and on the record.
 
+## 6. Integration
+
+Reachable only after approval, and only the one option the user picks. Never two
+in one run — a second one is a second decision, made again.
+
+- **Merge locally** — `git switch <base-branch>`, then `git merge --no-ff <branch>`. No
+  push, and the branch stays. On conflict, stop and leave it conflicted: you did
+  not write this code, and resolving it here is the repair this skill refuses
+  everywhere else.
+- **Push and open a PR** — `git push -u origin <branch>`, then `gh pr create`.
+  Title from the spec's title, never the branch name. The body names the spec,
+  the plan, what the sweep ran, and the open warns and nits. Print the URL.
+- **Keep as is** — nothing runs. Say so in one line.
+
+Before any of them, two checks: the tree is clean, and `git rev-parse HEAD`
+equals the `Swept:` line of the verdict. A commit landing while the user decided
+makes the verdict stale, so say so and run again from the top rather than
+shipping what nothing checked. Compare the written value, never a remembered
+one.
+
+Never force-push. Never delete a branch, local or remote. Never merge with a
+dirty tree. Never pass `--no-verify`.
+
 ## Repair nothing yourself
 
 The loop dispatches; you do not edit. Fixing what you find makes you the author
 of the change you are gating, and then there is no gate.
 
+Integrating is not repairing. A merge the user asked for adds no line you wrote
+and happens after the verdict rather than in order to reach one.
+
 ## Handoff
 
-On approval, the next skill is `finish`. Otherwise nothing downstream runs until
-every blocker is closed and `verify` runs again from the top.
+None. Integration ends the pipeline. Nothing else runs until every blocker is
+closed and `verify` runs again from the top.
