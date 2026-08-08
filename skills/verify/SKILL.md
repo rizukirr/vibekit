@@ -184,7 +184,7 @@ and may override with the gap named and on the record.
 Reachable only after approval, and only the one option the user picks. Never two
 in one run — a second one is a second decision, made again.
 
-- **Merge locally** — `git switch <base>`, then `git merge --no-ff <branch>`. No
+- **Merge locally** — `git switch <base-branch>`, then `git merge --no-ff <branch>`. No
   push, and the branch stays. On conflict, stop and leave it conflicted: you did
   not write this code, and resolving it here is the repair this skill refuses
   everywhere else.
