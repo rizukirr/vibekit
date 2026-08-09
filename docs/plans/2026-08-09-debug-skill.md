@@ -181,7 +181,7 @@ Note on the fence: the block above is delimited by four backticks because the sk
 **Files:**
 - Modify: `skills/exec/SKILL.md:102`
 
-- [ ] Step 1: In `skills/exec/SKILL.md`, under `## Repair nothing`, replace this line:
+- [x] Step 1: In `skills/exec/SKILL.md`, under `## Repair nothing`, replace this line:
 
 ```markdown
 - **Clause fails** — halt. The task's own criterion said no.
@@ -194,9 +194,9 @@ with:
   a failure with no diagnosis, which is what `debug` is for.
 ```
 
-- [ ] Step 2: Run `npm run check`
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit
+- [x] Step 2: Run `npm run check`
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Commit
 
 ---
 
