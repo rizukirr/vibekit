@@ -327,7 +327,7 @@ with:
 
 ---
 
-### Task 5: Run the three debug scenarios and commit the results → verify: `python3 -c "import json,glob,sys; got={k:v['rate'] for f in glob.glob('evals/results/2026-08-09T*-HEAD.json') for k,v in json.load(open(f))['candidate'].items()}; sys.exit(0 if all(got.get(i,0) >= 0.8 for i in ['debug-fires','debug-edits-nothing','debug-dispatches-the-refutation']) else 1)"` exits 0, and `git status --porcelain evals/results/` is empty
+### Task 5: Run the three debug scenarios and commit the results → verify: `python3 -c "import json,glob,sys; runs=[(k,v['rate']) for f in glob.glob('evals/results/2026-08-09T*-HEAD.json') for k,v in json.load(open(f))['candidate'].items()]; sys.exit(0 if all(any(k==i and r>=0.8 for k,r in runs) for i in ['debug-fires','debug-edits-nothing','debug-dispatches-the-refutation']) else 1)"` exits 0, and `git status --porcelain evals/results/` is empty
 
 **Files:**
 - Create: `evals/results/2026-08-09T12-29-57-385Z-HEAD.json`
@@ -346,3 +346,11 @@ The scenarios are run by the orchestrating session, not by a dispatched subagent
 - [x] Step 4: Re-run `npm run eval -- --scenarios debug-dispatches-the-refutation -n 10` after Task 4, since the scenario's assertion changed
 - [x] Step 5: Pin the digest again and confirm it matches the value from the step before the run it covers
 - [x] Step 6: Commit the result files under `evals/results/`
+
+**Clause amended immediately after it was written.** The first version built a
+dict keyed by scenario id across all matching result files, so for a scenario
+measured twice — `debug-dispatches-the-refutation`, at 0.40 before the harness
+fix and 1.00 after — the surviving value depended on `glob.glob` ordering, which
+is filesystem order and not sorted. It passed on the first run by luck. The
+clause now asks whether *any* recorded run reached the floor, which is
+order-independent and is the claim actually being made.
