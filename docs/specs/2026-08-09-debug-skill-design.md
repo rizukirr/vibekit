@@ -37,9 +37,10 @@ it.
   scores zero. This is the hard gate, measured directly.
 
 - **The refutation is dispatched, not asserted.** Observable: scenario
-  `debug-dispatches-the-refutation` at n=10 asserts `dispatchPromptMatches` on
-  the refute instruction, so a session that describes the confirmation without
-  performing it fails.
+  `debug-dispatches-the-refutation` at n=10 asserts `anyDispatchMatches` on the
+  refute instruction, so a session that describes the confirmation without
+  performing it fails. It originally asserted `dispatchPromptMatches`; see the
+  `anyDispatchMatches` goal below for why that was the wrong quantifier.
 
 - **The skill states the refutation contract.** Observable:
   `skills/debug/SKILL.md` states that the subagent is fresh, is read-only, is
