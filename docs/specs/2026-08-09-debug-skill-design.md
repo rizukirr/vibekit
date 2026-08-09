@@ -1,7 +1,7 @@
 ---
 title: debug — the pipeline's failure branch
 date: 2026-08-09
-status: draft
+status: approved
 ---
 
 # debug — the pipeline's failure branch — Design
