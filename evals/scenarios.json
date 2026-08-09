@@ -177,6 +177,7 @@
       "finalTextOmits": "not ready",
       "onlyNewFilesMatching": "^docs/"
     },
+    "repo": true,
     "n": 10,
     "model": "sonnet"
   },
@@ -191,6 +192,7 @@
     "expect": {
       "dispatchPromptMatches": "greet"
     },
+    "repo": true,
     "n": 10,
     "model": "sonnet"
   },

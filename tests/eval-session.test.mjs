@@ -140,3 +140,41 @@ test('a small session is not marked truncated', () => {
   const result = runSession(scenario, '/plugins/candidate', fakeSpawn([]))
   assert.equal(result.filesTruncated, false)
 })
+
+const repoScenario = { ...scenario, repo: true }
+const claudeCall = calls => calls.find(c => c.cmd === 'claude')
+
+test('a repo scenario gets an allowlist instead of a Bash ban', () => {
+  const calls = []
+  runSession(repoScenario, '/plugins/candidate', fakeSpawn(calls))
+  const args = claudeCall(calls).args
+  assert.ok(args.includes('--allowedTools'), 'must pass --allowedTools')
+  assert.equal(args.includes('--disallowedTools'), false)
+  assert.match(args[args.indexOf('--allowedTools') + 1], /Bash\(git:\*\)/)
+})
+
+test('a scenario without the key keeps the Bash ban and gets no allowlist', () => {
+  const calls = []
+  runSession(scenario, '/plugins/candidate', fakeSpawn(calls))
+  const args = claudeCall(calls).args
+  assert.equal(args.includes('--allowedTools'), false)
+  assert.equal(args[args.indexOf('--disallowedTools') + 1], 'Bash')
+})
+
+test('a repo scenario is seeded as a two-commit git repository', () => {
+  const calls = []
+  runSession(repoScenario, '/plugins/candidate', fakeSpawn(calls))
+  const git = calls.filter(c => c.cmd === 'git').map(c => c.args.join(' '))
+  assert.ok(git.some(a => a.includes('init')), 'must init')
+  assert.ok(git.some(a => a.includes('--allow-empty')), 'must make a base commit')
+  assert.ok(git.some(a => a.includes('switch')), 'must branch off the base')
+  assert.ok(git.every(a => a.includes('eval@vibekit.invalid')), 'must not use global git config')
+})
+
+test('a failing git invocation stops the run rather than spawning a session', () => {
+  const spawn = (cmd, args, opts) =>
+    cmd === 'git'
+      ? { status: 1, stdout: '', stderr: 'fatal: nope' }
+      : { status: 0, stdout: transcript, stderr: '' }
+  assert.throws(() => runSession(repoScenario, '/plugins/candidate', spawn), /fatal: nope/)
+})

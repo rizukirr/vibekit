@@ -50,6 +50,36 @@ function collectFiles(root) {
   return { files: out, truncated }
 }
 
+// A scenario whose skill sweeps a repository cannot be measured in a directory
+// that is not one. Two commits, not one: `verify` derives BASE from a
+// merge-base, and a single-commit repository has no parent to diff against. The
+// empty root commit makes the whole seeded state the change under verification.
+const GIT_ID = ['-c', 'user.name=vibekit-eval', '-c', 'user.email=eval@vibekit.invalid']
+const SEED_COMMANDS = [
+  ['init', '-b', 'main'],
+  ['commit', '--allow-empty', '-m', 'base'],
+  ['switch', '-c', 'work'],
+  ['add', '-A'],
+  ['commit', '-m', 'work'],
+]
+
+// An allowlist is not a sandbox; it bounds which commands run, not what they
+// can reach. It is narrower than the current posture in every respect but one,
+// recorded in the spec's Open questions.
+const REPO_TOOLS = [
+  'Bash(git:*)', 'Bash(node:*)', 'Bash(ls:*)', 'Bash(cat:*)',
+  'Read', 'Write', 'Edit', 'Glob', 'Grep', 'Task', 'Skill',
+].join(' ')
+
+function seedRepo(cwd, spawn) {
+  for (const cmd of SEED_COMMANDS) {
+    const proc = spawn('git', [...GIT_ID, ...cmd], { cwd, encoding: 'utf8' })
+    if (proc.status !== 0) {
+      throw new Error(`git ${cmd.join(' ')} failed in the eval fixture: ${proc.stderr ?? ''}`)
+    }
+  }
+}
+
 // Sessions run with edits permitted, because "did the agent write code before
 // invoking the skill" is the thing being measured — plan mode would block the
 // very action under observation. Safety comes from the cwd being a throwaway
@@ -58,16 +88,20 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
   const cwd = mkdtempSync(join(tmpdir(), 'vibekit-eval-'))
   try {
     seedFiles(cwd, scenario.files)
+    if (scenario.repo) seedRepo(cwd, spawn)
     const args = [
       '-p', scenario.prompt,
       '--output-format', 'stream-json',
       '--verbose', // required by the CLI whenever output-format is stream-json
       '--plugin-dir', pluginDir,
       '--permission-mode', 'bypassPermissions',
-      // bypassPermissions would otherwise hand the session Bash, and a temp cwd
-      // does not contain arbitrary command execution. Write/Edit stay available
-      // because attempting them is the behaviour under measurement.
-      '--disallowedTools', 'Bash',
+      // A temp cwd does not contain arbitrary command execution, so the default
+      // is no Bash at all. A repo scenario trades that for a named allowlist
+      // rather than for nothing. Write/Edit stay available either way, because
+      // attempting them is the behaviour under measurement.
+      ...(scenario.repo
+        ? ['--allowedTools', REPO_TOOLS]
+        : ['--disallowedTools', 'Bash']),
     ]
     if (scenario.model) args.push('--model', scenario.model)
 
