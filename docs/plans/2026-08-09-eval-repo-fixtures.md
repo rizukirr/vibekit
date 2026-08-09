@@ -17,7 +17,7 @@
 - Modify: `evals/session.mjs:57-71`
 - Modify: `tests/eval-session.test.mjs:142`
 
-- [ ] Step 1: Append three tests to `tests/eval-session.test.mjs`, each of which
+- [x] Step 1: Append three tests to `tests/eval-session.test.mjs`, each of which
       must be observed failing before Step 2 is written:
 
 ```js
@@ -60,9 +60,9 @@ test('a failing git invocation stops the run rather than spawning a session', ()
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record which of the three fail, and with what
+- [x] Step 2: Run `npm test` and record which of the three fail, and with what
       message. A test that passes before the change is written is not a check.
-- [ ] Step 3: In `evals/session.mjs`, add above `runSession`:
+- [x] Step 3: In `evals/session.mjs`, add above `runSession`:
 
 ```js
 // A scenario whose skill sweeps a repository cannot be measured in a directory
@@ -96,13 +96,13 @@ function seedRepo(cwd, spawn) {
 }
 ```
 
-- [ ] Step 4: In `runSession`, call it after `seedFiles(cwd, scenario.files)`:
+- [x] Step 4: In `runSession`, call it after `seedFiles(cwd, scenario.files)`:
 
 ```js
     if (scenario.repo) seedRepo(cwd, spawn)
 ```
 
-- [ ] Step 5: Replace the `--disallowedTools` entry in the `args` array, and the
+- [x] Step 5: Replace the `--disallowedTools` entry in the `args` array, and the
       comment sitting above it, so the permission flags depend on the key. Leave
       every other element in place. The replaced comment's reasoning is not
       dropped — it moves to `REPO_TOOLS` and to the branch below:
@@ -117,8 +117,8 @@ function seedRepo(cwd, spawn) {
         : ['--disallowedTools', 'Bash']),
 ```
 
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Commit
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Commit
 
 ### Task 2: opt the two unsatisfiable scenarios in → verify: `grep -c '"repo": true' evals/scenarios.json` is at least 2
 
