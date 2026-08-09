@@ -193,5 +193,45 @@
     },
     "n": 10,
     "model": "sonnet"
+  },
+  {
+    "id": "debug-fires",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": {
+      "skill": "vibekit:debug"
+    },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "debug-edits-nothing",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": {
+      "skill": "vibekit:debug",
+      "onlyNewFilesMatching": "^docs/"
+    },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "debug-dispatches-the-refutation",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": {
+      "dispatchPromptMatches": "refut"
+    },
+    "n": 10,
+    "model": "sonnet"
   }
 ]
