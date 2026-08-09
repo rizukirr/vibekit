@@ -64,9 +64,21 @@ it.
   entry under `## Repair nothing` names the route.
 
 - **The pipeline has no dangling names.** Observable:
-  `grep -rnoE '\b(finish|review|isolate|reconcile|debug-recovery)\b' skills/`
+  ``grep -rnoE '`(finish|review|isolate|reconcile|debug-recovery)`' skills/``
   returns nothing, and every skill named as a route — `brainstorm`, `plan`,
   `exec`, `verify`, `debug`, `lazy`, `terse` — has a `skills/<name>/SKILL.md`.
+
+  **Amended after the first verdict, 2026-08-09.** This criterion originally used
+  a word boundary, `\b(finish|review|...)\b`, and it failed on its first run with
+  13 matches — every one of them the ordinary English word "review", in
+  `## Self-review`, `## User review gate`, and "a reviewer looks for". None named
+  a skill. The change was correct and the probe was wrong.
+
+  The fix uses the codebase's own convention: a skill reference is written in
+  backticks, so the probe matches a backticked name. It was run both ways before
+  being written here — nothing against `skills/`, and a match against a file
+  containing the literal text `` `finish` ``. A check that has not been shown
+  failing is not a check, and this project has shipped three that could not fail.
 
 - **The skill stays under its budget.** Observable: `wc -l
   skills/debug/SKILL.md` is at most 150. Read as a content budget: reflowing to
