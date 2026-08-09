@@ -267,7 +267,7 @@ with:
 
 `dispatchPromptMatches` is universally quantified: every dispatch must match. That is correct and must not change. This task adds a second, existential expectation alongside it.
 
-- [ ] Step 1: Write the two tests FIRST, before touching `evals/score.mjs`, and run `npm test` to watch them fail. A check that has not been shown failing is not a check. Add both to `tests/eval-score.test.mjs`, immediately after the existing test named `dispatchPromptMatches and dispatchPromptOmits judge every dispatch`:
+- [x] Step 1: Write the two tests FIRST, before touching `evals/score.mjs`, and run `npm test` to watch them fail. A check that has not been shown failing is not a check. Add both to `tests/eval-score.test.mjs`, immediately after the existing test named `dispatchPromptMatches and dispatchPromptOmits judge every dispatch`:
 
 ```javascript
 // The existential sibling of dispatchPromptMatches. A skill that dispatches a
@@ -287,10 +287,10 @@ test('anyDispatchMatches fails when nothing was dispatched', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and confirm the two new tests fail. Record the failure message. If they pass before `evals/score.mjs` is changed, stop and return `blocked` — an expectation the scorer does not know should be rejected as an unknown key, and a passing test here means something is wrong with the guard.
-- [ ] Step 3: In `evals/score.mjs`, add `'anyDispatchMatches'` to the `KNOWN_EXPECTATIONS` set, alongside the existing `'dispatchPromptMatches'` entry.
-- [ ] Step 4: In `evals/score.mjs`, add `expect.anyDispatchMatches !== undefined ||` to the `needsDispatch` condition, so an empty dispatch list fails rather than passing vacuously.
-- [ ] Step 5: In `evals/score.mjs`, immediately after the `if (expect.dispatchPromptMatches !== undefined) { ... }` block, add:
+- [x] Step 2: Run `npm test` and confirm the two new tests fail. Record the failure message. If they pass before `evals/score.mjs` is changed, stop and return `blocked` — an expectation the scorer does not know should be rejected as an unknown key, and a passing test here means something is wrong with the guard.
+- [x] Step 3: In `evals/score.mjs`, add `'anyDispatchMatches'` to the `KNOWN_EXPECTATIONS` set, alongside the existing `'dispatchPromptMatches'` entry.
+- [x] Step 4: In `evals/score.mjs`, add `expect.anyDispatchMatches !== undefined ||` to the `needsDispatch` condition, so an empty dispatch list fails rather than passing vacuously.
+- [x] Step 5: In `evals/score.mjs`, immediately after the `if (expect.dispatchPromptMatches !== undefined) { ... }` block, add:
 
 ```javascript
   // The existential form. dispatchPromptMatches asks that every dispatch be the
@@ -304,8 +304,8 @@ test('anyDispatchMatches fails when nothing was dispatched', () => {
   }
 ```
 
-- [ ] Step 6: Run `npm test` and confirm the two new tests now pass and nothing else broke.
-- [ ] Step 7: In `evals/scenarios.json`, in the `debug-dispatches-the-refutation` scenario only, replace the `expect` block:
+- [x] Step 6: Run `npm test` and confirm the two new tests now pass and nothing else broke.
+- [x] Step 7: In `evals/scenarios.json`, in the `debug-dispatches-the-refutation` scenario only, replace the `expect` block:
 
 ```json
     "expect": {
@@ -321,6 +321,6 @@ with:
     },
 ```
 
-- [ ] Step 8: Run `python3 -c "import json; json.load(open('evals/scenarios.json'))"` to confirm the file is still valid JSON
-- [ ] Step 9: Run `npm test`
-- [ ] Step 10: Commit
+- [x] Step 8: Run `python3 -c "import json; json.load(open('evals/scenarios.json'))"` to confirm the file is still valid JSON
+- [x] Step 9: Run `npm test`
+- [x] Step 10: Commit
