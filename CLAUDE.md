@@ -8,6 +8,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | Trigger condition | Skill | Gate |
 |---|---|---|
 | About to start creative or implementation work, before code is written | `brainstorm` | hard |
+| A check failed — verify returned not ready on a failed check, an exec clause failed, or a failure was reported | `debug` | hard |
 | Never — this is a build fixture | `example-command` | none |
 | Never — this is a build fixture | `example-plain` | hard |
 | Plan approved, implementation not yet started | `exec` | hard |
