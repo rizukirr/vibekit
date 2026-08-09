@@ -99,7 +99,8 @@ On anything that is not `done`, halt and route. Never fix it here.
   Never patch the plan inline mid-loop: the plan and the work drift apart, and
   the drift is only found later, by a reviewer.
 - **`blocked`** — surface, stop the run.
-- **Clause fails** — halt. The task's own criterion said no.
+- **Clause fails** — halt. The task's own criterion said no. A failed clause is
+  a failure with no diagnosis, which is what `debug` is for.
 - **Scope violation** — halt, name the offending paths.
 
 A halt leaves the branch as it was at the last completed task.
