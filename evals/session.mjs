@@ -50,10 +50,6 @@ function collectFiles(root) {
   return { files: out, truncated }
 }
 
-// A skill whose precondition is a file on disk cannot be measured in an empty
-// directory. Seeding is what makes `plan` reachable at all: its gate is an
-// approved spec, and the session starts with nothing.
-//
 // A scenario whose skill sweeps a repository cannot be measured in a directory
 // that is not one. Two commits, not one: `verify` derives BASE from a
 // merge-base, and a single-commit repository has no parent to diff against. The
