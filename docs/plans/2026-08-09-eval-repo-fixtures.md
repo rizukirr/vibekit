@@ -144,9 +144,9 @@ function seedRepo(cwd, spawn) {
 
 - [x] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
 - [x] Step 2: Run `npm run eval -- --scenarios verify-nit-does-not-gate -n 1`
-- [x] Step 3: Read the stored final text of the session. Count matches for
-      `git repository` in it. A count above 0 means the seeding did not take,
-      and Task 4 does not start.
+- [x] Step 3: Read the recorded rate for the scenario. Below 0.8 means the
+      seeding did not take, and Task 4 does not start. The harness stores final
+      texts only for failing sessions, so on a passing run there is none to read.
 - [x] Step 4: Run `git ls-files -s skills evals | sha256sum` and confirm it
       equals the digest from Step 1.
 - [x] Step 5: Commit the results file.
@@ -164,3 +164,17 @@ function seedRepo(cwd, spawn) {
       strings and the stored final texts, and state whether the cause is the
       fixture or the skill. Do not change the expectation either way.
 - [x] Step 5: Commit the results file.
+
+### Task 5: claim the prior run this spec cites as evidence → verify: `git log --oneline -- evals/results/2026-08-09T15-09-00-976Z-HEAD.json` returns at least 1 line
+
+**Files:**
+- Create: `evals/results/2026-08-09T15-09-00-976Z-HEAD.json`
+
+Added 2026-08-09 during verification. The sweep's scope check found this file in
+the branch's diff claimed by no task. It is the five-scenario `verify` run whose
+0.30 and 0.00 rates the spec's Problem section quotes, measured before this cycle
+began and committed onto this branch so the evidence travels with the argument it
+supports. The alternative — widening `verify`'s exemption to cover run-produced
+artefacts — would be editing the gate while it holds the blocker.
+
+- [x] Step 1: Commit the results file.

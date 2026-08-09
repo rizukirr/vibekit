@@ -42,9 +42,12 @@ This is instrument defect eleven and twelve against zero implementation defects.
 - A scenario without the key spawns exactly as it does today. Observable: `npm
   test` passes a test asserting the argv for a keyless scenario still contains
   `--disallowedTools Bash` and no `--allowedTools`.
-- An opted-in session can observe the repo. Observable: one real run of
-  `verify-nit-does-not-gate` at n=1 produces a final text that does not report a
-  missing git repository.
+- An opted-in session can observe the repo. Observable: the recorded rate for
+  `verify-nit-does-not-gate` on a run at n=1 is at or above 0.8. Amended
+  2026-08-09 during verification: this criterion originally named the session's
+  final text, which the harness stores only for failing sessions, so a passing
+  run can never produce the artefact it asked for. The rate is the observable
+  the run actually yields.
 - The two failing scenarios are re-measured at n=10 and the result recorded.
   Observable: a results file under `evals/results/` naming both scenario ids.
   The rate is evidence, not a requirement — a remaining failure is diagnosed as
