@@ -19,7 +19,7 @@
 - Create: `skills/debug/SKILL.md`
 - Modify: `CLAUDE.md`, `README.md`, `AGENTS.md` — by running `npm run generate`, never by hand
 
-- [ ] Step 1: Create `skills/debug/SKILL.md` with exactly this content:
+- [x] Step 1: Create `skills/debug/SKILL.md` with exactly this content:
 
 ````markdown
 ---
@@ -169,10 +169,10 @@ the top on whatever they produce — on a change it has not seen.
 
 Note on the fence: the block above is delimited by four backticks because the skill body itself contains a three-backtick fenced block. Write the file with the inner three-backtick block intact and without the outer four-backtick delimiters.
 
-- [ ] Step 2: Run `npm run generate`
-- [ ] Step 3: Run `npm run check`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit
+- [x] Step 2: Run `npm run generate`
+- [x] Step 3: Run `npm run check`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit
 
 ---
 
