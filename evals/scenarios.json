@@ -229,7 +229,7 @@
       "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
     },
     "expect": {
-      "dispatchPromptMatches": "refut"
+      "anyDispatchMatches": "refut"
     },
     "n": 10,
     "model": "sonnet"
