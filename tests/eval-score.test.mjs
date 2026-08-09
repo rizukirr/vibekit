@@ -341,6 +341,22 @@ test('dispatchPromptMatches and dispatchPromptOmits judge every dispatch', () =>
   assert.equal(scoreScenario(s, dispatched([call({ prompt: 'here is the code:\n```js\nx\n```' })])).rate, 0)
 })
 
+// The existential sibling of dispatchPromptMatches. A skill that dispatches a
+// refuter alongside ordinary exploration cannot satisfy a universal match, and
+// scoring it against an unrelated dispatch measured a real behaviour as absent.
+test('anyDispatchMatches passes when one dispatch of several matches', () => {
+  const s = { id: 'p', expect: { anyDispatchMatches: 'refut' } }
+  const other = call({ prompt: 'read src/parse.mjs and report what it does' })
+  const refuter = call({ prompt: 'try to refute this root cause' })
+  assert.equal(scoreScenario(s, dispatched([other, refuter])).rate, 1)
+  assert.equal(scoreScenario(s, dispatched([other, other])).rate, 0)
+})
+
+test('anyDispatchMatches fails when nothing was dispatched', () => {
+  const s = { id: 'p', expect: { anyDispatchMatches: 'refut' } }
+  assert.equal(scoreScenario(s, dispatched([])).rate, 0)
+})
+
 // A capped prompt could pass an "omits" assertion on text that was cut off.
 // promptLength is passed explicitly here to simulate truncation, which is the
 // one place a hand-written length is correct.

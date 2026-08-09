@@ -78,6 +78,7 @@ const KNOWN_EXPECTATIONS = new Set([
   'fileMatching', 'onlyNewFilesMatching',
   'verifyClauses', 'tasksHaveVerify',
   'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
+  'anyDispatchMatches',
 ])
 
 // Returns null when the run satisfies the scenario, else a short string naming
@@ -143,7 +144,8 @@ function unsatisfiedReason(scenario, run) {
   const needsDispatch =
     expect.dispatchModelNamed !== undefined ||
     expect.dispatchPromptMatches !== undefined ||
-    expect.dispatchPromptOmits !== undefined
+    expect.dispatchPromptOmits !== undefined ||
+    expect.anyDispatchMatches !== undefined
   if (needsDispatch && dispatches.length === 0) return 'no dispatch was made'
 
   if (expect.dispatchModelNamed) {
@@ -155,6 +157,16 @@ function unsatisfiedReason(scenario, run) {
     const re = new RegExp(expect.dispatchPromptMatches)
     const miss = dispatches.find(d => !re.test(d.prompt ?? ''))
     if (miss) return `dispatch ${miss.index} did not match /${expect.dispatchPromptMatches}/`
+  }
+
+  // The existential form. dispatchPromptMatches asks that every dispatch be the
+  // thing; this asks that one of them was. A skill dispatching a refuter beside
+  // ordinary exploration needs the second question, not the first.
+  if (expect.anyDispatchMatches !== undefined) {
+    const re = new RegExp(expect.anyDispatchMatches)
+    if (!dispatches.some(d => re.test(d.prompt ?? ''))) {
+      return `no dispatch matched /${expect.anyDispatchMatches}/`
+    }
   }
 
   if (expect.dispatchPromptOmits !== undefined) {
