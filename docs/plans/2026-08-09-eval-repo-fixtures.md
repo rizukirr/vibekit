@@ -156,11 +156,11 @@ function seedRepo(cwd, spawn) {
 **Files:**
 - Create: `evals/results/<timestamp>-HEAD.json`
 
-- [ ] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
-- [ ] Step 2: Run `npm run eval -- --scenarios verify-nit-does-not-gate,verify-dispatches-the-fix -n 10`
-- [ ] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
+- [x] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
+- [x] Step 2: Run `npm run eval -- --scenarios verify-nit-does-not-gate,verify-dispatches-the-fix -n 10`
+- [x] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
       equals the digest from Step 1.
-- [ ] Step 4: For any scenario below its floor, read the recorded failure
+- [x] Step 4: For any scenario below its floor, read the recorded failure
       strings and the stored final texts, and state whether the cause is the
       fixture or the skill. Do not change the expectation either way.
-- [ ] Step 5: Commit the results file.
+- [x] Step 5: Commit the results file.
