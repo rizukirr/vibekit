@@ -1,7 +1,7 @@
 ---
 title: eval repo fixtures
 date: 2026-08-09
-status: draft
+status: approved
 ---
 
 # eval repo fixtures — Design
