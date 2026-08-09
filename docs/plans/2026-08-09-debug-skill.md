@@ -207,7 +207,7 @@ with:
 
 `evals/scenarios.json` is a top-level JSON array. Append these three objects as its last three elements, preserving the existing elements unchanged.
 
-- [ ] Step 1: Append the following three objects to the array in `evals/scenarios.json`:
+- [x] Step 1: Append the following three objects to the array in `evals/scenarios.json`:
 
 ```json
   {
@@ -252,6 +252,6 @@ with:
   }
 ```
 
-- [ ] Step 2: Run `python3 -c "import json; json.load(open('evals/scenarios.json'))"` to confirm the file is still valid JSON
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit
+- [x] Step 2: Run `python3 -c "import json; json.load(open('evals/scenarios.json'))"` to confirm the file is still valid JSON
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Commit
