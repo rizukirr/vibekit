@@ -126,16 +126,16 @@ function seedRepo(cwd, spawn) {
 - Modify: `evals/scenarios.json:169`
 - Modify: `evals/scenarios.json:184`
 
-- [ ] Step 1: Add `"repo": true,` to the `verify-nit-does-not-gate` object,
+- [x] Step 1: Add `"repo": true,` to the `verify-nit-does-not-gate` object,
       alongside its existing `"n"` and `"model"` keys. Change nothing else in
       the object — its `expect` block stays exactly as it is.
-- [ ] Step 2: Add `"repo": true,` to the `verify-dispatches-the-fix` object, on
+- [x] Step 2: Add `"repo": true,` to the `verify-dispatches-the-fix` object, on
       the same terms.
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Run `git diff --stat` and confirm the only changed file is
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Run `git diff --stat` and confirm the only changed file is
       `evals/scenarios.json`, and that no line containing `expect`, or any other
       scenario id, appears in the diff.
-- [ ] Step 5: Commit
+- [x] Step 5: Commit
 
 ### Task 3: paid smoke run at n=1 → verify: a results file naming `verify-nit-does-not-gate` exists under `evals/results/`
 
