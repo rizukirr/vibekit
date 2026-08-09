@@ -142,14 +142,14 @@ function seedRepo(cwd, spawn) {
 **Files:**
 - Create: `evals/results/<timestamp>-HEAD.json`
 
-- [ ] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
-- [ ] Step 2: Run `npm run eval -- --scenarios verify-nit-does-not-gate -n 1`
-- [ ] Step 3: Read the stored final text of the session. Count matches for
+- [x] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
+- [x] Step 2: Run `npm run eval -- --scenarios verify-nit-does-not-gate -n 1`
+- [x] Step 3: Read the stored final text of the session. Count matches for
       `git repository` in it. A count above 0 means the seeding did not take,
       and Task 4 does not start.
-- [ ] Step 4: Run `git ls-files -s skills evals | sha256sum` and confirm it
+- [x] Step 4: Run `git ls-files -s skills evals | sha256sum` and confirm it
       equals the digest from Step 1.
-- [ ] Step 5: Commit the results file.
+- [x] Step 5: Commit the results file.
 
 ### Task 4: measure both scenarios at n=10 → verify: a results file naming both `verify-nit-does-not-gate` and `verify-dispatches-the-fix` exists under `evals/results/`
 

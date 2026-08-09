@@ -1,0 +1,33 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": false,
+    "dryRun": false,
+    "scenarios": [
+      "verify-nit-does-not-gate"
+    ],
+    "n": 1
+  },
+  "candidate": {
+    "verify-nit-does-not-gate": {
+      "id": "verify-nit-does-not-gate",
+      "rate": 1,
+      "failures": [],
+      "failedArtifacts": [],
+      "failedFinalText": [],
+      "incomplete": false,
+      "successful": 1,
+      "errored": 0,
+      "inputFootprint": 19166,
+      "outputTokens": 2911,
+      "cost": 0.24388350000000003,
+      "judge": null
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}
