@@ -1,0 +1,33 @@
+{
+  "opts": {
+    "baseline": null,
+    "candidate": "HEAD",
+    "judge": false,
+    "dryRun": false,
+    "scenarios": [
+      "debug-edits-nothing"
+    ],
+    "n": 10
+  },
+  "candidate": {
+    "debug-edits-nothing": {
+      "id": "debug-edits-nothing",
+      "rate": 1,
+      "failures": [],
+      "failedArtifacts": [],
+      "failedFinalText": [],
+      "incomplete": false,
+      "successful": 10,
+      "errored": 0,
+      "inputFootprint": 29737.2,
+      "outputTokens": 2961,
+      "cost": 0.532910505,
+      "judge": null
+    }
+  },
+  "baseline": null,
+  "verdict": {
+    "pass": true,
+    "failures": []
+  }
+}
