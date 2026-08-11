@@ -24,10 +24,14 @@ test('subordinates the cap and the deletion pass to the never-compress list', ()
   assert.match(section, /narration/i, 'the exemption must scope the rules to narration')
 })
 
-// The tells measured 0.00 against a 0.00 baseline at n=10, in two positions,
-// on 2026-08-11. This test is what stops them returning unnoticed.
-test('omits the tells that measured inert', () => {
-  assert.doesNotMatch(terse, /No em dash/i)
+// The tells measured 0.00 against a 0.00 baseline at n=10, in two positions, on
+// 2026-08-11. They ship anyway, by the user's decision, so what this test now
+// guards is that the null results travel with them: a reader who finds the rule
+// must find the evidence that it did not move a number.
+test('states the tells alongside the measurement that refuted them', () => {
+  assert.match(terse, /No em dash/i)
+  assert.match(terse, /did not bind/i)
+  assert.match(terse, /2026-08-11T15-18-28-057Z-HEAD\.json/)
 })
 
 // description and trigger are what the runtime shows the model before it decides

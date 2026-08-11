@@ -73,10 +73,51 @@ Compression decides what survives. This decides the order it arrives in.
    are about to do, the last if it recaps or asks whether anything else is
    needed, any sidebar, and any hedging adverb carrying no real uncertainty. Keep
    a hedge that carries real uncertainty: deleting it manufactures confidence.
+6. **Number multi-step work.** More than one step means a numbered list, one
+   bounded action per step, no step containing "and then" twice. Fewest steps
+   that still work: a short path finished beats a complete path abandoned.
+7. **Suppress tangents.** Finish the thing in front of you, then offer the second
+   issue as its own question. A question that comes up mid-work is not a tangent
+   — answer it yourself if you can, and surface it once, at the end, if you
+   cannot.
+8. **Estimate in concrete units.** "Some work" and "a few hours" read the same.
+   Say "about fifteen minutes if the tests already cover this, an afternoon if
+   not." Point the estimate at whoever runs the steps.
+9. **Show what now works.** Name the capability and how to see it, not the files
+   you touched. "Login works with magic links: `npm run dev`, open `/login`"
+   beats "I made some changes to the auth flow."
+10. **Matter-of-fact on errors.** No "uh oh", no "there seems to be a problem".
+    State the failure, its cause, and the fix: what failed, where, expected
+    versus got, and the line that repairs it.
+
+### Tells
+
+Four constructions that read as machine-written at any length. Each is
+detectable by looking, which is why these four and not a phrase list:
+
+- No em dash.
+- No throat-clearing opener: "Here's what", "Let me", "Great question", "Sure".
+- No "not X, it's Y" contrast where stating Y alone would do.
+- No adverb doing emphasis work.
+
+**These four were measured and did not bind.** A/B at n=10 on 2026-08-11, stated
+at line 86 of the file and then at line 13: `terse-omits-em-dash` returned 0.00
+against a 0.00 baseline both times, with the skill firing in every session.
+Recorded in `evals/results/2026-08-11T15-18-28-057Z-HEAD.json` and
+`evals/results/2026-08-11T16-09-14-732Z-HEAD.json`. They are stated here as
+intent, not as a claim that output changes. Do not re-run that experiment
+expecting a different number.
+
+Two more, from the same family, never measured separately:
+
+- **Active voice, human subject.** Someone does something. Not "the complaint
+  becomes a fix" or "the decision emerges" — name who decided.
+- **No vague declaratives.** "The implications are significant" names nothing.
+  Say which implication.
 
 ### The exemption
 
-Rule 4 and rule 5 govern **narration only**. Neither touches anything on the
+Rules 4, 5 and 9 govern **narration only**. None of them touches anything on the
 never-compress list: a findings list, a blocker enumeration, a goals walk, a
 question to the user, quoted evidence, a destructive-operation warning.
 
