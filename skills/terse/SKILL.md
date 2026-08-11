@@ -55,6 +55,45 @@ Drop compression entirely for:
 
 Resume afterwards.
 
+## Shaping
+
+Compression decides what survives. This decides the order it arrives in.
+
+1. **Lead with the action.** If the answer is a command, a path or a snippet, it
+   is the first line. Prose comes after, if at all.
+2. **Restate position every turn.** In a multi-step run, say where you are:
+   `Task 3 of 8 done: opencode emitter. Next: probe it.` The reader is not
+   holding the plan in their head, and a run that reports results without
+   position makes them count.
+3. **One concrete next action** whenever something is left open, small enough to
+   start immediately. "Open the file" counts.
+4. **Cap narration lists at five.** Past five, split into now and later, or must
+   and nice to have. Five ranked beats ten unranked.
+5. **Pre-send deletion pass.** Delete the first sentence if it announces what you
+   are about to do, the last if it recaps or asks whether anything else is
+   needed, any sidebar, and any hedging adverb carrying no real uncertainty. Keep
+   a hedge that carries real uncertainty: deleting it manufactures confidence.
+
+### Tells
+
+Four constructions that read as machine-written at any length. Each is
+detectable by looking, which is why these four and not a phrase list:
+
+- No em dash.
+- No throat-clearing opener: "Here's what", "Let me", "Great question", "Sure".
+- No "not X, it's Y" contrast where stating Y alone would do.
+- No adverb doing emphasis work.
+
+### The exemption
+
+Rule 4 and rule 5 govern **narration only**. Neither touches anything on the
+never-compress list: a findings list, a blocker enumeration, a goals walk, a
+question to the user, quoted evidence, a destructive-operation warning.
+
+A cap that can truncate findings is a licence to drop the sixth blocker. The
+rules above shorten what you say about the work; they never shorten the work's
+own output.
+
 ## What does not save tokens
 
 Measured, not assumed. Do not do these — they cost clarity and save nothing:
