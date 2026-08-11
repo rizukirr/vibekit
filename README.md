@@ -15,6 +15,7 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 - `terse` — Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after.
 - `using-vibekit` — Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
 - `verify` — Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen.
+- `vibe` — Run a short intent through the pipeline. Invoked as /vibekit:vibe; hands off to brainstorm and does nothing else.
 <!-- /vibekit:generated -->
 
 ## Runtime support
