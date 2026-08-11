@@ -1,7 +1,7 @@
 ---
 title: nit scenario assertion
 date: 2026-08-11
-status: draft
+status: approved
 ---
 
 # nit scenario assertion — Design
