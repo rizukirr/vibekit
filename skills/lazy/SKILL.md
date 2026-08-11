@@ -1,6 +1,6 @@
 ---
 name: lazy
-description: Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder: stdlib and native features before new code, one line before fifty. Stays on after.
+description: Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after.
 trigger: First moment of any coding work — invoke once, then it stays on
 gate: none
 ---
