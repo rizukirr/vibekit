@@ -22,7 +22,7 @@ export function skillFile({ name, description = 'does a thing', trigger = 'when 
 export const MODEL = {
   config: {
     name: 'vibekit',
-    version: '2.0.0',
+    version: '0.6.0',
     description: 'Guardrailed vibe-coding pipeline for coding agents.',
     author: { name: 'rizukirr', url: 'https://github.com/rizukirr' },
     license: 'MIT',

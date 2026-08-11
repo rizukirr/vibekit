@@ -7,7 +7,7 @@ import { MODEL } from './helpers.mjs'
 test('emits the plugin manifest stamped with the config version', () => {
   const plugin = JSON.parse(emit(MODEL)['.claude-plugin/plugin.json'])
   assert.equal(plugin.name, 'vibekit')
-  assert.equal(plugin.version, '2.0.0')
+  assert.equal(plugin.version, '0.6.0')
   assert.equal(plugin.license, 'MIT')
 })
 
