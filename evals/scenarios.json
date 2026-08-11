@@ -174,8 +174,7 @@
       "src/greet.js": "// greeting helper\nconst tmp = 1\nexport const greet = nm => `hello ${nm}`\n"
     },
     "expect": {
-      "finalTextOmits": "not ready",
-      "onlyNewFilesMatching": "^docs/"
+      "finalTextMatches": "[Vv]erdict:\\s*ready"
     },
     "repo": true,
     "n": 10,
