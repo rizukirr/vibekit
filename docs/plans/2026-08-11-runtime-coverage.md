@@ -202,17 +202,17 @@ under `[marketplaces.vibekit]`. The two cannot coexist, so this task replaces it
 Restoring the previous state is one command:
 `codex plugin marketplace add https://github.com/rizukirr/vibekit.git`.
 
-- [ ] Step 1: Run `codex plugin list` and record, verbatim, the row for the
+- [x] Step 1: Run `codex plugin list` and record, verbatim, the row for the
       currently installed vibekit plugin and its version column.
-- [ ] Step 2: Run `codex plugin marketplace remove vibekit`
-- [ ] Step 3: Run `codex plugin marketplace add /home/rizukirr/Projects/vibekit`
-- [ ] Step 4: Run `codex plugin add vibekit@vibekit` and record its output
+- [x] Step 2: Run `codex plugin marketplace remove vibekit`
+- [x] Step 3: Run `codex plugin marketplace add /home/rizukirr/Projects/vibekit`
+- [x] Step 4: Run `codex plugin add vibekit@vibekit` and record its output
       verbatim.
-- [ ] Step 5: Run `codex plugin list` and record the vibekit row verbatim,
+- [x] Step 5: Run `codex plugin list` and record the vibekit row verbatim,
       including its version column. A version other than the one in
       `vibekit.config.json` means the manifest resolved to something else; stop
       and report rather than reinstalling.
-- [ ] Step 6: No commit — nothing in the repository changed.
+- [x] Step 6: No commit — nothing in the repository changed.
 
 ### Task 4: the opencode runtime → verify: `npm test` exits 0
 
