@@ -253,3 +253,40 @@ than as a file the model opens. That would be a third cycle, and the third
 consecutive null would be strong evidence that skill prose shapes what the agent
 does and not how it writes.
 
+## Outcome 2 — position is not the mechanism
+
+Measured 2026-08-11, A/B at n=10 against `v2`, recorded in
+`evals/results/2026-08-11T16-09-14-732Z-HEAD.json`. Digest
+`255f34e38150e611d883259a6d795f329f99dec142e6ffceac64dd33ee4fe358` before and
+after.
+
+```
+baseline  terse-omits-em-dash  rate=0.00  n=10  errors=0
+candidate terse-omits-em-dash  rate=0.00  n=10  errors=0
+```
+
+The one variable held. The block was recovered from commit `603b487` rather than
+retyped, `diff` against it returned nothing, and the file was 120 lines on both
+sides. Only its position changed, from line 58 to line 13. All ten candidate
+failures read `final message contained /—/`.
+
+**The section was reverted, on the same reasoning as round 1: shipping prose that
+demonstrably changes nothing is the failure this spec's non-goals rejected a
+phrase catalogue for.** `skills/` is byte-identical to `v2`.
+
+Applying what this spec decided in advance, without re-arguing it: prose
+placement is not the mechanism, and the next candidate is delivery — the rule
+arriving as harness text through the existing `SessionStart` hook rather than as
+a file the model opens. That is a third cycle and the user's call, not something
+this one starts.
+
+Two nulls now stand against the same behaviour, under progressively stronger
+conditions: the skill fired, the file was read, and the rule was stated first.
+
+**A cost correction belongs here too.** This run was quoted at roughly $1.10 and
+cost **$2.74** — mean $0.135 per baseline session, $0.139 per candidate. Reading
+the same field out of round 1's file puts that run at **$5.48**, against the
+$2.20 quoted twice. The $0.055 per-session figure was calibrated on short text
+answers; these scenarios ask for three or four paragraphs, and output tokens are
+what move. Quote from a comparable results file, never from memory.
+
