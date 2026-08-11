@@ -32,13 +32,13 @@
   "files": [
     ".claude-plugin/",
     ".codex-plugin/",
-    "commands/",
-    "hooks/",
-    "skills/",
     "AGENTS.md",
     "CLAUDE.md",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "commands/",
+    "hooks/",
+    "skills/"
   ],
   "publishConfig": {
     "access": "public"

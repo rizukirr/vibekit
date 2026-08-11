@@ -3,7 +3,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { writeFileSync, mkdirSync, cpSync } from 'node:fs'
 import { join } from 'node:path'
-import { build, mergeEmitters, applyRegions, planChanges, MANIFEST } from '../lib/build.mjs'
+import { build, mergeEmitters, applyRegions, planChanges, mergeContributions, MANIFEST } from '../lib/build.mjs'
 import { makeSkillsDir, skillFile, MODEL } from './helpers.mjs'
 
 const alpha = { id: 'alpha', emit: () => ({ 'a.json': '1\n' }) }
@@ -96,4 +96,28 @@ test('throws when the config names an emitter that does not exist', async () => 
     cpSync(join(root, 'using-vibekit'), join(root, 'skills', 'using-vibekit'), { recursive: true })
     await assert.rejects(() => build(root), /runtimes\/no-such-runtime\.mjs could not be loaded/)
   } finally { cleanup() }
+})
+
+const withPkg = { id: 'withPkg', emit: () => ({}), pkg: () => ({ main: './x.js' }), ships: () => ['.x/'] }
+const alsoPkg = { id: 'alsoPkg', emit: () => ({}), pkg: () => ({ main: './y.js' }) }
+const withShips = { id: 'withShips', emit: () => ({}), ships: () => ['.y/', '.x/'] }
+
+test('collects pkg contributions from every emitter', () => {
+  const { pkg } = mergeContributions([alpha, withPkg], MODEL)
+  assert.deepEqual(pkg, { main: './x.js' })
+})
+
+test('throws naming both emitters when two claim the same package.json key', () => {
+  assert.throws(() => mergeContributions([withPkg, alsoPkg], MODEL), /'main' contributed by both 'withPkg' and 'alsoPkg'/)
+})
+
+test('ships entries are merged, sorted and de-duplicated', () => {
+  const { ships } = mergeContributions([withPkg, withShips], MODEL)
+  assert.deepEqual(ships, ['.x/', '.y/'])
+})
+
+test('an emitter exporting neither contributes nothing', () => {
+  const { pkg, ships } = mergeContributions([alpha, beta], MODEL)
+  assert.deepEqual(pkg, {})
+  assert.deepEqual(ships, [])
 })
