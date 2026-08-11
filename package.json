@@ -47,5 +47,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./.opencode/plugins/vibekit.js"
+  "main": "./.opencode/plugins/vibekit.js",
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  }
 }

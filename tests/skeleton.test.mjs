@@ -10,7 +10,7 @@ test('config names a bootstrap skill that exists', () => {
 })
 
 test('config names only runtimes that will have emitters', () => {
-  assert.deepEqual(config.runtimes, ['claude-code', 'codex', 'opencode', 'gemini'])
+  assert.deepEqual(config.runtimes, ['claude-code', 'codex', 'opencode', 'gemini', 'pi'])
 })
 
 test('every stub skill has a SKILL.md', () => {

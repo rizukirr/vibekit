@@ -52,7 +52,7 @@ test('never removes a path absent from the previous manifest', () => {
 
 test('loads core plus every configured runtime, in that order', async () => {
   const { emitters } = await build(process.cwd())
-  assert.deepEqual(emitters.map(e => e.id), ['core', 'claude-code', 'codex', 'opencode', 'gemini'])
+  assert.deepEqual(emitters.map(e => e.id), ['core', 'claude-code', 'codex', 'opencode', 'gemini', 'pi'])
 })
 
 // W2: the merge → regions → manifest → plan sequencing used to live untested in
