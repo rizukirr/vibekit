@@ -515,16 +515,16 @@ export function pkg() {
 - Modify: `README.md:20-29`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Replace the runtime support table and the paragraph beneath it with
+- [x] Step 1: Replace the runtime support table and the paragraph beneath it with
       a five-row table. Each row names the runtime, its emitter, and how it was
       verified — for the two probed runtimes, the tool version the probe ran
       against, taken from the output recorded in Tasks 3 and 5; for the two that
       were not, the words `not verified — tool not installed`. Do not restate a
       version from memory: read it from the recorded probe output.
-- [ ] Step 2: Run `npm run generate`, then `npm test`
-- [ ] Step 3: Run `npm pack --dry-run` and confirm the listing includes a path
+- [x] Step 2: Run `npm run generate`, then `npm test`
+- [x] Step 3: Run `npm pack --dry-run` and confirm the listing includes a path
       under `.agents/`, a path under `.opencode/`, `gemini-extension.json` and
       `GEMINI.md`.
-- [ ] Step 4: Commit
+- [x] Step 4: Commit
 
 _Amended 2026-08-11 during execution: generated files were missing from the Files blocks. `npm run generate` rewrites `package.json` and `.vibekit-manifest` on every task that adds an emitter or an emitted path, so a task that regenerates and does not claim them trips the scope check. Amended again the same day: `tests/build.test.mjs` and `tests/skeleton.test.mjs` both assert the configured runtime list, so every task that adds an emitter edits them too._
