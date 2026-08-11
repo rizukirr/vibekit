@@ -234,5 +234,25 @@
     },
     "n": 10,
     "model": "sonnet"
+  },
+  {
+    "id": "terse-omits-em-dash",
+    "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer: in three or four paragraphs, explain to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
+    "expect": {
+      "skill": "vibekit:terse",
+      "finalTextOmits": "—"
+    },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "terse-omits-throat-clearing",
+    "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer: in three or four paragraphs, explain to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
+    "expect": {
+      "skill": "vibekit:terse",
+      "finalTextOmits": "^(Great question|Let me |Here's what|Sure[,!])"
+    },
+    "n": 10,
+    "model": "sonnet"
   }
 ]
