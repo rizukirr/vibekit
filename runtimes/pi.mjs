@@ -1,3 +1,5 @@
+// runtimes/pi.mjs
+
 export const id = 'pi'
 
 // Pi reads a `pi` block from package.json and has native skill support, so a
