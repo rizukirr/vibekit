@@ -1,5 +1,5 @@
 // runtimes/core.mjs
-import { skillList } from '../lib/table.mjs'
+import { skillTable } from '../lib/table.mjs'
 
 export const id = 'core'
 
@@ -41,5 +41,5 @@ export function emit(model) {
 }
 
 export function regions(model) {
-  return { 'README.md': { 'skill-list': skillList(model.skills) } }
+  return { 'README.md': { 'skill-list': skillTable(model.skills) } }
 }

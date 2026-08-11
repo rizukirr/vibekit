@@ -37,7 +37,9 @@ test('package.json ends with a trailing newline', () => {
 
 test('owns the README skill-list region', () => {
   assert.deepEqual(Object.keys(regions(MODEL)), ['README.md'])
-  assert.ok(regions(MODEL)['README.md']['skill-list'].includes('- `alpha` — Alpha does A.'))
+  const table = regions(MODEL)['README.md']['skill-list']
+  assert.ok(table.startsWith('| Skill | What it does | Gate |'), 'must render as a table')
+  assert.ok(table.includes('| `alpha` | Alpha does A.'), 'must carry each skill as a row')
 })
 
 test('merges contributed package.json keys', () => {
