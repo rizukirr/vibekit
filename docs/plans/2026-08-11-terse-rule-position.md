@@ -19,13 +19,13 @@
 - Create: `tests/terse.test.mjs`
 - Modify: `skills/terse/SKILL.md:12`
 
-- [ ] Step 1: Recover round 1's section without retyping it. Run
+- [x] Step 1: Recover round 1's section without retyping it. Run
       `git show 603b487:skills/terse/SKILL.md` and read the block that begins
       with the line `## Shaping` and ends with the line immediately before
       `## What does not save tokens`. That block is the text to move. Do not
       edit a word of it, and do not reformat it.
 
-- [ ] Step 2: Write `tests/terse.test.mjs`, and observe both tests failing:
+- [x] Step 2: Write `tests/terse.test.mjs`, and observe both tests failing:
 
 ```js
 // tests/terse.test.mjs
@@ -50,17 +50,17 @@ test('states them before the persistence section', () => {
 })
 ```
 
-- [ ] Step 3: Run `npm test` and record both failures with their messages.
-- [ ] Step 4: Insert the recovered block into `skills/terse/SKILL.md` between the
+- [x] Step 3: Run `npm test` and record both failures with their messages.
+- [x] Step 4: Insert the recovered block into `skills/terse/SKILL.md` between the
       line `fluff dies.` and the `## Persistence` heading. Change no existing
       line, and add nothing that was not in the recovered block.
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Run `npm run check` and confirm it exits 0. Then run
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Run `npm run check` and confirm it exits 0. Then run
       `git show 603b487:skills/terse/SKILL.md | wc -l` and `wc -l
       skills/terse/SKILL.md` and confirm the two counts are equal. Unequal means
       the file's length moved alongside its order and the experiment has two
       variables; stop and say so rather than adjusting either file to match.
-- [ ] Step 7: Commit
+- [x] Step 7: Commit
 
 ### Task 2: measure A/B at n=10 → verify: `ls evals/results/ | wc -l` is at least 28
 
