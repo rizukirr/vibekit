@@ -221,6 +221,8 @@ Restoring the previous state is one command:
 - Create: `tests/opencode.test.mjs`
 - Modify: `vibekit.config.json:10`
 - Create: `.opencode/plugins/vibekit.js`
+- Modify: `tests/build.test.mjs`
+- Modify: `tests/skeleton.test.mjs`
 - Create: `.opencode/INSTALL.md`
 - Modify: `package.json`
 - Modify: `.vibekit-manifest`
@@ -365,6 +367,8 @@ outside the repository and holds one file; deleting it is `rm -rf
 - Create: `GEMINI.md`
 - Modify: `vibekit.config.json:10`
 - Create: `gemini-extension.json`
+- Modify: `tests/build.test.mjs`
+- Modify: `tests/skeleton.test.mjs`
 - Modify: `package.json`
 - Modify: `.vibekit-manifest`
 
@@ -455,6 +459,8 @@ export function regions(model) {
 **Files:**
 - Create: `runtimes/pi.mjs`
 - Create: `tests/pi.test.mjs`
+- Modify: `tests/build.test.mjs`
+- Modify: `tests/skeleton.test.mjs`
 - Modify: `vibekit.config.json:10`
 - Modify: `package.json`
 
@@ -521,4 +527,4 @@ export function pkg() {
       `GEMINI.md`.
 - [ ] Step 4: Commit
 
-_Amended 2026-08-11 during execution: generated files were missing from the Files blocks. `npm run generate` rewrites `package.json` and `.vibekit-manifest` on every task that adds an emitter or an emitted path, so a task that regenerates and does not claim them trips the scope check._
+_Amended 2026-08-11 during execution: generated files were missing from the Files blocks. `npm run generate` rewrites `package.json` and `.vibekit-manifest` on every task that adds an emitter or an emitted path, so a task that regenerates and does not claim them trips the scope check. Amended again the same day: `tests/build.test.mjs` and `tests/skeleton.test.mjs` both assert the configured runtime list, so every task that adds an emitter edits them too._
