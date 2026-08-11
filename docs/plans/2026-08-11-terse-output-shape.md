@@ -18,7 +18,7 @@
 - Create: `tests/terse.test.mjs`
 - Modify: `skills/terse/SKILL.md:57`
 
-- [ ] Step 1: Write `tests/terse.test.mjs`, and observe both tests failing
+- [x] Step 1: Write `tests/terse.test.mjs`, and observe both tests failing
       before Step 3 is written:
 
 ```js
@@ -52,9 +52,9 @@ test('subordinates the cap and the deletion pass to the never-compress list', ()
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record both failures with their messages. A
+- [x] Step 2: Run `npm test` and record both failures with their messages. A
       test that passes before the section is written is not a check.
-- [ ] Step 3: In `skills/terse/SKILL.md`, insert this section between the end of
+- [x] Step 3: In `skills/terse/SKILL.md`, insert this section between the end of
       `### Auto-clarity override` and the `## What does not save tokens`
       heading. Change no existing line:
 
@@ -99,12 +99,12 @@ rules above shorten what you say about the work; they never shorten the work's
 own output.
 ```
 
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Run `npm run check` and confirm it exits 0, then run `git diff
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Run `npm run check` and confirm it exits 0, then run `git diff
       --name-only` and confirm no file under `skills/` other than
       `skills/terse/SKILL.md` appears. `terse`'s frontmatter is unchanged, so no
       generated file should move either.
-- [ ] Step 6: Commit
+- [x] Step 6: Commit
 
 ### Task 2: the two measurement scenarios → verify: `node -e "const s=require('./evals/scenarios.json'); process.exit(s.filter(x => x.id.startsWith('terse-omits')).length >= 2 ? 0 : 1)"` exits 0
 
