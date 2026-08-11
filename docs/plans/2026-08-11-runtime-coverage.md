@@ -342,7 +342,7 @@ The probe directory is left in place so the clause stays re-runnable. It is
 outside the repository and holds one file; deleting it is `rm -rf
 /tmp/vibekit-opencode-probe`.
 
-- [ ] Step 1: Create `/tmp/vibekit-opencode-probe` and write `opencode.json` in
+- [x] Step 1: Create `/tmp/vibekit-opencode-probe` and write `opencode.json` in
       it:
 
 ```json
@@ -352,12 +352,12 @@ outside the repository and holds one file; deleting it is `rm -rf
 }
 ```
 
-- [ ] Step 2: Run `opencode debug skill` in that directory and record its output
+- [x] Step 2: Run `opencode debug skill` in that directory and record its output
       verbatim.
-- [ ] Step 3: Confirm the output names `brainstorm`. If it does not, stop: the
+- [x] Step 3: Confirm the output names `brainstorm`. If it does not, stop: the
       plugin does not load, and that is a `debug` question, not a retry. Record
       what the output did contain.
-- [ ] Step 4: No commit — nothing in the repository changed.
+- [x] Step 4: No commit — nothing in the repository changed.
 
 ### Task 6: the Gemini runtime → verify: `npm test` exits 0
 
