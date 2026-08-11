@@ -7,8 +7,10 @@
 .vibekit-manifest
 AGENTS.md
 CLAUDE.md
+GEMINI.md
 README.md
 commands/example-command.md
 commands/example-command.toml
+gemini-extension.json
 hooks/hooks.json
 package.json
