@@ -1,6 +1,20 @@
 # Installing vibekit for opencode
 
-Add it to the `plugin` array in your `opencode.json`, global or project-level:
+## Local checkout
+
+Add a local checkout to the `plugin` array in your `opencode.json`:
+
+```json
+{
+  "plugin": ["/path/to/local/vibekit"]
+}
+```
+
+Replace `/path/to/local/vibekit` with the absolute path to your checkout.
+
+## Git repository
+
+This form is available once vibekit is published to the repository's default branch:
 
 ```json
 {
