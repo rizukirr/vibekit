@@ -464,7 +464,7 @@ export function regions(model) {
 - Modify: `vibekit.config.json:10`
 - Modify: `package.json`
 
-- [ ] Step 1: Write `tests/pi.test.mjs`, and observe it failing:
+- [x] Step 1: Write `tests/pi.test.mjs`, and observe it failing:
 
 ```js
 // tests/pi.test.mjs
@@ -485,8 +485,8 @@ test('contributes a skills block and emits no files', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record the failure.
-- [ ] Step 3: Write `runtimes/pi.mjs`:
+- [x] Step 2: Run `npm test` and record the failure.
+- [x] Step 3: Write `runtimes/pi.mjs`:
 
 ```js
 // runtimes/pi.mjs
@@ -504,10 +504,10 @@ export function pkg() {
 }
 ```
 
-- [ ] Step 4: In `vibekit.config.json`, add `"pi"` to the `runtimes` array, after
+- [x] Step 4: In `vibekit.config.json`, add `"pi"` to the `runtimes` array, after
       `"gemini"`.
-- [ ] Step 5: Run `npm test`, then `npm run generate`
-- [ ] Step 6: Commit
+- [x] Step 5: Run `npm test`, then `npm run generate`
+- [x] Step 6: Commit
 
 ### Task 8: the support table → verify: `npm run check` exits 0
 
