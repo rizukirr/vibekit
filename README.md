@@ -1,18 +1,12 @@
 # vibekit
 
-A guardrailed pipeline for coding agents. It turns a one-line intent into a
-design you approved, a plan you approved, code written by an agent that never saw
-the plan being written, and a verdict backed by output you can read. Dependency
-free: bare Node and whichever agent CLI you already use.
+A guardrailed pipeline for coding agents. It turns a one-line intent into a design you approved, a plan you approved, code written by an agent that never saw the plan being written, and a verdict backed by output you can read. Dependency free: bare Node and whichever agent CLI you already use.
 
-The problem it solves is not bad code. It is the claim of being done. vibekit
-puts a gate in front of every such claim and makes the evidence part of the
-answer.
+The problem it solves is not bad code. It is the claim of being done. vibekit puts a gate in front of every such claim and makes the evidence part of the answer.
 
 ## How it works
 
-Six skills, each one a gate. Every stage hands to the next, and no stage can skip
-the one before it.
+Six skills, each one a gate. Every stage hands to the next, and no stage can skip the one before it.
 
 ```
 /vibekit:vibe "add a dark mode toggle"
@@ -25,27 +19,14 @@ the one before it.
               (a check failed)
 ```
 
-- **`brainstorm`** asks questions one at a time, pushes back on your framing
-  once, offers alternatives, and writes a spec with observable success criteria.
-  No code before you approve it.
-- **`plan`** turns the approved spec into numbered tasks. Every task carries a
-  `→ verify:` clause that is checkable before anything runs, and a plan may not
-  state a value nobody has observed.
-- **`exec`** dispatches one fresh agent per task. The author of a plan reads past
-  its own contradictions. A fresh context reads it literally and stops. Every
-  plan defect this project has found was found by a dispatched agent.
-- **`verify`** runs the checks no single task could: the whole suite, the scope
-  of the diff, every goal against its evidence. It returns `ready` or `not
-  ready`, and unmeasured counts as not satisfied.
-- **`debug`** takes over on a failed check. It finds one falsifiable cause, sends
-  a read-only agent to refute it, and stops after two refutations rather than
-  guessing a third time. It never edits.
-- **`lazy`** and **`terse`** stay on once invoked. One governs how much you
-  build, the other how much you say.
+- **`brainstorm`** asks questions one at a time, pushes back on your framing once, offers alternatives, and writes a spec with observable success criteria. No code before you approve it.
+- **`plan`** turns the approved spec into numbered tasks. Every task carries a `→ verify:` clause that is checkable before anything runs, and a plan may not state a value nobody has observed.
+- **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent.
+- **`verify`** runs the checks no single task could: the whole suite, the scope of the diff, every goal against its evidence. It returns `ready` or `not ready`, and unmeasured counts as not satisfied.
+- **`debug`** takes over on a failed check. It finds one falsifiable cause, sends a read-only agent to refute it, and stops after two refutations rather than guessing a third time. It never edits.
+- **`lazy`** and **`terse`** stay on once invoked. One governs how much you build, the other how much you say.
 
-Two rules run through all of it. **Evidence or it did not happen**, because a
-check with no output to show is not a check. **You may not write a value you have
-not observed**, because a guess in a plan is a defect a later agent pays for.
+Two rules run through all of it. **Evidence or it did not happen**, because a check with no output to show is not a check. **You may not write a value you have not observed**, because a guess in a plan is a defect a later agent pays for.
 
 ## Features
 
@@ -55,7 +36,7 @@ not observed**, because a guess in a plan is a defect a later agent pays for.
 | `brainstorm` | Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design. | hard |
 | `debug` | Use when a check fails — a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product; this skill never edits. | hard |
 | `exec` | Use when a plan is approved and implementation has not started — dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
-| `lazy` | Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder: stdlib and native features before new code, one line before fifty. Stays on after. | none |
+| `lazy` | Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
 | `plan` | Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
 | `terse` | Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
 | `using-vibekit` | Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
@@ -63,14 +44,9 @@ not observed**, because a guess in a plan is a defect a later agent pays for.
 | `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe; hands off to brainstorm and does nothing else. | none |
 <!-- /vibekit:generated -->
 
-A `hard` gate refuses to proceed until its condition is met. `none` means the
-skill shapes behaviour without blocking anything.
+A `hard` gate refuses to proceed until its condition is met. `none` means the skill shapes behaviour without blocking anything.
 
-Skills are discovered by globbing `skills/*/SKILL.md`. There is no registry
-anywhere in the repo, which is what makes registration drift impossible rather
-than merely detectable. Every derived file, including the runtime manifests, the
-command files, the trigger tables and this table, is generated by `npm run
-generate` and verified by `npm run check`.
+Skills are discovered by globbing `skills/*/SKILL.md`. There is no registry anywhere in the repo, which is what makes registration drift impossible rather than merely detectable. Every derived file, including the runtime manifests, the command files, the trigger tables and this table, is generated by `npm run generate` and verified by `npm run check`.
 
 ## Install
 
@@ -126,15 +102,11 @@ pi install git:github.com/rizukirr/vibekit
 | Gemini | `runtimes/gemini.mjs` | not verified, tool not installed |
 | Pi | `runtimes/pi.mjs` | not verified, tool not installed |
 
-Two runtimes were probed against the real CLI and two were not. That distinction
-is kept per row because unit tests assert what we decided to emit, which says
-nothing about whether a host accepts it. That gap hid four integration defects
-until they were probed.
+Two runtimes were probed against the real CLI and two were not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
 
 ## Evals
 
-Skills are behaviour-shaping prompts, so the only way to know one works is to
-watch it fire in a real session.
+Skills are behaviour-shaping prompts, so the only way to know one works is to watch it fire in a real session.
 
 ```
 npm run eval                                       # candidate only, deterministic
@@ -143,15 +115,11 @@ npm run eval -- --dry-run                          # print the plan and cost, sp
 npm run eval -- --judge                            # also grade whether the skill was followed
 ```
 
-Variants are git refs materialised as throwaway worktrees, so there is never a
-second `skills/` tree to drift. Sessions run in a disposable temp directory.
+Variants are git refs materialised as throwaway worktrees, so there is never a second `skills/` tree to drift. Sessions run in a disposable temp directory.
 
-Run A/B rather than candidate-only whenever a rate is the point. A candidate rate
-of 1.00 once looked like a new rule working. Its baseline arm was also 1.00,
-because the model already did it.
+Run A/B rather than candidate-only whenever a rate is the point. A candidate rate of 1.00 once looked like a new rule working. Its baseline arm was also 1.00, because the model already did it.
 
-This costs real money and needs an authenticated `claude` CLI, so it is a manual
-gate, not part of the free CI (`check`, `test`, `check:hook`).
+This costs real money and needs an authenticated `claude` CLI, so it is a manual gate, not part of the free CI (`check`, `test`, `check:hook`).
 
 ## Development
 
@@ -161,8 +129,7 @@ npm run check       # fail if any generated file is out of date
 npm test            # unit tests
 ```
 
-Adding a skill is creating one directory under `skills/` with a `SKILL.md`, then
-running `npm run generate`. Never hand-edit a generated file.
+Adding a skill is creating one directory under `skills/` with a `SKILL.md`, then running `npm run generate`. Never hand-edit a generated file.
 
 ## License
 
