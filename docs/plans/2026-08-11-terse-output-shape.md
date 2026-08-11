@@ -111,7 +111,7 @@ own output.
 **Files:**
 - Modify: `evals/scenarios.json`
 
-- [ ] Step 1: Append two scenario objects to the array, after
+- [x] Step 1: Append two scenario objects to the array, after
       `debug-dispatches-the-refutation`. Change no existing scenario:
 
 ```json
@@ -137,12 +137,12 @@ own output.
   }
 ```
 
-- [ ] Step 2: Run `npm test`
-- [ ] Step 3: Run `npm run eval -- --dry-run --scenarios terse-omits-em-dash,terse-omits-throat-clearing`
+- [x] Step 2: Run `npm test`
+- [x] Step 3: Run `npm run eval -- --dry-run --scenarios terse-omits-em-dash,terse-omits-throat-clearing`
       and record the printed plan and cost estimate. Spawn nothing.
-- [ ] Step 4: Run `git diff evals/scenarios.json` and confirm the diff adds two
+- [x] Step 4: Run `git diff evals/scenarios.json` and confirm the diff adds two
       objects and changes no existing `"id"` line.
-- [ ] Step 5: Commit
+- [x] Step 5: Commit
 
 ### Task 3: measure A/B at n=10 → verify: a results file naming `terse-omits-em-dash` exists under `evals/results/`
 
