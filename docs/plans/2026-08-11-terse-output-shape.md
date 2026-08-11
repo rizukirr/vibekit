@@ -152,12 +152,12 @@ own output.
 This task spends money. Before Step 2, stop and confirm with the user, quoting
 the estimate recorded in Task 2 Step 3.
 
-- [ ] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
-- [ ] Step 2: Run `npm run eval -- --baseline v2 --candidate HEAD --scenarios terse-omits-em-dash,terse-omits-throat-clearing -n 10`
-- [ ] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
+- [x] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest.
+- [x] Step 2: Run `npm run eval -- --baseline v2 --candidate HEAD --scenarios terse-omits-em-dash,terse-omits-throat-clearing -n 10`
+- [x] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
       equals the digest from Step 1.
-- [ ] Step 4: Record the baseline and candidate rate for each scenario. A
+- [x] Step 4: Record the baseline and candidate rate for each scenario. A
       candidate rate at or below its baseline is the finding, reported as it
       stands. Do not change the expectation, the prompt, or the skill in
       response to it.
-- [ ] Step 5: Commit the results file.
+- [x] Step 5: Commit the results file.
