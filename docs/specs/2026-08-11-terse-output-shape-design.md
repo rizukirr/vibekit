@@ -215,3 +215,78 @@ in the same place will produce the same number.
 Unmeasured and unchanged by this cycle: whether `terse`'s **existing** rules bind.
 They were never A/B tested either.
 
+## Approach 2 — position, amended 2026-08-11
+
+Round 1's Approach is refuted, not repaired. `verify` routed the failure to
+`plan`, and `plan` may not silently edit the spec it is given, so the question
+went to the user: what replaces "a section in the skill file"? The user chose to
+test **position**, over an explicit pre-send check, over hook delivery, and over
+stopping.
+
+**One variable.** The same rule text, the same file length, a different place.
+Round 1 put the tells at line 86 of a 120-line skill; round 2 puts them
+immediately after the title, before `## Persistence`, and moves the material they
+displaced down to fill the gap. Word count and line count stay within a line or
+two of round 1's candidate, so a rate change cannot be attributed to the skill
+getting shorter.
+
+Length is the obvious second variable and it is deliberately not tested here.
+Changing both at once produces a number that explains nothing.
+
+**Instrument.** `terse-omits-em-dash`, unchanged and already committed. Its
+baseline is known: 0.00 at n=10 on 2026-08-11 under a pinned digest. The
+companion opener scenario is not re-run — its baseline was already 1.00, so it
+has nothing to prove and paying for it twice buys nothing.
+
+**Goal.** The em-dash rule changes behaviour when stated first. Observable: an
+A/B run of `terse-omits-em-dash` at n=10 records a candidate rate above its
+baseline rate.
+
+Both arms run again rather than reusing round 1's baseline number. Twenty
+sessions, roughly $1.10. Reusing a stored baseline across a week of drift is the
+kind of shortcut that produces a rate nobody can defend.
+
+**What a null result means, decided in advance so it cannot be rationalised
+afterwards:** if position does not move it, prose placement is not the mechanism,
+and the next candidate is delivery — the rule arriving as harness text rather
+than as a file the model opens. That would be a third cycle, and the third
+consecutive null would be strong evidence that skill prose shapes what the agent
+does and not how it writes.
+
+## Outcome 2 — position is not the mechanism
+
+Measured 2026-08-11, A/B at n=10 against `v2`, recorded in
+`evals/results/2026-08-11T16-09-14-732Z-HEAD.json`. Digest
+`255f34e38150e611d883259a6d795f329f99dec142e6ffceac64dd33ee4fe358` before and
+after.
+
+```
+baseline  terse-omits-em-dash  rate=0.00  n=10  errors=0
+candidate terse-omits-em-dash  rate=0.00  n=10  errors=0
+```
+
+The one variable held. The block was recovered from commit `603b487` rather than
+retyped, `diff` against it returned nothing, and the file was 120 lines on both
+sides. Only its position changed, from line 58 to line 13. All ten candidate
+failures read `final message contained /—/`.
+
+**The section was reverted, on the same reasoning as round 1: shipping prose that
+demonstrably changes nothing is the failure this spec's non-goals rejected a
+phrase catalogue for.** `skills/` is byte-identical to `v2`.
+
+Applying what this spec decided in advance, without re-arguing it: prose
+placement is not the mechanism, and the next candidate is delivery — the rule
+arriving as harness text through the existing `SessionStart` hook rather than as
+a file the model opens. That is a third cycle and the user's call, not something
+this one starts.
+
+Two nulls now stand against the same behaviour, under progressively stronger
+conditions: the skill fired, the file was read, and the rule was stated first.
+
+**A cost correction belongs here too.** This run was quoted at roughly $1.10 and
+cost **$2.74** — mean $0.135 per baseline session, $0.139 per candidate. Reading
+the same field out of round 1's file puts that run at **$5.48**, against the
+$2.20 quoted twice. The $0.055 per-session figure was calibrated on short text
+answers; these scenarios ask for three or four paragraphs, and output tokens are
+what move. Quote from a comparable results file, never from memory.
+
