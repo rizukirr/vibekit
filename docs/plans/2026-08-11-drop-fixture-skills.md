@@ -23,7 +23,7 @@
 - Modify: `README.md`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Write `skills/vibe/SKILL.md`:
+- [x] Step 1: Write `skills/vibe/SKILL.md`:
 
 ```markdown
 ---
@@ -55,16 +55,16 @@ business to restate or to sequence.
 - Never carry out the intent yourself.
 ```
 
-- [ ] Step 2: Run `npm run generate` and record which paths it reports writing.
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Confirm `commands/vibe.md` and `commands/vibe.toml` both exist and
+- [x] Step 2: Run `npm run generate` and record which paths it reports writing.
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Confirm `commands/vibe.md` and `commands/vibe.toml` both exist and
       both name the `vibe` skill. If either is absent, `command: true` did not
       take; stop rather than hand-writing the file.
-- [ ] Step 5: Read the `vibe` row of the generated trigger table in `CLAUDE.md`
+- [x] Step 5: Read the `vibe` row of the generated trigger table in `CLAUDE.md`
       and confirm its trigger column says the skill is invoked explicitly and
       never fires on its own. A row claiming a session moment would put `vibe`
       in competition with `brainstorm` for the gate `brainstorm` owns.
-- [ ] Step 6: Commit
+- [x] Step 6: Commit
 
 ### Task 2: delete the fixtures and repoint what named them → verify: `grep -rn example- CLAUDE.md AGENTS.md GEMINI.md README.md commands/` exits 1
 
