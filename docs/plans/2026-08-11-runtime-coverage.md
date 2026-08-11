@@ -20,6 +20,7 @@
 - Modify: `runtimes/core.mjs:21-39`
 - Modify: `tests/build.test.mjs:99`
 - Modify: `tests/core.test.mjs:41`
+- Modify: `package.json`
 
 - [ ] Step 1: Append to `tests/build.test.mjs`, and observe each failing before
       Step 3 is written:
@@ -140,6 +141,8 @@ export function emit(model) {
 - Modify: `runtimes/codex.mjs:23-46`
 - Modify: `tests/codex.test.mjs`
 - Create: `.agents/plugins/marketplace.json`
+- Modify: `package.json`
+- Modify: `.vibekit-manifest`
 
 - [ ] Step 1: Append to `tests/codex.test.mjs`, and observe both failing:
 
@@ -217,6 +220,10 @@ Restoring the previous state is one command:
 - Create: `runtimes/opencode.mjs`
 - Create: `tests/opencode.test.mjs`
 - Modify: `vibekit.config.json:10`
+- Create: `.opencode/plugins/vibekit.js`
+- Create: `.opencode/INSTALL.md`
+- Modify: `package.json`
+- Modify: `.vibekit-manifest`
 
 - [ ] Step 1: Write `tests/opencode.test.mjs`, and observe it failing:
 
@@ -357,6 +364,9 @@ outside the repository and holds one file; deleting it is `rm -rf
 - Create: `tests/gemini.test.mjs`
 - Create: `GEMINI.md`
 - Modify: `vibekit.config.json:10`
+- Create: `gemini-extension.json`
+- Modify: `package.json`
+- Modify: `.vibekit-manifest`
 
 - [ ] Step 1: Write `tests/gemini.test.mjs`, and observe it failing:
 
@@ -446,6 +456,7 @@ export function regions(model) {
 - Create: `runtimes/pi.mjs`
 - Create: `tests/pi.test.mjs`
 - Modify: `vibekit.config.json:10`
+- Modify: `package.json`
 
 - [ ] Step 1: Write `tests/pi.test.mjs`, and observe it failing:
 
@@ -496,6 +507,7 @@ export function pkg() {
 
 **Files:**
 - Modify: `README.md:20-29`
+- Modify: `.vibekit-manifest`
 
 - [ ] Step 1: Replace the runtime support table and the paragraph beneath it with
       a five-row table. Each row names the runtime, its emitter, and how it was
@@ -508,3 +520,5 @@ export function pkg() {
       under `.agents/`, a path under `.opencode/`, `gemini-extension.json` and
       `GEMINI.md`.
 - [ ] Step 4: Commit
+
+_Amended 2026-08-11 during execution: generated files were missing from the Files blocks. `npm run generate` rewrites `package.json` and `.vibekit-manifest` on every task that adds an emitter or an emitted path, so a task that regenerates and does not claim them trips the scope check._
