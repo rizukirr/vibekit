@@ -22,7 +22,7 @@
 - Modify: `tests/core.test.mjs:41`
 - Modify: `package.json`
 
-- [ ] Step 1: Append to `tests/build.test.mjs`, and observe each failing before
+- [x] Step 1: Append to `tests/build.test.mjs`, and observe each failing before
       Step 3 is written:
 
 ```js
@@ -51,7 +51,7 @@ test('an emitter exporting neither contributes nothing', () => {
 })
 ```
 
-- [ ] Step 2: Append to `tests/core.test.mjs`, and observe both failing:
+- [x] Step 2: Append to `tests/core.test.mjs`, and observe both failing:
 
 ```js
 test('merges contributed package.json keys', () => {
@@ -68,9 +68,9 @@ test('merges contributed paths into the files allowlist', () => {
 })
 ```
 
-- [ ] Step 3: Run `npm test` and record which of the six fail and with what
+- [x] Step 3: Run `npm test` and record which of the six fail and with what
       message. A test that passes before the change is written is not a check.
-- [ ] Step 4: In `lib/build.mjs`, add after `mergeEmitters`:
+- [x] Step 4: In `lib/build.mjs`, add after `mergeEmitters`:
 
 ```js
 // The second merge point. `emit` returns files; `pkg` and `ships` return
@@ -95,7 +95,7 @@ export function mergeContributions(emitters, model) {
 }
 ```
 
-- [ ] Step 5: In `lib/build.mjs`, inside `build`, between `loadEmitters` and
+- [x] Step 5: In `lib/build.mjs`, inside `build`, between `loadEmitters` and
       `mergeEmitters`, attach the contributions to the model so `core` — which
       owns `package.json` but cannot see its sibling emitters — can read them:
 
@@ -103,7 +103,7 @@ export function mergeContributions(emitters, model) {
   model.contributions = mergeContributions(emitters, model)
 ```
 
-- [ ] Step 6: In `runtimes/core.mjs`, replace the `emit` function body so the
+- [x] Step 6: In `runtimes/core.mjs`, replace the `emit` function body so the
       contributions are merged in. Leave `FILES` and every other key as they are:
 
 ```js
@@ -130,10 +130,10 @@ export function emit(model) {
 }
 ```
 
-- [ ] Step 7: Run `npm test`
-- [ ] Step 8: Run `npm run generate`, then `git diff package.json` and confirm
+- [x] Step 7: Run `npm test`
+- [x] Step 8: Run `npm run generate`, then `git diff package.json` and confirm
       the only change is `files[]` becoming sorted.
-- [ ] Step 9: Commit
+- [x] Step 9: Commit
 
 ### Task 2: the Codex marketplace manifest → verify: `node -e "process.exit(require('./.agents/plugins/marketplace.json').plugins[0].name === 'vibekit' ? 0 : 1)"` exits 0
 
