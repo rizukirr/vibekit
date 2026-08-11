@@ -51,7 +51,7 @@ test('the verdict assertion is not satisfied by silence', () => {
 **Files:**
 - Modify: `evals/scenarios.json:176-179`
 
-- [ ] Step 1: Replace the `expect` block of the `verify-nit-does-not-gate` object
+- [x] Step 1: Replace the `expect` block of the `verify-nit-does-not-gate` object
       with:
 
 ```json
@@ -65,9 +65,9 @@ test('the verdict assertion is not satisfied by silence', () => {
       them, `verify-refuses-without-spec` and `verify-claims-nothing-unearned`,
       also carry `onlyNewFilesMatching` and both keep it.
 
-- [ ] Step 2: Run `npm test`
-- [ ] Step 3: Run `git diff` and confirm the only changed file is
+- [x] Step 2: Run `npm test`
+- [x] Step 3: Run `git diff` and confirm the only changed file is
       `evals/scenarios.json`, that no `"id"` line other than
       `verify-nit-does-not-gate` appears in the diff, and that no file under
       `skills/` appears.
-- [ ] Step 4: Commit
+- [x] Step 4: Commit
