@@ -33,6 +33,7 @@
     ".agents/",
     ".claude-plugin/",
     ".codex-plugin/",
+    ".opencode/",
     "AGENTS.md",
     "CLAUDE.md",
     "LICENSE",
@@ -43,5 +44,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "main": "./.opencode/plugins/vibekit.js"
 }

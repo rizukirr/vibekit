@@ -7,7 +7,7 @@
   "homepage": "https://github.com/rizukirr/vibekit",
   "repository": "https://github.com/rizukirr/vibekit",
   "bootstrap": "using-vibekit",
-  "runtimes": ["claude-code", "codex"],
+  "runtimes": ["claude-code", "codex", "opencode"],
   "keywords": ["vibekit", "ai-coding", "vibe-coding", "claude-code", "codex", "agent-skills", "skills"],
   "npm": {
     "name": "@rizukirr/vibekit",

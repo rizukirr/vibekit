@@ -52,7 +52,7 @@ test('never removes a path absent from the previous manifest', () => {
 
 test('loads core plus every configured runtime, in that order', async () => {
   const { emitters } = await build(process.cwd())
-  assert.deepEqual(emitters.map(e => e.id), ['core', 'claude-code', 'codex'])
+  assert.deepEqual(emitters.map(e => e.id), ['core', 'claude-code', 'codex', 'opencode'])
 })
 
 // W2: the merge → regions → manifest → plan sequencing used to live untested in
@@ -60,7 +60,8 @@ test('loads core plus every configured runtime, in that order', async () => {
 test('assembles every generated path and reports no drift on a clean tree', async () => {
   const { files, write, remove } = await build(process.cwd())
   for (const path of ['package.json', 'CLAUDE.md', 'AGENTS.md', 'README.md',
-                      '.claude-plugin/plugin.json', '.codex-plugin/plugin.json', MANIFEST]) {
+                      '.claude-plugin/plugin.json', '.codex-plugin/plugin.json', '.opencode/plugins/vibekit.js',
+                      '.opencode/INSTALL.md', MANIFEST]) {
     assert.ok(path in files, `${path} missing from assembled output`)
   }
   assert.deepEqual(write, [], 'clean tree must report no stale files')
