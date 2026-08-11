@@ -22,7 +22,7 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 | Runtime | Emitter | Verified |
 |---|---|---|
 | Claude Code | `runtimes/claude-code.mjs` | Yes — SessionStart hook smoke-tested in CI on Linux and Windows |
-| Codex | `runtimes/codex.mjs` | installed from this checkout and listed as enabled at version 2.0.0 by `codex plugin list`, against codex-cli 0.147.0 |
+| Codex | `runtimes/codex.mjs` | installed from this checkout and listed as enabled at version 0.6.0 by `codex plugin list`, against codex-cli 0.147.0 |
 | opencode | `runtimes/opencode.mjs` | all ten skills listed by `opencode debug skill`, against opencode 1.18.16 |
 | Gemini | `runtimes/gemini.mjs` | not verified — tool not installed |
 | Pi | `runtimes/pi.mjs` | not verified — tool not installed |

@@ -12,7 +12,7 @@ test('emits an extension manifest pointing at the context file', () => {
   const manifest = JSON.parse(emit(MODEL)['gemini-extension.json'])
   assert.equal(manifest.name, 'vibekit')
   assert.equal(manifest.contextFileName, 'GEMINI.md')
-  assert.equal(manifest.version, '2.0.0')
+  assert.equal(manifest.version, '0.6.0')
 })
 
 test('claims the context file as a generated region', () => {

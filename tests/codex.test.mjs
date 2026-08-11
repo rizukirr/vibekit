@@ -10,7 +10,7 @@ test('is identified as codex', () => {
 
 test('emits a plugin manifest pointing at the shared skills directory', () => {
   const plugin = JSON.parse(emit(MODEL)['.codex-plugin/plugin.json'])
-  assert.equal(plugin.version, '2.0.0')
+  assert.equal(plugin.version, '0.6.0')
   assert.equal(plugin.skills, './skills/')
   assert.equal(plugin.hooks, './hooks/hooks.json')
 })

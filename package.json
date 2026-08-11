@@ -1,6 +1,6 @@
 {
   "name": "@rizukirr/vibekit",
-  "version": "2.0.0",
+  "version": "0.6.0",
   "description": "Guardrailed vibe-coding pipeline for coding agents.",
   "type": "module",
   "license": "MIT",

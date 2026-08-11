@@ -11,7 +11,7 @@ test('is identified as core', () => {
 test('composes package.json from the config npm block plus generated fields', () => {
   const pkg = JSON.parse(emit(MODEL)['package.json'])
   assert.equal(pkg.name, '@rizukirr/vibekit')
-  assert.equal(pkg.version, '2.0.0')
+  assert.equal(pkg.version, '0.6.0')
   assert.equal(pkg.type, 'module')
   assert.equal(pkg.license, 'MIT')
   assert.deepEqual(pkg.publishConfig, { access: 'public' })
