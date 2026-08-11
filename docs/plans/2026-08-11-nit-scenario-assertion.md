@@ -17,7 +17,7 @@
 **Files:**
 - Modify: `tests/eval-score.test.mjs:418`
 
-- [ ] Step 1: Append to `tests/eval-score.test.mjs`. The `said` helper it uses is
+- [x] Step 1: Append to `tests/eval-score.test.mjs`. The `said` helper it uses is
       defined at `tests/eval-score.test.mjs:394` and builds a single successful
       run carrying only a final message:
 
@@ -37,14 +37,14 @@ test('the verdict assertion is not satisfied by silence', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record whether the two new tests pass. They are
+- [x] Step 2: Run `npm test` and record whether the two new tests pass. They are
       expected to pass immediately: `finalTextMatches` already exists at
       `evals/score.mjs:123-128` and this task adds no source. The check under
       test is the regex, not the scorer, and the lines that carry it are the two
       `rate, 0` assertions — a regex that matched `not ready` or matched silence
       would fail them here rather than in a paid run. Record which assertion
       would catch which mistake.
-- [ ] Step 3: Commit
+- [x] Step 3: Commit
 
 ### Task 2: repoint the scenario at the verdict claim → verify: `node -e "const s=require('./evals/scenarios.json'); const x=s.find(v => v.id === 'verify-nit-does-not-gate'); process.exit(Object.keys(x.expect).join() === 'finalTextMatches' ? 0 : 1)"` exits 0
 
