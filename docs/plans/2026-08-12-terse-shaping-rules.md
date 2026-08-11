@@ -18,7 +18,7 @@
 - Create: `tests/terse.test.mjs`
 - Modify: `skills/terse/SKILL.md:57`
 
-- [ ] Step 1: Recover the text rather than retyping it. Run
+- [x] Step 1: Recover the text rather than retyping it. Run
       `git show 603b487:skills/terse/SKILL.md` and take the block that begins
       with the line `## Shaping` and ends with the line immediately before
       `### Tells`. That block is rules 1 to 5. Then take the block that begins
@@ -27,7 +27,7 @@
       order, are the text to insert. The `### Tells` subsection between them is
       dropped and must not appear.
 
-- [ ] Step 2: Write `tests/terse.test.mjs`, and observe every test failing
+- [x] Step 2: Write `tests/terse.test.mjs`, and observe every test failing
       before Step 4:
 
 ```js
@@ -74,20 +74,20 @@ test('pins the frontmatter that drives firing', () => {
 })
 ```
 
-- [ ] Step 3: Run `npm test` and record which tests fail and with what messages.
+- [x] Step 3: Run `npm test` and record which tests fail and with what messages.
       A test that passes before the section is written is not a check. The
       frontmatter test is expected to pass from the start, since it pins values
       that already hold; say so rather than claiming it as evidence.
-- [ ] Step 4: Insert the recovered text into `skills/terse/SKILL.md` between the
+- [x] Step 4: Insert the recovered text into `skills/terse/SKILL.md` between the
       line `Resume afterwards.` and the `## What does not save tokens` heading.
       Change no existing line, and add nothing that was not in the two recovered
       blocks.
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Run `npm run check` and confirm it exits 0. Then run
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Run `npm run check` and confirm it exits 0. Then run
       `git diff skills/terse/SKILL.md` and confirm no line above `# terse`
       appears in the diff, and `git diff --name-only` and confirm the only paths
       are `skills/terse/SKILL.md` and `tests/terse.test.mjs`.
-- [ ] Step 7: Run `grep -c '—' skills/terse/SKILL.md` and record the count. The
+- [x] Step 7: Run `grep -c '—' skills/terse/SKILL.md` and record the count. The
       recovered text contains em dashes and that is expected: the tells are what
       this cycle drops, not the punctuation of the prose carrying the rules.
-- [ ] Step 8: Commit
+- [x] Step 8: Commit
