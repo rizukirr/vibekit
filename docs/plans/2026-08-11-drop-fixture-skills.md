@@ -81,16 +81,16 @@ business to restate or to sequence.
 - Modify: `README.md`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Delete the directories `skills/example-command/` and
+- [x] Step 1: Delete the directories `skills/example-command/` and
       `skills/example-plain/`. Do not delete anything under `commands/` by hand.
-- [ ] Step 2: In `tests/skeleton.test.mjs`, replace the array in the test named
+- [x] Step 2: In `tests/skeleton.test.mjs`, replace the array in the test named
       `every stub skill has a SKILL.md`:
 
 ```js
   for (const name of ['using-vibekit', 'vibe']) {
 ```
 
-- [ ] Step 3: In `evals/scenarios.json`, replace the `skill-invocable` scenario's
+- [x] Step 3: In `evals/scenarios.json`, replace the `skill-invocable` scenario's
       prompt and expectation, leaving its `id`, `n` and `model` untouched:
 
 ```json
@@ -98,11 +98,11 @@ business to restate or to sequence.
     "expect": { "skill": "vibekit:lazy" },
 ```
 
-- [ ] Step 4: Run `npm run generate` and confirm it reports removing
+- [x] Step 4: Run `npm run generate` and confirm it reports removing
       `commands/example-command.md` and `commands/example-command.toml`. If it
       does not, the manifest did not track them and the removal is not the
       generator's; stop and say so rather than deleting them by hand.
-- [ ] Step 5: Run `npm test`, then `npm run check`
-- [ ] Step 6: Run `ls commands/` and confirm the only entries are `vibe.md` and
+- [x] Step 5: Run `npm test`, then `npm run check`
+- [x] Step 6: Run `ls commands/` and confirm the only entries are `vibe.md` and
       `vibe.toml`.
-- [ ] Step 7: Commit
+- [x] Step 7: Commit
