@@ -72,12 +72,12 @@ measured calibration for a text-only sonnet session is about $0.055. Stop and
 confirm with the user before Step 2, quoting the harness's figure rather than
 mine.
 
-- [ ] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest. `evals/results/` held 27 files when this plan was written, which is where the clause's threshold comes from.
-- [ ] Step 2: Run `npm run eval -- --baseline v2 --candidate HEAD --scenarios terse-omits-em-dash -n 10`
-- [ ] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
+- [x] Step 1: Run `git ls-files -s skills evals | sha256sum` and record the digest. `evals/results/` held 27 files when this plan was written, which is where the clause's threshold comes from.
+- [x] Step 2: Run `npm run eval -- --baseline v2 --candidate HEAD --scenarios terse-omits-em-dash -n 10`
+- [x] Step 3: Run `git ls-files -s skills evals | sha256sum` and confirm it
       equals the digest from Step 1.
-- [ ] Step 4: Record both arms' rates. A candidate rate at or below its baseline
+- [x] Step 4: Record both arms' rates. A candidate rate at or below its baseline
       is the finding, reported as it stands. Do not change the expectation, the
       prompt, or the skill in response to it. The spec decided in advance what a
       null result means; apply that, do not re-argue it.
-- [ ] Step 5: Commit the results file.
+- [x] Step 5: Commit the results file.
