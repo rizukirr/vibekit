@@ -1,7 +1,7 @@
 ---
 title: terse shaping rules
 date: 2026-08-12
-status: draft
+status: approved
 ---
 
 # terse shaping rules — Design
