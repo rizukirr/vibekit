@@ -144,7 +144,7 @@ export function emit(model) {
 - Modify: `package.json`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Append to `tests/codex.test.mjs`, and observe both failing:
+- [x] Step 1: Append to `tests/codex.test.mjs`, and observe both failing:
 
 ```js
 test('emits the marketplace manifest Codex resolves a plugin through', () => {
@@ -159,8 +159,8 @@ test('ships the marketplace directory', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record the failures.
-- [ ] Step 3: In `runtimes/codex.mjs`, add to the `files` object inside `emit`,
+- [x] Step 2: Run `npm test` and record the failures.
+- [x] Step 3: In `runtimes/codex.mjs`, add to the `files` object inside `emit`,
       alongside the existing `.codex-plugin/plugin.json` entry:
 
 ```js
@@ -179,7 +179,7 @@ test('ships the marketplace directory', () => {
     }, null, 2)}\n`,
 ```
 
-- [ ] Step 4: In `runtimes/codex.mjs`, export the allowlist contribution:
+- [x] Step 4: In `runtimes/codex.mjs`, export the allowlist contribution:
 
 ```js
 export function ships() {
@@ -187,8 +187,8 @@ export function ships() {
 }
 ```
 
-- [ ] Step 5: Run `npm test`, then `npm run generate`
-- [ ] Step 6: Commit
+- [x] Step 5: Run `npm test`, then `npm run generate`
+- [x] Step 6: Commit
 
 ### Task 3: probe Codex → verify: `codex plugin list | grep -q "vibekit@vibekit .*installed"` exits 0
 
