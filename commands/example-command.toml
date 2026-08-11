@@ -1,7 +1,0 @@
-description = "Fixture skill that exercises slash-command emission."
-
-prompt = """
-Invoke the `example-command` skill and follow it exactly.
-
-User intent: {{args}}
-"""

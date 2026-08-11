@@ -15,8 +15,8 @@
   },
   {
     "id": "skill-invocable",
-    "prompt": "Invoke the vibekit:example-plain skill using the Skill tool, then stop.",
-    "expect": { "skill": "vibekit:example-plain" },
+    "prompt": "Invoke the vibekit:lazy skill using the Skill tool, then stop.",
+    "expect": { "skill": "vibekit:lazy" },
     "n": 3,
     "model": "haiku"
   },

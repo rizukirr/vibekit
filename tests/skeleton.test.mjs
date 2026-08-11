@@ -14,7 +14,7 @@ test('config names only runtimes that will have emitters', () => {
 })
 
 test('every stub skill has a SKILL.md', () => {
-  for (const name of ['using-vibekit', 'example-command', 'example-plain']) {
+  for (const name of ['using-vibekit', 'vibe']) {
     assert.ok(existsSync(`skills/${name}/SKILL.md`), `${name} missing`)
   }
 })
