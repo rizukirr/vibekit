@@ -1,7 +1,7 @@
 ---
 title: runtime coverage
 date: 2026-08-11
-status: draft
+status: approved
 ---
 
 # runtime coverage — Design
