@@ -1,7 +1,7 @@
 ---
 title: drop fixture skills
 date: 2026-08-11
-status: draft
+status: approved
 ---
 
 # drop fixture skills — Design
