@@ -1,260 +1,136 @@
 # vibekit
 
-Vibekit is a discipline-first vibe-coding plugin for Claude Code, OpenAI Codex, OpenCode, Gemini CLI, and Pi. One command, `/vibe <intent>`, drives a 7-stage pipeline (brainstorm → plan → isolate → exec → verify → review → integrate) that produces a verified, user-approved feature. For autonomy, `/ralph-loop` re-runs `/vibe` across iterations until verify-gate is satisfied, bounded by budgets, and never bypassing sign-off.
+A guardrailed pipeline for coding agents. It turns a one-line intent into a design you approved, a plan you approved, code written by an agent that never saw the plan being written, and a verdict backed by output you can read. Dependency free: bare Node and whichever agent CLI you already use.
 
-Token-efficient per feature: subagent briefs are RTCO-compressed and reports are schema-stripped, while every guardrail, evidence quotes, plans, constraints, degradation warnings, stays verbatim.
+The problem it solves is not bad code. It is the claim of being done. vibekit puts a gate in front of every such claim and makes the evidence part of the answer.
 
-Guardrails are non-negotiable. If the plan is wrong or the tests don't pass, the pipeline **halts loudly**, it does not silently commit the wrong thing.
+## How it works
 
----
+Six skills, each one a gate. Every stage hands to the next, and no stage can skip the one before it.
 
-## What you get
+```
+/vibekit:vibe "add a dark mode toggle"
+        │
+        ▼
+  brainstorm ──► plan ──► exec ──► verify ──► merge or PR
+   (design)    (tasks)  (agents)  (evidence)
+        ▲                   │         │
+        └───── debug ◄──────┴─────────┘
+              (a check failed)
+```
 
-- **`/vibe <intent>`**, the full 7-stage pipeline in one command.
-- **`/ralph-loop <intent>`**, autonomous bounded re-run of `/vibe` with a blocker classifier and thrashing critic. Same gates, never bypasses sign-off.
-- **Fifteen invocable skills** that also work standalone, plus an auto-loaded priming layer (`using-vibekit`) that carries the trigger map.
-- **Auto-trigger discipline.** A SessionStart hook (Claude Code) and equivalent adapters (Codex native discovery, Gemini `@`-import, opencode plugin, Pi `before_agent_start` extension) load `using-vibekit` into every session so pipeline skills cannot be silently skipped.
-- **Evidence-based verification.** Every "done" claim is backed by the exact test output, verbatim.
-- **Halt-and-report discipline.** Real live eval caught two plan defects cleanly, neither reached a commit.
-- **Token-efficient by design.** Compression is applied to agent framing, every guardrail stays verbatim.
-- **Karpathy-aligned discipline.** Four-axis authoring contract: PEG (substance), Karpathy (behavior), Caveman (style), Quad-Adapter (cross-runtime portability).
-- **Parallel-group dispatch** when a plan marks tasks as independent, with honest sequential fallback on runtimes that lack parallel subagents.
-- **Cross-session knowledge.** `memory-dual` captures durable project knowledge, atomic facts, compound documents, and a working notepad, under one file-backed convention.
+- **`brainstorm`** asks questions one at a time, pushes back on your framing once, offers alternatives, and writes a spec with observable success criteria. No code before you approve it.
+- **`plan`** turns the approved spec into numbered tasks. Every task carries a `→ verify:` clause that is checkable before anything runs, and a plan may not state a value nobody has observed.
+- **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent.
+- **`verify`** runs the checks no single task could: the whole suite, the scope of the diff, every goal against its evidence. It returns `ready` or `not ready`, and unmeasured counts as not satisfied.
+- **`debug`** takes over on a failed check. It finds one falsifiable cause, sends a read-only agent to refute it, and stops after two refutations rather than guessing a third time. It never edits.
+- **`lazy`** and **`terse`** stay on once invoked. One governs how much you build, the other how much you say.
 
----
+Two rules run through all of it. **Evidence or it did not happen**, because a check with no output to show is not a check. **You may not write a value you have not observed**, because a guess in a plan is a defect a later agent pays for.
+
+## Features
+
+<!-- vibekit:generated:skill-list -->
+| Skill | What it does | Gate |
+|---|---|---|
+| `brainstorm` | Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design. | hard |
+| `debug` | Use when a check fails — a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product; this skill never edits. | hard |
+| `exec` | Use when a plan is approved and implementation has not started — dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
+| `lazy` | Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
+| `plan` | Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
+| `terse` | Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
+| `using-vibekit` | Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
+| `verify` | Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen. | hard |
+| `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe; hands off to brainstorm and does nothing else. | none |
+<!-- /vibekit:generated -->
+
+A `hard` gate refuses to proceed until its condition is met. `none` means the skill shapes behaviour without blocking anything.
+
+Skills are discovered by globbing `skills/*/SKILL.md`. There is no registry anywhere in the repo, which is what makes registration drift impossible rather than merely detectable. Every derived file, including the runtime manifests, the command files, the trigger tables and this table, is generated by `npm run generate` and verified by `npm run check`.
 
 ## Install
 
-Choose your runtime below and use its native plugin or package installer bellow:
+Each runtime installs separately. Installing for one does not affect any other.
 
-### Claude Code
-
-From a marketplace that hosts this plugin:
+**Claude Code**
 
 ```
 /plugin marketplace add rizukirr/vibekit
-/plugin install vibekit@vibekit
+/plugin install vibekit@vibekit-marketplace
 ```
 
-From a local clone:
+**Codex**
 
-```bash
-git clone <this repo>
-cd vibekit
-# then add the repo path as a plugin source in Claude Code settings
+```
+codex plugin marketplace add rizukirr/vibekit
+codex plugin add vibekit@vibekit
 ```
 
-After installation, restart Claude Code. The `/vibe` command and all skills become available.
+Verify with `codex plugin list`.
 
-### OpenCode
+**opencode**
 
-Install `@rizukirr/vibekit` using npm:
-
-```bash
-npm install -g @rizukirr/vibekit 
-```
-
-Then add the scoped npm package name to an OpenCode configuration file:
-
-- Global, for all projects: `~/.config/opencode/opencode.json`
-- Project-specific: `<project-root>/opencode.json`
-
-OpenCode also accepts the `.jsonc` extension. It will install and load the configured package through its own package cache:
+Add it to the `plugin` array in your `opencode.json`, global or project level:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@rizukirr/vibekit"]
+  "plugin": ["vibekit@git+https://github.com/rizukirr/vibekit.git"]
 }
 ```
 
-Tell the agent:
+Verify with `opencode debug skill`.
+
+**Gemini CLI**
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.opencode/INSTALL.md
+gemini extensions install https://github.com/rizukirr/vibekit
 ```
 
-That keeps installation instructions centralized in one file and avoids README drift.
-
-### OpenAI Codex
-
-Register and install the plugin through its Codex marketplace:
-
-```bash
-codex plugin marketplace add rizukirr/vibekit
-codex plugin add vibekit --marketplace vibekit
-```
-
-Restart Codex after installation. Detailed Codex docs, including verification steps, are in `.codex/INSTALL.md`.
-
-### Gemini CLI
-
-Use Gemini's extension installer with the GitHub URL:
-
-Tell Gemini CLI:
-
-```bash
-Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/INSTALL.gemini.md
-```
-
-Detailed Gemini docs: `INSTALL.gemini.md`.
-
-### Pi
-
-Use Pi's package installer with either the npm release or Git repository:
-
-Tell Pi:
+**Pi**
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/rizukirr/vibekit/refs/heads/main/.pi-plugin/INSTALL.md
-```
-
-Manual installation is also documented in `.pi-plugin/INSTALL.md`.
-
-Quick install (global settings):
-
-```bash
-# Pinned npm release:
-pi install npm:@rizukirr/vibekit@0.5.2
-
-# Or track the git repository:
 pi install git:github.com/rizukirr/vibekit
 ```
 
-Install into project settings (`.pi/settings.json`) instead of global settings:
+### What has actually been checked
 
-```bash
-pi install git:github.com/rizukirr/vibekit -l
-```
+| Runtime | Emitter | Verified |
+|---|---|---|
+| Claude Code | `runtimes/claude-code.mjs` | SessionStart hook smoke-tested in CI on Linux and Windows |
+| Codex | `runtimes/codex.mjs` | installed and listed as enabled by `codex plugin list`, against codex-cli 0.147.0 |
+| opencode | `runtimes/opencode.mjs` | all skills listed by `opencode debug skill`, against opencode 1.18.16 |
+| Gemini | `runtimes/gemini.mjs` | not verified, tool not installed |
+| Pi | `runtimes/pi.mjs` | not verified, tool not installed |
 
-Useful maintenance commands:
-
-```bash
-pi list
-pi update
-pi remove git:github.com/rizukirr/vibekit
-```
-
-> **Heads-up, possible conflict if vibekit is already installed.** Pi reads skills from `~/.agents/skills/` as well as Pi package sources. If you previously installed vibekit for another runtime (commonly Codex, which symlinks `~/.agents/skills/vibekit/`), Pi can already see every vibekit skill from that path, and installing again can produce benign "skill collision" warnings on startup. **Check first:**
->
-> ```bash
-> ls ~/.agents/skills/vibekit/ 2>/dev/null
-> ```
->
-> If that lists 16 skill directories, vibekit is already reachable on Pi via `/skill:<name>`. Skip `pi install` to avoid collision warnings, or follow the "Avoiding collisions" guidance in `.pi-plugin/INSTALL.md`.
-
----
-
-## Quick start
-
-```
-/vibe add a toKebabCase utility with tests
-```
-
-What happens:
-
-1. **Brainstorm.** The pipeline asks a few clarifying questions (edge cases, scope, testing approach), proposes 2–3 approaches with trade-offs, and writes a short design doc you sign off on.
-2. **Plan.** It produces a TDD-shaped implementation plan, every step is bite-sized, every command is exact, every commit is named.
-3. **Isolate.** A git worktree gets created so your main branch is untouched.
-4. **Execute.** Each task runs in a fresh subagent with a tight brief. On any "Expected" mismatch, the agent halts and reports, no improvised fixes.
-5. **Verify.** Every spec requirement is checked against the actual evidence. Three independent verdict passes per requirement.
-6. **Review.** A self-critique surfaces blocks / warns / nits. You see the full diff.
-7. **Integrate.** You pick: merge locally, open a PR, keep the branch, or abandon. Nothing ships without your explicit choice.
-
-You only talk to the pipeline during brainstorm and at each gate. The rest is autonomous.
-
----
-
-## The skills
-
-All 15 invocable skills live in `skills/` and can be used standalone. A 16th skill, `using-vibekit`, is the priming layer, it is auto-loaded on session start by every supported runtime and is not invoked manually.
-
-**Pipeline:**
-
-| Skill | Role |
-|-------|------|
-| `vibe` | Orchestrator for the 7-stage pipeline. |
-| `brainstorm-lean` | Disciplined Socratic design gate with a HARD-GATE before implementation, pushback turn challenges framing before approaches are proposed. |
-| `plan-write` | TDD-shaped, bite-sized implementation plan with exact commands, mandatory `→ verify:` clause per task, optional `parallel-group` markers. |
-| `brief-compiler` | Turns verbose intents into tight RTCO subagent briefs with surgical-change constraints baked in. |
-| `exec-dispatch` | One fresh subagent per task, two-stage review, parallel-group fan-out where the runtime supports it. |
-| `report-filter` | Validates subagent returns against the declared schema, rejects drift. |
-| `verify-gate` | Evidence-based completion check, three independent verdict dispatches per requirement, plus a fail-closed surgical-diff pass. |
-| `review-pack` | Reflexion-style self-critique with simplicity + surgical-diff passes, then user sign-off on the diff. |
-| `security-review` | Optional threat-model gate, peer to `review-pack`. Tiered security pass over the diff, universal code-security always, AI-artifact checks when the diff builds a skill/agent/prompt/MCP server. Blocks finish-branch on CRITICAL/HIGH with a written-waiver escape. |
-| `finish-branch` | Integration endpoint, merge / PR / keep / abandon, no auto-actions. |
-| `isolate` | Dedicated worktree or branch per run, rollback is cheap. |
-
-**Cross-cutting:**
-
-| Skill | Role |
-|-------|------|
-| `memory-dual` | Durable project knowledge under `.vibekit/memory/`, atomic facts and compound documents in one storage convention, plus a working notepad. Keyword + tag + type search, `[[key]]` cross-links, audit pass. |
-| `vibekit-doctor` | Diagnostic health check, skill files, runtime registrations, `.vibekit/` health, `docs/` subdirs, authoring contracts. Read-only by default, `--fix` for safe repairs. |
-| `debug-recovery` | Pipeline failure branch + standalone debugger. Stop-the-line root-cause triage with one fresh read-only confirmation dispatch, produces a proven diagnosis and routes the fix to `exec-dispatch`/`plan-write`. Never edits code. |
-| `ralph-loop` | Autonomous-driver peer to `vibe`, bounded persistence loop with blocker classifier and thrashing critic. Same gates, same sign-off, no shortcuts. Cross-runtime with degraded checkpoint mode where native loops are absent. |
-
----
-
-## The guardrails
-
-Non-negotiable. None of them can be bypassed by a flag.
-
-- No implementation without an approved spec.
-- No dispatch without a plan.
-- No commit without the task's exact test command running and passing.
-- No "done" claim without evidence quoted verbatim.
-- No merge / PR / push without explicit user sign-off.
-- On any "Expected" mismatch: **halt and report**, never improvise a fix.
-
-This is what keeps vibe-coding from turning into vibe-disasters.
-
----
-
-## Token budget
-
-Measured in live eval on a small feature (toKebabCase utility, 2-task plan, 1 verification pass):
-
-- Total subagent tokens: ~118k across 4 dispatches.
-- Wall clock: minutes per dispatch, dominated by test-runner I/O.
-- Compression concentrated in agent briefs + reports, guardrails stay full prose.
-
-Large features scale linearly with task count. Verification cost scales with requirement count × 3 (self-consistency). For large specs the `verify-gate` skill offers a critical-only mode.
-
----
-
-## Philosophy
-
-- **Form compresses, guardrails don't.** Agent framing is fragmented, evidence and constraints are verbatim.
-- **Halt is a feature.** The pipeline would rather stop and surface a defect than improvise.
-- **One thing per run.** No mega-runs. One feature, one spec, one plan, one integration choice.
-- **Files over summaries.** Stages hand off via committed files, never prose summaries.
-- **Cross-runtime portability is a contract, not a hope.** Every runtime-coupled skill declares its required capabilities and ships a documented fallback for runtimes that lack them, with a verbatim degradation warning, never a silent skip.
-
----
+Two runtimes were probed against the real CLI and two were not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
 
 ## Evals
 
-Three evals are on record under `docs/evals/`:
+Skills are behaviour-shaping prompts, so the only way to know one works is to watch it fire in a real session.
 
-- `2026-04-21-static-eval-run-01.md`, initial static walkthrough, found 3 blocking defects, 7 warns, 4 nits.
-- `2026-04-21-static-eval-run-02.md`, post-fix re-walk, all blockers resolved, no regressions.
-- `2026-04-21-live-eval-run-03.md`, live dispatch on a throwaway repo, the halt-and-report discipline was proven twice under real subagents.
+```
+npm run eval                                       # candidate only, deterministic
+npm run eval -- --baseline v2 --candidate HEAD     # A/B two refs
+npm run eval -- --dry-run                          # print the plan and cost, spawn nothing
+npm run eval -- --judge                            # also grade whether the skill was followed
+```
 
-Re-running the evals after substantive skill changes is recommended. A packaged harness will come in a later release.
+Variants are git refs materialised as throwaway worktrees, so there is never a second `skills/` tree to drift. Sessions run in a disposable temp directory.
 
----
+Run A/B rather than candidate-only whenever a rate is the point. A candidate rate of 1.00 once looked like a new rule working. Its baseline arm was also 1.00, because the model already did it.
+
+This costs real money and needs an authenticated `claude` CLI, so it is a manual gate, not part of the free CI (`check`, `test`, `check:hook`).
+
+## Development
+
+```
+npm run generate    # regenerate every derived file
+npm run check       # fail if any generated file is out of date
+npm test            # unit tests
+```
+
+Adding a skill is creating one directory under `skills/` with a `SKILL.md`, then running `npm run generate`. Never hand-edit a generated file.
 
 ## License
 
-MIT.
-
-## Acknowledgements
-
-Thanks to all plugins that inspired this one, especially:
-
-- [superpowers](https://github.com/obra/superpowers)
-- [omc](https://github.com/Yeachan-Heo/oh-my-claudecode)
-- [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)
-- [caveman](https://github.com/JuliusBrussee/caveman)
-- [Prompt-Engineering-Guide](https://github.com/dair-ai/Prompt-Engineering-Guide)
+MIT. Copyright (c) 2026 Rizki Rakasiwi. See [LICENSE](LICENSE).

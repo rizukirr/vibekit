@@ -2,10 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, v2]
   pull_request:
 
-# Cancel superseded runs on the same ref to save runner minutes.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -21,14 +20,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          # Node 24+ runs the TypeScript syntax check (type stripping) with no
-          # toolchain install. shellcheck is preinstalled on ubuntu-latest.
           node-version: '24'
 
-      # The repo ships no dependencies; the checks run on a bare node. No
-      # install step is needed.
-      - name: Validate manifests, skills, and package contents
+      # The repo ships no dependencies; every check runs on a bare node.
+      - name: Check generated files are up to date
         run: npm run check
+
+      - name: Run unit tests
+        run: npm test
 
   hook:
     name: hook (${{ matrix.os }})
@@ -44,9 +43,9 @@ jobs:
         with:
           node-version: '24'
 
-      # The SessionStart hook is the entire vibekit integration: if it fails to
-      # execute, every skill is inert with no visible error. The windows-latest
-      # leg is the only machine-executed proof that the polyglot wrapper's batch
-      # half works; nothing on a Unix dev box can verify it.
+      # The SessionStart hook is the entire integration: if it fails to execute,
+      # every skill is inert with no visible error. The windows-latest leg is the
+      # only machine-executed proof that the polyglot wrapper's batch half works;
+      # nothing on a Unix dev box can verify it.
       - name: Smoke-test the SessionStart hook
         run: npm run check:hook

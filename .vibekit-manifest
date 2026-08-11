@@ -1,0 +1,16 @@
+.agents/plugins/marketplace.json
+.claude-plugin/marketplace.json
+.claude-plugin/plugin.json
+.codex-plugin/plugin.json
+.opencode/INSTALL.md
+.opencode/plugins/vibekit.js
+.vibekit-manifest
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+README.md
+commands/vibe.md
+commands/vibe.toml
+gemini-extension.json
+hooks/hooks.json
+package.json

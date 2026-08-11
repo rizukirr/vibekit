@@ -1,7 +1,5 @@
 external/
-/.omc
-tests/eval/*/
-.no-vibe/
 .vibe-worktrees/
-docs/
-/.omx
+.eval-worktrees/
+/docs
+/evals/results

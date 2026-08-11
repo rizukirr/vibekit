@@ -1,6 +1,6 @@
 {
   "name": "vibekit",
-  "description": "Token-efficient vibe-coding pipeline with hard guardrails: brainstorm, plan, isolate, exec, verify, review, integrate.",
-  "version": "0.5.2",
+  "description": "Guardrailed vibe-coding pipeline for coding agents.",
+  "version": "0.6.0",
   "contextFileName": "GEMINI.md"
 }

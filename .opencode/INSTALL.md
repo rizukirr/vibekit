@@ -1,68 +1,31 @@
-# Installing Vibekit for OpenCode
+# Installing vibekit for opencode
 
-## 1) Add plugin entry
+## Local checkout
 
-Add Vibekit's scoped npm package to the `plugin` array in one of these OpenCode configuration files:
-
-- **Global (all projects):** `~/.config/opencode/opencode.json`
-- **Project-specific:** `<project-root>/opencode.json`
-
-OpenCode also accepts `opencode.jsonc`. If you set the `OPENCODE_CONFIG` environment variable, edit the custom file it names instead.
+Add a local checkout to the `plugin` array in your `opencode.json`:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@rizukirr/vibekit"]
+  "plugin": ["/path/to/local/vibekit"]
 }
 ```
 
-OpenCode installs configured npm plugins into its own package cache. This enables Vibekit's plugin hooks (bootstrap injection and skill path registration).
+Replace `/path/to/local/vibekit` with the absolute path to your checkout.
 
-> [!IMPORTANT]
-> `npm install @rizukirr/vibekit` and `npm install -g @rizukirr/vibekit` only download the package into npm's project or global directory. They do not add it to `opencode.json`, so they do not activate it in OpenCode. Use the configuration above even if you already downloaded the package with npm.
+## Git repository
 
-## 2) Install commands
+This form is available once vibekit is published to the repository's default branch:
 
-OpenCode plugins and slash commands are loaded separately. To use Vibekit slash commands globally from a project-local npm install, copy the command files into your global commands directory:
-
-```bash
-mkdir -p ~/.config/opencode/commands
-cp node_modules/@rizukirr/vibekit/.opencode/commands/*.md ~/.config/opencode/commands/
+```json
+{
+  "plugin": ["vibekit@git+https://github.com/rizukirr/vibekit.git"]
+}
 ```
 
-For a global npm install, the source is under the global npm root:
+Restart opencode. Verify with:
 
-```bash
-mkdir -p ~/.config/opencode/commands
-cp "$(npm root -g)"/@rizukirr/vibekit/.opencode/commands/*.md ~/.config/opencode/commands/
+```
+opencode debug skill
 ```
 
-If you are working from a Vibekit clone, use `.opencode/commands/*.md` as the source. If you prefer project-local commands, copy the files into `<project>/.opencode/commands/`.
-
-## 3) Restart OpenCode
-
-Restart OpenCode so plugins and commands reload.
-
-## 4) Verify
-
-- Use the `skill` tool to list skills.
-- Confirm you can see `vibe`, `brainstorm-lean`, `plan-write`, and other vibekit skills.
-- Confirm slash commands work:
-
-```bash
-opencode run --command vibe "add a hello endpoint"
-opencode run --command vibekit-doctor
-```
-
-## Troubleshooting
-
-If vibekit slash commands do not appear in autocomplete or return unknown command:
-
-1. Confirm `@rizukirr/vibekit` appears in the `plugin` array in `opencode.json`.
-2. Confirm command files exist at `~/.config/opencode/commands/` (or project-local `.opencode/commands/`).
-3. Restart OpenCode after config changes.
-4. If needed, clear vibekit package cache and restart OpenCode:
-
-```bash
-rm -rf ~/.cache/opencode/packages/vibekit
-```
+Each runtime installs separately; installing here does not affect any other.

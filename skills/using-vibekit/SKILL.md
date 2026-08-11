@@ -1,70 +1,56 @@
 ---
 name: using-vibekit
-description: Use when starting any conversation — establishes vibekit's auto-trigger discipline so pipeline skills (brainstorm, brief, plan, exec, verify, review, finish, memory) actually fire at their trigger points instead of being silently skipped.
+description: Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
+trigger: Session start
+gate: none
 ---
 
-<SUBAGENT-STOP>
-If you were dispatched as a subagent to execute a specific task, skip this skill. Subagents follow their RTCO brief, not the orchestration discipline.
-</SUBAGENT-STOP>
+# using-vibekit
 
-<EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a vibekit skill applies to what you are about to do, you MUST invoke it via the Skill tool.
+If there is even a 1% chance a vibekit skill applies to what you are about to do,
+invoke it.
 
-This is not negotiable. You cannot rationalize "the task is too small," "I already know the answer," or "it would be faster to just do it." Skipping a guardrail skill is the failure mode this plugin exists to prevent.
-</EXTREMELY-IMPORTANT>
+This is not negotiable. "The task is too small", "I already know the answer" and
+"it would be faster to just do it" are the rationalisations this plugin exists to
+stop. A guardrail you talked yourself out of is a guardrail that was never there.
+
+If a skill turns out to be wrong for the situation, you do not have to follow it —
+but you do have to check.
+
+## If you are a subagent
+
+If you were dispatched to execute a specific task, skip this and follow your
+brief. The orchestration discipline belongs to the session that dispatched you.
 
 ## Instruction priority
 
-1. **User's explicit instructions** (CLAUDE.md, AGENTS.md, GEMINI.md, direct messages) — highest.
-2. **Vibekit skills** — override default behavior where they conflict.
-3. **Default system prompt** — lowest.
+1. **The user's explicit instructions** — highest. If they say "skip the design step", skip it.
+2. **vibekit skills** — these override default behaviour where they conflict.
+3. **The default system prompt** — lowest.
 
-If the user says "skip the brainstorm" or "just write the code," follow the user. Otherwise, follow the trigger map below.
+## Finding the right skill
 
-## Auto-trigger map
+Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is
+generated from those declarations — so it is never out of date. Read the table,
+not a copy of it.
 
-| Trigger condition | Skill that MUST fire |
-|---|---|
-| User says "vibe" or gives a short intent ("add X", "build Y", "fix Z") | `vibe` |
-| About to start any creative or implementation work, before code is written | `brainstorm-lean` |
-| Spec is approved, implementation has not started | `plan-write` |
-| Plan is approved, before any implementation dispatch | `isolate` |
-| About to dispatch any subagent / Task / Agent call | `brief-compiler` (compile RTCO brief first) |
-| Executing an approved plan task-by-task | `exec-dispatch` |
-| Just received output from a subagent, tool chain, or dispatched task | `report-filter` |
-| About to claim work is done, fixed, complete, or passing | `verify-gate` |
-| `verify-gate` returned `ready`, before any outward-facing action | `review-pack` |
-| A vibe run is complete and the user wants a security pass on the diff (optional, before finish-branch) | `security-review` |
-| `review-pack` returned `yes` and user signed off on the diff | `finish-branch` |
-| Driving a vibe run autonomously across iterations | `ralph-loop` |
-| Storing, recalling, or auditing durable project knowledge | `memory-dual` |
-| `verify-gate` returns `not satisfied`/`partial`, or an `exec-dispatch` task fails its test/build | `debug-recovery` |
-| User reports a bug, failing test, broken build, or asks "why is this failing" | `debug-recovery` |
-| User reports vibekit feels broken, skills not firing, or cross-runtime drift | `vibekit-doctor` |
+A skill whose row says `hard` is a gate. Respect it regardless of how simple the
+task looks; simple tasks are where unexamined assumptions cost the most.
 
-## Hard gates (never bypass)
+## Always on
 
-- **No code before brainstorm-approved design.** `brainstorm-lean` has a HARD-GATE; respect it on every project regardless of perceived simplicity.
-- **No "done" claim before verify-gate.** Evidence before assertions, always.
-- **No merge / push / PR before review-pack sign-off.** `finish-branch` is the only outward-facing endpoint.
-- **`security-review` is an optional peer gate.** When the user runs it and it returns `blocked` (CRITICAL/HIGH finding), `finish-branch` is unavailable until the user fixes or waives — the same block-halts-handoff rule as `review-pack`.
-- **No subagent dispatch without a compiled brief.** `brief-compiler` runs first; `report-filter` runs on return.
+Some skills are modifiers rather than steps — they say so in their own
+descriptions, which end "Stays on after." The trigger table lists them like any
+other skill; nothing here enumerates them, because a count kept by hand goes
+stale the moment one is added.
 
-## How to access skills
+Invoke each **once**, at the first moment its trigger applies, then keep applying
+it for the rest of the session without invoking it again. A modifier you never
+invoke is a modifier whose content you never read — the description line alone is
+not the skill.
 
-- **Claude Code / Copilot CLI:** `Skill` tool. The skill content loads — follow it directly. Never `Read` a skill file as a substitute for invoking it.
-- **Codex:** skills are referenced from `AGENTS.md`; invoke by following the named workflow.
-- **Gemini CLI:** `activate_skill` tool.
-- **opencode:** see the per-runtime adapter shim.
-- **Pi:** `prompts/vibe.md` is registered via the `pi` key in package.json; skills auto-discovered from `skills/` and primed by the .pi-plugin extension. Invoke via `/skill:<name>` or by following the auto-trigger map.
+## How to invoke
 
-## Compression policy reminder
-
-Compress agent chatter, briefs, capped reports, progress logs. **Never compress** questions to the user, user answers, plan files, TDD markers, verification evidence, error quotes, code blocks, destructive-operation warnings, or final commit/PR text. If a compression would reduce guardrail clarity by any amount, do not compress.
-
-## Anti-patterns
-
-- "This is too simple to need brainstorm." → Wrong. Run `brainstorm-lean`. The design can be three sentences, but it must exist and be approved.
-- "I'll skip verify-gate, the diff is obviously right." → Wrong. The diff being obvious is not evidence. Run the verification.
-- "I'll dispatch this subagent with a quick inline prompt." → Wrong. Run `brief-compiler` to produce an RTCO brief, every time.
-- "The subagent's report looks fine, I'll just use it." → Wrong. Run `report-filter` to enforce schema and strip restatements.
+Use the `Skill` tool. The skill's content loads and you follow it directly. Never
+read a skill file as a substitute for invoking it — reading gives you the text
+without the commitment.

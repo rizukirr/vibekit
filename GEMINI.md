@@ -1,34 +1,20 @@
-# Vibekit for Gemini CLI
+# vibekit
 
-You are running with the vibekit extension. Prefer vibekit skills when relevant.
+Guardrailed vibe-coding pipeline. Skills are referenced from this file and
+invoked by following the named workflow.
 
-Auto-trigger discipline (read this first — it tells you when each skill MUST fire):
-@./skills/using-vibekit/SKILL.md
+## Auto-trigger map
 
-Core workflow skill:
-@./skills/vibe/SKILL.md
-
-If a request is broad or underspecified, start with:
-@./skills/brainstorm-lean/SKILL.md
-
-For implementation planning and execution:
-@./skills/plan-write/SKILL.md
-@./skills/isolate/SKILL.md
-@./skills/brief-compiler/SKILL.md
-@./skills/exec-dispatch/SKILL.md
-@./skills/report-filter/SKILL.md
-@./skills/verify-gate/SKILL.md
-@./skills/review-pack/SKILL.md
-@./skills/finish-branch/SKILL.md
-
-For the pipeline failure branch and standalone debugging (root-cause triage, routes fixes to exec/plan):
-@./skills/debug-recovery/SKILL.md
-
-For durable project knowledge — atomic facts, compound documents, working notepad:
-@./skills/memory-dual/SKILL.md
-
-For diagnosing vibekit installation health (skill files, registrations, `.vibekit/` health):
-@./skills/vibekit-doctor/SKILL.md
-
-For autonomous bounded re-runs of `/vibe` until verify-gate is ready (degraded to manual `--resume` checkpoints on Gemini):
-@./skills/ralph-loop/SKILL.md
+<!-- vibekit:generated:trigger-table -->
+| Trigger condition | Skill | Gate |
+|---|---|---|
+| About to start creative or implementation work, before code is written | `brainstorm` | hard |
+| A check failed — verify returned not ready on a failed check, an exec clause failed, or a failure was reported | `debug` | hard |
+| Plan approved, implementation not yet started | `exec` | hard |
+| First moment of any coding work — invoke once, then it stays on | `lazy` | none |
+| Spec approved, implementation not yet started | `plan` | hard |
+| First response of the session — invoke once, then it stays on | `terse` | none |
+| Session start | `using-vibekit` | none |
+| Implementation complete, before any claim that work is done | `verify` | hard |
+| Invoked explicitly as a slash command — never fires on its own | `vibe` | none |
+<!-- /vibekit:generated -->

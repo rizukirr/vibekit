@@ -1,0 +1,25 @@
+{
+  "name": "vibekit",
+  "version": "0.6.0",
+  "description": "Guardrailed vibe-coding pipeline for coding agents.",
+  "author": { "name": "rizukirr", "url": "https://github.com/rizukirr" },
+  "license": "MIT",
+  "homepage": "https://github.com/rizukirr/vibekit",
+  "repository": "https://github.com/rizukirr/vibekit",
+  "bootstrap": "using-vibekit",
+  "runtimes": ["claude-code", "codex", "opencode", "gemini", "pi"],
+  "keywords": ["vibekit", "ai-coding", "vibe-coding", "claude-code", "codex", "agent-skills", "skills"],
+  "npm": {
+    "name": "@rizukirr/vibekit",
+    "type": "module",
+    "engines": { "node": ">=24" },
+    "scripts": {
+      "generate": "node bin/generate.mjs",
+      "check": "node bin/generate.mjs --check",
+      "test": "node --test \"tests/**/*.test.mjs\"",
+      "check:hook": "node --test \"tests/hook.test.mjs\"",
+      "eval": "node evals/run.mjs"
+    },
+    "publishConfig": { "access": "public" }
+  }
+}

@@ -1,17 +1,20 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "vibekit",
-  "description": "One-command vibe-coding with real guardrails. Brainstorm, plan, exec, verify, review, integrate — halts loudly on defects instead of committing them.",
+  "name": "vibekit-marketplace",
+  "description": "Guardrailed vibe-coding pipeline for coding agents.",
   "owner": {
-    "name": "rizukirr"
+    "name": "rizukirr",
+    "url": "https://github.com/rizukirr"
   },
   "plugins": [
     {
       "name": "vibekit",
-      "description": "One-command vibe-coding pipeline for Claude Code. Disciplined brainstorm + plan + dispatch + verify + review + integrate. Token-efficient by design; guardrails non-negotiable.",
-      "version": "0.5.2",
+      "description": "Guardrailed vibe-coding pipeline for coding agents.",
+      "version": "0.6.0",
       "source": "./",
-      "category": "productivity"
+      "author": {
+        "name": "rizukirr",
+        "url": "https://github.com/rizukirr"
+      }
     }
   ]
 }

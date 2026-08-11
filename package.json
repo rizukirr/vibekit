@@ -1,77 +1,56 @@
 {
   "name": "@rizukirr/vibekit",
-  "version": "0.5.2",
-  "description": "Token-efficient vibe-coding pipeline — 16 auto-triggered guardrail skills for Claude Code, Codex, Gemini, Pi, and OpenCode.",
+  "version": "0.6.0",
+  "description": "Guardrailed vibe-coding pipeline for coding agents.",
   "type": "module",
-  "main": ".opencode/plugins/vibekit.js",
-  "scripts": {
-    "check": "npm run check:json && npm run check:versions && npm run check:manifests && npm run check:skills && npm run check:code && npm run check:pack && npm run check:hook",
-    "check:json": "node scripts/check-json.mjs",
-    "check:versions": "node scripts/check-versions.mjs",
-    "check:manifests": "node scripts/check-manifests.mjs",
-    "check:skills": "node scripts/check-skills.mjs",
-    "check:code": "node scripts/check-code.mjs",
-    "check:pack": "node scripts/check-pack.mjs",
-    "check:hook": "node scripts/check-hook.mjs"
-  },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rizukirr/vibekit.git"
+  "author": {
+    "name": "rizukirr",
+    "url": "https://github.com/rizukirr"
   },
-  "homepage": "https://github.com/rizukirr/vibekit#readme",
-  "bugs": {
-    "url": "https://github.com/rizukirr/vibekit/issues"
-  },
-  "files": [
-    "skills/brainstorm-lean/",
-    "skills/brief-compiler/",
-    "skills/debug-recovery/",
-    "skills/exec-dispatch/",
-    "skills/finish-branch/",
-    "skills/isolate/",
-    "skills/memory-dual/",
-    "skills/plan-write/",
-    "skills/ralph-loop/",
-    "skills/report-filter/",
-    "skills/review-pack/",
-    "skills/security-review/",
-    "skills/using-vibekit/",
-    "skills/verify-gate/",
-    "skills/vibe/",
-    "skills/vibekit-doctor/",
-    "commands/",
-    "hooks/",
-    ".claude-plugin/",
-    ".codex/",
-    ".codex-plugin/",
-    ".pi-plugin/",
-    ".opencode/",
-    "gemini-extension.json",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "GEMINI.md",
-    "README.md",
-    "LICENSE"
-  ],
+  "homepage": "https://github.com/rizukirr/vibekit",
+  "repository": "https://github.com/rizukirr/vibekit",
   "keywords": [
     "vibekit",
-    "pi-package",
-    "opencode-plugin",
     "ai-coding",
     "vibe-coding",
     "claude-code",
     "codex",
-    "gemini",
     "agent-skills",
     "skills"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "generate": "node bin/generate.mjs",
+    "check": "node bin/generate.mjs --check",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "check:hook": "node --test \"tests/hook.test.mjs\"",
+    "eval": "node evals/run.mjs"
+  },
+  "files": [
+    ".agents/",
+    ".claude-plugin/",
+    ".codex-plugin/",
+    ".opencode/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "LICENSE",
+    "README.md",
+    "commands/",
+    "gemini-extension.json",
+    "hooks/",
+    "skills/"
   ],
   "publishConfig": {
     "access": "public"
   },
+  "main": "./.opencode/plugins/vibekit.js",
   "pi": {
-    "skills": ["./skills"],
-    "prompts": ["./.pi-plugin/prompts"],
-    "extensions": ["./.pi-plugin/extensions"]
+    "skills": [
+      "./skills"
+    ]
   }
 }
