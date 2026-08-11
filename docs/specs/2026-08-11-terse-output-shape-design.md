@@ -1,7 +1,7 @@
 ---
 title: terse output shape
 date: 2026-08-11
-status: draft
+status: approved
 ---
 
 # terse output shape — Design
