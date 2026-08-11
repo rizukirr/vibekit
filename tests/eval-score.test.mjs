@@ -416,3 +416,17 @@ test('finalTextOmits reads the final message, not the transcript', () => {
   const run = [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => true, raw: 'the plan says ready', finalText: 'Blocked.' }]
   assert.equal(scoreScenario(s, run).rate, 1)
 })
+
+// The assertion verify-nit-does-not-gate carries after 2026-08-11. It replaced
+// `finalTextOmits: "not ready"`, which silence satisfies — a run that never
+// reached a verdict scored the same as one that reached the right verdict.
+test('the verdict assertion accepts ready and rejects not ready', () => {
+  const s = { id: 'p', expect: { finalTextMatches: '[Vv]erdict:\\s*ready' } }
+  assert.equal(scoreScenario(s, said('Verdict: ready')).rate, 1)
+  assert.equal(scoreScenario(s, said('Verdict: not ready')).rate, 0)
+})
+
+test('the verdict assertion is not satisfied by silence', () => {
+  const s = { id: 'p', expect: { finalTextMatches: '[Vv]erdict:\\s*ready' } }
+  assert.equal(scoreScenario(s, said('Everything looks fine to me.')).rate, 0)
+})
