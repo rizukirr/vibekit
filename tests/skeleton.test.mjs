@@ -10,7 +10,7 @@ test('config names a bootstrap skill that exists', () => {
 })
 
 test('config names only runtimes that will have emitters', () => {
-  assert.deepEqual(config.runtimes, ['claude-code', 'codex'])
+  assert.deepEqual(config.runtimes, ['claude-code', 'codex', 'opencode', 'gemini', 'pi'])
 })
 
 test('every stub skill has a SKILL.md', () => {
@@ -20,7 +20,7 @@ test('every stub skill has a SKILL.md', () => {
 })
 
 test('mixed markdown files carry balanced marker regions', () => {
-  for (const [file, id] of [['CLAUDE.md', 'trigger-table'], ['AGENTS.md', 'trigger-table'], ['README.md', 'skill-list']]) {
+  for (const [file, id] of [['CLAUDE.md', 'trigger-table'], ['AGENTS.md', 'trigger-table'], ['GEMINI.md', 'trigger-table'], ['README.md', 'skill-list']]) {
     const text = readFileSync(file, 'utf8')
     assert.ok(text.includes(`<!-- vibekit:generated:${id} -->`), `${file} missing open marker`)
     assert.ok(text.includes('<!-- /vibekit:generated -->'), `${file} missing close marker`)

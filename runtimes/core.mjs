@@ -20,6 +20,7 @@ const FILES = [
 
 export function emit(model) {
   const { config } = model
+  const { pkg: contributed = {}, ships = [] } = model.contributions ?? {}
   const pkg = {
     name: config.npm.name,
     version: config.version,
@@ -32,8 +33,9 @@ export function emit(model) {
     keywords: config.keywords,
     engines: config.npm.engines,
     scripts: config.npm.scripts,
-    files: FILES,
+    files: [...new Set([...FILES, ...ships])].sort(),
     publishConfig: config.npm.publishConfig,
+    ...contributed,
   }
   return { 'package.json': `${JSON.stringify(pkg, null, 2)}\n` }
 }

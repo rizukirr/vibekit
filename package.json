@@ -30,17 +30,27 @@
     "eval": "node evals/run.mjs"
   },
   "files": [
+    ".agents/",
     ".claude-plugin/",
     ".codex-plugin/",
-    "commands/",
-    "hooks/",
-    "skills/",
+    ".opencode/",
     "AGENTS.md",
     "CLAUDE.md",
+    "GEMINI.md",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "commands/",
+    "gemini-extension.json",
+    "hooks/",
+    "skills/"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "main": "./.opencode/plugins/vibekit.js",
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
   }
 }

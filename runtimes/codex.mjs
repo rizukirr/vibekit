@@ -36,6 +36,19 @@ export function emit(model) {
       skills: './skills/',
       hooks: './hooks/hooks.json',
     }, null, 2)}\n`,
+    // Codex resolves a marketplace through this path, not through
+    // .codex-plugin/plugin.json. Confirmed 2026-08-11 against codex-cli 0.147.0:
+    // without it `codex plugin marketplace add` has nothing to read.
+    '.agents/plugins/marketplace.json': `${JSON.stringify({
+      name: config.name,
+      interface: { displayName: config.name },
+      plugins: [{
+        name: config.name,
+        source: { source: 'local', path: './' },
+        policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' },
+        category: 'Productivity',
+      }],
+    }, null, 2)}\n`,
   }
 
   for (const skill of skills.filter(s => s.command)) {
@@ -47,4 +60,8 @@ export function emit(model) {
 
 export function regions(model) {
   return { 'AGENTS.md': { 'trigger-table': triggerTable(model.skills) } }
+}
+
+export function ships() {
+  return ['.agents/']
 }

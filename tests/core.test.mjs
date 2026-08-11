@@ -39,3 +39,16 @@ test('owns the README skill-list region', () => {
   assert.deepEqual(Object.keys(regions(MODEL)), ['README.md'])
   assert.ok(regions(MODEL)['README.md']['skill-list'].includes('- `alpha` — Alpha does A.'))
 })
+
+test('merges contributed package.json keys', () => {
+  const model = { ...MODEL, contributions: { pkg: { main: './p.js' }, ships: [] } }
+  const pkg = JSON.parse(emit(model)['package.json'])
+  assert.equal(pkg.main, './p.js')
+})
+
+test('merges contributed paths into the files allowlist', () => {
+  const model = { ...MODEL, contributions: { pkg: {}, ships: ['.agents/'] } }
+  const pkg = JSON.parse(emit(model)['package.json'])
+  assert.ok(pkg.files.includes('.agents/'))
+  assert.ok(pkg.files.includes('skills/'), 'the base allowlist survives')
+})

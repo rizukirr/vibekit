@@ -1,7 +1,7 @@
 // tests/codex.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { id, emit, regions } from '../runtimes/codex.mjs'
+import { id, emit, regions, ships } from '../runtimes/codex.mjs'
 import { MODEL } from './helpers.mjs'
 
 test('is identified as codex', () => {
@@ -37,4 +37,15 @@ test('emits no path that the claude-code emitter also emits', () => {
 test('owns the AGENTS.md trigger-table region', () => {
   assert.deepEqual(Object.keys(regions(MODEL)), ['AGENTS.md'])
   assert.ok(regions(MODEL)['AGENTS.md']['trigger-table'].includes('| `beta` | none |'))
+})
+
+test('emits the marketplace manifest Codex resolves a plugin through', () => {
+  const manifest = JSON.parse(emit(MODEL)['.agents/plugins/marketplace.json'])
+  assert.equal(manifest.name, 'vibekit')
+  assert.equal(manifest.plugins[0].name, 'vibekit')
+  assert.deepEqual(manifest.plugins[0].source, { source: 'local', path: './' })
+})
+
+test('ships the marketplace directory', () => {
+  assert.ok(ships(MODEL).includes('.agents/'))
 })
