@@ -7,8 +7,6 @@ Guardrailed vibe-coding pipeline for coding agents. Dependency free.
 <!-- vibekit:generated:skill-list -->
 - `brainstorm` — Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design.
 - `debug` — Use when a check fails — a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product; this skill never edits.
-- `example-command` — Fixture skill that exercises slash-command emission.
-- `example-plain` — Fixture skill that exercises the plain-skill path.
 - `exec` — Use when a plan is approved and implementation has not started — dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit.
 - `lazy` — Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder: stdlib and native features before new code, one line before fifty. Stays on after.
 - `plan` — Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here.

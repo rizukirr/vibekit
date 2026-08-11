@@ -9,8 +9,6 @@ AGENTS.md
 CLAUDE.md
 GEMINI.md
 README.md
-commands/example-command.md
-commands/example-command.toml
 commands/vibe.md
 commands/vibe.toml
 gemini-extension.json
