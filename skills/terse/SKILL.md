@@ -100,15 +100,7 @@ detectable by looking, which is why these four and not a phrase list:
 - No "not X, it's Y" contrast where stating Y alone would do.
 - No adverb doing emphasis work.
 
-**These four were measured and did not bind.** A/B at n=10 on 2026-08-11, stated
-at line 86 of the file and then at line 13: `terse-omits-em-dash` returned 0.00
-against a 0.00 baseline both times, with the skill firing in every session.
-Recorded in `evals/results/2026-08-11T15-18-28-057Z-HEAD.json` and
-`evals/results/2026-08-11T16-09-14-732Z-HEAD.json`. They are stated here as
-intent, not as a claim that output changes. Do not re-run that experiment
-expecting a different number.
-
-Two more, from the same family, never measured separately:
+Two more, from the same family:
 
 - **Active voice, human subject.** Someone does something. Not "the complaint
   becomes a fix" or "the decision emerges" — name who decided.
