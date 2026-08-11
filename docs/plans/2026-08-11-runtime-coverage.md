@@ -227,7 +227,7 @@ Restoring the previous state is one command:
 - Modify: `package.json`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Write `tests/opencode.test.mjs`, and observe it failing:
+- [x] Step 1: Write `tests/opencode.test.mjs`, and observe it failing:
 
 ```js
 // tests/opencode.test.mjs
@@ -263,8 +263,8 @@ test('ships the plugin directory', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record the failure.
-- [ ] Step 3: Write `runtimes/opencode.mjs`:
+- [x] Step 2: Run `npm test` and record the failure.
+- [x] Step 3: Write `runtimes/opencode.mjs`:
 
 ```js
 // runtimes/opencode.mjs
@@ -328,10 +328,10 @@ export function ships() {
 }
 ```
 
-- [ ] Step 4: In `vibekit.config.json`, add `"opencode"` to the `runtimes` array,
+- [x] Step 4: In `vibekit.config.json`, add `"opencode"` to the `runtimes` array,
       after `"codex"`.
-- [ ] Step 5: Run `npm test`, then `npm run generate`
-- [ ] Step 6: Commit
+- [x] Step 5: Run `npm test`, then `npm run generate`
+- [x] Step 6: Commit
 
 ### Task 5: probe opencode → verify: `sh -c "cd /tmp/vibekit-opencode-probe && opencode debug skill" | grep -q brainstorm` exits 0
 
