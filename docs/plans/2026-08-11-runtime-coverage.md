@@ -372,7 +372,7 @@ outside the repository and holds one file; deleting it is `rm -rf
 - Modify: `package.json`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: Write `tests/gemini.test.mjs`, and observe it failing:
+- [x] Step 1: Write `tests/gemini.test.mjs`, and observe it failing:
 
 ```js
 // tests/gemini.test.mjs
@@ -403,8 +403,8 @@ test('ships both the manifest and the context file', () => {
 })
 ```
 
-- [ ] Step 2: Run `npm test` and record the failure.
-- [ ] Step 3: Write `GEMINI.md` by hand — it is a skeleton carrying a generated
+- [x] Step 2: Run `npm test` and record the failure.
+- [x] Step 3: Write `GEMINI.md` by hand — it is a skeleton carrying a generated
       region, exactly as `AGENTS.md` is, and the generator refuses a region whose
       file does not exist:
 
@@ -420,7 +420,7 @@ invoked by following the named workflow.
 <!-- /vibekit:generated -->
 ```
 
-- [ ] Step 4: Write `runtimes/gemini.mjs`:
+- [x] Step 4: Write `runtimes/gemini.mjs`:
 
 ```js
 // runtimes/gemini.mjs
@@ -449,10 +449,10 @@ export function regions(model) {
 }
 ```
 
-- [ ] Step 5: In `vibekit.config.json`, add `"gemini"` to the `runtimes` array,
+- [x] Step 5: In `vibekit.config.json`, add `"gemini"` to the `runtimes` array,
       after `"opencode"`.
-- [ ] Step 6: Run `npm test`, then `npm run generate`
-- [ ] Step 7: Commit
+- [x] Step 6: Run `npm test`, then `npm run generate`
+- [x] Step 7: Commit
 
 ### Task 7: the Pi runtime → verify: `node -e "process.exit(Array.isArray(require('./package.json').pi.skills) ? 0 : 1)"` exits 0
 
