@@ -176,3 +176,42 @@ the finding, never repaired by editing the expectation.
   or only ever binds in interactive use, where nothing measures it.
 - Whether the authoring-style cycle, if run, would require rewriting all ten
   skills or only new ones. Deferred with the rest of that half.
+
+## Outcome
+
+Measured 2026-08-11, A/B at n=10 against `v2`, recorded in
+`evals/results/2026-08-11T15-18-28-057Z-HEAD.json`. Digest
+`8bbf2fd71523d887964b117921a4e3f1d34a5fdb2d10a9fca5172cddf5cb7af1` before and
+after.
+
+```
+baseline  terse-omits-em-dash          rate=0.00  n=10  errors=0
+candidate terse-omits-em-dash          rate=0.00  n=10  errors=0
+baseline  terse-omits-throat-clearing  rate=1.00  n=10  errors=0
+candidate terse-omits-throat-clearing  rate=1.00  n=10  errors=0
+```
+
+Neither goal that named a rate is satisfied. **The shaping section did not change
+behaviour, so it was reverted.** The scenarios and this result stay.
+
+Two things the run established that the design did not anticipate.
+
+The em-dash rule is inert under the strongest conditions available. Every session
+was told to invoke `terse` and follow it exactly; the `skill` expectation passed
+in all ten, so the file was read. All ten failures read
+`final message contained /—/`. A stated prose rule, sitting at line 86 of a
+120-line skill, lost to the model's defaults.
+
+The opener rule never had anything to prove. Its baseline arm scored 1.00 with an
+empty failure list, so the behaviour was already absent before the rule existed.
+Without the baseline arm this would have read as the section working. A candidate
+rate means nothing on its own when the baseline is unmeasured — which is an
+argument for running A/B by default, not only when a regression is suspected.
+
+The reverted section is recoverable from git history. Re-attempting it belongs to
+a new cycle with a different mechanism, not a re-run of this one: the same prose
+in the same place will produce the same number.
+
+Unmeasured and unchanged by this cycle: whether `terse`'s **existing** rules bind.
+They were never A/B tested either.
+

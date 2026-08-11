@@ -161,3 +161,9 @@ the estimate recorded in Task 2 Step 3.
       stands. Do not change the expectation, the prompt, or the skill in
       response to it.
 - [x] Step 5: Commit the results file.
+
+_Amended 2026-08-11 after Task 3: the A/B showed no behaviour change, so Task 1's
+section and its test were reverted under `verify`'s routing, with the user's
+decision recorded. Tasks 2 and 3 stand — the scenarios and the recorded result
+are the durable output of this cycle. See the spec's Outcome section._
+
