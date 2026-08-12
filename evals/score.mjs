@@ -117,7 +117,7 @@ function unsatisfiedReason(scenario, run) {
   // kind. Pair it with `skill` in the scenario — on its own it is satisfied by
   // a session that did nothing at all.
   for (const name of [].concat(expect.skillAbsent ?? [])) {
-    if (run.skills.find(s => s.name === name)) return `skill ${name} fired`
+    if (run.skills.some(s => s.name === name)) return `skill ${name} fired`
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return `transcript missing ${JSON.stringify(expect.transcriptContains)}`
