@@ -12,6 +12,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | Plan approved, implementation not yet started | `exec` | hard |
 | First moment of any coding work — invoke once, then it stays on | `lazy` | none |
 | Spec approved, implementation not yet started | `plan` | hard |
+| Invoked explicitly as a slash command — never fires on its own | `quick` | none |
 | First response of the session — invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
 | Implementation complete, before any claim that work is done | `verify` | hard |

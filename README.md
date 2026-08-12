@@ -38,6 +38,7 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 | `exec` | Use when a plan is approved and implementation has not started — dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
 | `lazy` | Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
 | `plan` | Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
+| `quick` | Use when the user types /vibekit:quick — writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
 | `terse` | Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
 | `using-vibekit` | Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
 | `verify` | Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen. | hard |

@@ -9,6 +9,8 @@ AGENTS.md
 CLAUDE.md
 GEMINI.md
 README.md
+commands/quick.md
+commands/quick.toml
 commands/vibe.md
 commands/vibe.toml
 gemini-extension.json
