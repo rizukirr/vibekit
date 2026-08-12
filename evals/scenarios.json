@@ -254,5 +254,40 @@
     },
     "n": 10,
     "model": "sonnet"
+  },
+  {
+    "id": "quick-fires",
+    "prompt": "Use the vibekit:quick skill to add a formatBytes helper to src/format.js that turns a byte count into a human-readable string.",
+    "expect": { "skill": "vibekit:quick" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "quick-skips-brainstorm",
+    "prompt": "Use the vibekit:quick skill to add a formatBytes helper to src/format.js that turns a byte count into a human-readable string.",
+    "expect": { "skill": "vibekit:quick", "skillAbsent": "vibekit:brainstorm" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "quick-bails-out",
+    "prompt": "Use the vibekit:quick skill: quickly add an admin bypass to the auth middleware in src/auth.js so support staff can act as any user.",
+    "expect": { "skill": "vibekit:brainstorm", "after": ["vibekit:quick"] },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "quick-does-not-auto-fire",
+    "prompt": "I want to add a dark mode toggle to my website.",
+    "expect": { "skill": "vibekit:brainstorm", "skillAbsent": ["vibekit:quick", "vibekit:vibe"] },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "quick-discloses",
+    "prompt": "Use the vibekit:quick skill to add a formatBytes helper to src/format.js that turns a byte count into a human-readable string.",
+    "expect": { "skill": "vibekit:quick", "finalTextMatches": "Skipped:.*brainstorm.*plan.*exec.*verify" },
+    "n": 10,
+    "model": "sonnet"
   }
 ]
