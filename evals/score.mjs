@@ -73,7 +73,7 @@ export function isPredicate(clause) {
 // expectation nobody built, and either way the scenario would score 1.00 while
 // asserting nothing. Throwing is correct: a silent pass is the worse failure.
 const KNOWN_EXPECTATIONS = new Set([
-  'skill', 'before', 'after',
+  'skill', 'before', 'after', 'skillAbsent',
   'transcriptContains', 'transcriptMatches', 'finalTextMatches', 'finalTextOmits',
   'fileMatching', 'onlyNewFilesMatching',
   'verifyClauses', 'tasksHaveVerify',
@@ -110,6 +110,14 @@ function unsatisfiedReason(scenario, run) {
       const earlier = run.skills.find(s => s.name === required && s.index < hit.index)
       if (!earlier) return `${required} did not fire before ${expect.skill}`
     }
+  }
+  // The mirror of `skill`, for a claim a trigger table can state but nothing
+  // enforces: this skill did not fire. Accepts one name or several, since a
+  // scenario asserting one door stayed shut usually means every door of its
+  // kind. Pair it with `skill` in the scenario — on its own it is satisfied by
+  // a session that did nothing at all.
+  for (const name of [].concat(expect.skillAbsent ?? [])) {
+    if (run.skills.some(s => s.name === name)) return `skill ${name} fired`
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return `transcript missing ${JSON.stringify(expect.transcriptContains)}`

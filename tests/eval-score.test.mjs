@@ -430,3 +430,25 @@ test('the verdict assertion is not satisfied by silence', () => {
   const s = { id: 'p', expect: { finalTextMatches: '[Vv]erdict:\\s*ready' } }
   assert.equal(scoreScenario(s, said('Everything looks fine to me.')).rate, 0)
 })
+
+test('skillAbsent is unsatisfied when the named skill fired', () => {
+  const s = { id: 's', expect: { skillAbsent: 'vibekit:example-plain' } }
+  assert.equal(scoreScenario(s, [fired()]).rate, 0)
+})
+
+test('skillAbsent is satisfied when the named skill did not fire', () => {
+  const s = { id: 's', expect: { skillAbsent: 'vibekit:example-plain' } }
+  assert.equal(scoreScenario(s, [ok()]).rate, 1)
+})
+
+test('skillAbsent accepts an array and is unsatisfied by any member firing', () => {
+  const s = { id: 's', expect: { skillAbsent: ['vibekit:other', 'vibekit:example-plain'] } }
+  assert.equal(scoreScenario(s, [fired()]).rate, 0)
+  assert.equal(scoreScenario(s, [ok()]).rate, 1)
+})
+
+test('skillAbsent paired with skill: a session that did nothing fails the positive half', () => {
+  const s = { id: 's', expect: { skill: 'vibekit:example-plain', skillAbsent: 'vibekit:other' } }
+  assert.equal(scoreScenario(s, [ok()]).rate, 0)
+  assert.equal(scoreScenario(s, [fired()]).rate, 1)
+})
