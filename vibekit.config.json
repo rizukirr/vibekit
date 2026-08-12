@@ -1,7 +1,7 @@
 {
   "name": "vibekit",
-  "version": "0.6.0",
-  "description": "Guardrailed vibe-coding pipeline for coding agents.",
+  "version": "0.6.1",
+  "description": "Efficient, Opinionated vibe-coding pipeline for coding agents.",
   "author": { "name": "rizukirr", "url": "https://github.com/rizukirr" },
   "license": "MIT",
   "homepage": "https://github.com/rizukirr/vibekit",
