@@ -452,3 +452,28 @@ test('skillAbsent paired with skill: a session that did nothing fails the positi
   assert.equal(scoreScenario(s, [ok()]).rate, 0)
   assert.equal(scoreScenario(s, [fired()]).rate, 1)
 })
+
+test('producedFilesOmit is satisfied when no written file matches', () => {
+  const s = { id: 's', expect: { producedFilesOmit: '—' } }
+  const files = { 'a.md': 'clean prose' }
+  assert.equal(scoreScenario(s, produced(files)).rate, 1)
+})
+
+test('producedFilesOmit is unsatisfied when a written file matches', () => {
+  const s = { id: 's', expect: { producedFilesOmit: '—' } }
+  const files = { 'a.md': 'dirty — prose' }
+  assert.equal(scoreScenario(s, produced(files)).rate, 0)
+})
+
+test('producedFilesOmit accepts an array and is unsatisfied by any member matching', () => {
+  const s = { id: 's', expect: { producedFilesOmit: ['—', ';'] } }
+  const files = { 'a.md': 'has a; semicolon' }
+  assert.equal(scoreScenario(s, produced(files)).rate, 0)
+})
+
+test('producedFilesOmit ignores seeded fixtures', () => {
+  const s = { id: 's', expect: { producedFilesOmit: '—' } }
+  const seeded = { 'seed.md': 'seeded — prose' }
+  const files = { ...seeded }
+  assert.equal(scoreScenario(s, produced(files, seeded)).rate, 1)
+})

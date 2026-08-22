@@ -75,7 +75,7 @@ export function isPredicate(clause) {
 const KNOWN_EXPECTATIONS = new Set([
   'skill', 'before', 'after', 'skillAbsent',
   'transcriptContains', 'transcriptMatches', 'finalTextMatches', 'finalTextOmits',
-  'fileMatching', 'onlyNewFilesMatching',
+  'fileMatching', 'onlyNewFilesMatching', 'producedFilesOmit',
   'verifyClauses', 'tasksHaveVerify',
   'dispatchModelNamed', 'dispatchPromptMatches', 'dispatchPromptOmits',
   'anyDispatchMatches',
@@ -218,6 +218,20 @@ function unsatisfiedReason(scenario, run) {
   // and a spec that discusses verify clauses in prose would otherwise fail a
   // check aimed at the plan the session wrote.
   const written = Object.entries(produced).filter(([path]) => !(path in seeded))
+
+  // Mirrors finalTextOmits over files the session wrote. finalTextOmits sees
+  // only the last assistant message, so a rule that must hold in artifacts —
+  // code comments, commit messages, PR bodies — has nothing to assert against
+  // without this. Seeded fixtures are excluded: they are the input, not the work.
+  if (expect.producedFilesOmit !== undefined) {
+    const patterns = [expect.producedFilesOmit].flat()
+    for (const pattern of patterns) {
+      const re = new RegExp(pattern)
+      for (const [path, contents] of written) {
+        if (re.test(contents)) return `${path} contained /${pattern}/`
+      }
+    }
+  }
 
   if (expect.verifyClauses === 'predicate') {
     for (const [path, contents] of written) {
