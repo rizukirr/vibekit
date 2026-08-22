@@ -23,7 +23,7 @@ Before proposing anything, trace the whole thing first: every file the change to
 
 ## Procedure
 
-1. **Invoke `lazy` and `terse` before anything else.** `lazy` governs what you build, `terse` how you talk. Both stay on for the rest of the session. Their description lines are not their content. You have not read either skill until you have invoked it.
+1. **Invoke `lazy`, `terse` and `plain` before anything else.** `lazy` governs what you build, `terse` how you talk, `plain` how text is typed. All three stay on for the rest of the session. Their description lines are not their content. You have not read a skill until you have invoked it.
 2. Explore context: **look before you ask**. List the directory, read what matters, check recent commits. "New project, nothing to explore" is a conclusion you may only reach *after* a tool call, never instead of one. Asking your first question before you have looked is skipping this step.
 3. Clarifying questions, one at a time.
 4. Scope check.
