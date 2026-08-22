@@ -96,7 +96,15 @@ function unsatisfiedReason(scenario, run) {
   }
   if (expect.skill !== undefined) {
     const hit = run.skills.find(s => s.name === expect.skill)
-    if (!hit) return `skill ${expect.skill} never fired`
+    if (!hit) {
+      // Only claim unavailability when the transcript says what was offered. A
+      // run object carrying no initSkills says nothing either way, so it keeps
+      // the original wording rather than asserting something unobserved.
+      const offered = run.initSkills ?? []
+      return offered.length && !offered.includes(expect.skill)
+        ? `skill ${expect.skill} was not available to the session`
+        : `skill ${expect.skill} never fired`
+    }
     for (const forbidden of expect.before ?? []) {
       const earlier = run.tools.find(t => t.name === forbidden && t.index < hit.index)
       if (earlier) return `${forbidden} used before ${expect.skill}`
