@@ -1,0 +1,3 @@
+{"type":"system","subtype":"init","model":"claude-haiku-4-5-20251001","tools":["Bash","Read","Skill"],"skills":["vibekit:example-command","vibekit:using-vibekit"],"slash_commands":["vibekit:example-command"]}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Skill","input":{"skill":"vibekit:example-plain"}}]}}
+{"type":"result","subtype":"success","is_error":false,"num_turns":2,"total_cost_usd":0.0239948,"usage":{"input_tokens":2,"cache_creation_input_tokens":12892,"cache_read_input_tokens":23686,"output_tokens":283}}

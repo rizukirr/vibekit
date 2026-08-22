@@ -477,3 +477,15 @@ test('producedFilesOmit ignores seeded fixtures', () => {
   const files = { ...seeded }
   assert.equal(scoreScenario(s, produced(files, seeded)).rate, 1)
 })
+
+test('a skill the session was never offered reports unavailability', () => {
+  const scenario = { id: 's', expect: { skill: 'vibekit:example-plain' } }
+  const run = { ...ok(), initSkills: ['vibekit:using-vibekit'] }
+  assert.match(scoreScenario(scenario, [run]).failures[0], /was not available/)
+})
+
+test('a skill that was offered and not invoked still reports never fired', () => {
+  const scenario = { id: 's', expect: { skill: 'vibekit:example-plain' } }
+  const run = { ...ok(), initSkills: ['vibekit:example-plain'] }
+  assert.match(scoreScenario(scenario, [run]).failures[0], /never fired/)
+})

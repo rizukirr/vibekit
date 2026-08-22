@@ -98,3 +98,18 @@ test('caps a stored prompt and records the original length', () => {
   assert.equal(d.prompt.length, 4000)
   assert.equal(d.promptLength, 5000)
 })
+
+test('a skill the session was never offered is not reported as fired', () => {
+  const t = parseTranscript(fixture('skill-unavailable'))
+  assert.equal(t.ok, true)
+  assert.deepEqual(t.skills, [])
+})
+
+// The attempt stays in `tools` on purpose. `before` reads run.tools to enforce
+// the brainstorm gate, and a session that tried to act still made the decision
+// the gate exists to catch. Without this test, filtering `tools` to match
+// `skills` looks like a tidy-up rather than a weakening of that gate.
+test('an attempted skill is still recorded in tools', () => {
+  const t = parseTranscript(fixture('skill-unavailable'))
+  assert.ok(t.tools.some(u => u.name === 'Skill'), 'tools must record the attempt')
+})
