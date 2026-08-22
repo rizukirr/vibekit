@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here.
+description: Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here.
 trigger: Spec approved, implementation not yet started
 gate: hard
 ---
@@ -21,7 +21,7 @@ something the user may still change.
 ## The spec is settled
 
 Read it, do not re-litigate it. Questions it already answered are not asked
-again. A defect found in it goes back to the user as a question — never a silent
+again. A defect found in it goes back to the user as a question: never a silent
 edit, because the approved artefact is what the user signed.
 
 ## Refusals
@@ -34,10 +34,10 @@ edit, because the approved artefact is what the user signed.
 
 ## Plan document
 
-Write to `docs/plans/YYYY-MM-DD-<topic>.md`, then commit — that file alone.
+Write to `docs/plans/YYYY-MM-DD-<topic>.md`, then commit: that file alone.
 
 ```
-# <topic> — Implementation Plan
+# <topic>: Implementation Plan
 
 **Spec:** docs/specs/<file>.md
 **Goal:** one sentence
@@ -47,7 +47,7 @@ Write to `docs/plans/YYYY-MM-DD-<topic>.md`, then commit — that file alone.
 - <one line each, values copied verbatim from the spec>
 ```
 
-Global constraints are the spec's project-wide requirements — version floors,
+Global constraints are the spec's project-wide requirements: version floors,
 dependency limits, naming rules. Stated once, they are implicitly part of every
 task, so no task restates them and no task author has to remember them.
 
@@ -76,17 +76,17 @@ the command and stops there.
 
 ## You may not write a value you have not observed
 
-Every value this plan states — a number, a path, a count, a cross-reference —
+Every value this plan states, a number, a path, a count, a cross-reference,
 must be one you observed. You read it, you ran it, or you chose it as a
 threshold. A value you recalled is a guess, and a guess in a plan is a defect a
 fresh implementer pays for: they follow the plan exactly, hit a contradiction,
 and stop.
 
-Two ways to satisfy it. Derive the value before writing it — usually one command
+Two ways to satisfy it. Derive the value before writing it, usually one command
 and a few seconds. Or state the property instead of the value: "every new case
 passes" rather than "three cases pass".
 
-**A clause is the strictest case.** A `→ verify:` clause states a predicate —
+**A clause is the strictest case.** A `→ verify:` clause states a predicate:
 something checkable by a reader of the plan, before anything runs. Not a
 transcript.
 
@@ -95,20 +95,20 @@ above a threshold, an HTTP status.
 
 **Not predicates:** a quoted message, a specific count, a diff, a sample of
 output. Each is a claim about a future you have not seen. When one is wrong, the
-executing agent cannot tell whether the code failed or the plan lied — and it
+executing agent cannot tell whether the code failed or the plan lied, and it
 will assume the code.
 
-A number is not itself the tell; three forms carry one legitimately — an exit
+A number is not itself the tell. Three forms carry one legitimately: an exit
 status, an HTTP status, and a threshold in either direction (at least 1 match,
 under 120 lines). Any other number in a clause is a predicted value. A threshold
-is derivable because you chose it; a predicted value is not, because the runtime
+is derivable because you chose it. A predicted value is not, because the runtime
 chooses it.
 
 Spelling a number out does not launder it. "The four cases pass" is a count, and
 the first plan written under this rule got that count wrong.
 
 Naming your command in a code span is not quoting. Backticks delimit what to
-run; straight quotes are how a predicted transcript gets in.
+run. Straight quotes are how a predicted transcript gets in.
 
 If a specific value is genuinely load-bearing, the task's first step **observes
 it**, and the clause refers to the observation instead of a guess.
@@ -118,13 +118,13 @@ would make it true, the task boundary is wrong, not the clause.
 
 **Outside a clause the rule still holds, and there is no allowlist.** A line
 count in a task title, a path in a Files block, a version in Global constraints,
-a reference to another task by number — each is a value, so each was read, run,
+a reference to another task by number: each is a value, so each was read, run,
 or chosen. None may be recalled.
 
 ## No placeholders
 
 `TBD`, `TODO`, "add error handling", "similar to Task N", and any reference to a
-function no task defines are plan failures, not shorthand. Repeat the code —
+function no task defines are plan failures, not shorthand. Repeat the code:
 tasks get read out of order.
 
 ## Self-review
@@ -135,7 +135,7 @@ tasks get read out of order.
    the three permitted forms. Both are predicted output. Fix them.
 4. **Provenance.** For every number, path, count and cross-reference in the
    plan, name where it came from. "I ran it" and "I read it" pass. "I knew it"
-   is a guess — derive it, or state a property instead.
+   is a guess: derive it, or state a property instead.
 
 Fix inline. No re-review.
 

@@ -6,11 +6,11 @@ const TASK_HEADER = /^#{2,4}\s+Task\s+\d+/
 
 // The three numeric forms a clause may carry. Each names a property of the
 // runtime rather than of the code under test, which is what makes it derivable
-// without having run anything. A bare number is a predicted value — and a bare
+// without having run anything. A bare number is a predicted value, and a bare
 // three-digit number is exactly the wrong-`wc -l` defect this check exists to
 // catch, so an HTTP status has to be introduced by a context word to count.
 // Spelled-out numbers count. This plan's own Task 3 clause claimed "the four
-// new path-set cases" when Step 1 defined three — a wrong count that a
+// new path-set cases" when Step 1 defined three, a wrong count that a
 // digits-only check waves through, which is how the defect class this skill
 // targets escaped its own test on the very first plan written under it.
 const WORD = 'one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|dozen|twenty|thirty|forty|fifty|hundred|thousand'
@@ -20,7 +20,7 @@ const ALLOWED_NUMERIC = [
   // Exit status, in the phrasings plans actually use. Measured: five
   // agent-written plans produced "exit status 0" and "exit status of `cmd` is
   // 0", and a pattern demanding digits immediately after "exit" rejected every
-  // one — three false positives and no true ones. Widening here can only admit
+  // one. Three false positives and no true ones. Widening here can only admit
   // clauses that were always predicates; a quoted string still fails on the
   // quote, and a stale count still fails as a bare number.
   /\bexits?\b[^.\n]*?\b\d+/gi,
@@ -45,7 +45,7 @@ export function verifyClauses(text) {
       continue
     }
     if (depth > 0) continue
-    // A clause lives in a task header — that is where the skill's template puts
+    // A clause lives in a task header: that is where the skill's template puts
     // it. Anything else mentioning the marker is prose about the rule, and a
     // plan that documents its own compliance ("one of the three permitted
     // forms") was flagged for the word three. Documentation is not a clause.
@@ -59,7 +59,7 @@ export function verifyClauses(text) {
 export function isPredicate(clause) {
   // A code span is what you run; prose is what you claim. Predicted output is a
   // claim, so the span comes out before anything is judged. Tolerating
-  // backticks was not enough — an agent-written clause held
+  // backticks was not enough: an agent-written clause held
   // `node -e "...assert.strictEqual(pkg.type,'module')"` and was rejected for
   // quotes that belonged to the command, not to a predicted transcript.
   const prose = clause.replace(/`[^`]*`/g, ' ')
@@ -84,8 +84,8 @@ const KNOWN_EXPECTATIONS = new Set([
 // Returns null when the run satisfies the scenario, else a short string naming
 // the expectation that failed. A bare rate says one run in five broke a rule
 // without saying which, and "which" is the whole question when a rule is under
-// test. Reporting the reason cannot change a rate — every return here maps to
-// the boolean the previous version returned — so this is observability, not an
+// test. Reporting the reason cannot change a rate, every return here maps to
+// the boolean the previous version returned, so this is observability, not an
 // adjustment.
 function unsatisfiedReason(scenario, run) {
   const expect = scenario.expect ?? {}
@@ -103,7 +103,7 @@ function unsatisfiedReason(scenario, run) {
     }
     // `after` is `before`'s mirror over skills: each named skill must already
     // have fired. Without it a delegation scenario cannot tell "brainstorm
-    // delegated to lazy" from "lazy fired on its own trigger" — both leave a
+    // delegated to lazy" from "lazy fired on its own trigger": both leave a
     // lazy invocation in the transcript, and only one of them is the thing
     // under test.
     for (const required of expect.after ?? []) {
@@ -114,7 +114,7 @@ function unsatisfiedReason(scenario, run) {
   // The mirror of `skill`, for a claim a trigger table can state but nothing
   // enforces: this skill did not fire. Accepts one name or several, since a
   // scenario asserting one door stayed shut usually means every door of its
-  // kind. Pair it with `skill` in the scenario — on its own it is satisfied by
+  // kind. Pair it with `skill` in the scenario: on its own it is satisfied by
   // a session that did nothing at all.
   for (const name of [].concat(expect.skillAbsent ?? [])) {
     if (run.skills.some(s => s.name === name)) return `skill ${name} fired`
@@ -220,8 +220,8 @@ function unsatisfiedReason(scenario, run) {
   const written = Object.entries(produced).filter(([path]) => !(path in seeded))
 
   // Mirrors finalTextOmits over files the session wrote. finalTextOmits sees
-  // only the last assistant message, so a rule that must hold in artifacts —
-  // code comments, commit messages, PR bodies — has nothing to assert against
+  // only the last assistant message, so a rule that must hold in artifacts,
+  // code comments, commit messages, PR bodies, has nothing to assert against
   // without this. Seeded fixtures are excluded: they are the input, not the work.
   if (expect.producedFilesOmit !== undefined) {
     const patterns = [expect.producedFilesOmit].flat()
@@ -274,7 +274,7 @@ export function scoreScenario(scenario, runs) {
   }
 
   // W2: a judged run costs a second model call per session. Summarising it here
-  // is what makes that spend readable — previously the verdict was attached to
+  // is what makes that spend readable: previously the verdict was attached to
   // the run object and then dropped when the summary was written.
   const graded = good.filter(r => r.judge && !r.judge.judge_error)
   const judge = graded.length === 0
@@ -324,7 +324,7 @@ export function compare(candidate, baseline, thresholds) {
     const gate = { ...thresholds.defaults, ...(thresholds.scenarios?.[id] ?? {}) }
 
     if (result.incomplete) {
-      failures.push(`${id}: incomplete — no successful runs`)
+      failures.push(`${id}: incomplete, no successful runs`)
       continue
     }
     if (result.rate < gate.minFiringRate) {

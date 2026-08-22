@@ -1,7 +1,7 @@
 ---
 name: quick
-description: Use when the user types /vibekit:quick — writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped.
-trigger: Invoked explicitly as a slash command — never fires on its own
+description: Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped.
+trigger: Invoked explicitly as a slash command, never fires on its own
 gate: none
 command: true
 ---
@@ -16,7 +16,7 @@ The fast path. One intent in, the change written now.
 doc, no subagent dispatch, no verification report. That is the whole point of
 typing this instead of `/vibekit:vibe`.
 
-Invoke `lazy` and write under its ladder. Do not restate its rungs — one copy of
+Invoke `lazy` and write under its ladder. Do not restate its rungs: one copy of
 the ladder exists, and it lives in `lazy`.
 
 ## Bail out first
@@ -31,7 +31,7 @@ about its size:
 - The intent reads two ways.
 
 Any one of them: stop, name the criterion that tripped, and say the request wants
-`brainstorm`. Do not start a spec yourself, and do not negotiate — the user asked
+`brainstorm`. Do not start a spec yourself, and do not negotiate: the user asked
 for speed, and the honest answer is that this is not the path for it.
 
 None of them: write the change now.

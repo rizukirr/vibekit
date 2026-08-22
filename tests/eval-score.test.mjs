@@ -278,8 +278,8 @@ test('tasksHaveVerify matches the heading levels agents actually use', () => {
   }
 })
 
-// A real plan documented its own compliance — "one of the three permitted
-// predicate forms" — and the word three was read as a stale count. Clauses
+// A real plan documented its own compliance, "one of the three permitted
+// predicate forms", and the word three was read as a stale count. Clauses
 // live in task headers; anything else mentioning the marker is prose.
 test('prose about the rule is not a clause', () => {
   const s = { id: 'p', expect: { verifyClauses: 'predicate' } }
@@ -315,7 +315,7 @@ test('transcriptMatches fails when the transcript does not match', () => {
 const dispatched = list => [{ ok: true, skills: [], tools: [], dispatches: list, files: {}, seeded: {}, contains: () => false, raw: '' }]
 // promptLength is derived, never written by hand. A hand-counted length that
 // disagrees with the prompt reads as truncation and makes the fixture
-// unsatisfiable — which is exactly what happened on the first attempt at this
+// unsatisfiable, which is exactly what happened on the first attempt at this
 // task.
 const call = (over = {}) => {
   const prompt = over.prompt ?? 'read docs/briefs/task-1.md'
@@ -368,7 +368,7 @@ test('a truncated prompt cannot satisfy dispatchPromptOmits', () => {
 
 // A misspelled expectation key is silently ignored by a guard chain, so the
 // scenario scores 1.00 while testing nothing. A check that cannot fail is not
-// a check — and this one hides other checks that cannot fail.
+// a check, and this one hides other checks that cannot fail.
 test('an unknown expectation key is an error, not a silent pass', () => {
   const s = { id: 'p', expect: { transcriptMatchs: 'typo' } }
   assert.throws(() => scoreScenario(s, [ok()]), /unknown expectation/i)
@@ -389,7 +389,7 @@ test('every implemented key is accepted', () => {
 })
 
 // raw is the whole stdout, tool results included, so a fixture can satisfy an
-// assertion about itself. finalText is the last thing the agent said — a
+// assertion about itself. finalText is the last thing the agent said: a
 // refusal shows there and a file it read does not.
 const said = text => [{ ok: true, skills: [], tools: [], dispatches: [], files: {}, seeded: {}, contains: () => false, raw: 'irrelevant', finalText: text }]
 
@@ -418,7 +418,7 @@ test('finalTextOmits reads the final message, not the transcript', () => {
 })
 
 // The assertion verify-nit-does-not-gate carries after 2026-08-11. It replaced
-// `finalTextOmits: "not ready"`, which silence satisfies — a run that never
+// `finalTextOmits: "not ready"`, which silence satisfies, a run that never
 // reached a verdict scored the same as one that reached the right verdict.
 test('the verdict assertion accepts ready and rejects not ready', () => {
   const s = { id: 'p', expect: { finalTextMatches: '[Vv]erdict:\\s*ready' } }
@@ -454,26 +454,26 @@ test('skillAbsent paired with skill: a session that did nothing fails the positi
 })
 
 test('producedFilesOmit is satisfied when no written file matches', () => {
-  const s = { id: 's', expect: { producedFilesOmit: '—' } }
+  const s = { id: 's', expect: { producedFilesOmit: 'TODO' } }
   const files = { 'a.md': 'clean prose' }
   assert.equal(scoreScenario(s, produced(files)).rate, 1)
 })
 
 test('producedFilesOmit is unsatisfied when a written file matches', () => {
-  const s = { id: 's', expect: { producedFilesOmit: '—' } }
-  const files = { 'a.md': 'dirty — prose' }
+  const s = { id: 's', expect: { producedFilesOmit: 'TODO' } }
+  const files = { 'a.md': 'dirty TODO prose' }
   assert.equal(scoreScenario(s, produced(files)).rate, 0)
 })
 
 test('producedFilesOmit accepts an array and is unsatisfied by any member matching', () => {
-  const s = { id: 's', expect: { producedFilesOmit: ['—', ';'] } }
+  const s = { id: 's', expect: { producedFilesOmit: ['TODO', ';'] } }
   const files = { 'a.md': 'has a; semicolon' }
   assert.equal(scoreScenario(s, produced(files)).rate, 0)
 })
 
 test('producedFilesOmit ignores seeded fixtures', () => {
-  const s = { id: 's', expect: { producedFilesOmit: '—' } }
-  const seeded = { 'seed.md': 'seeded — prose' }
+  const s = { id: 's', expect: { producedFilesOmit: 'TODO' } }
+  const seeded = { 'seed.md': 'seeded TODO prose' }
   const files = { ...seeded }
   assert.equal(scoreScenario(s, produced(files, seeded)).rate, 1)
 })

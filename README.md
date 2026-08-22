@@ -33,16 +33,16 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 <!-- vibekit:generated:skill-list -->
 | Skill | What it does | Gate |
 |---|---|---|
-| `brainstorm` | Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design. | hard |
-| `debug` | Use when a check fails — a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product; this skill never edits. | hard |
-| `exec` | Use when a plan is approved and implementation has not started — dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
-| `lazy` | Use at the start of any coding work — writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
-| `plan` | Use when a spec is approved and implementation has not started — turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
-| `quick` | Use when the user types /vibekit:quick — writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
-| `terse` | Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
-| `using-vibekit` | Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
-| `verify` | Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen. | hard |
-| `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe; hands off to brainstorm and does nothing else. | none |
+| `brainstorm` | Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design. | hard |
+| `debug` | Use when a check fails: a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product. This skill never edits. | hard |
+| `exec` | Use when a plan is approved and implementation has not started: dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
+| `lazy` | Use at the start of any coding work: writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
+| `plan` | Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
+| `quick` | Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
+| `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
+| `using-vibekit` | Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
+| `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen. | hard |
+| `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else. | none |
 <!-- /vibekit:generated -->
 
 A `hard` gate refuses to proceed until its condition is met. `none` means the skill shapes behaviour without blocking anything.

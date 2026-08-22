@@ -1,7 +1,7 @@
 ---
 name: vibe
-description: Run a short intent through the pipeline. Invoked as /vibekit:vibe; hands off to brainstorm and does nothing else.
-trigger: Invoked explicitly as a slash command — never fires on its own
+description: Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else.
+trigger: Invoked explicitly as a slash command, never fires on its own
 gate: none
 command: true
 ---

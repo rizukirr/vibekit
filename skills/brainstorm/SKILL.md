@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Use before any creative or implementation work — features, components, behavior changes. Hard gate, no code before an approved design.
+description: Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design.
 trigger: About to start creative or implementation work, before code is written
 gate: hard
 ---
@@ -16,7 +16,7 @@ Do NOT write code, scaffold a project, or invoke any implementation skill until
 you have presented a design and the user has approved it in writing.
 
 This applies to every project regardless of perceived simplicity. A todo list, a
-one-function utility, a config change — all go through this gate. The design can
+one-function utility, a config change: all go through this gate. The design can
 be three sentences, but it must exist and be approved.
 
 **Anti-pattern:** "this is too simple to need a design." Simple projects are where
@@ -24,20 +24,20 @@ unexamined assumptions cause the most wasted work.
 
 ## Understand before you shorten
 
-Trace the whole thing first — every file the change touches, the actual flow —
-before proposing anything. `lazy` governs how short the solution gets; it never
+Before proposing anything, trace the whole thing first: every file the change
+touches, the actual flow. `lazy` governs how short the solution gets. It never
 shortens the reading.
 
 ## Procedure
 
 1. **Invoke `lazy` and `terse` before anything else.** `lazy` governs what you
-   build, `terse` how you talk; both stay on for the rest of the session. Their
-   description lines are not their content — you have not read either skill until
+   build, `terse` how you talk. Both stay on for the rest of the session. Their
+   description lines are not their content. You have not read either skill until
    you have invoked it.
-2. Explore context — **look before you ask**. List the directory, read what
+2. Explore context: **look before you ask**. List the directory, read what
    matters, check recent commits. "New project, nothing to explore" is a
-   conclusion you may only reach *after* a tool call, never instead of one —
-   and asking your first question before you have looked is skipping this step.
+   conclusion you may only reach *after* a tool call, never instead of one.
+   Asking your first question before you have looked is skipping this step.
 3. Clarifying questions, one at a time.
 4. Scope check.
 5. Pushback turn.
@@ -57,12 +57,12 @@ open-ended when it is wide. Focus on purpose, constraints, success criteria.
 check the literal text before sending: if your turn contains a second `?`, or an
 "and" joining two asks, cut everything after the first question and hold it for
 the next turn. Two questions in one turn is a violation even when they are
-related — especially then, because the answer to the first often deletes the
+related, especially then, because the answer to the first often deletes the
 second.
 
 Two rules that override the urge to proceed:
 
-- **If multiple interpretations exist, present them — do not pick silently.**
+- **If multiple interpretations exist, present them. Do not pick silently.**
 - **If something is unclear, stop. Name what is confusing. Ask.**
 
 ## Scope check
@@ -77,15 +77,15 @@ first one. Each sub-project gets its own spec, plan and implementation cycle.
 ## Pushback turn
 
 Exactly one, before approaches. Required. Challenge the framing if a simpler path
-exists — silently accepting the user's framing is a failure mode.
+exists. Silently accepting the user's framing is a failure mode.
 
 Output verbatim, in this shape:
 
-> **Pushback:** Before I sketch approaches, one challenge — `<one-sentence simpler framing or hidden assumption>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
+> **Pushback:** Before I sketch approaches, one challenge. `<one-sentence simpler framing or hidden assumption>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
 
 If no simpler framing exists, say so explicitly:
 
-> **Pushback:** No simpler framing — the requirement is already minimal. Proceeding to approaches.
+> **Pushback:** No simpler framing: the requirement is already minimal. Proceeding to approaches.
 
 Record the user's response in the spec's Approach section.
 
@@ -101,7 +101,7 @@ meets the requirement**, so the user can choose it.
 
 ## Presenting the design
 
-Scale each section to its complexity — a few sentences if straightforward, up to
+Scale each section to its complexity: a few sentences if straightforward, up to
 about 300 words if nuanced. Ask after each section whether it looks right so far.
 
 Cover architecture, components, data flow, error handling, testing.
@@ -127,7 +127,7 @@ date: YYYY-MM-DD
 status: draft
 ---
 
-# <topic> — Design
+# <topic>: Design
 
 ## Problem
 ## Goals
@@ -142,7 +142,7 @@ status: draft
 **Each goal states an observable success criterion.** "Make it work" is not a
 goal. Strong criteria let downstream skills verify without asking the user.
 
-If a section is genuinely not applicable, write `N/A — <one-line reason>`, never
+If a section is genuinely not applicable, write `N/A: <one-line reason>`, never
 `TODO`.
 
 ## Self-review

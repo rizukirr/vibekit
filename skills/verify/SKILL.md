@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Use before claiming a change is done, fixed or passing — checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen.
+description: Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen.
 trigger: Implementation complete, before any claim that work is done
 gate: hard
 ---
@@ -28,7 +28,7 @@ is `not satisfied`. Reading the code is not a substitute for running it, and no
 amount of re-reading turns unmeasured into satisfied.
 
 **Report what you could not observe.** A verdict that hides its gaps reads as
-evidence while proving nothing — the instrument is wrong at least as often as
+evidence while proving nothing. The instrument is wrong at least as often as
 the change is. Say what you could not check, every time, inside the verdict.
 
 ## 1. Preconditions
@@ -72,16 +72,16 @@ it goes, so the plan is changed by every run and claimed by no task. Without the
 exemption this check fires every time, and a check that always fires is ignored
 exactly like one that never fires.
 
-A command that errors rather than fails — a missing script, a binary that is not
-installed — is unobserved, not passed. Say so.
+A command that errors rather than fails, a missing script, a binary that is not
+installed, is unobserved, not passed. Say so.
 
 ## 3. Goals walk
 
 Every goal in the spec, one at a time, with the evidence behind it.
 
-- **`satisfied`** — you observed the criterion hold.
-- **`not satisfied`** — you observed it fail, or its criterion never ran.
-- **`partial`** — the criterion has parts, some observed, the rest named.
+- **`satisfied`**: you observed the criterion hold.
+- **`not satisfied`**: you observed it fail, or its criterion never ran.
+- **`partial`**: the criterion has parts, some observed, the rest named.
 
 `partial` is for a criterion that genuinely splits, never a hedge on one you
 skipped. That one is `not satisfied`.
@@ -112,11 +112,11 @@ are reading is not code you wrote.
 Every finding carries one. Severity is about consequence, and it is not the same
 question as a goal's verdict, which is about evidence.
 
-- **`blocker`** — a failed sweep check, a goal observed to fail, an unmeasured
+- **`blocker`**: a failed sweep check, a goal observed to fail, an unmeasured
   goal, a non-goal the diff built. **Only a blocker produces `not ready`.**
-- **`warn`** — a ladder violation whose fix would change behaviour, or a
+- **`warn`**: a ladder violation whose fix would change behaviour, or a
   `partial` goal.
-- **`nit`** — a ladder violation whose fix cannot change behaviour.
+- **`nit`**: a ladder violation whose fix cannot change behaviour.
 
 **An unobserved part is a `blocker` even inside a `partial` goal.** A goal whose
 criterion has several parts, one of them never run, is not laundered into a
@@ -133,7 +133,7 @@ still reaches the user, and a `blocker` that is a pure rename does not.
 ## 5. The bounded fix loop
 
 If any finding is auto-fixable, dispatch **one** fresh subagent carrying all of
-them in a single brief. Never one dispatch per finding — two implementers on one
+them in a single brief. Never one dispatch per finding: two implementers on one
 diff conflict.
 
 Confine the fix agent to files already in the diff. A fix reaching outside it is
@@ -142,7 +142,7 @@ the confinement it trips the sweep's scope check on the next round.
 
 Then run the sweep and the ladder again from the top. **The re-run is the gate on
 the fix.** A fix that breaks a test comes back as a failed check, which is a
-`blocker` — no special handling, and no way for a repair to slip past unchecked.
+`blocker`: no special handling, and no way for a repair to slip past unchecked.
 
 Stop at the first of these: a round produced no new findings, or one round
 completed. Anything still open is carried to the ending as information, never
@@ -159,27 +159,27 @@ Report in the conversation. Write nothing, commit nothing.
 ```
 Swept:   the HEAD every check below ran against
 Sweep:   one line per check, with what it returned
-Goals:   one line per goal — verdict, then the evidence
+Goals:   one line per goal, verdict, then the evidence
 Fixed:   what the loop fixed, or none
 Open:    remaining warns and nits, each with its severity
 Unseen:  what you could not observe, and why
 Verdict: ready | not ready
 ```
 
-`not ready` requires a blocker. There is no `ready with caveats` — a caveat is a
+`not ready` requires a blocker. There is no `ready with caveats`: a caveat is a
 blocker looking for a waiver.
 
 ## The ending
 
 Both exits end with the user. Present, then wait.
 
-**On `ready`** — the `git diff --stat` summary, the open warns and nits, and
+**On `ready`**: the `git diff --stat` summary, the open warns and nits, and
 three ways this change could be wrong that the tests would not catch. Then:
 approve, fix, or abort. Approval is always available. Only the user blocks: the
 risk list is judgement with nothing behind it, and letting an unevidenced guess
 veto the person whose code it is inverts who decides.
 
-**On `not ready`** — every blocker with its evidence, then the routing choice. A
+**On `not ready`**: every blocker with its evidence, then the routing choice. A
 failing test or build belongs to `debug`. A goal this plan cannot satisfy belongs
 to `plan`. A ladder violation belongs to `exec` as a new task. The user picks,
 and may override with the gap named and on the record.
@@ -187,16 +187,16 @@ and may override with the gap named and on the record.
 ## 6. Integration
 
 Reachable only after approval, and only the one option the user picks. Never two
-in one run — a second one is a second decision, made again.
+in one run: a second one is a second decision, made again.
 
-- **Merge locally** — `git switch <base-branch>`, then `git merge --no-ff <branch>`. No
+- **Merge locally**: `git switch <base-branch>`, then `git merge --no-ff <branch>`. No
   push, and the branch stays. On conflict, stop and leave it conflicted: you did
   not write this code, and resolving it here is the repair this skill refuses
   everywhere else.
-- **Push and open a PR** — `git push -u origin <branch>`, then `gh pr create`.
+- **Push and open a PR**: `git push -u origin <branch>`, then `gh pr create`.
   Title from the spec's title, never the branch name. The body names the spec,
   the plan, what the sweep ran, and the open warns and nits. Print the URL.
-- **Keep as is** — nothing runs. Say so in one line.
+- **Keep as is**: nothing runs. Say so in one line.
 
 Before any of them, two checks: the tree is clean, and `git rev-parse HEAD`
 equals the `Swept:` line of the verdict. A commit landing while the user decided
@@ -209,7 +209,7 @@ dirty tree. Never pass `--no-verify`.
 
 ## Repair nothing yourself
 
-The loop dispatches; you do not edit. Fixing what you find makes you the author
+The loop dispatches. You do not edit. Fixing what you find makes you the author
 of the change you are gating, and then there is no gate.
 
 Integrating is not repairing. A merge the user asked for adds no line you wrote

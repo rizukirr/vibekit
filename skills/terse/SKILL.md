@@ -1,7 +1,7 @@
 ---
 name: terse
-description: Use at the start of every session — compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after.
-trigger: First response of the session — invoke once, then it stays on
+description: Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after.
+trigger: First response of the session, invoke once, then it stays on
 gate: none
 ---
 
@@ -12,7 +12,7 @@ fluff dies.
 
 ## Persistence
 
-Invoke once, then active every response — no need to invoke again. No filler
+Invoke once, then active every response, no need to invoke again. No filler
 drift after many turns. Still active if unsure. Off only on "stop terse" or
 "normal mode".
 
@@ -26,7 +26,7 @@ by agents and read later by humans, and a compressed artifact is a silent bug.
 ### Compress
 
 - Transitions between steps.
-- Self-narration — "I'll now check the config" — drop it and check the config.
+- Self-narration: "I'll now check the config". Drop it and check the config.
 - Restating the user's last answer before responding to it.
 - Acknowledgements: "Great!", "Certainly!", "Happy to help".
 - Hedging and filler: just, really, basically, actually, simply.
@@ -37,7 +37,7 @@ by agents and read later by humans, and a compressed artifact is a silent bug.
 
 - Every question asked of the user, and the user's answers when quoted back.
 - Constraints, requirements and success criteria.
-- Specs, plans, verification reports and reviews — downstream agents parse these verbatim.
+- Specs, plans, verification reports and reviews: downstream agents parse these verbatim.
 - Brief CONSTRAINTS blocks dispatched to subagents.
 - Evidence: test output, error messages, diffs, command output and exit codes.
 - Code blocks, commit messages and PR bodies.
@@ -77,8 +77,8 @@ Compression decides what survives. This decides the order it arrives in.
    bounded action per step, no step containing "and then" twice. Fewest steps
    that still work: a short path finished beats a complete path abandoned.
 7. **Suppress tangents.** Finish the thing in front of you, then offer the second
-   issue as its own question. A question that comes up mid-work is not a tangent
-   — answer it yourself if you can, and surface it once, at the end, if you
+   issue as its own question. A question that comes up mid-work is not a tangent:
+   answer it yourself if you can, and surface it once, at the end, if you
    cannot.
 8. **Estimate in concrete units.** "Some work" and "a few hours" read the same.
    Say "about fifteen minutes if the tests already cover this, an afternoon if
@@ -103,7 +103,7 @@ detectable by looking, which is why these four and not a phrase list:
 Two more, from the same family:
 
 - **Active voice, human subject.** Someone does something. Not "the complaint
-  becomes a fix" or "the decision emerges" — name who decided.
+  becomes a fix" or "the decision emerges": name who decided.
 - **No vague declaratives.** "The implications are significant" names nothing.
   Say which implication.
 
@@ -114,15 +114,15 @@ never-compress list: a findings list, a blocker enumeration, a goals walk, a
 question to the user, quoted evidence, a destructive-operation warning.
 
 A cap that can truncate findings is a licence to drop the sixth blocker. The
-rules above shorten what you say about the work; they never shorten the work's
+rules above shorten what you say about the work. They never shorten the work's
 own output.
 
 ## What does not save tokens
 
-Measured, not assumed. Do not do these — they cost clarity and save nothing:
+Measured, not assumed. Do not do these. They cost clarity and save nothing:
 
-- **Invented abbreviations** — `cfg`, `impl`, `req`, `res`, `fn`. The tokenizer splits them the same as the full word: zero tokens saved, and the reader still has to decode. The full word is cheaper *and* clearer.
-- **Causal arrows** — `X → Y`. The arrow is its own token.
+- **Invented abbreviations**: `cfg`, `impl`, `req`, `res`, `fn`. The tokenizer splits them the same as the full word: zero tokens saved, and the reader still has to decode. The full word is cheaper *and* clearer.
+- **Causal arrows**: `X → Y`. The arrow is its own token.
 
 Standard, widely-known acronyms are fine: DB, API, HTTP.
 
@@ -136,8 +136,8 @@ likely caused by..."
 Yes: "Bug in auth middleware. Token expiry check uses `<` not `<=`. Fix:"
 
 Technical terms, function names, API names, CLI commands and error strings stay
-exact. Preserve the user's language — compress the style, not the language.
+exact. Preserve the user's language: compress the style, not the language.
 
 ## Boundaries
 
-How you talk, not what you build — `lazy` covers code volume.
+How you talk, not what you build. `lazy` covers code volume.

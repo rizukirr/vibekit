@@ -2,11 +2,11 @@
 
 // The tools that hand work to a fresh context. A name not on this list is not a
 // dispatch, and a dispatch this list misses is invisible to every expectation
-// built on it — which is why the scoring tests carry a negative case.
+// built on it, which is why the scoring tests carry a negative case.
 const DISPATCH_TOOLS = new Set(['Task', 'Agent'])
 const PROMPT_CAP = 4000
 
-// Pure: JSONL text in, facts out. No fs, no network — this is what lets the
+// Pure: JSONL text in, facts out. No fs, no network: this is what lets the
 // scoring rules be tested without spending money on sessions.
 export function parseTranscript(text) {
   const skills = []

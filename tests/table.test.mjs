@@ -18,8 +18,8 @@ test('renders one row per skill and nothing else', () => {
 
 test('renders a skill list with descriptions', () => {
   const out = skillList(MODEL.skills)
-  assert.ok(out.includes('- `alpha` — Alpha does A.'))
-  assert.ok(out.includes('- `beta` — Beta does B.'))
+  assert.ok(out.includes('- `alpha`: Alpha does A.'))
+  assert.ok(out.includes('- `beta`: Beta does B.'))
 })
 
 // B1: a pipe in a cell silently added a column, corrupting the auto-trigger map.

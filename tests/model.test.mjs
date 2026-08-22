@@ -79,7 +79,7 @@ test('throws when frontmatter carries generated-region marker syntax', () => {
   } finally { cleanup() }
 })
 
-test('allows a pipe in frontmatter — it is escaped at render time, not banned', () => {
+test('allows a pipe in frontmatter: it is escaped at render time, not banned', () => {
   const { root, cleanup } = makeSkillsDir({
     'using-vibekit': skillFile({ name: 'using-vibekit', trigger: 'returns not satisfied | partial' }),
   })

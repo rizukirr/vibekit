@@ -1,6 +1,6 @@
 ---
 name: using-vibekit
-description: Use when starting any conversation — establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
+description: Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
 trigger: Session start
 gate: none
 ---
@@ -14,7 +14,7 @@ This is not negotiable. "The task is too small", "I already know the answer" and
 "it would be faster to just do it" are the rationalisations this plugin exists to
 stop. A guardrail you talked yourself out of is a guardrail that was never there.
 
-If a skill turns out to be wrong for the situation, you do not have to follow it —
+If a skill turns out to be wrong for the situation, you do not have to follow it,
 but you do have to check.
 
 ## If you are a subagent
@@ -24,33 +24,33 @@ brief. The orchestration discipline belongs to the session that dispatched you.
 
 ## Instruction priority
 
-1. **The user's explicit instructions** — highest. If they say "skip the design step", skip it.
-2. **vibekit skills** — these override default behaviour where they conflict.
-3. **The default system prompt** — lowest.
+1. **The user's explicit instructions**: highest. If they say "skip the design step", skip it.
+2. **vibekit skills**: these override default behaviour where they conflict.
+3. **The default system prompt**: lowest.
 
 ## Finding the right skill
 
 Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is
-generated from those declarations — so it is never out of date. Read the table,
+generated from those declarations, so it is never out of date. Read the table,
 not a copy of it.
 
 A skill whose row says `hard` is a gate. Respect it regardless of how simple the
-task looks; simple tasks are where unexamined assumptions cost the most.
+task looks. Simple tasks are where unexamined assumptions cost the most.
 
 ## Always on
 
-Some skills are modifiers rather than steps — they say so in their own
+Some skills are modifiers rather than steps: they say so in their own
 descriptions, which end "Stays on after." The trigger table lists them like any
-other skill; nothing here enumerates them, because a count kept by hand goes
+other skill. Nothing here enumerates them, because a count kept by hand goes
 stale the moment one is added.
 
 Invoke each **once**, at the first moment its trigger applies, then keep applying
 it for the rest of the session without invoking it again. A modifier you never
-invoke is a modifier whose content you never read — the description line alone is
+invoke is a modifier whose content you never read: the description line alone is
 not the skill.
 
 ## How to invoke
 
 Use the `Skill` tool. The skill's content loads and you follow it directly. Never
-read a skill file as a substitute for invoking it — reading gives you the text
+read a skill file as a substitute for invoking it: reading gives you the text
 without the commitment.

@@ -39,7 +39,7 @@ test('states the tells as rules, without eval provenance', () => {
 // changes firing, which five scenarios measure. Pinned by value rather than by
 // diff against HEAD: a diff against HEAD passes trivially once committed.
 test('pins the frontmatter that drives firing', () => {
-  assert.match(terse, /^trigger: First response of the session — invoke once, then it stays on$/m)
+  assert.match(terse, /^trigger: First response of the session, invoke once, then it stays on$/m)
   assert.match(terse, /^gate: none$/m)
-  assert.match(terse, /^description: Use at the start of every session — compress narration, never artifacts\./m)
+  assert.match(terse, /^description: Use at the start of every session\. Compress narration, never artifacts\./m)
 })
