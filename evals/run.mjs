@@ -7,7 +7,7 @@ import { runSession } from './session.mjs'
 import { scoreScenario, compare } from './score.mjs'
 import { materialise, remove } from './worktree.mjs'
 
-// Paths resolve from the module, not the caller's cwd — the same convention
+// Paths resolve from the module, not the caller's cwd, the same convention
 // bin/generate.mjs uses. Previously running the harness from a subdirectory
 // failed on a missing-file error that did not name the real cause.
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -59,7 +59,7 @@ export function planRuns(scenarios, opts) {
 
 // Every check here is about malformed input. The harness reports a verdict, so
 // the one thing it must never do is report PASS without having measured
-// anything — a green result with nothing behind it is worse than a crash,
+// anything, a green result with nothing behind it is worse than a crash,
 // because it looks like success and gets committed as trend history.
 export function validatePlan(runs, scenarios, opts, thresholds) {
   const known = new Set(scenarios.map(s => s.id))
@@ -75,12 +75,12 @@ export function validatePlan(runs, scenarios, opts, thresholds) {
   }
 
   if (runs.length === 0) {
-    throw new Error('no sessions planned — refusing to report a result for zero measurements')
+    throw new Error('no sessions planned: refusing to report a result for zero measurements')
   }
 }
 
 // Measured per-session cost ranges, taken from real runs recorded in
-// evals/results/*.json — not estimated from token prices. Haiku sessions in this
+// evals/results/*.json, not estimated from token prices. Haiku sessions in this
 // project ranged $0.0217 to $0.0887 depending on how much the session did.
 // vibekit: flat per-model range, refine from historical results if the spread
 // starts misleading people.
@@ -112,7 +112,7 @@ export function formatPlan(runs, opts) {
   const est = estimateCost(runs, opts)
   const lines = [
     `${runs.length} sessions${opts.judge ? ` + ${runs.length} judge calls` : ''}` +
-      ` — est. $${est.low.toFixed(2)}-$${est.high.toFixed(2)}`,
+      `: est. $${est.low.toFixed(2)}-$${est.high.toFixed(2)}`,
     `candidate: ${opts.candidate}`,
   ]
   if (opts.baseline) lines.push(`baseline: ${opts.baseline}`)
@@ -128,7 +128,7 @@ export function formatPlan(runs, opts) {
 function requireClaude() {
   const probe = spawnSync('claude', ['--version'], { encoding: 'utf8' })
   if (probe.status !== 0) {
-    throw new Error('claude CLI not available or not authenticated — cannot run evals')
+    throw new Error('claude CLI not available or not authenticated: cannot run evals')
   }
 }
 
@@ -140,7 +140,7 @@ function rubric() {
   return rubricCache
 }
 
-// The rubric says "no code fence", and haiku fences it anyway — 4 of 5 judge
+// The rubric says "no code fence", and haiku fences it anyway. 4 of 5 judge
 // calls on the first judged run were lost to that alone. Take the outermost
 // braces rather than trusting the instruction to be obeyed.
 export function extractJson(text) {
@@ -175,7 +175,7 @@ async function main() {
 
   console.log(formatPlan(runs, opts))
   if (opts.dryRun) {
-    console.log('dry run — nothing spawned')
+    console.log('dry run: nothing spawned')
     return 0
   }
 

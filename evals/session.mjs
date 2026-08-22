@@ -81,7 +81,7 @@ function seedRepo(cwd, spawn) {
 }
 
 // Sessions run with edits permitted, because "did the agent write code before
-// invoking the skill" is the thing being measured — plan mode would block the
+// invoking the skill" is the thing being measured, plan mode would block the
 // very action under observation. Safety comes from the cwd being a throwaway
 // temp directory, never the repo.
 export function runSession(scenario, pluginDir, spawn = spawnSync) {

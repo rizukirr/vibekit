@@ -15,8 +15,8 @@ function git(args) {
 }
 
 // N3: a string prefix test would accept a sibling like `.eval-worktrees-old`.
-// path.relative answers the question actually being asked — is this path inside
-// that directory — and rejects both siblings and `..` traversal.
+// path.relative answers the question actually being asked, is this path inside
+// that directory, and rejects both siblings and `..` traversal.
 function inside(root, target) {
   const rel = relative(root, resolve(target))
   return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel)

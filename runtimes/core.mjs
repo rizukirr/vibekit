@@ -4,7 +4,7 @@ import { skillTable } from '../lib/table.mjs'
 export const id = 'core'
 
 // files[] names directories, never individual skills. v1 listed each skill
-// explicitly, which meant every new skill needed a package.json edit — and a
+// explicitly, which meant every new skill needed a package.json edit, and a
 // forgotten edit shipped a broken package.
 const FILES = [
   '.claude-plugin/',

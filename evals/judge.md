@@ -7,7 +7,7 @@ You will receive:
 ## The transcript is one turn, and that is not a defect
 
 These sessions are non-interactive: the agent gets one user message and no
-replies. Several vibekit skills are *supposed* to stop and wait for the user —
+replies. Several vibekit skills are *supposed* to stop and wait for the user:
 asking a question and ending the turn is compliance with the procedure, not
 abandonment of it.
 
@@ -20,7 +20,7 @@ handed off, when the agent correctly stopped at a question before reaching them.
 The question you are answering is: **of the steps this agent had the chance to
 take, did it take them the way the skill says?**
 
-## Compliance failures — these do lower the score
+## Compliance failures: these do lower the score
 
 - Taking an action the skill forbids: writing code, scaffolding, or invoking an
   implementation skill before the gate the skill defines.
@@ -38,10 +38,10 @@ take, did it take them the way the skill says?**
 reached*, with no compliance failure above.
 
 Scoring:
-- 5 — every step it reached was taken as the skill specifies
-- 4 — reached steps taken, with a minor deviation in order or emphasis
-- 3 — invoked and partially followed; one clear compliance failure
-- 1 — invoked and then ignored
-- 0 — never invoked
+- 5: every step it reached was taken as the skill specifies
+- 4: reached steps taken, with a minor deviation in order or emphasis
+- 3: invoked and partially followed, one clear compliance failure
+- 1: invoked and then ignored
+- 0: never invoked
 
 Do not explain outside the JSON. Do not wrap the JSON in a code fence.
