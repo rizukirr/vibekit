@@ -29,9 +29,16 @@ test('subordinates the cap and the deletion pass to the never-compress list', ()
 // files and the project memory. A skill that undermines its own rule in the same
 // breath is worse than one that omits the rule.
 test('states the tells as rules, without eval provenance', () => {
-  assert.match(terse, /No em dash/i)
+  assert.match(terse, /No throat-clearing opener/i)
+  assert.doesNotMatch(terse, /No em dash/i)
   assert.doesNotMatch(terse, /did not bind/i)
   assert.doesNotMatch(terse, /evals\/results/)
+})
+
+// The em dash rule moved to `plain`. terse keeps a pointer rather than a copy,
+// for the same reason its Boundaries line points at `lazy` for code volume.
+test('points at plain for typography rather than restating it', () => {
+  assert.match(terse, /`plain` covers typography/)
 })
 
 // description and trigger are what the runtime shows the model before it decides

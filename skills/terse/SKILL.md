@@ -68,9 +68,8 @@ Compression decides what survives. This decides the order it arrives in.
 
 ### Tells
 
-Four constructions that read as machine-written at any length. Each is detectable by looking, which is why these four and not a phrase list:
+Three constructions that read as machine-written at any length. Each is detectable by looking, which is why these three and not a phrase list:
 
-- No em dash.
 - No throat-clearing opener: "Here's what", "Let me", "Great question", "Sure".
 - No "not X, it's Y" contrast where stating Y alone would do.
 - No adverb doing emphasis work.
@@ -107,4 +106,4 @@ Technical terms, function names, API names, CLI commands and error strings stay 
 
 ## Boundaries
 
-How you talk, not what you build. `lazy` covers code volume.
+How you talk, not what you build. `lazy` covers code volume, `plain` covers typography.
