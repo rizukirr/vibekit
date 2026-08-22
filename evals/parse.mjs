@@ -64,17 +64,30 @@ export function parseTranscript(text) {
     }
   }
 
+  // A Skill block records an attempt, not a load. The runtime can only load a
+  // skill it offered, so an attempt naming something outside initSkills came
+  // back as "Unknown skill" and the body was never read. Counting those as
+  // fired let sessions report a skill as fired in a worktree lacking it.
+  //
+  // Filtered here rather than at each expectation so one definition of "fired"
+  // serves all three consumers in score.mjs: skill, after and skillAbsent.
+  //
+  // tools and dispatches are deliberately NOT filtered. They record a decision
+  // the model made, and an errored Write still means the session chose to write
+  // before designing, which is what the `before` expectation catches.
+  const fired = skills.filter(s => initSkills.includes(s.name))
+
   // A session that produced no result event did not complete. Treating that as
   // "the skill did not fire" would let an API failure masquerade as a
   // behavioural regression, so it is an error instead.
   if (subtype === null) {
-    return { ok: false, error: 'no result event', skills, tools, dispatches, usage, cost, subtype, initSkills, finalText }
+    return { ok: false, error: 'no result event', skills: fired, tools, dispatches, usage, cost, subtype, initSkills, finalText }
   }
 
   return {
     ok: subtype === 'success' && isError !== true,
     error: null,
-    skills,
+    skills: fired,
     tools,
     dispatches,
     usage,
