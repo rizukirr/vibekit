@@ -1,7 +1,7 @@
 ---
 name: plain
-description: Use at the start of every session. Three typography rules that hold in every string you emit, including code comments, commit messages, PR bodies and docs. No em dash, no semicolon, no hard wrapping inside a paragraph. Stays on after.
-trigger: First response of the session, invoke once, then it stays on
+description: Use before writing any text, in chat or into a file. Three typography rules that hold in every string you emit, including code comments, commit messages, PR bodies and docs. No em dash, no semicolon, no hard wrapping inside a paragraph. Stays on after.
+trigger: Before the first text of the session is written, whether prose or a file, invoke once, then it stays on
 gate: none
 ---
 

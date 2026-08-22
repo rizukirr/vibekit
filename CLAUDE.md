@@ -11,7 +11,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 | A check failed: verify returned not ready on a failed check, an exec clause failed, or a failure was reported | `debug` | hard |
 | Plan approved, implementation not yet started | `exec` | hard |
 | First moment of any coding work, invoke once, then it stays on | `lazy` | none |
-| First response of the session, invoke once, then it stays on | `plain` | none |
+| Before the first text of the session is written, whether prose or a file, invoke once, then it stays on | `plain` | none |
 | Spec approved, implementation not yet started | `plan` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `quick` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |
