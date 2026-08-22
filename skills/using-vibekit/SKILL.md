@@ -7,20 +7,15 @@ gate: none
 
 # using-vibekit
 
-If there is even a 1% chance a vibekit skill applies to what you are about to do,
-invoke it.
+If there is even a 1% chance a vibekit skill applies to what you are about to do, invoke it.
 
-This is not negotiable. "The task is too small", "I already know the answer" and
-"it would be faster to just do it" are the rationalisations this plugin exists to
-stop. A guardrail you talked yourself out of is a guardrail that was never there.
+This is not negotiable. "The task is too small", "I already know the answer" and "it would be faster to just do it" are the rationalisations this plugin exists to stop. A guardrail you talked yourself out of is a guardrail that was never there.
 
-If a skill turns out to be wrong for the situation, you do not have to follow it,
-but you do have to check.
+If a skill turns out to be wrong for the situation, you do not have to follow it, but you do have to check.
 
 ## If you are a subagent
 
-If you were dispatched to execute a specific task, skip this and follow your
-brief. The orchestration discipline belongs to the session that dispatched you.
+If you were dispatched to execute a specific task, skip this and follow your brief. The orchestration discipline belongs to the session that dispatched you.
 
 ## Instruction priority
 
@@ -30,27 +25,16 @@ brief. The orchestration discipline belongs to the session that dispatched you.
 
 ## Finding the right skill
 
-Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is
-generated from those declarations, so it is never out of date. Read the table,
-not a copy of it.
+Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is generated from those declarations, so it is never out of date. Read the table, not a copy of it.
 
-A skill whose row says `hard` is a gate. Respect it regardless of how simple the
-task looks. Simple tasks are where unexamined assumptions cost the most.
+A skill whose row says `hard` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most.
 
 ## Always on
 
-Some skills are modifiers rather than steps: they say so in their own
-descriptions, which end "Stays on after." The trigger table lists them like any
-other skill. Nothing here enumerates them, because a count kept by hand goes
-stale the moment one is added.
+Some skills are modifiers rather than steps: they say so in their own descriptions, which end "Stays on after." The trigger table lists them like any other skill. Nothing here enumerates them, because a count kept by hand goes stale the moment one is added.
 
-Invoke each **once**, at the first moment its trigger applies, then keep applying
-it for the rest of the session without invoking it again. A modifier you never
-invoke is a modifier whose content you never read: the description line alone is
-not the skill.
+Invoke each **once**, at the first moment its trigger applies, then keep applying it for the rest of the session without invoking it again. A modifier you never invoke is a modifier whose content you never read: the description line alone is not the skill.
 
 ## How to invoke
 
-Use the `Skill` tool. The skill's content loads and you follow it directly. Never
-read a skill file as a substitute for invoking it: reading gives you the text
-without the commitment.
+Use the `Skill` tool. The skill's content loads and you follow it directly. Never read a skill file as a substitute for invoking it: reading gives you the text without the commitment.

@@ -7,21 +7,17 @@ gate: none
 
 # terse
 
-Cut output tokens by compressing narration. All technical substance stays. Only
-fluff dies.
+Cut output tokens by compressing narration. All technical substance stays. Only fluff dies.
 
 ## Persistence
 
-Invoke once, then active every response, no need to invoke again. No filler
-drift after many turns. Still active if unsure. Off only on "stop terse" or
-"normal mode".
+Invoke once, then active every response, no need to invoke again. No filler drift after many turns. Still active if unsure. Off only on "stop terse" or "normal mode".
 
 ## The placement rule
 
 **Compress the conversation. Never the artifacts.**
 
-Narration is consumed once, by a human, in the moment. Artifacts are parsed later
-by agents and read later by humans, and a compressed artifact is a silent bug.
+Narration is consumed once, by a human, in the moment. Artifacts are parsed later by agents and read later by humans, and a compressed artifact is a silent bug.
 
 ### Compress
 
@@ -59,41 +55,20 @@ Resume afterwards.
 
 Compression decides what survives. This decides the order it arrives in.
 
-1. **Lead with the action.** If the answer is a command, a path or a snippet, it
-   is the first line. Prose comes after, if at all.
-2. **Restate position every turn.** In a multi-step run, say where you are:
-   `Task 3 of 8 done: opencode emitter. Next: probe it.` The reader is not
-   holding the plan in their head, and a run that reports results without
-   position makes them count.
-3. **One concrete next action** whenever something is left open, small enough to
-   start immediately. "Open the file" counts.
-4. **Cap narration lists at five.** Past five, split into now and later, or must
-   and nice to have. Five ranked beats ten unranked.
-5. **Pre-send deletion pass.** Delete the first sentence if it announces what you
-   are about to do, the last if it recaps or asks whether anything else is
-   needed, any sidebar, and any hedging adverb carrying no real uncertainty. Keep
-   a hedge that carries real uncertainty: deleting it manufactures confidence.
-6. **Number multi-step work.** More than one step means a numbered list, one
-   bounded action per step, no step containing "and then" twice. Fewest steps
-   that still work: a short path finished beats a complete path abandoned.
-7. **Suppress tangents.** Finish the thing in front of you, then offer the second
-   issue as its own question. A question that comes up mid-work is not a tangent:
-   answer it yourself if you can, and surface it once, at the end, if you
-   cannot.
-8. **Estimate in concrete units.** "Some work" and "a few hours" read the same.
-   Say "about fifteen minutes if the tests already cover this, an afternoon if
-   not." Point the estimate at whoever runs the steps.
-9. **Show what now works.** Name the capability and how to see it, not the files
-   you touched. "Login works with magic links: `npm run dev`, open `/login`"
-   beats "I made some changes to the auth flow."
-10. **Matter-of-fact on errors.** No "uh oh", no "there seems to be a problem".
-    State the failure, its cause, and the fix: what failed, where, expected
-    versus got, and the line that repairs it.
+1. **Lead with the action.** If the answer is a command, a path or a snippet, it is the first line. Prose comes after, if at all.
+2. **Restate position every turn.** In a multi-step run, say where you are: `Task 3 of 8 done: opencode emitter. Next: probe it.` The reader is not holding the plan in their head, and a run that reports results without position makes them count.
+3. **One concrete next action** whenever something is left open, small enough to start immediately. "Open the file" counts.
+4. **Cap narration lists at five.** Past five, split into now and later, or must and nice to have. Five ranked beats ten unranked.
+5. **Pre-send deletion pass.** Delete the first sentence if it announces what you are about to do, the last if it recaps or asks whether anything else is needed, any sidebar, and any hedging adverb carrying no real uncertainty. Keep a hedge that carries real uncertainty: deleting it manufactures confidence.
+6. **Number multi-step work.** More than one step means a numbered list, one bounded action per step, no step containing "and then" twice. Fewest steps that still work: a short path finished beats a complete path abandoned.
+7. **Suppress tangents.** Finish the thing in front of you, then offer the second issue as its own question. A question that comes up mid-work is not a tangent: answer it yourself if you can, and surface it once, at the end, if you cannot.
+8. **Estimate in concrete units.** "Some work" and "a few hours" read the same. Say "about fifteen minutes if the tests already cover this, an afternoon if not." Point the estimate at whoever runs the steps.
+9. **Show what now works.** Name the capability and how to see it, not the files you touched. "Login works with magic links: `npm run dev`, open `/login`" beats "I made some changes to the auth flow."
+10. **Matter-of-fact on errors.** No "uh oh", no "there seems to be a problem". State the failure, its cause, and the fix: what failed, where, expected versus got, and the line that repairs it.
 
 ### Tells
 
-Four constructions that read as machine-written at any length. Each is
-detectable by looking, which is why these four and not a phrase list:
+Four constructions that read as machine-written at any length. Each is detectable by looking, which is why these four and not a phrase list:
 
 - No em dash.
 - No throat-clearing opener: "Here's what", "Let me", "Great question", "Sure".
@@ -102,20 +77,14 @@ detectable by looking, which is why these four and not a phrase list:
 
 Two more, from the same family:
 
-- **Active voice, human subject.** Someone does something. Not "the complaint
-  becomes a fix" or "the decision emerges": name who decided.
-- **No vague declaratives.** "The implications are significant" names nothing.
-  Say which implication.
+- **Active voice, human subject.** Someone does something. Not "the complaint becomes a fix" or "the decision emerges": name who decided.
+- **No vague declaratives.** "The implications are significant" names nothing. Say which implication.
 
 ### The exemption
 
-Rules 4, 5 and 9 govern **narration only**. None of them touches anything on the
-never-compress list: a findings list, a blocker enumeration, a goals walk, a
-question to the user, quoted evidence, a destructive-operation warning.
+Rules 4, 5 and 9 govern **narration only**. None of them touches anything on the never-compress list: a findings list, a blocker enumeration, a goals walk, a question to the user, quoted evidence, a destructive-operation warning.
 
-A cap that can truncate findings is a licence to drop the sixth blocker. The
-rules above shorten what you say about the work. They never shorten the work's
-own output.
+A cap that can truncate findings is a licence to drop the sixth blocker. The rules above shorten what you say about the work. They never shorten the work's own output.
 
 ## What does not save tokens
 
@@ -130,13 +99,11 @@ Standard, widely-known acronyms are fine: DB, API, HTTP.
 
 Pattern: `[thing] [action] [reason]. [next step].`
 
-Not: "Sure! I'd be happy to help with that. The issue you're experiencing is
-likely caused by..."
+Not: "Sure! I'd be happy to help with that. The issue you're experiencing is likely caused by..."
 
 Yes: "Bug in auth middleware. Token expiry check uses `<` not `<=`. Fix:"
 
-Technical terms, function names, API names, CLI commands and error strings stay
-exact. Preserve the user's language: compress the style, not the language.
+Technical terms, function names, API names, CLI commands and error strings stay exact. Preserve the user's language: compress the style, not the language.
 
 ## Boundaries
 
