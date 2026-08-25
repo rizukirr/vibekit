@@ -82,13 +82,15 @@ Add it to the `plugin` array in your `opencode.json`, global or project level:
 
 Verify with `opencode debug skill`.
 
-**Antigravity**
+**Antigravity (`agy`)**
 
 ```
 agy plugin install https://github.com/rizukirr/vibekit
 ```
 
 Verify with `agy plugin list`. Re-run the install command to update.
+
+The install reports `hooks: skipped (not found)`, which is expected. vibekit's hook is Claude Code's `SessionStart`, and Antigravity has no session-start event: its five events are `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation` and `Stop`. The auto-trigger map reaches the model through `rules/AGENTS.md` instead, which Antigravity loads as always-on rules.
 
 **Pi**
 
