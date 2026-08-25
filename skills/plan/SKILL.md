@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here.
+description: "Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here."
 trigger: Spec approved, implementation not yet started
 gate: hard
 ---

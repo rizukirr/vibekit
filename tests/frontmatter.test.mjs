@@ -21,6 +21,21 @@ test('keeps colons that appear inside a value', () => {
   assert.equal(data.trigger, 'About to run: anything')
 })
 
+test('strips a matched pair of double quotes from a value', () => {
+  const { data } = parseFrontmatter('---\ndescription: "does a thing"\n---\nbody\n')
+  assert.equal(data.description, 'does a thing')
+})
+
+test('strips a matched pair of single quotes from a value', () => {
+  const { data } = parseFrontmatter("---\ndescription: 'does a thing'\n---\nbody\n")
+  assert.equal(data.description, 'does a thing')
+})
+
+test('keeps an interior colon unchanged once the surrounding quotes are stripped', () => {
+  const { data } = parseFrontmatter('---\ntrigger: "About to run: anything"\n---\nbody\n')
+  assert.equal(data.trigger, 'About to run: anything')
+})
+
 test('throws when the frontmatter block is missing', () => {
   assert.throws(() => parseFrontmatter('# Foo\n'), /missing frontmatter/)
 })

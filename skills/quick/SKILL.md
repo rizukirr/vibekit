@@ -1,6 +1,6 @@
 ---
 name: quick
-description: Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped.
+description: "Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped."
 trigger: Invoked explicitly as a slash command, never fires on its own
 gate: none
 command: true

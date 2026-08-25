@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen.
+description: "Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen."
 trigger: Implementation complete, before any claim that work is done
 gate: hard
 ---
