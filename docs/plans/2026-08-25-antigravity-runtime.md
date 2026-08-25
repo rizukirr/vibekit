@@ -65,7 +65,7 @@ description: "Use before any creative or implementation work: features, componen
 
 This lands after Task 1 rather than with it. Adding the rejection while the skills still carry bare colons would make `npm run generate` fail on the repo's own sources, so the quoting has to be in place first.
 
-- [ ] Step 1: In `lib/frontmatter.mjs`, after computing `scalar` and before the assignment, reject a bare value carrying colon-space:
+- [x] Step 1: In `lib/frontmatter.mjs`, after computing `scalar` and before the assignment, reject a bare value carrying colon-space:
 
 ```js
     if (!unquoted && scalar.includes(': ')) {
@@ -73,11 +73,11 @@ This lands after Task 1 rather than with it. Adding the rejection while the skil
     }
 ```
 
-- [ ] Step 2: Add a test asserting that an unquoted value containing colon-space throws, and that the message names the key.
-- [ ] Step 3: Add a test asserting a quoted value containing colon-space does not throw.
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Commit
+- [x] Step 2: Add a test asserting that an unquoted value containing colon-space throws, and that the message names the key.
+- [x] Step 3: Add a test asserting a quoted value containing colon-space does not throw.
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Commit
 
 ## Task 3: Quote the description in generated Claude Code command files → verify: `npm run check` exits 0 after `npm run generate`
 
