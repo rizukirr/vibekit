@@ -175,15 +175,15 @@ export function regions(model) {
 
 The README's runtime table distinguishes probed rows from unprobed ones, so the row may only claim verification after this task's probe has run. That is why the probe and the README edit share a task and a commit.
 
-- [ ] Step 1: Run `agy plugin list`, uninstall any existing vibekit entry, truncate the agy log so the probe reads only its own output, then run `agy plugin install <this repo path>`
-- [ ] Step 2: In a scratch directory outside the repo, run a print-mode session asking whether the auto-trigger map is in context and to reproduce one of its rows.
-- [ ] Step 3: Grep the agy log at `~/.gemini/antigravity-cli/cli.log` for the skill-parse failure line and confirm the grep exits non-zero.
-- [ ] Step 4: Inspect the installed plugin's `skills/vibe/SKILL.md` and `skills/quick/SKILL.md` and confirm each still contains its authored body rather than a command prompt.
-- [ ] Step 5: In `README.md`, replace the Gemini CLI install block at lines 85 to 89 with an Antigravity block, matching the heading-then-fenced-command shape the neighbouring runtime blocks already use. The heading text is `**Antigravity**` and the fenced command is `agy plugin install https://github.com/rizukirr/vibekit`.
+- [x] Step 1: Run `agy plugin list`, uninstall any existing vibekit entry, truncate the agy log so the probe reads only its own output, then run `agy plugin install <this repo path>`
+- [x] Step 2: In a scratch directory outside the repo, run a print-mode session asking whether the auto-trigger map is in context and to reproduce one of its rows.
+- [x] Step 3: Grep the agy log at `~/.gemini/antigravity-cli/cli.log` for the skill-parse failure line and confirm the grep exits non-zero.
+- [x] Step 4: Inspect the installed plugin's `skills/vibe/SKILL.md` and `skills/quick/SKILL.md` and confirm each still contains its authored body rather than a command prompt.
+- [x] Step 5: In `README.md`, replace the Gemini CLI install block at lines 85 to 89 with an Antigravity block, matching the heading-then-fenced-command shape the neighbouring runtime blocks already use. The heading text is `**Antigravity**` and the fenced command is `agy plugin install https://github.com/rizukirr/vibekit`.
 
-- [ ] Step 6: In `README.md`, replace the Gemini row of the runtime table on line 104 with an Antigravity row naming `runtimes/antigravity.mjs` and describing what Step 2 and Step 3 observed, including the agy version reported by `agy --version`.
-- [ ] Step 7: In `README.md` line 107, update the sentence counting probed and unprobed runtimes so it matches the table as edited.
-- [ ] Step 8: Run `agy plugin uninstall vibekit` so the probe leaves no state.
-- [ ] Step 9: Run `npm test`
-- [ ] Step 10: Run `npm run check`
-- [ ] Step 11: Commit
+- [x] Step 6: In `README.md`, replace the Gemini row of the runtime table on line 104 with an Antigravity row naming `runtimes/antigravity.mjs` and describing what Step 2 and Step 3 observed, including the agy version reported by `agy --version`.
+- [x] Step 7: In `README.md` line 107, update the sentence counting probed and unprobed runtimes so it matches the table as edited.
+- [x] Step 8: Run `agy plugin uninstall vibekit` so the probe leaves no state.
+- [x] Step 9: Run `npm test`
+- [x] Step 10: Run `npm run check`
+- [x] Step 11: Commit
