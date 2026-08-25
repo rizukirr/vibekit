@@ -187,3 +187,27 @@ The README's runtime table distinguishes probed rows from unprobed ones, so the 
 - [x] Step 9: Run `npm test`
 - [x] Step 10: Run `npm run check`
 - [x] Step 11: Commit
+
+## Task 6: Name the skill in a frontmatter parse failure → verify: `npm test` exits 0
+
+**Files:**
+- Modify: `lib/model.mjs:35`
+- Modify: `tests/model.test.mjs`
+
+Added after `verify` observed spec goal 5 fail. `npm run generate` rejects an unquoted colon-space and exits non-zero, but the message names only the key, so an author with eleven skills gets no file to open. Every other error raised in `lib/model.mjs` already prefixes the skill directory, so this is that same pattern applied to the one call that lacks it.
+
+- [ ] Step 1: In `lib/model.mjs`, wrap the `parseFrontmatter` call so the skill directory prefixes anything it throws:
+
+```js
+    let data
+    try {
+      ({ data } = parseFrontmatter(text))
+    } catch (error) {
+      throw new Error(`${dir}: ${error.message}`)
+    }
+```
+
+- [ ] Step 2: Add a test to `tests/model.test.mjs` asserting that a skill whose frontmatter carries an unquoted colon-space throws an error naming both the skill directory and the offending key.
+- [ ] Step 3: Run `npm test`
+- [ ] Step 4: Run `npm run check`
+- [ ] Step 5: Commit
