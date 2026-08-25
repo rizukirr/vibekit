@@ -16,8 +16,8 @@ test('coerces true and false to booleans', () => {
   assert.equal(data.hidden, false)
 })
 
-test('keeps colons that appear inside a value', () => {
-  const { data } = parseFrontmatter('---\ntrigger: About to run: anything\n---\nbody\n')
+test('keeps colons that appear inside a value when quoted', () => {
+  const { data } = parseFrontmatter('---\ntrigger: "About to run: anything"\n---\nbody\n')
   assert.equal(data.trigger, 'About to run: anything')
 })
 
@@ -42,4 +42,15 @@ test('throws when the frontmatter block is missing', () => {
 
 test('throws on a malformed line', () => {
   assert.throws(() => parseFrontmatter('---\nname foo\n---\nbody\n'), /malformed frontmatter/)
+})
+
+test('throws when an unquoted value contains colon-space', () => {
+  assert.throws(() => parseFrontmatter('---\ntrigger: run and then: do more\n---\nbody\n'), (err) => {
+    return err.message.includes("'trigger'") && err.message.includes(': ')
+  })
+})
+
+test('does not throw when a quoted value contains colon-space', () => {
+  const { data } = parseFrontmatter('---\ntrigger: "run and then: do more"\n---\nbody\n')
+  assert.equal(data.trigger, 'run and then: do more')
 })
