@@ -88,6 +88,8 @@ Verify with `opencode debug skill`.
 agy plugin install https://github.com/rizukirr/vibekit
 ```
 
+Verify with `agy plugin list`. Re-run the install command to update.
+
 **Pi**
 
 ```
