@@ -12,6 +12,7 @@
 - Every description and trigger, as parsed, must be byte-identical before and after the change.
 - A rules file is capped at 12,000 characters by agy.
 - `plain` applies to every file this plan writes: no em dash, no semicolon, no hard wrapping inside a paragraph.
+- A task whose steps run `npm run generate` also authorises every path listed in `.vibekit-manifest`, which is the generator's own record of what it writes. A `Files` block names what a human edits, and generated output is never hand-edited, so it is not listed there. The scope check for such a task is the union of its `Files` block and that manifest.
 
 ## Task 1: Quote the nine colon-bearing frontmatter values → verify: `npm run check` exits 0
 
