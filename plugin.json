@@ -1,6 +1,5 @@
 {
   "name": "vibekit",
   "description": "Efficient, Opinionated vibe-coding pipeline for coding agents.",
-  "version": "0.6.2",
-  "contextFileName": "GEMINI.md"
+  "version": "0.6.2"
 }

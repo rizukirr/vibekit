@@ -1,6 +1,6 @@
 ---
 name: exec
-description: Use when a plan is approved and implementation has not started: dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit.
+description: "Use when a plan is approved and implementation has not started: dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit."
 trigger: Plan approved, implementation not yet started
 gate: hard
 ---
