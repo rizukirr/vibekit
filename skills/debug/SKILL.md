@@ -1,7 +1,7 @@
 ---
 name: debug
-description: Use when a check fails: a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product. This skill never edits.
-trigger: A check failed: verify returned not ready on a failed check, an exec clause failed, or a failure was reported
+description: "Use when a check fails: a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product. This skill never edits."
+trigger: "A check failed: verify returned not ready on a failed check, an exec clause failed, or a failure was reported"
 gate: hard
 ---
 

@@ -2,6 +2,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { id, emit, regions } from '../runtimes/claude-code.mjs'
+import { parseFrontmatter } from '../lib/frontmatter.mjs'
 import { MODEL } from './helpers.mjs'
 
 test('emits the plugin manifest stamped with the config version', () => {
@@ -37,8 +38,15 @@ test('emits one markdown command per command-enabled skill and no others', () =>
 test('the command file carries the skill description as frontmatter', () => {
   const command = emit(MODEL)['commands/alpha.md']
   assert.ok(command.startsWith('---\n'))
-  assert.ok(command.includes('description: Alpha does A.'))
+  assert.ok(command.includes('description: "Alpha does A."'))
   assert.ok(command.includes('$ARGUMENTS'))
+})
+
+test('the command file description survives parseFrontmatter and round-trips to the skill description', () => {
+  const command = emit(MODEL)['commands/alpha.md']
+  const { data } = parseFrontmatter(command)
+  const skill = MODEL.skills.find(s => s.name === 'alpha')
+  assert.equal(data.description, skill.description)
 })
 
 test('owns the CLAUDE.md trigger-table region', () => {

@@ -36,12 +36,12 @@
     ".opencode/",
     "AGENTS.md",
     "CLAUDE.md",
-    "GEMINI.md",
     "LICENSE",
     "README.md",
     "commands/",
-    "gemini-extension.json",
     "hooks/",
+    "plugin.json",
+    "rules/AGENTS.md",
     "skills/"
   ],
   "publishConfig": {

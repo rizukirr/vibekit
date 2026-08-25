@@ -87,3 +87,15 @@ test('allows a pipe in frontmatter: it is escaped at render time, not banned', (
     assert.equal(buildModel(config, root).skills[0].trigger, 'returns not satisfied | partial')
   } finally { cleanup() }
 })
+
+test('throws when frontmatter has unquoted colon-space, naming both skill directory and key', () => {
+  const { root, cleanup } = makeSkillsDir({
+    testskill: skillFile({ name: 'testskill', trigger: 'foo: bar' }),
+  })
+  try {
+    assert.throws(
+      () => buildModel(config, root),
+      /testskill: frontmatter 'trigger' contains ': ' and must be quoted/
+    )
+  } finally { cleanup() }
+})

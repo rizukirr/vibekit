@@ -1,5 +1,7 @@
 external/
 .vibe-worktrees/
 .eval-worktrees/
-/docs
+/docs/*
+!/docs/plans/
+!/docs/specs/
 /evals/results

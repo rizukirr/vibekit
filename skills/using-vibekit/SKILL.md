@@ -1,6 +1,6 @@
 ---
 name: using-vibekit
-description: Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped.
+description: "Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped."
 trigger: Session start
 gate: none
 ---

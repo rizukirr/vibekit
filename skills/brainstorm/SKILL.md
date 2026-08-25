@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design.
+description: "Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design."
 trigger: About to start creative or implementation work, before code is written
 gate: hard
 ---
