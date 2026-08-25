@@ -1,7 +1,6 @@
 # vibekit
 
-Guardrailed vibe-coding pipeline. Skills are referenced from this file and
-invoked by following the named workflow.
+Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points. Invoke a skill by reading its `SKILL.md` and following it.
 
 ## Auto-trigger map
 
