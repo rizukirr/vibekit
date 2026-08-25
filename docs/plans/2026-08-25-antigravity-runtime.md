@@ -88,17 +88,17 @@ This lands after Task 1 rather than with it. Adding the rejection while the skil
 
 `commands/*.md` is one of the files agy converts, and it currently writes the description as a bare YAML scalar, reproducing the same defect in a generated file.
 
-- [ ] Step 1: In `runtimes/claude-code.mjs`, change the description line of `commandFile` from an unquoted interpolation to a JSON-quoted one:
+- [x] Step 1: In `runtimes/claude-code.mjs`, change the description line of `commandFile` from an unquoted interpolation to a JSON-quoted one:
 
 ```js
     `description: ${JSON.stringify(skill.description)}`,
 ```
 
-- [ ] Step 2: Add a test asserting the generated command file's description line survives `parseFrontmatter` and round-trips to the skill's description.
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Commit
+- [x] Step 2: Add a test asserting the generated command file's description line survives `parseFrontmatter` and round-trips to the skill's description.
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Commit
 
 ## Task 4: Replace the Gemini runtime with the Antigravity runtime → verify: `npm test` exits 0
 
