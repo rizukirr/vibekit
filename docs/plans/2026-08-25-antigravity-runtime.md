@@ -196,7 +196,7 @@ The README's runtime table distinguishes probed rows from unprobed ones, so the 
 
 Added after `verify` observed spec goal 5 fail. `npm run generate` rejects an unquoted colon-space and exits non-zero, but the message names only the key, so an author with eleven skills gets no file to open. Every other error raised in `lib/model.mjs` already prefixes the skill directory, so this is that same pattern applied to the one call that lacks it.
 
-- [ ] Step 1: In `lib/model.mjs`, wrap the `parseFrontmatter` call so the skill directory prefixes anything it throws:
+- [x] Step 1: In `lib/model.mjs`, wrap the `parseFrontmatter` call so the skill directory prefixes anything it throws:
 
 ```js
     let data
@@ -207,7 +207,7 @@ Added after `verify` observed spec goal 5 fail. `npm run generate` rejects an un
     }
 ```
 
-- [ ] Step 2: Add a test to `tests/model.test.mjs` asserting that a skill whose frontmatter carries an unquoted colon-space throws an error naming both the skill directory and the offending key.
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Run `npm run check`
-- [ ] Step 5: Commit
+- [x] Step 2: Add a test to `tests/model.test.mjs` asserting that a skill whose frontmatter carries an unquoted colon-space throws an error naming both the skill directory and the offending key.
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Run `npm run check`
+- [x] Step 5: Commit
