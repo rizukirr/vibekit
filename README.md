@@ -104,7 +104,7 @@ pi install git:github.com/rizukirr/vibekit
 | Antigravity | `runtimes/antigravity.mjs` | installed with `agy plugin install`, a print-mode session confirmed the auto-trigger map was in context and reproduced a table row, and the CLI log showed no skill parse failures, against agy 1.1.20 |
 | Pi | `runtimes/pi.mjs` | not verified, tool not installed |
 
-Four runtimes were probed against the real CLI and one was not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
+Three runtimes were probed against the real CLI and one was not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
 
 ## Evals
 
