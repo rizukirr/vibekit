@@ -82,10 +82,10 @@ Add it to the `plugin` array in your `opencode.json`, global or project level:
 
 Verify with `opencode debug skill`.
 
-**Gemini CLI**
+**Antigravity**
 
 ```
-gemini extensions install https://github.com/rizukirr/vibekit
+agy plugin install https://github.com/rizukirr/vibekit
 ```
 
 **Pi**
@@ -101,10 +101,10 @@ pi install git:github.com/rizukirr/vibekit
 | Claude Code | `runtimes/claude-code.mjs` | SessionStart hook smoke-tested in CI on Linux and Windows |
 | Codex | `runtimes/codex.mjs` | installed and listed as enabled by `codex plugin list`, against codex-cli 0.147.0 |
 | opencode | `runtimes/opencode.mjs` | all skills listed by `opencode debug skill`, against opencode 1.18.16 |
-| Gemini | `runtimes/gemini.mjs` | not verified, tool not installed |
+| Antigravity | `runtimes/antigravity.mjs` | installed with `agy plugin install`, a print-mode session confirmed the auto-trigger map was in context and reproduced a table row, and the CLI log showed no skill parse failures, against agy 1.1.20 |
 | Pi | `runtimes/pi.mjs` | not verified, tool not installed |
 
-Two runtimes were probed against the real CLI and two were not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
+Four runtimes were probed against the real CLI and one was not. That distinction is kept per row because unit tests assert what we decided to emit, which says nothing about whether a host accepts it. That gap hid four integration defects until they were probed.
 
 ## Evals
 
