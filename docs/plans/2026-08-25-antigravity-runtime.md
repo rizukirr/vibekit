@@ -22,7 +22,7 @@
 
 The verify clause is load-bearing beyond a smoke test. `npm run check` compares every generated file against disk, so it passes only if the parsed values are unchanged. A leaked quote character would alter the README skill list and the generated command files, and the check would fail.
 
-- [ ] Step 1: In `lib/frontmatter.mjs`, replace the value extraction at lines 20 and 23 so a matched pair of surrounding quotes is stripped. Insert after the existing `const value = line.slice(split + 1).trim()`:
+- [x] Step 1: In `lib/frontmatter.mjs`, replace the value extraction at lines 20 and 23 so a matched pair of surrounding quotes is stripped. Insert after the existing `const value = line.slice(split + 1).trim()`:
 
 ```js
     // agy parses this frontmatter with a spec-strict YAML parser, where a plain
@@ -39,23 +39,23 @@ The verify clause is load-bearing beyond a smoke test. `npm run check` compares 
     data[key] = scalar === 'true' ? true : scalar === 'false' ? false : scalar
 ```
 
-- [ ] Step 2: Derive the exact set of values needing quotes by running:
+- [x] Step 2: Derive the exact set of values needing quotes by running:
 
 ```
 for f in skills/*/SKILL.md; do sed -n '/^---$/,/^---$/p' $f | grep -E '^[a-z]+:' | while IFS= read -r line; do k=${line%%:*}; v=${line#*:}; case "$v" in *": "*) echo "$f $k";; esac; done; done
 ```
 
-- [ ] Step 3: For each key the previous step named, wrap its value in double quotes in place, changing nothing else about the text. The affected keys are `description` in eight skills and `trigger` in `skills/debug/SKILL.md`. Example, in `skills/brainstorm/SKILL.md`:
+- [x] Step 3: For each key the previous step named, wrap its value in double quotes in place, changing nothing else about the text. The affected keys are `description` in eight skills and `trigger` in `skills/debug/SKILL.md`. Example, in `skills/brainstorm/SKILL.md`:
 
 ```
 description: "Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design."
 ```
 
-- [ ] Step 4: Re-run the command from Step 2. It must print nothing that is not now quoted.
-- [ ] Step 5: Add cases to `tests/frontmatter.test.mjs` covering a double-quoted value, a single-quoted value, and a value whose interior colon survives parsing unchanged.
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Run `npm run check`
-- [ ] Step 8: Commit
+- [x] Step 4: Re-run the command from Step 2. It must print nothing that is not now quoted.
+- [x] Step 5: Add cases to `tests/frontmatter.test.mjs` covering a double-quoted value, a single-quoted value, and a value whose interior colon survives parsing unchanged.
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Run `npm run check`
+- [x] Step 8: Commit
 
 ## Task 2: Reject an unquoted colon-space at generate time → verify: `npm test` exits 0
 
