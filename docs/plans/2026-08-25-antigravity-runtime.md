@@ -115,8 +115,8 @@ This lands after Task 1 rather than with it. Adding the rejection while the skil
 
 `rules/AGENTS.md` must exist with its region marker before `npm run generate` runs, because `applyRegions` throws when a file carrying a generated region is absent. The move is therefore Step 1, not a consequence of generating.
 
-- [ ] Step 1: Run `git mv GEMINI.md rules/AGENTS.md`
-- [ ] Step 2: In `rules/AGENTS.md`, rewrite the prose above the region marker so it names no dead runtime and is not hard wrapped, leaving the `<!-- vibekit:generated:trigger-table -->` and `<!-- /vibekit:generated -->` markers and everything between them untouched:
+- [x] Step 1: Run `git mv GEMINI.md rules/AGENTS.md`
+- [x] Step 2: In `rules/AGENTS.md`, rewrite the prose above the region marker so it names no dead runtime and is not hard wrapped, leaving the `<!-- vibekit:generated:trigger-table -->` and `<!-- /vibekit:generated -->` markers and everything between them untouched:
 
 ```markdown
 # vibekit
@@ -126,7 +126,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points. I
 ## Auto-trigger map
 ```
 
-- [ ] Step 3: Create `runtimes/antigravity.mjs`:
+- [x] Step 3: Create `runtimes/antigravity.mjs`:
 
 ```js
 // runtimes/antigravity.mjs
@@ -158,15 +158,15 @@ export function regions(model) {
 }
 ```
 
-- [ ] Step 4: In `vibekit.config.json`, replace `"gemini"` with `"antigravity"` in the `runtimes` array.
-- [ ] Step 5: Run `git rm runtimes/gemini.mjs tests/gemini.test.mjs`
-- [ ] Step 6: Create `tests/antigravity.test.mjs` asserting the exported `id`, that `emit` produces a `plugin.json` whose name matches the config, that `regions` carries a `trigger-table` entry for `rules/AGENTS.md`, and that `ships` includes both emitted paths.
-- [ ] Step 7: In `tests/skeleton.test.mjs`, update the runtimes array on line 13 and replace the `GEMINI.md` entry on line 23 with `rules/AGENTS.md`.
-- [ ] Step 8: In `tests/build.test.mjs`, update the emitter id list on line 55 and replace `GEMINI.md` and `gemini-extension.json` in the path list on lines 62 to 64 with `rules/AGENTS.md` and `plugin.json`.
-- [ ] Step 9: Run `npm run generate`
-- [ ] Step 9: Run `npm test`
-- [ ] Step 10: Run `npm run check`
-- [ ] Step 11: Commit
+- [x] Step 4: In `vibekit.config.json`, replace `"gemini"` with `"antigravity"` in the `runtimes` array.
+- [x] Step 5: Run `git rm runtimes/gemini.mjs tests/gemini.test.mjs`
+- [x] Step 6: Create `tests/antigravity.test.mjs` asserting the exported `id`, that `emit` produces a `plugin.json` whose name matches the config, that `regions` carries a `trigger-table` entry for `rules/AGENTS.md`, and that `ships` includes both emitted paths.
+- [x] Step 7: In `tests/skeleton.test.mjs`, update the runtimes array on line 13 and replace the `GEMINI.md` entry on line 23 with `rules/AGENTS.md`.
+- [x] Step 8: In `tests/build.test.mjs`, update the emitter id list on line 55 and replace `GEMINI.md` and `gemini-extension.json` in the path list on lines 62 to 64 with `rules/AGENTS.md` and `plugin.json`.
+- [x] Step 9: Run `npm run generate`
+- [x] Step 9: Run `npm test`
+- [x] Step 10: Run `npm run check`
+- [x] Step 11: Commit
 
 ## Task 5: Probe against the real agy CLI and record the result in the README → verify: `grep -q "Failed to parse skill file" ~/.gemini/antigravity-cli/cli.log` exits non-zero
 
