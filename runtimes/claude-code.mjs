@@ -19,7 +19,7 @@ function pluginManifest(config) {
 function commandFile(skill) {
   return [
     '---',
-    `description: ${skill.description}`,
+    `description: ${JSON.stringify(skill.description)}`,
     'argument-hint: <intent>',
     '---',
     '',

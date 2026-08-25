@@ -1,5 +1,5 @@
 ---
-description: Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped.
+description: "Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped."
 argument-hint: <intent>
 ---
 
