@@ -154,7 +154,7 @@ for (const id of ids) {
 - Modify: `evals/scenarios.json` (append the five entries between the final scenario's closing brace and the closing `]`)
 - Create: `evals/guard-new-scenarios.js`
 
-- [ ] Step 1: Append these five entries after the final existing entry, keeping the file valid JSON. Every pattern below is written to compile under `new RegExp(pattern)` with no flags, because that is how `evals/score.mjs` compiles it. Line anchoring uses `(^|\n)` rather than an `m` flag, and the emoji ranges use surrogate pairs rather than `\u{...}`, because neither the `m` flag nor the `u` flag is reachable through the scorer.
+- [x] Step 1: Append these five entries after the final existing entry, keeping the file valid JSON. Every pattern below is written to compile under `new RegExp(pattern)` with no flags, because that is how `evals/score.mjs` compiles it. Line anchoring uses `(^|\n)` rather than an `m` flag, and the emoji ranges use surrogate pairs rather than `\u{...}`, because neither the `m` flag nor the `u` flag is reachable through the scorer.
 
 ```json
   {
@@ -194,7 +194,7 @@ for (const id of ids) {
   }
 ```
 
-- [ ] Step 2: Write this guard to `evals/guard-new-scenarios.js`. It compiles each pattern the way `evals/score.mjs` does, with no flags, and then asserts each one matches a sample it must catch and does not match a sample it must allow. Both assertions are required. A pattern that compiles but can never match produces a scenario that can never fail, which is a worse defect than one that throws.
+- [x] Step 2: Write this guard to `evals/guard-new-scenarios.js`. It compiles each pattern the way `evals/score.mjs` does, with no flags, and then asserts each one matches a sample it must catch and does not match a sample it must allow. Both assertions are required. A pattern that compiles but can never match produces a scenario that can never fail, which is a worse defect than one that throws.
 
 ```js
 const file = process.argv[2] || "evals/scenarios.json"
@@ -219,10 +219,10 @@ for (const [id, hit, miss] of cases) {
 }
 ```
 
-- [ ] Step 3: Run `node evals/guard-new-scenarios.js`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Commit
+- [x] Step 3: Run `node evals/guard-new-scenarios.js`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Commit
 
 ## Task 4: Measure the change against the pre-change baseline → verify: `evals/run.mjs` exit status 0 and `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md` exists
 
