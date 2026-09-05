@@ -1,0 +1,8 @@
+version: 2
+
+updates:
+  # The repo ships no runtime dependencies, so Actions are the only update surface.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
