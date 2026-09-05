@@ -22,19 +22,19 @@
 - Modify: `tests/plain.test.mjs:10-12` (rule phrase list)
 - Modify: `tests/plain.test.mjs:24` (pinned description assertion)
 
-- [ ] Step 1: Replace the description on `skills/plain/SKILL.md:3` with this single line:
+- [x] Step 1: Replace the description on `skills/plain/SKILL.md:3` with this single line:
 
 ```
 description: Use before writing any text, in chat or into a file. Thirteen rules that hold in every string you emit, including code comments, commit messages, PR bodies and docs. No em dash, no semicolon, no hard wrapping inside a paragraph, no curly quotes, no decorative emoji, no title case in headings, no bold label lists, no heading echo, no fragment runs, no padded triads, no rejected straw options, no unraised objections, no writing about the previous version. Stays on after.
 ```
 
-- [ ] Step 2: Replace `skills/plain/SKILL.md:10` with:
+- [x] Step 2: Replace `skills/plain/SKILL.md:10` with:
 
 ```
 Thirteen rules about how text is typed and shaped. They hold everywhere, with no exception for artifacts.
 ```
 
-- [ ] Step 3: Replace the whole rules section, `skills/plain/SKILL.md:16-22`, with:
+- [x] Step 3: Replace the whole rules section, `skills/plain/SKILL.md:16-22`, with:
 
 ```
 ## The rules
@@ -86,7 +86,7 @@ An alternative is fine when it is weighed and its trade-offs are given. The tell
 Prior behaviour is fine in a changelog, a migration note, a release note, a root cause or a commit message. The tell is it appearing in a description of current behaviour. `debug` produces root causes and `exec` writes commit messages, and rule 13 never overrides either.
 ```
 
-- [ ] Step 4: Replace `skills/plain/SKILL.md:30-32`, the Boundaries section, with:
+- [x] Step 4: Replace `skills/plain/SKILL.md:30-32`, the Boundaries section, with:
 
 ```
 ## Boundaries
@@ -94,7 +94,7 @@ Prior behaviour is fine in a changelog, a migration note, a release note, a root
 How text is typed and shaped, not how much of it there is. `terse` covers volume, `lazy` covers code.
 ```
 
-- [ ] Step 5: Replace the phrase list at `tests/plain.test.mjs:10-12` with all thirteen phrases:
+- [x] Step 5: Replace the phrase list at `tests/plain.test.mjs:10-12` with all thirteen phrases:
 
 ```js
     'No em dash',
@@ -112,11 +112,11 @@ How text is typed and shaped, not how much of it there is. `terse` covers volume
     'No writing about the previous version',
 ```
 
-- [ ] Step 6: Update the pinned assertion at `tests/plain.test.mjs:24` so its regex matches the description written in Step 1, escaping each `.` as the existing line does.
-- [ ] Step 7: Run `npm run generate`
-- [ ] Step 8: Run `npm run check`
-- [ ] Step 9: Run `npm test`
-- [ ] Step 10: Commit
+- [x] Step 6: Update the pinned assertion at `tests/plain.test.mjs:24` so its regex matches the description written in Step 1, escaping each `.` as the existing line does.
+- [x] Step 7: Run `npm run generate`
+- [x] Step 8: Run `npm run check`
+- [x] Step 9: Run `npm test`
+- [x] Step 10: Commit
 
 ## Task 2: Widen the existing dash scenarios to catch the en dash → verify: `node -e` guard exit status 0
 
