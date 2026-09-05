@@ -125,13 +125,13 @@ How text is typed and shaped, not how much of it there is. `terse` covers volume
 - Modify: `evals/scenarios.json:301` (`plain-omits-em-dash-in-artifact`)
 - Modify: `evals/scenarios.json:315` (`terse-omits-em-dash-short`)
 
-- [ ] Step 1: In each of the three scenarios, replace the single-character dash value with the regex below. It is the `finalTextOmits` value in `terse-omits-em-dash` and `terse-omits-em-dash-short`, and the `producedFilesOmit` value in `plain-omits-em-dash-in-artifact`.
+- [x] Step 1: In each of the three scenarios, replace the single-character dash value with the regex below. It is the `finalTextOmits` value in `terse-omits-em-dash` and `terse-omits-em-dash-short`, and the `producedFilesOmit` value in `plain-omits-em-dash-in-artifact`.
 
 ```
 [—–]|\s--\s
 ```
 
-- [ ] Step 2: Run this guard, which fails when any of the three still misses an en dash:
+- [x] Step 2: Run this guard, which fails when any of the three still misses an en dash:
 
 ```sh
 node -e '
@@ -146,7 +146,7 @@ for (const id of ids) {
 '
 ```
 
-- [ ] Step 3: Commit
+- [x] Step 3: Commit
 
 ## Task 3: Add five scenarios for the new typography and shape rules → verify: `node -e` guard exit status 0
 
