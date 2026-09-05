@@ -1,7 +1,7 @@
 ---
 title: plain anti-slop patterns
 date: 2026-09-05
-status: draft
+status: approved
 ---
 
 # plain anti-slop patterns: Design
