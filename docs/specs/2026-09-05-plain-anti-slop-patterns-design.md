@@ -22,7 +22,7 @@ The reference for what is missing is blader/humanizer v2.11.2, a 35-pattern skil
 - Five new eval scenarios exist in `evals/scenarios.json`, each at `n: 10`, covering curly quotes, decorative emoji, title-case headings, bold mini-heading list items, and the en dash.
 - The three existing em-dash scenarios (`terse-omits-em-dash`, `plain-omits-em-dash-in-artifact`, `terse-omits-em-dash-short`) use a regex that matches the en dash as well as the em dash.
 - `npm run check` and `npm test` both exit 0 after `npm run generate`.
-- An A/B eval run is recorded: a baseline at the pre-change commit and a post-change run, both reported per scenario with rates and opportunity counts.
+- A candidate-only eval run is recorded over the `plain` and `terse` scenarios at the post-change commit, reported per scenario with rates and opportunity counts. The baseline comparison against the pre-change commit is deferred rather than dropped, and stays an open question until it is run.
 - No existing scenario regresses by more than the 0.2 ceiling in `evals/thresholds.json`.
 
 ## Non-goals
@@ -91,3 +91,5 @@ Seven of the thirteen rules ship unmeasured: hard wrapping, heading echo, fragme
 The title-case heading regex may false-positive on legitimate proper nouns in a heading, for example a heading naming Claude Code or GitHub Actions. The acceptable false-positive rate is not yet decided, and the regex may need a proper-noun allowance before it is trustworthy.
 
 Whether roughly 80 added lines regress `plain`'s three existing scenarios is unknown until the A/B runs. If they regress beyond 0.2, the fallback recorded in Alternatives considered becomes the plan.
+
+Whether the change regresses any scenario is unmeasured. A candidate-only run has no baseline, so `maxRateRegression` cannot fire, and the six skills outside `plain` and `terse` are not exercised at all. `brainstorm-precedes-code` carries a `minFiringRate` of 1.00 with no margin, so a full A/B run against `a09baf2` is still required before this branch merges.
