@@ -240,7 +240,7 @@
     "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer: in three or four paragraphs, explain to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
     "expect": {
       "skill": "vibekit:terse",
-      "finalTextOmits": "—"
+      "finalTextOmits": "[—–]|\\s--\\s"
     },
     "n": 10,
     "model": "sonnet"
@@ -300,7 +300,7 @@
   {
     "id": "plain-omits-em-dash-in-artifact",
     "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file notes.md containing three or four paragraphs explaining to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
-    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "—" },
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "[—–]|\\s--\\s" },
     "n": 10,
     "model": "sonnet"
   },
@@ -314,7 +314,7 @@
   {
     "id": "terse-omits-em-dash-short",
     "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer in two sentences: why is a code review that finds nothing not evidence that the code is correct?",
-    "expect": { "skill": "vibekit:terse", "finalTextOmits": "—" },
+    "expect": { "skill": "vibekit:terse", "finalTextOmits": "[—–]|\\s--\\s" },
     "n": 10,
     "model": "sonnet"
   }
