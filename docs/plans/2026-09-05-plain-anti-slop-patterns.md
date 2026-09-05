@@ -224,12 +224,20 @@ for (const [id, hit, miss] of cases) {
 - [x] Step 5: Run `npm run check`
 - [x] Step 6: Commit
 
-## Task 4: Measure the change against the pre-change baseline → verify: `evals/run.mjs` exit status 0 and `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md` exists
+## Task 4: Measure the new rules with a candidate-only run → verify: at least 1 new file under `evals/results/` and `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md` exists
 
 **Files:**
 - Create: `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md`
 
+This task measures. A rate below a threshold is its result, not its failure. The clause therefore asks whether the measurement happened and was written down, never what the measurement said. `evals/run.mjs` exits non-zero when a scenario falls below `minFiringRate`, and with no baseline that gate applies to five scenarios that have never been measured, so its exit status is recorded in the results document rather than used as the gate.
+
 - [ ] Step 1: Run `git worktree list` and confirm it reports only the main working tree. If it reports a `.eval-worktrees` entry, remove it with `git worktree remove` before continuing, because a stale worktree measures the wrong commit.
-- [ ] Step 2: Run `npm run eval -- --baseline a09baf2 --candidate HEAD`. Commit a09baf2 is the spec approval, the last commit before any implementation, so it is the correct pre-change ref.
-- [ ] Step 3: Write `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md` recording, for every scenario the run reported, its baseline rate, its candidate rate, and its opportunity count. Record the five new scenarios' rates as first measurements with no baseline. State plainly which of the thirteen rules remain unmeasured.
-- [ ] Step 4: Commit
+- [ ] Step 2: Run the command below with `--dry-run` appended, to confirm every scenario id resolves before anything is spawned.
+- [ ] Step 3: Run:
+
+```sh
+npm run eval -- --candidate HEAD --scenarios terse-reachable,terse-omits-em-dash,terse-omits-throat-clearing,plain-reachable,plain-omits-em-dash-in-artifact,plain-omits-semicolon,terse-omits-em-dash-short,plain-omits-curly-quotes,plain-omits-decorative-emoji,plain-omits-title-case-headings,plain-omits-bold-label-list,plain-omits-en-dash-in-artifact
+```
+
+- [ ] Step 4: Write `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md`. Record the runner's exit status. Record every scenario the run reported with its rate and its opportunity count, taking both from the JSON the run wrote under `evals/results/` rather than from the console summary. Mark the five `plain-omits-` scenarios added by Task 3 as first measurements with no baseline. List which of the thirteen rules in `skills/plain/SKILL.md` have no scenario at all. State that no baseline was run, so no regression figure exists for any scenario.
+- [ ] Step 5: Commit
