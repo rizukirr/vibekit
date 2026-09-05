@@ -20,7 +20,7 @@ The reference for what is missing is blader/humanizer v2.11.2, a 35-pattern skil
 - Rule 1 covers the em dash, the en dash, the spaced dash form, and the double hyphen used as a dash, while keeping the literal string `No em dash` so the existing assertion at `tests/plain.test.mjs:11` still matches.
 - `skills/plain/SKILL.md` contains a guard section, scoped to tiers 2 and 3, that names at least the five false positives which would otherwise collide with `brainstorm`, `debug` and `exec`.
 - Five new eval scenarios exist in `evals/scenarios.json`, each at `n: 10`, covering curly quotes, decorative emoji, title-case headings, bold mini-heading list items, and the en dash.
-- The two existing em-dash scenarios (`terse-omits-em-dash`, `plain-omits-em-dash-in-artifact`) use a regex that matches the en dash as well as the em dash.
+- The three existing em-dash scenarios (`terse-omits-em-dash`, `plain-omits-em-dash-in-artifact`, `terse-omits-em-dash-short`) use a regex that matches the en dash as well as the em dash.
 - `npm run check` and `npm test` both exit 0 after `npm run generate`.
 - An A/B eval run is recorded: a baseline at the pre-change commit and a post-change run, both reported per scenario with rates and opportunity counts.
 - No existing scenario regresses by more than the 0.2 ceiling in `evals/thresholds.json`.
