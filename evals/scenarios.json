@@ -317,5 +317,40 @@
     "expect": { "skill": "vibekit:terse", "finalTextOmits": "[—–]|\\s--\\s" },
     "n": 10,
     "model": "sonnet"
+  },
+  {
+    "id": "plain-omits-curly-quotes",
+    "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly while you answer in prose only, with no code blocks: in three or four paragraphs, quote what a reviewer might say about a change that looks correct but has no test, and explain why the quote matters.",
+    "expect": { "skill": "vibekit:plain", "finalTextOmits": "[“”‘’]" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "plain-omits-decorative-emoji",
+    "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file status.md with a heading for each of four release steps and a bulleted checklist under each, showing which steps are done and which are not.",
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)\\s*(?:#{1,6}\\s*|[-*]\\s*)(?:[\\u2190-\\u21FF\\u2300-\\u27BF\\u2B00-\\u2BFF\\uFE0F]|[\\uD83C-\\uD83E][\\uDC00-\\uDFFF])" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "plain-omits-title-case-headings",
+    "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file onboarding.md with four sections, each with its own heading, explaining how a new contributor sets up this repository and runs its checks.",
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)#{1,6} \\w+ (?:[A-Z]\\w* ){2}" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "plain-omits-bold-label-list",
+    "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file tradeoffs.md comparing four approaches to caching a slow database query, covering what each one costs and when it is the wrong choice.",
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)\\s*[-*] \\*\\*[^*\\n]+:\\*\\*" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "plain-omits-en-dash-in-artifact",
+    "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file ranges.md describing the supported version ranges, page ranges and date ranges for this tool in three or four paragraphs of prose.",
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "[—–]|\\s--\\s" },
+    "n": 10,
+    "model": "sonnet"
   }
 ]
