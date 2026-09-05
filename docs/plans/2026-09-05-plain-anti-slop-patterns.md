@@ -7,7 +7,7 @@
 ## Global constraints
 - The repository ships no dependencies and targets Node 24. Every check runs on a bare node.
 - Generated files are produced by `npm run generate` and are never hand-edited. The skill table in `README.md:33-47` and the trigger table in `CLAUDE.md:7-21` are generated regions.
-- `evals/score.mjs:139-152` and `evals/score.mjs:230-235` compile `finalTextOmits` and `producedFilesOmit` with `new RegExp`, so every scenario value below is a regex.
+- `evals/score.mjs:139-152` and `evals/score.mjs:230-235` compile `finalTextOmits` and `producedFilesOmit` with `new RegExp` and pass no flags, ever. A scenario pattern may therefore not rely on the `m` flag, the `u` flag, or an inline `(?m)` group, which JavaScript does not support and which throws at compile time.
 - Default eval thresholds are `minFiringRate` 0.8 and `maxRateRegression` 0.2, from `evals/thresholds.json`.
 - `git worktree list` must report only the main working tree before any `evals/run.mjs` invocation.
 - `terse` is not edited by this work.
@@ -148,12 +148,13 @@ for (const id of ids) {
 
 - [x] Step 3: Commit
 
-## Task 3: Add five scenarios for the new typography and shape rules → verify: `node -e` guard exit status 0
+## Task 3: Add five scenarios for the new typography and shape rules → verify: `node` guard exit status 0
 
 **Files:**
-- Modify: `evals/scenarios.json:320` (append inside the closing array bracket at `evals/scenarios.json:321`)
+- Modify: `evals/scenarios.json` (append the five entries between the final scenario's closing brace and the closing `]`)
+- Create: `evals/guard-new-scenarios.js`
 
-- [ ] Step 1: Append these five entries after the final existing entry, keeping the file valid JSON. The `plain-omits-curly-quotes` and `plain-omits-bold-label-list` values are anchored where the rule is positional, because an unanchored omit expectation is a far harder test than an anchored one and the two are not comparable.
+- [ ] Step 1: Append these five entries after the final existing entry, keeping the file valid JSON. Every pattern below is written to compile under `new RegExp(pattern)` with no flags, because that is how `evals/score.mjs` compiles it. Line anchoring uses `(^|\n)` rather than an `m` flag, and the emoji ranges use surrogate pairs rather than `\u{...}`, because neither the `m` flag nor the `u` flag is reachable through the scorer.
 
 ```json
   {
@@ -166,21 +167,21 @@ for (const id of ids) {
   {
     "id": "plain-omits-decorative-emoji",
     "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file status.md with a heading for each of four release steps and a bulleted checklist under each, showing which steps are done and which are not.",
-    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(?m)^\\s*(#{1,6}\\s*|[-*]\\s*)[\\u2190-\\u21FF\\u2300-\\u27BF\\u2B00-\\u2BFF\\uFE0F\\u{1F300}-\\u{1FAFF}]" },
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)\\s*(?:#{1,6}\\s*|[-*]\\s*)(?:[\\u2190-\\u21FF\\u2300-\\u27BF\\u2B00-\\u2BFF\\uFE0F]|[\\uD83C-\\uD83E][\\uDC00-\\uDFFF])" },
     "n": 10,
     "model": "sonnet"
   },
   {
     "id": "plain-omits-title-case-headings",
     "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file onboarding.md with four sections, each with its own heading, explaining how a new contributor sets up this repository and runs its checks.",
-    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(?m)^#{1,6} \\w+ (?:[A-Z]\\w* ){2}" },
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)#{1,6} \\w+ (?:[A-Z]\\w* ){2}" },
     "n": 10,
     "model": "sonnet"
   },
   {
     "id": "plain-omits-bold-label-list",
     "prompt": "Invoke the vibekit:plain skill using the Skill tool, then follow it exactly. Write a file tradeoffs.md comparing four approaches to caching a slow database query, covering what each one costs and when it is the wrong choice.",
-    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(?m)^\\s*[-*] \\*\\*[^*\\n]+:\\*\\*" },
+    "expect": { "skill": "vibekit:plain", "producedFilesOmit": "(^|\\n)\\s*[-*] \\*\\*[^*\\n]+:\\*\\*" },
     "n": 10,
     "model": "sonnet"
   },
@@ -193,26 +194,35 @@ for (const id of ids) {
   }
 ```
 
-- [ ] Step 2: Run this guard, which fails when any of the five is missing, is not at n of 10, or carries an expectation key the scorer does not know:
+- [ ] Step 2: Write this guard to `evals/guard-new-scenarios.js`. It compiles each pattern the way `evals/score.mjs` does, with no flags, and then asserts each one matches a sample it must catch and does not match a sample it must allow. Both assertions are required. A pattern that compiles but can never match produces a scenario that can never fail, which is a worse defect than one that throws.
 
-```sh
-node -e '
-const d = JSON.parse(require("fs").readFileSync("evals/scenarios.json", "utf8"))
+```js
+const file = process.argv[2] || "evals/scenarios.json"
+const d = JSON.parse(require("fs").readFileSync(file, "utf8"))
 const known = new Set(["skill", "finalTextOmits", "producedFilesOmit"])
-const ids = ["plain-omits-curly-quotes", "plain-omits-decorative-emoji", "plain-omits-title-case-headings", "plain-omits-bold-label-list", "plain-omits-en-dash-in-artifact"]
-for (const id of ids) {
+const cases = [
+  ["plain-omits-curly-quotes", "he said “hi”", "he said \"hi\""],
+  ["plain-omits-decorative-emoji", "text\n- ✅ done", "text\n- done"],
+  ["plain-omits-title-case-headings", "x\n## Strategic Negotiations And Global", "x\n## Strategic negotiations and global"],
+  ["plain-omits-bold-label-list", "x\n- **Performance:** fast", "x\n- performance is fast"],
+  ["plain-omits-en-dash-in-artifact", "a – b", "a - b"],
+]
+for (const [id, hit, miss] of cases) {
   const s = d.find(x => x.id === id)
   if (!s) throw new Error(id + " missing")
   if (s.n !== 10) throw new Error(id + " is not at n of 10")
   for (const k of Object.keys(s.expect)) if (!known.has(k)) throw new Error(id + " has unknown key " + k)
   const v = s.expect.finalTextOmits ?? s.expect.producedFilesOmit
-  new RegExp(v, v.startsWith("(?m)") ? "u" : "")
+  const re = new RegExp(v)
+  if (!re.test(hit)) throw new Error(id + " fails to match the sample it must catch")
+  if (re.test(miss)) throw new Error(id + " matches the sample it must allow")
 }
-'
 ```
 
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit
+- [ ] Step 3: Run `node evals/guard-new-scenarios.js`
+- [ ] Step 4: Run `npm test`
+- [ ] Step 5: Run `npm run check`
+- [ ] Step 6: Commit
 
 ## Task 4: Measure the change against the pre-change baseline → verify: `evals/run.mjs` exit status 0 and `docs/plans/2026-09-05-plain-anti-slop-patterns-results.md` exists
 
