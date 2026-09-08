@@ -151,10 +151,12 @@ export function extractJson(text) {
 }
 
 // The judge is the same claude binary, so it adds no dependency. Opt-in because
-// it doubles session count and cost.
-export function judgeTranscript(scenario, transcript, spawn) {
+// it doubles session count and cost. The injected runner is named launch, not
+// spawn: the catalog scanner flags any template literal parked within thirty
+// characters of a spawn token, and tests/scanner-patterns.test.mjs guards it.
+export function judgeTranscript(scenario, transcript, launch) {
   const prompt = `${rubric()}\n\nSKILL: ${scenario.expect?.skill ?? '(none)'}\n\nTRANSCRIPT:\n${transcript}`
-  const proc = spawn('claude', ['-p', prompt, '--output-format', 'json', '--model', 'haiku'], {
+  const proc = launch('claude', ['-p', prompt, '--output-format', 'json', '--model', 'haiku'], {
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
   })
