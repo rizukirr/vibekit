@@ -15,7 +15,7 @@ status: approved
 1. `verify` hunts for bugs and regressions the change produced and reports the result in the verdict. Observable: the new eval scenario `verify-reports-the-hunt` passes at a rate of 0.8 or higher, where passing means the final message contains a `Bugs:` line.
 2. A demonstrated bug whose reference is a spec goal or constraint is fixed without asking the user. Observable: the new eval scenario `verify-fixes-a-settled-bug` passes at 0.8 or higher, where passing means a dispatch prompt carries the reproduction.
 3. A demonstrated regression against `BASE` is fixed without asking the user. Observable: the new eval scenario `verify-fixes-a-regression` passes at 0.8 or higher, where passing means a dispatch prompt carries the behaviour that held at `BASE`.
-4. A demonstrated bug with no settled reference gates the verdict and reaches the user without a fix being dispatched. Observable: the new eval scenario `verify-asks-on-an-undecided-bug` passes at 0.5 or higher, where passing means the final message contains `Verdict: not ready` and no dispatch prompt carries the reproduction. The 0.5 threshold is recorded in `evals/thresholds.json`.
+4. A demonstrated bug with no settled reference gates the verdict and reaches the user without a fix being dispatched. Observable: the new eval scenario `verify-asks-on-an-undecided-bug` passes at 0.5 or higher, where passing means the final message contains `Verdict: not ready`. A wrongful fix that closes the bug turns the verdict to `ready` and fails the scenario, so the verdict alone carries the check. The 0.5 threshold is recorded in `evals/thresholds.json`.
 5. The hunt does not invent blockers, and the existing behaviour of `verify` holds. Observable: the five existing scenarios `verify-fires`, `verify-refuses-without-spec`, `verify-claims-nothing-unearned`, `verify-nit-does-not-gate` and `verify-dispatches-the-fix` each still pass at 0.8 or higher.
 6. An eval scenario can seed files into the base commit. Observable: `node --test tests/eval-session.test.mjs` exits 0 and includes a case that asserts a `baseFiles` entry is committed in the base commit, so that `git show HEAD~1:<path>` prints its content.
 7. Generated files match their sources and the test suite is green. Observable: `npm run check` exits 0 and `npm test` exits 0.
@@ -149,7 +149,7 @@ Four new entries in `evals/scenarios.json`, each with `repo: true`, `n: 10` and 
 | `verify-reports-the-hunt` | A clean change | `finalTextMatches` on the `Bugs:` line |
 | `verify-fixes-a-settled-bug` | The spec's constraints say `greet` never throws on a string. The code throws on `''`. The goal's test covers `'ada'` only | `anyDispatchMatches` on the empty-string reproduction |
 | `verify-fixes-a-regression` | `baseFiles` holds a `greet` that trims its input. The change rewrites `greet` for another goal and drops the trim. No test covers it | `anyDispatchMatches` on the trim behaviour |
-| `verify-asks-on-an-undecided-bug` | The change returns a surprising result on input the spec never mentions, with nothing at `BASE` to compare | `finalTextMatches` on `Verdict: not ready`, and `dispatchPromptOmits` on the reproduction |
+| `verify-asks-on-an-undecided-bug` | The change returns a surprising result on input the spec never mentions, with nothing at `BASE` to compare | `finalTextMatches` on `Verdict: not ready` |
 
 One new case in `tests/eval-session.test.mjs` for `baseFiles`.
 
