@@ -1,7 +1,7 @@
 ---
 title: verify bug hunt
 date: 2026-10-07
-status: draft
+status: approved
 ---
 
 # verify bug hunt: Design
