@@ -332,7 +332,7 @@ description: "Use before claiming a change is done, fixed or passing: checks the
 
 The dry run rejects any scenario id it cannot find and any threshold naming an unknown scenario, so it proves all four entries and the threshold are in place. It spawns nothing.
 
-- [ ] Step 1: In `evals/scenarios.json`, insert the four entries below after line 197. Line 197 is the `  },` that closes the `verify-dispatches-the-fix` entry.
+- [x] Step 1: In `evals/scenarios.json`, insert the four entries below after line 197. Line 197 is the `  },` that closes the `verify-dispatches-the-fix` entry.
 
 ````json
   {
@@ -404,7 +404,7 @@ The dry run rejects any scenario id it cannot find and any threshold naming an u
   },
 ````
 
-- [ ] Step 2: In `evals/thresholds.json`, replace line 8:
+- [x] Step 2: In `evals/thresholds.json`, replace line 8:
 
 ````json
     "terse-reachable": { "minFiringRate": 0.5 }
@@ -417,9 +417,9 @@ with:
     "verify-asks-on-an-undecided-bug": { "minFiringRate": 0.5 }
 ````
 
-- [ ] Step 3: Run `node evals/run.mjs --dry-run --scenarios verify-reports-the-hunt,verify-fixes-a-settled-bug,verify-fixes-a-regression,verify-asks-on-an-undecided-bug`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit
+- [x] Step 3: Run `node evals/run.mjs --dry-run --scenarios verify-reports-the-hunt,verify-fixes-a-settled-bug,verify-fixes-a-regression,verify-asks-on-an-undecided-bug`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit
 
 ### Task 4: separate the two inserted fix loop paragraphs → verify: `node -e "const l=require('fs').readFileSync('skills/verify/SKILL.md','utf8').split('\n');for(const p of ['For a bug, the brief','After the round, hunt']){const i=l.findIndex(x=>x.startsWith(p));if(i<1||l[i-1]!=='')process.exit(1)}"` exits 0 and `npm run check` exits 0 and `npm test` exits 0
 
