@@ -34,13 +34,13 @@ That command spawns `claude` sessions on the user's account. Its dry run, with t
 - Modify: `tests/eval-session.test.mjs:7`
 - Modify: `tests/eval-session.test.mjs:180`
 
-- [ ] Step 1: In `tests/eval-session.test.mjs`, insert this import before line 7, which is the `runSession` import:
+- [x] Step 1: In `tests/eval-session.test.mjs`, insert this import before line 7, which is the `runSession` import:
 
 ````js
 import { spawnSync } from 'node:child_process'
 ````
 
-- [ ] Step 2: Append this test after line 180, the last line of the file, with one blank line before it:
+- [x] Step 2: Append this test after line 180, the last line of the file, with one blank line before it:
 
 ````js
 // Real git here, unlike the stubs above: which commit a file landed in is a
@@ -60,8 +60,8 @@ test('baseFiles are committed in the base commit, under the work commit', () => 
 })
 ````
 
-- [ ] Step 3: Run `node --test tests/eval-session.test.mjs` and confirm the new case fails while every other case passes.
-- [ ] Step 4: In `evals/session.mjs`, replace the `SEED_COMMANDS` constant at lines 58-64 with the two lists below. Leave the comment at lines 53-56 and the `GIT_ID` line at 57 as they are.
+- [x] Step 3: Run `node --test tests/eval-session.test.mjs` and confirm the new case fails while every other case passes.
+- [x] Step 4: In `evals/session.mjs`, replace the `SEED_COMMANDS` constant at lines 58-64 with the two lists below. Leave the comment at lines 53-56 and the `GIT_ID` line at 57 as they are.
 
 ````js
 // Split at the branch point: `baseFiles` are committed before it and `files`
@@ -78,7 +78,7 @@ const SEED_WORK = [
 ]
 ````
 
-- [ ] Step 5: Replace the `seedRepo` function at lines 74-81 with:
+- [x] Step 5: Replace the `seedRepo` function at lines 74-81 with:
 
 ````js
 function git(cwd, spawn, commands) {
@@ -98,7 +98,7 @@ function seedRepo(cwd, spawn, scenario) {
 }
 ````
 
-- [ ] Step 6: In `runSession`, replace lines 90-91:
+- [x] Step 6: In `runSession`, replace lines 90-91:
 
 ````js
     seedFiles(cwd, scenario.files)
@@ -112,9 +112,9 @@ with:
     else seedFiles(cwd, scenario.files)
 ````
 
-- [ ] Step 7: On line 115, replace `seeded: scenario.files ?? {},` with `seeded: { ...scenario.baseFiles, ...scenario.files },`.
-- [ ] Step 8: Run `node --test tests/eval-session.test.mjs`
-- [ ] Step 9: Commit
+- [x] Step 7: On line 115, replace `seeded: scenario.files ?? {},` with `seeded: { ...scenario.baseFiles, ...scenario.files },`.
+- [x] Step 8: Run `node --test tests/eval-session.test.mjs`
+- [x] Step 9: Commit
 
 ### Task 2: the bug hunt in the verify skill → verify: `npm run check` exits 0 and `npm test` exits 0
 
