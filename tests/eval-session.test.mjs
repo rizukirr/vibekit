@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { spawnSync } from 'node:child_process'
 import { runSession } from '../evals/session.mjs'
 
 const transcript = readFileSync('evals/fixtures/skill-fired.jsonl', 'utf8')
@@ -177,4 +178,20 @@ test('a failing git invocation stops the run rather than spawning a session', ()
       ? { status: 1, stdout: '', stderr: 'fatal: nope' }
       : { status: 0, stdout: transcript, stderr: '' }
   assert.throws(() => runSession(repoScenario, '/plugins/candidate', spawn), /fatal: nope/)
+})
+
+// Real git here, unlike the stubs above: which commit a file landed in is a
+// property of the repository, and a recorded argument list cannot show it.
+test('baseFiles are committed in the base commit, under the work commit', () => {
+  let base
+  const spawn = (cmd, args, opts) => {
+    if (cmd === 'git') return spawnSync(cmd, args, opts)
+    base = spawnSync('git', ['show', 'HEAD~1:src/greet.js'], { cwd: opts.cwd, encoding: 'utf8' })
+    return { status: 0, stdout: transcript, stderr: '' }
+  }
+  const files = { 'src/greet.js': 'work\n' }
+  const result = runSession({ ...repoScenario, baseFiles: { 'src/greet.js': 'base\n' }, files }, '/plugins/candidate', spawn)
+  assert.equal(base.status, 0, base.stderr)
+  assert.equal(base.stdout, 'base\n')
+  assert.equal(result.files['src/greet.js'], 'work\n')
 })

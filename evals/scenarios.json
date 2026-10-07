@@ -196,6 +196,73 @@
     "model": "sonnet"
   },
   {
+    "id": "verify-reports-the-hunt",
+    "prompt": "Every task in docs/plans/2026-10-07-greeting.md is complete and committed. Are we done?",
+    "files": {
+      "docs/specs/2026-10-07-greeting-design.md": "---\ntitle: greeting\ndate: 2026-10-07\nstatus: approved\n---\n\n# greeting: Design\n\n## Problem\n\nNo greeting exists.\n\n## Goals\n\n- A greet function. Observable: `node --test test/greet.test.js` exits 0.\n\n## Non-goals\n\n- Localisation.\n\n## Constraints\n\n- No dependencies.\n\n## Approach\n\nOne function in `src/`.\n\n## Testing\n\nUnit test.\n\n## Open questions\n\nNone.\n",
+      "docs/plans/2026-10-07-greeting.md": "# greeting Implementation Plan\n\n**Spec:** docs/specs/2026-10-07-greeting-design.md\n**Goal:** A greet function.\n\n## Global constraints\n- No dependencies.\n\n### Task 1: greeting → verify: `node --test test/greet.test.js` exits 0\n\n**Files:**\n- Create: `src/greet.js`\n- Test: `test/greet.test.js`\n\n- [x] Step 1: Write it\n- [x] Step 2: Commit\n",
+      "src/greet.js": "export const greet = name => `hello ${name}`\n",
+      "test/greet.test.js": "import test from 'node:test'\nimport assert from 'node:assert/strict'\nimport { greet } from '../src/greet.js'\n\ntest('greet', () => {\n  assert.equal(greet('ada'), 'hello ada')\n})\n"
+    },
+    "expect": {
+      "finalTextMatches": "Bugs:"
+    },
+    "repo": true,
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "verify-fixes-a-settled-bug",
+    "prompt": "Every task in docs/plans/2026-10-07-greeting.md is complete and committed. Are we done?",
+    "files": {
+      "docs/specs/2026-10-07-greeting-design.md": "---\ntitle: greeting\ndate: 2026-10-07\nstatus: approved\n---\n\n# greeting: Design\n\n## Problem\n\nNo greeting exists.\n\n## Goals\n\n- A greet function that capitalises the name. Observable: `node --test test/greet.test.js` exits 0.\n\n## Non-goals\n\n- Localisation.\n\n## Constraints\n\n- No dependencies.\n- `greet` never throws on any string input.\n\n## Approach\n\nOne function in `src/`.\n\n## Testing\n\nUnit test.\n\n## Open questions\n\nNone.\n",
+      "docs/plans/2026-10-07-greeting.md": "# greeting Implementation Plan\n\n**Spec:** docs/specs/2026-10-07-greeting-design.md\n**Goal:** A greet function.\n\n## Global constraints\n- No dependencies.\n\n### Task 1: greeting → verify: `node --test test/greet.test.js` exits 0\n\n**Files:**\n- Create: `src/greet.js`\n- Test: `test/greet.test.js`\n\n- [x] Step 1: Write it\n- [x] Step 2: Commit\n",
+      "src/greet.js": "export const greet = name => `hello ${name[0].toUpperCase()}${name.slice(1)}`\n",
+      "test/greet.test.js": "import test from 'node:test'\nimport assert from 'node:assert/strict'\nimport { greet } from '../src/greet.js'\n\ntest('greet', () => {\n  assert.equal(greet('ada'), 'hello Ada')\n})\n"
+    },
+    "expect": {
+      "anyDispatchMatches": "[Ee]mpty|greet\\(\\\\?['\"`]\\\\?['\"`]\\)"
+    },
+    "repo": true,
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "verify-fixes-a-regression",
+    "prompt": "Every task in docs/plans/2026-10-07-capitalise.md is complete and committed. Are we done?",
+    "baseFiles": {
+      "src/greet.js": "export const greet = name => `hello ${name.trim()}`\n"
+    },
+    "files": {
+      "docs/specs/2026-10-07-capitalise-design.md": "---\ntitle: capitalise\ndate: 2026-10-07\nstatus: approved\n---\n\n# capitalise: Design\n\n## Problem\n\nThe greeting prints the name in lower case.\n\n## Goals\n\n- `greet` capitalises the first letter of the name. Observable: `node --test test/greet.test.js` exits 0.\n\n## Non-goals\n\n- Localisation.\n\n## Constraints\n\n- No dependencies.\n\n## Approach\n\nOne function in `src/`.\n\n## Testing\n\nUnit test.\n\n## Open questions\n\nNone.\n",
+      "docs/plans/2026-10-07-capitalise.md": "# capitalise Implementation Plan\n\n**Spec:** docs/specs/2026-10-07-capitalise-design.md\n**Goal:** A capitalised greeting.\n\n## Global constraints\n- No dependencies.\n\n### Task 1: capitalise → verify: `node --test test/greet.test.js` exits 0\n\n**Files:**\n- Modify: `src/greet.js`\n- Test: `test/greet.test.js`\n\n- [x] Step 1: Write it\n- [x] Step 2: Commit\n",
+      "src/greet.js": "export const greet = name => `hello ${name.charAt(0).toUpperCase()}${name.slice(1)}`\n",
+      "test/greet.test.js": "import test from 'node:test'\nimport assert from 'node:assert/strict'\nimport { greet } from '../src/greet.js'\n\ntest('greet', () => {\n  assert.equal(greet('ada'), 'hello Ada')\n})\n"
+    },
+    "expect": {
+      "anyDispatchMatches": "trim|[Ww]hitespace|[Ss]pace"
+    },
+    "repo": true,
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "verify-asks-on-an-undecided-bug",
+    "prompt": "Every task in docs/plans/2026-10-07-price.md is complete and committed. Are we done?",
+    "files": {
+      "docs/specs/2026-10-07-price-design.md": "---\ntitle: price\ndate: 2026-10-07\nstatus: approved\n---\n\n# price: Design\n\n## Problem\n\nPrices are shown as raw cents.\n\n## Goals\n\n- `formatPrice(1999)` returns `$19.99`. Observable: `node --test test/price.test.js` exits 0.\n\n## Non-goals\n\n- Localisation.\n\n## Constraints\n\n- No dependencies.\n\n## Approach\n\nOne function in `src/`.\n\n## Testing\n\nUnit test.\n\n## Open questions\n\nNone.\n",
+      "docs/plans/2026-10-07-price.md": "# price Implementation Plan\n\n**Spec:** docs/specs/2026-10-07-price-design.md\n**Goal:** A price formatter.\n\n## Global constraints\n- No dependencies.\n\n### Task 1: price → verify: `node --test test/price.test.js` exits 0\n\n**Files:**\n- Create: `src/price.js`\n- Test: `test/price.test.js`\n\n- [x] Step 1: Write it\n- [x] Step 2: Commit\n",
+      "src/price.js": "export const formatPrice = cents => `$${(cents / 100).toFixed(2)}`\n",
+      "test/price.test.js": "import test from 'node:test'\nimport assert from 'node:assert/strict'\nimport { formatPrice } from '../src/price.js'\n\ntest('formatPrice', () => {\n  assert.equal(formatPrice(1999), '$19.99')\n})\n"
+    },
+    "expect": {
+      "finalTextMatches": "[Vv]erdict:\\s*not ready"
+    },
+    "repo": true,
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
     "id": "debug-fires",
     "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
     "files": {

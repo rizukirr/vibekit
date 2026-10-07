@@ -55,10 +55,15 @@ function collectFiles(root) {
 // merge-base, and a single-commit repository has no parent to diff against. The
 // empty root commit makes the whole seeded state the change under verification.
 const GIT_ID = ['-c', 'user.name=vibekit-eval', '-c', 'user.email=eval@vibekit.invalid']
-const SEED_COMMANDS = [
+// Split at the branch point: `baseFiles` are committed before it and `files`
+// after, so a scenario can state what held before the change under verification.
+const SEED_BASE = [
   ['init', '-b', 'main'],
+  ['add', '-A'],
   ['commit', '--allow-empty', '-m', 'base'],
   ['switch', '-c', 'work'],
+]
+const SEED_WORK = [
   ['add', '-A'],
   ['commit', '-m', 'work'],
 ]
@@ -71,13 +76,20 @@ const REPO_TOOLS = [
   'Read', 'Write', 'Edit', 'Glob', 'Grep', 'Task', 'Skill',
 ].join(' ')
 
-function seedRepo(cwd, spawn) {
-  for (const cmd of SEED_COMMANDS) {
+function git(cwd, spawn, commands) {
+  for (const cmd of commands) {
     const proc = spawn('git', [...GIT_ID, ...cmd], { cwd, encoding: 'utf8' })
     if (proc.status !== 0) {
       throw new Error(`git ${cmd.join(' ')} failed in the eval fixture: ${proc.stderr ?? ''}`)
     }
   }
+}
+
+function seedRepo(cwd, spawn, scenario) {
+  seedFiles(cwd, scenario.baseFiles)
+  git(cwd, spawn, SEED_BASE)
+  seedFiles(cwd, scenario.files)
+  git(cwd, spawn, SEED_WORK)
 }
 
 // Sessions run with edits permitted, because "did the agent write code before
@@ -87,8 +99,8 @@ function seedRepo(cwd, spawn) {
 export function runSession(scenario, pluginDir, spawn = spawnSync) {
   const cwd = mkdtempSync(join(tmpdir(), 'vibekit-eval-'))
   try {
-    seedFiles(cwd, scenario.files)
-    if (scenario.repo) seedRepo(cwd, spawn)
+    if (scenario.repo) seedRepo(cwd, spawn, scenario)
+    else seedFiles(cwd, scenario.files)
     const args = [
       '-p', scenario.prompt,
       '--output-format', 'stream-json',
@@ -112,7 +124,7 @@ export function runSession(scenario, pluginDir, spawn = spawnSync) {
     // transcriptContains expectation without re-reading the stream.
     // Collected inside the try, before the finally removes the directory.
     const { files, truncated } = collectFiles(cwd)
-    return { ...parsed, raw: stdout, files, filesTruncated: truncated, seeded: scenario.files ?? {}, contains: needle => stdout.includes(needle) }
+    return { ...parsed, raw: stdout, files, filesTruncated: truncated, seeded: { ...scenario.baseFiles, ...scenario.files }, contains: needle => stdout.includes(needle) }
   } finally {
     rmSync(cwd, { recursive: true, force: true })
   }

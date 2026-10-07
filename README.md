@@ -44,7 +44,7 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 | `quick` | Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
 | `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
 | `using-vibekit` | Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
-| `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, and returns ready or not ready. Evidence or it did not happen. | hard |
+| `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen. | hard |
 | `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else. | none |
 <!-- /vibekit:generated -->
 

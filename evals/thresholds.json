@@ -5,6 +5,7 @@
     "bootstrap-injected": { "minFiringRate": 1 },
     "brainstorm-precedes-code": { "minFiringRate": 1 },
     "lazy-reachable": { "minFiringRate": 0.5 },
-    "terse-reachable": { "minFiringRate": 0.5 }
+    "terse-reachable": { "minFiringRate": 0.5 },
+    "verify-asks-on-an-undecided-bug": { "minFiringRate": 0.5 }
   }
 }
