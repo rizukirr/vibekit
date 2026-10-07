@@ -429,9 +429,9 @@ with:
 
 Added after Task 2 ran. Steps 8 and 11 of Task 2 gave their new paragraphs without the blank line that separates a paragraph from the one before it, so each new paragraph now sits on the line directly under its neighbour and renders as part of it. The line numbers below refer to the file as committed after Task 2.
 
-- [ ] Step 1: Insert one empty line before line 129, which begins `After the round, hunt once more`.
-- [ ] Step 2: Insert one empty line before line 122, which begins `For a bug, the brief carries`.
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm run check`
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Commit
+- [x] Step 1: Insert one empty line before line 129, which begins `After the round, hunt once more`.
+- [x] Step 2: Insert one empty line before line 122, which begins `For a bug, the brief carries`.
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm run check`
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Commit
