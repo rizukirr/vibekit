@@ -420,3 +420,18 @@ with:
 - [ ] Step 3: Run `node evals/run.mjs --dry-run --scenarios verify-reports-the-hunt,verify-fixes-a-settled-bug,verify-fixes-a-regression,verify-asks-on-an-undecided-bug`
 - [ ] Step 4: Run `npm test`
 - [ ] Step 5: Commit
+
+### Task 4: separate the two inserted fix loop paragraphs → verify: `node -e "const l=require('fs').readFileSync('skills/verify/SKILL.md','utf8').split('\n');for(const p of ['For a bug, the brief','After the round, hunt']){const i=l.findIndex(x=>x.startsWith(p));if(i<1||l[i-1]!=='')process.exit(1)}"` exits 0 and `npm run check` exits 0 and `npm test` exits 0
+
+**Files:**
+- Modify: `skills/verify/SKILL.md:122`
+- Modify: `skills/verify/SKILL.md:129`
+
+Added after Task 2 ran. Steps 8 and 11 of Task 2 gave their new paragraphs without the blank line that separates a paragraph from the one before it, so each new paragraph now sits on the line directly under its neighbour and renders as part of it. The line numbers below refer to the file as committed after Task 2.
+
+- [ ] Step 1: Insert one empty line before line 129, which begins `After the round, hunt once more`.
+- [ ] Step 2: Insert one empty line before line 122, which begins `For a bug, the brief carries`.
+- [ ] Step 3: Run `npm run generate`
+- [ ] Step 4: Run `npm run check`
+- [ ] Step 5: Run `npm test`
+- [ ] Step 6: Commit
