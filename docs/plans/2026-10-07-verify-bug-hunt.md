@@ -124,8 +124,8 @@ with:
 
 Line numbers below refer to `skills/verify/SKILL.md` as committed before this task. The steps run from the bottom of the file upward, so each line number is still valid when its step is reached. `README.md` line 47 sits inside the generated skill list and is rewritten by `npm run generate`, never by hand.
 
-- [ ] Step 1: Read `skills/verify/SKILL.md` in full.
-- [ ] Step 2: Replace line 137. Line 137 begins:
+- [x] Step 1: Read `skills/verify/SKILL.md` in full.
+- [x] Step 2: Replace line 137. Line 137 begins:
 
 ````text
 ## 6. Integration
@@ -136,7 +136,7 @@ New text:
 ````text
 ## 7. Integration
 ````
-- [ ] Step 3: Append to the end of line 135, on the same line, keeping the leading space. Line 135 begins:
+- [x] Step 3: Append to the end of line 135, on the same line, keeping the leading space. Line 135 begins:
 
 ````text
 **On `not ready`**: every blocker with its evidence, then th
@@ -147,7 +147,7 @@ New text:
 ````text
  A demonstrated bug gets three choices of its own: fixing it belongs to `debug`, amending the spec belongs to `brainstorm`, where the behaviour becomes a goal or a non-goal, and keeping it as is is the override.
 ````
-- [ ] Step 4: Replace line 133. Line 133 begins:
+- [x] Step 4: Replace line 133. Line 133 begins:
 
 ````text
 **On `ready`**: the `git diff --stat` summary, the open warn
@@ -158,7 +158,7 @@ New text:
 ````text
 **On `ready`**: the `git diff --stat` summary, the open warns and nits, and every suspected bug with the reason it could not be reproduced. Then: approve, fix, or abort. Approval is always available. Only the user blocks: a suspected bug is judgement with nothing run behind it, and letting an unevidenced guess veto the person whose code it is inverts who decides.
 ````
-- [ ] Step 5: Replace line 122. Line 122 begins:
+- [x] Step 5: Replace line 122. Line 122 begins:
 
 ````text
 Open:    remaining warns and nits, each with its severity
@@ -169,7 +169,7 @@ New text:
 ````text
 Open:    remaining warns and nits, each with its severity, and any pre-existing bug
 ````
-- [ ] Step 6: Replace line 121. Line 121 begins:
+- [x] Step 6: Replace line 121. Line 121 begins:
 
 ````text
 Fixed:   what the loop fixed, or none
@@ -180,7 +180,7 @@ New text:
 ````text
 Fixed:   what the loop fixed, each bug with its reproduction before and after, or none
 ````
-- [ ] Step 7: Insert after line 120. Line 120 begins:
+- [x] Step 7: Insert after line 120. Line 120 begins:
 
 ````text
 Goals:   one line per goal, verdict, then the evidence
@@ -193,7 +193,7 @@ Bugs:    one line per suspect: demonstrated or suspected, the claim with file:li
          then the command and what it returned, or why it could not run. Then the count dropped.
          With no suspects, say so and name what you read and ran
 ````
-- [ ] Step 8: Insert after line 109. Line 109 begins:
+- [x] Step 8: Insert after line 109. Line 109 begins:
 
 ````text
 Stop at the first of these: a round produced no new findings
@@ -204,7 +204,7 @@ New text:
 ````text
 After the round, hunt once more over the fix commit only. Anything that hunt demonstrates is a `blocker` carried to the user and never auto-fixed: a fix that breaks something else does not earn a second unattended round.
 ````
-- [ ] Step 9: Replace line 107. Line 107 begins:
+- [x] Step 9: Replace line 107. Line 107 begins:
 
 ````text
 Then run the sweep and the ladder again from the top. **The 
@@ -215,7 +215,7 @@ New text:
 ````text
 Then run the sweep and the ladder again from the top, with every reproduction command added to the sweep. **The re-run is the gate on the fix.** A fix that breaks a test comes back as a failed check, and a reproduction still showing the wrong behaviour comes back as a demonstrated bug. Both are `blocker`s: no special handling, and no way for a repair to slip past unchecked.
 ````
-- [ ] Step 10: Append to the end of line 105, on the same line, keeping the leading space. Line 105 begins:
+- [x] Step 10: Append to the end of line 105, on the same line, keeping the leading space. Line 105 begins:
 
 ````text
 Confine the fix agent to files already in the diff. A fix re
@@ -226,7 +226,7 @@ New text:
 ````text
  A bug whose fix needs a file outside the diff is not dispatched at all: it stays a `blocker` and reaches the user.
 ````
-- [ ] Step 11: Insert after line 103. Line 103 begins:
+- [x] Step 11: Insert after line 103. Line 103 begins:
 
 ````text
 If any finding is auto-fixable, dispatch **one** fresh subag
@@ -237,7 +237,7 @@ New text:
 ````text
 For a bug, the brief carries the reproduction command, its output verbatim, the reference, and the expected result. The fix agent adds the reproduction as a test when a test file is already in the diff. With none in the diff it adds no test, and you say so in `Unseen`: a new test file belongs to no task, so it would trip the scope check.
 ````
-- [ ] Step 12: Replace line 101. Line 101 begins:
+- [x] Step 12: Replace line 101. Line 101 begins:
 
 ````text
 ## 5. The bounded fix loop
@@ -248,7 +248,7 @@ New text:
 ````text
 ## 6. The bounded fix loop
 ````
-- [ ] Step 13: Replace line 99. Line 99 begins:
+- [x] Step 13: Replace line 99. Line 99 begins:
 
 ````text
 **Fixability is a second, independent question: a finding is
@@ -259,7 +259,7 @@ New text:
 ````text
 **Fixability is a second, independent question. A finding is auto-fixable in two cases: fixing it cannot change behaviour, or it is a demonstrated bug whose reference is settled.** A `nit` whose fix would alter behaviour still reaches the user, and a `blocker` that is a pure rename does not. A demonstrated bug with no settled reference is never auto-fixed: choosing its correct behaviour is a decision, and decisions belong to the user.
 ````
-- [ ] Step 14: Replace line 92. Line 92 begins:
+- [x] Step 14: Replace line 92. Line 92 begins:
 
 ````text
 - **`warn`**: a ladder violation whose fix would change beha
@@ -270,7 +270,7 @@ New text:
 ````text
 - **`warn`**: a ladder violation whose fix would change behaviour, a `partial` goal, or a suspected bug.
 ````
-- [ ] Step 15: Replace line 91. Line 91 begins:
+- [x] Step 15: Replace line 91. Line 91 begins:
 
 ````text
 - **`blocker`**: a failed sweep check, a goal observed to fa
@@ -281,7 +281,7 @@ New text:
 ````text
 - **`blocker`**: a failed sweep check, a goal observed to fail, an unmeasured goal, a non-goal the diff built, a demonstrated bug. **Only a blocker produces `not ready`.**
 ````
-- [ ] Step 16: Insert before line 87, followed by one blank line. Line 87 begins:
+- [x] Step 16: Insert before line 87, followed by one blank line. Line 87 begins:
 
 ````text
 ## Severity
@@ -308,7 +308,7 @@ A reproduction writes nothing into the working tree. Run it inline, or from a te
 
 Reading is how you find a suspect, never how you confirm one. A bug you only read about is `suspected`, however sure you are.
 ````
-- [ ] Step 17: Replace line 3. Line 3 begins:
+- [x] Step 17: Replace line 3. Line 3 begins:
 
 ````text
 description: "Use before claiming a change is done, fixed or
@@ -319,10 +319,10 @@ New text:
 ````text
 description: "Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen."
 ````
-- [ ] Step 18: Run `npm run generate`
-- [ ] Step 19: Run `npm run check`
-- [ ] Step 20: Run `npm test`
-- [ ] Step 21: Commit
+- [x] Step 18: Run `npm run generate`
+- [x] Step 19: Run `npm run check`
+- [x] Step 20: Run `npm test`
+- [x] Step 21: Commit
 
 ### Task 3: eval scenarios for the hunt → verify: `node evals/run.mjs --dry-run --scenarios verify-reports-the-hunt,verify-fixes-a-settled-bug,verify-fixes-a-regression,verify-asks-on-an-undecided-bug` exits 0 and `npm test` exits 0
 
