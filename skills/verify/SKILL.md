@@ -119,6 +119,7 @@ A `warn` or a `nit` never gates. Treating one as a blocker halts a pipeline over
 ## 6. The bounded fix loop
 
 If any finding is auto-fixable, dispatch **one** fresh subagent carrying all of them in a single brief. Never one dispatch per finding: two implementers on one diff conflict.
+
 For a bug, the brief carries the reproduction command, its output verbatim, the reference, and the expected result. The fix agent adds the reproduction as a test when a test file is already in the diff. With none in the diff it adds no test, and you say so in `Unseen`: a new test file belongs to no task, so it would trip the scope check.
 
 Confine the fix agent to files already in the diff. A fix reaching outside it is a `blocker`, not a fix: the fix belongs to no task's `Files` block, so without the confinement it trips the sweep's scope check on the next round. A bug whose fix needs a file outside the diff is not dispatched at all: it stays a `blocker` and reaches the user.
@@ -126,6 +127,7 @@ Confine the fix agent to files already in the diff. A fix reaching outside it is
 Then run the sweep and the ladder again from the top, with every reproduction command added to the sweep. **The re-run is the gate on the fix.** A fix that breaks a test comes back as a failed check, and a reproduction still showing the wrong behaviour comes back as a demonstrated bug. Both are `blocker`s: no special handling, and no way for a repair to slip past unchecked.
 
 Stop at the first of these: a round produced no new findings, or one round completed. Anything still open is carried to the ending as information, never retried. A ladder finding has no exit status to converge on, so the bound is what makes stopping a property rather than a hope.
+
 After the round, hunt once more over the fix commit only. Anything that hunt demonstrates is a `blocker` carried to the user and never auto-fixed: a fix that breaks something else does not earn a second unattended round.
 
 If the fix agent returns anything but success, the loop ends and its findings stay open. Do not answer its question yourself.
