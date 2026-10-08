@@ -1,0 +1,12 @@
+{
+  "displayName": "Vibekit",
+  "shortDescription": "Guardrailed coding workflows",
+  "longDescription": "A coding workflow for developers using Codex. Design and approve changes, plan implementation, execute tasks, and verify results. Includes debugging and writing guidance. Activate Vibekit explicitly after installation. This skills-only package has no session startup hooks. Coding and command execution require a compatible Codex environment with the relevant tools.",
+  "developerName": "rizukirr",
+  "category": "Developer Tools",
+  "capabilities": ["Design coding changes", "Plan implementation", "Verify changes", "Diagnose failures"],
+  "websiteURL": "https://github.com/rizukirr/vibekit",
+  "defaultPrompt": ["Use Vibekit to help me plan a coding change."],
+  "logo": "./assets/icon.svg",
+  "composerIcon": "./assets/icon.svg"
+}

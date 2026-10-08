@@ -131,6 +131,8 @@ This costs real money and needs an authenticated `claude` CLI, so it is a manual
 
 ## Development
 
+Prepare the separate skills-only OpenAI upload with the [submission packaging guide](submission/README.md).
+
 ```
 npm run generate    # regenerate every derived file
 npm run check       # fail if any generated file is out of date
