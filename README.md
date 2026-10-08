@@ -2,7 +2,7 @@
 
 [![HOL Guard](https://img.shields.io/endpoint?url=https%3A%2F%2Fhol.org%2Fapi%2Fregistry%2Fbadges%2Fplugin%3Fslug%3Drizukirr%252Fvibekit%26metric%3Dtrust)](https://hol.org/registry/plugins/rizukirr%2Fvibekit)
 
-A guardrailed pipeline for coding agents. It turns a one-line intent into a design you approved, a plan you approved, code written by an agent that never saw the plan being written, and a verdict backed by output you can read. Dependency free: bare Node and whichever agent CLI you already use.
+Efficient, Evidence-based, Opinionated vibe-coding pipeline. It turns a one-line intent into a design you approved, a plan you approved, code written by an agent that never saw the plan being written, and a verdict backed by output you can read. Dependency free: bare Node and whichever agent CLI you already use.
 
 The problem it solves is not bad code. It is the claim of being done. vibekit puts a gate in front of every such claim and makes the evidence part of the answer.
 
@@ -130,6 +130,8 @@ Run A/B rather than candidate-only whenever a rate is the point. A candidate rat
 This costs real money and needs an authenticated `claude` CLI, so it is a manual gate, not part of the free CI (`check`, `test`, `check:hook`).
 
 ## Development
+
+Prepare the separate skills-only OpenAI upload with the [submission packaging guide](submission/README.md).
 
 ```
 npm run generate    # regenerate every derived file

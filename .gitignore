@@ -5,3 +5,4 @@ external/
 !/docs/plans/
 !/docs/specs/
 /evals/results
+/dist/

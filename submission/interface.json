@@ -1,0 +1,14 @@
+{
+  "displayName": "Vibekit",
+  "shortDescription": "Efficient vibe-coding pipeline",
+  "longDescription": "Efficient, Evidence-based, Opinionated vibe-coding pipeline. Design and approve changes, plan implementation, execute tasks, and verify results. Includes debugging and writing guidance. Activate Vibekit explicitly after installation. This skills-only package has no session startup hooks. Coding and command execution require a compatible Codex environment with the relevant tools.",
+  "developerName": "rizukirr",
+  "category": "Developer Tools",
+  "capabilities": ["Design coding changes", "Plan implementation", "Verify changes", "Diagnose failures"],
+  "websiteURL": "https://github.com/rizukirr/vibekit",
+  "privacyPolicyURL": "https://github.com/rizukirr/vibekit/blob/main/PRIVACY.md",
+  "supportURL": "https://github.com/rizukirr/vibekit/issues",
+  "defaultPrompt": ["Use Vibekit to help me plan a coding change."],
+  "logo": "./assets/icon.svg",
+  "composerIcon": "./assets/icon.svg"
+}
