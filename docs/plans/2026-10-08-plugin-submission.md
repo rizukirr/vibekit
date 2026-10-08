@@ -86,14 +86,14 @@ Use Node's existing test runner and temporary fixture roots. Test the actual arc
 
 ### Step 5: Verify
 
-- [ ] Run `node --test tests/submission.test.mjs`.
-- [ ] Run `npm run generate`.
-- [ ] Run `npm run check`.
-- [ ] Run `npm test`.
-- [ ] Run `npm run package:submission`.
-- [ ] Inspect the final archive using `unzip -l` and extract it to a fresh temporary directory. Check the actual manifest, all declared resources, all discovered skills, and absence of hooks, app references, secrets, Git internals, and unrelated development files.
-- [ ] Record the actual artifact path and clean Codex runtime validation status. Report any publisher-owned information still needed by the portal.
-- [ ] Commit only this task's source and generated files. Leave ignored build artifacts available locally.
+- [x] Run `node --test tests/submission.test.mjs`.
+- [x] Run `npm run generate`.
+- [x] Run `npm run check`.
+- [x] Run `npm test`.
+- [x] Run `npm run package:submission`.
+- [x] Inspect the final archive using `unzip -l` and extract it to a fresh temporary directory. Check the actual manifest, all declared resources, all discovered skills, and absence of hooks, app references, secrets, Git internals, and unrelated development files.
+- [x] Record the actual artifact path and clean Codex runtime validation status. Report any publisher-owned information still needed by the portal.
+- [x] Commit only this task's source and generated files. Leave ignored build artifacts available locally.
 
 ## Final verification
 
