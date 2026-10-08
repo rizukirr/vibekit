@@ -8,6 +8,11 @@ import { fileURLToPath } from 'node:url'
 import { buildSubmission } from '../lib/submission.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const PRIVATE_KEY_HEADER = ['-----BEGIN ', 'PRIVATE KEY-----'].join('')
+
+test('test source contains no literal private key header', () => {
+  assert.ok(!readFileSync(fileURLToPath(import.meta.url), 'utf8').includes(PRIVATE_KEY_HEADER))
+})
 
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'vibekit-submission-test-'))
@@ -185,7 +190,7 @@ for (const path of ['.env', 'private.key', 'hooks/runner.json', 'apps/config.jso
 
 test('rejects common private key signatures in resources', t => {
   const root = fixture(t)
-  writeFileSync(join(root, 'skills/lazy/leak.txt'), '-----BEGIN PRIVATE KEY-----')
+  writeFileSync(join(root, 'skills/lazy/leak.txt'), PRIVATE_KEY_HEADER)
   assert.throws(() => buildSubmission({ sourceRoot: root }), /possible secret/)
 })
 
