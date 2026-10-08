@@ -6,6 +6,8 @@
   "category": "Developer Tools",
   "capabilities": ["Design coding changes", "Plan implementation", "Verify changes", "Diagnose failures"],
   "websiteURL": "https://github.com/rizukirr/vibekit",
+  "privacyPolicyURL": "https://github.com/rizukirr/vibekit/blob/main/PRIVACY.md",
+  "supportURL": "https://github.com/rizukirr/vibekit/issues",
   "defaultPrompt": ["Use Vibekit to help me plan a coding change."],
   "logo": "./assets/icon.svg",
   "composerIcon": "./assets/icon.svg"

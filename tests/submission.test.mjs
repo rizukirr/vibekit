@@ -12,7 +12,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'vibekit-submission-test-'))
   t.after(() => rmSync(root, { recursive: true, force: true }))
-  for (const path of ['skills', 'submission', 'vibekit.config.json', 'LICENSE']) cpSync(join(ROOT, path), join(root, path), { recursive: true })
+  for (const path of ['skills', 'submission', 'vibekit.config.json', 'LICENSE', 'PRIVACY.md']) cpSync(join(ROOT, path), join(root, path), { recursive: true })
   return root
 }
 
@@ -48,15 +48,18 @@ test('builds and independently extracts a versioned skills-only archive without 
   const entries = unzip(artifact, '-Z1').trim().split('\n')
   const expectedSkills = readdirSync(join(root, 'skills')).sort()
   assert.deepEqual(skills, expectedSkills)
-  assert.equal(entries.length, skills.length + 6)
+  assert.equal(entries.length, skills.length + 7)
   assert.ok(entries.includes('skills/lazy/references/check.md'))
-  for (const entry of entries) assert.match(entry, /^(?:\.codex-plugin\/plugin\.json|skills\/[^/]+\/.+|AGENTS\.md|LICENSE|README\.md|assets\/icon\.svg)$/)
+  for (const entry of entries) assert.match(entry, /^(?:\.codex-plugin\/plugin\.json|skills\/[^/]+\/.+|AGENTS\.md|LICENSE|PRIVACY\.md|README\.md|assets\/icon\.svg)$/)
   const extracted = join(root, 'extracted')
   mkdirSync(extracted)
   execFileSync('unzip', ['-q', artifact, '-d', extracted])
   const manifest = JSON.parse(readFileSync(join(extracted, '.codex-plugin/plugin.json'), 'utf8'))
   assert.equal(manifest.version, '2.3.4-rc.1+test')
   assert.equal(manifest.name, 'vibekit')
+  const listing = JSON.parse(readFileSync(join(root, 'submission/interface.json'), 'utf8'))
+  assert.equal(manifest.interface.privacyPolicyURL, listing.privacyPolicyURL)
+  assert.equal(manifest.interface.supportURL, listing.supportURL)
   assert.deepEqual(Object.keys(manifest).sort(), ['author', 'description', 'extensions', 'interface', 'name', 'skills', 'version'])
   assert.deepEqual(Object.keys(manifest.extensions['com.openai']), ['onboardingSkill'])
   for (const resource of [manifest.skills, manifest.interface.logo, manifest.interface.composerIcon, manifest.extensions['com.openai'].onboardingSkill]) assert.ok(existsSync(resolve(extracted, resource)), resource)
@@ -69,6 +72,7 @@ test('builds and independently extracts a versioned skills-only archive without 
   assert.doesNotMatch(staged, /CLAUDE\.md|Use the `Skill` tool/)
   assert.match(readFileSync(join(extracted, 'AGENTS.md'), 'utf8'), /\| `brainstorm` \| hard \|/)
   assert.equal(readFileSync(join(extracted, 'README.md'), 'utf8'), readFileSync(join(root, 'submission/README.md'), 'utf8'))
+  assert.equal(readFileSync(join(extracted, 'PRIVACY.md'), 'utf8'), readFileSync(join(root, 'PRIVACY.md'), 'utf8'))
   assert.equal(readFileSync(startup, 'utf8'), original)
   assert.equal(readFileSync(skill, 'utf8'), expectedSkill)
   assert.equal(readFileSync(join(extracted, 'skills/lazy/SKILL.md'), 'utf8'), expectedSkill)
@@ -90,6 +94,22 @@ const invalidListings = [
   ['missing icon', listing => { listing.logo = './assets/missing.svg' }, /ENOENT/],
 ]
 
+for (const key of ['privacyPolicyURL', 'supportURL']) {
+  for (const [name, value] of [
+    ['missing', undefined],
+    ['whitespace-only', '   '],
+    ['malformed', 'not a URL'],
+    ['insecure', 'http://example.com'],
+    ['credentials', 'https://user:password@example.com'],
+    ['oversized', `https://example.com/${'x'.repeat(1024)}`],
+  ]) {
+    invalidListings.push([`${name} ${key}`, listing => {
+      if (value === undefined) delete listing[key]
+      else listing[key] = value
+    }, new RegExp(`interface\\.${key}`)])
+  }
+}
+
 for (const [name, mutate, error] of invalidListings) {
   test(`rejects ${name} and preserves a preexisting artifact`, t => {
     const root = fixture(t)
@@ -101,6 +121,16 @@ for (const [name, mutate, error] of invalidListings) {
     assert.ok(!readdirSync(root).some(name => name.startsWith('.vibekit-archive-')))
   })
 }
+
+test('missing policy preserves a preexisting artifact', t => {
+  const root = fixture(t)
+  const destination = join(root, 'existing.zip')
+  writeFileSync(destination, 'previous artifact')
+  rmSync(join(root, 'PRIVACY.md'))
+  assert.throws(() => buildSubmission({ sourceRoot: root, destination }), /ENOENT.*PRIVACY\.md/)
+  assert.equal(readFileSync(destination, 'utf8'), 'previous artifact')
+  assert.ok(!readdirSync(root).some(name => name.startsWith('.vibekit-archive-')))
+})
 
 for (const [name, path, value, error] of [
   ['semantic version', 'version', '../outside', /semantic version/],
