@@ -1,7 +1,7 @@
 ---
 title: Plugin submission package
 date: 2026-10-08
-status: draft
+status: approved
 ---
 
 # Plugin submission package: Design
