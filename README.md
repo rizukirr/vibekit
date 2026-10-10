@@ -74,7 +74,7 @@ Verify with `codex plugin list`.
 
 **opencode**
 
-Add it to the `plugin` array in your `opencode.json`, global or project level:
+Requires opencode v2. Add it to the `plugin` array in your `opencode.json`:
 
 ```json
 {
@@ -82,7 +82,7 @@ Add it to the `plugin` array in your `opencode.json`, global or project level:
 }
 ```
 
-Verify with `opencode debug skill`.
+Verify with `opencode plugin list`, which shows a row with ID `vibekit`. `.opencode/INSTALL.md` has a second check that the skills registered.
 
 **Antigravity (`agy`)**
 
@@ -106,7 +106,7 @@ pi install git:github.com/rizukirr/vibekit
 |---|---|---|
 | Claude Code | `runtimes/claude-code.mjs` | SessionStart hook smoke-tested in CI on Linux and Windows |
 | Codex | `runtimes/codex.mjs` | installed and listed as enabled by `codex plugin list`, against codex-cli 0.147.0 |
-| opencode | `runtimes/opencode.mjs` | all skills listed by `opencode debug skill`, against opencode 1.18.16 |
+| opencode | `runtimes/opencode.mjs` | plugin loaded from `.opencode/plugins/` by `opencode plugin list` and all skills listed by `opencode api skill.list`, against opencode 2.0.26 |
 | Antigravity | `runtimes/antigravity.mjs` | installed with `agy plugin install`, a print-mode session confirmed the auto-trigger map was in context and reproduced a table row, and the CLI log showed no skill parse failures, against agy 1.1.20 |
 | Pi | `runtimes/pi.mjs` | not verified, tool not installed |
 
