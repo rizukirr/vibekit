@@ -10,13 +10,13 @@ Prerequisites: Node.js 24 or newer and native `zip` and `unzip` commands on PATH
 npm run package:submission
 ```
 
-The command reads `vibekit.config.json` for the name and version and writes `dist/openai/vibekit-<current-version>.zip`. For version 0.6.4 the path is `dist/openai/vibekit-0.6.4.zip`. Archives stay ignored by Git. A failed build preserves a preexisting destination archive.
+The command reads `vibekit.config.json` for the name and version and writes `dist/openai/vibekit-<current-version>.zip`. For version 0.6.5 the path is `dist/openai/vibekit-0.6.5.zip`. Archives stay ignored by Git. A failed build preserves a preexisting destination archive.
 
 Inspect the actual archive before upload:
 
 ```sh
-unzip -l dist/openai/vibekit-0.6.4.zip
-unzip -p dist/openai/vibekit-0.6.4.zip .codex-plugin/plugin.json
+unzip -l dist/openai/vibekit-0.6.5.zip
+unzip -p dist/openai/vibekit-0.6.5.zip .codex-plugin/plugin.json
 ```
 
 Extract into a fresh temporary directory with `unzip`, then inspect every manifest resource. The archive contains `.codex-plugin/plugin.json`, discovered skill directories and resources, a generated `AGENTS.md` trigger reference, `assets/icon.svg`, `LICENSE`, `PRIVACY.md`, and this guide as `README.md`. It has no lifecycle hooks, app references, portable root manifest, repository metadata, or development tooling.
