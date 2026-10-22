@@ -303,6 +303,21 @@
     "model": "sonnet"
   },
   {
+    "id": "debug-standalone-writes-spec",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong. If your diagnosis holds, I approve it.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": {
+      "skill": "vibekit:plan",
+      "after": ["vibekit:debug"],
+      "fileMatching": "^docs/specs/.*fix.*-design\\.md$"
+    },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
     "id": "terse-omits-em-dash",
     "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer: in three or four paragraphs, explain to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
     "expect": {
