@@ -14,7 +14,7 @@
 **Files:**
 - Modify: `skills/debug/SKILL.md:75-108`
 
-- [ ] Step 1: Replace lines 75 to 100 of `skills/debug/SKILL.md` (from `## 6. Route` through the closing fence of the report block) with the text between the `~~~` markers below. Lines 102 to 105, the `## Repair nothing yourself` section, stay byte for byte as they are.
+- [x] Step 1: Replace lines 75 to 100 of `skills/debug/SKILL.md` (from `## 6. Route` through the closing fence of the report block) with the text between the `~~~` markers below. Lines 102 to 105, the `## Repair nothing yourself` section, stay byte for byte as they are.
 
 ~~~
 ## 6. Route
@@ -95,15 +95,15 @@ If writing it shows the constraint cannot hold, the route was wrong: it is struc
 The spec is the only file this skill ever writes. It holds no fix and no test. Hand off to `plan`.
 ~~~
 
-- [ ] Step 2: Replace the line under `## Handoff` (the last paragraph of the file) with:
+- [x] Step 2: Replace the line under `## Handoff` (the last paragraph of the file) with:
 
 ```
 None of your own. `exec`, `plan` or `brainstorm` takes the route, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm run check && npm test`
-- [ ] Step 5: Commit `skills/debug/SKILL.md` with the message `feat(debug): route a standalone diagnosis to a fix spec or brainstorm`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm run check && npm test`
+- [x] Step 5: Commit `skills/debug/SKILL.md` with the message `feat(debug): route a standalone diagnosis to a fix spec or brainstorm`
 
 ### Task 2: eval scenario for the standalone route → verify: `node -e "const s=require('./evals/scenarios.json').find(x=>x.id==='debug-standalone-writes-spec');if(!s||s.n!==10||s.expect.skill!=='vibekit:plan'||!s.expect.after.includes('vibekit:debug')||s.expect.fileMatching!=='^docs/specs/.*fix.*-design\\\\.md$')process.exit(1)" && npm test`
 
