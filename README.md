@@ -8,7 +8,7 @@ The problem it solves is not bad code. It is the claim of being done. vibekit pu
 
 ## How it works
 
-Six skills, each one a gate. Every stage hands to the next, and no stage can skip the one before it.
+Five skills are gates. Every stage hands to the next, and no stage can skip the one before it.
 
 ```
 /vibekit:vibe "add a dark mode toggle"
@@ -26,7 +26,7 @@ Six skills, each one a gate. Every stage hands to the next, and no stage can ski
 - **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent.
 - **`verify`** runs the checks no single task could: the whole suite, the scope of the diff, every goal against its evidence. It returns `ready` or `not ready`, and unmeasured counts as not satisfied.
 - **`debug`** takes over on a failed check. It finds one falsifiable cause, sends a read-only agent to refute it, and stops after two refutations rather than guessing a third time. It never edits.
-- **`lazy`** and **`terse`** stay on once invoked. One governs how much you build, the other how much you say.
+- **`lazy`**, **`terse`** and **`plain`** stay on once invoked. One governs how much you build, one how much you say, and one how text is typed.
 
 Two rules run through all of it. **Evidence or it did not happen**, because a check with no output to show is not a check. **You may not write a value you have not observed**, because a guess in a plan is a defect a later agent pays for.
 
