@@ -149,3 +149,26 @@ The first eval run of `debug-standalone-writes-spec` seeded plain files with Bas
 - [x] Step 2: In the same object, add `"repo": true,` on its own line directly before `"n": 10,`, matching the placement in the `verify-dispatches-the-fix` object.
 - [x] Step 3: Run `npm test`
 - [x] Step 4: Commit `evals/scenarios.json` with the message `test(evals): run the standalone debug eval in a git repo`
+
+### Task 4: debug invokes plan on a standalone local route → verify: `npm run check && npm test && grep -q '^One of your own: on a standalone local route' skills/debug/SKILL.md && ! grep -q '^None of your own' skills/debug/SKILL.md`
+
+The second eval run committed the fix spec in 8 of 10 sessions, and `plan` fired in none. The fix spec section says "Hand off to `plan`", but `## Handoff` opens with "None of your own", and every session stopped at "The next step is `plan`". `debug` invokes `plan` itself on this one route. `plan`'s own review gate still stands before any code.
+
+**Files:**
+- Modify: `skills/debug/SKILL.md:150-158`
+
+- [ ] Step 1: Replace line 150 of `skills/debug/SKILL.md` with:
+
+```
+The spec is the only file this skill ever writes. It holds no fix and no test. Once it is committed, invoke `plan` with its path, as Handoff says.
+```
+
+- [ ] Step 2: Replace line 158 (the paragraph under `## Handoff`) with:
+
+```
+One of your own: on a standalone local route, once the fix spec is committed, invoke `plan` with its path. Do not stop to ask: the user approved the report, and `plan`'s own review gate stands between the spec and any code. Every other route has none of your own. `exec`, `plan` or `brainstorm` takes it, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
+```
+
+- [ ] Step 3: Run `npm run generate`
+- [ ] Step 4: Run `npm run check && npm test`
+- [ ] Step 5: Commit `skills/debug/SKILL.md` with the message `fix(debug): invoke plan after committing a standalone fix spec`
