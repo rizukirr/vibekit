@@ -21,8 +21,8 @@ The last part of the clause runs the new test file against the emitter on `main`
 - Delete: `commands/vibe.md`
 - Modify: `.vibekit-manifest`
 
-- [ ] Step 1: In `runtimes/claude-code.mjs`, delete the whole `function commandFile(skill) { ... }` block (lines 19 to 31) and the blank line after it.
-- [ ] Step 2: In the same file, replace these lines inside `emit`:
+- [x] Step 1: In `runtimes/claude-code.mjs`, delete the whole `function commandFile(skill) { ... }` block (lines 19 to 31) and the blank line after it.
+- [x] Step 2: In the same file, replace these lines inside `emit`:
 
 ```js
   for (const skill of skills.filter(s => s.command)) {
@@ -38,8 +38,8 @@ with:
   // the skill's body. Plugin skills are already slash commands here.
 ```
 
-- [ ] Step 3: In `tests/claude-code.test.mjs`, delete line 5, `import { parseFrontmatter } from '../lib/frontmatter.mjs'`.
-- [ ] Step 4: In the same file, replace the three tests named `emits one markdown command per command-enabled skill and no others`, `the command file carries the skill description as frontmatter` and `the command file description survives parseFrontmatter and round-trips to the skill description` with this one test:
+- [x] Step 3: In `tests/claude-code.test.mjs`, delete line 5, `import { parseFrontmatter } from '../lib/frontmatter.mjs'`.
+- [x] Step 4: In the same file, replace the three tests named `emits one markdown command per command-enabled skill and no others`, `the command file carries the skill description as frontmatter` and `the command file description survives parseFrontmatter and round-trips to the skill description` with this one test:
 
 ```js
 test('emits no markdown command, because a plugin command hides the skill of the same name', () => {
@@ -49,6 +49,6 @@ test('emits no markdown command, because a plugin command hides the skill of the
 })
 ```
 
-- [ ] Step 5: Run `npm run generate`
-- [ ] Step 6: Run `npm run check && npm test`
-- [ ] Step 7: Commit every path in this task's Files block (the deletions with `git rm` or `git add -A` on those paths) with the message `fix(claude-code): stop emitting command wrappers that hide skill bodies`
+- [x] Step 5: Run `npm run generate`
+- [x] Step 6: Run `npm run check && npm test`
+- [x] Step 7: Commit every path in this task's Files block (the deletions with `git rm` or `git add -A` on those paths) with the message `fix(claude-code): stop emitting command wrappers that hide skill bodies`
