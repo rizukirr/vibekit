@@ -110,7 +110,7 @@ None of your own. `exec`, `plan` or `brainstorm` takes the route, and `verify` r
 **Files:**
 - Modify: `evals/scenarios.json:304`
 
-- [ ] Step 1: In `evals/scenarios.json`, directly after the object whose `id` is `debug-dispatches-the-refutation` (it closes at line 304), insert this object, with a comma after the preceding `}`:
+- [x] Step 1: In `evals/scenarios.json`, directly after the object whose `id` is `debug-dispatches-the-refutation` (it closes at line 304), insert this object, with a comma after the preceding `}`:
 
 ```json
   {
@@ -130,5 +130,5 @@ None of your own. `exec`, `plan` or `brainstorm` takes the route, and `verify` r
   },
 ```
 
-- [ ] Step 2: Run `npm test`
-- [ ] Step 3: Commit `evals/scenarios.json` with the message `test(evals): debug writes a fix spec on a standalone route`
+- [x] Step 2: Run `npm test`
+- [x] Step 3: Commit `evals/scenarios.json` with the message `test(evals): debug writes a fix spec on a standalone route`
