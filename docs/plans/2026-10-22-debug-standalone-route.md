@@ -140,12 +140,12 @@ The first eval run of `debug-standalone-writes-spec` seeded plain files with Bas
 **Files:**
 - Modify: `evals/scenarios.json:306-320`
 
-- [ ] Step 1: In the object whose `id` is `debug-standalone-writes-spec`, replace the `prompt` value with:
+- [x] Step 1: In the object whose `id` is `debug-standalone-writes-spec`, replace the `prompt` value with:
 
 ```json
 "`node test/parse.test.mjs` fails. It says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong. If your diagnosis holds, I approve it."
 ```
 
-- [ ] Step 2: In the same object, add `"repo": true,` on its own line directly before `"n": 10,`, matching the placement in the `verify-dispatches-the-fix` object.
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit `evals/scenarios.json` with the message `test(evals): run the standalone debug eval in a git repo`
+- [x] Step 2: In the same object, add `"repo": true,` on its own line directly before `"n": 10,`, matching the placement in the `verify-dispatches-the-fix` object.
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Commit `evals/scenarios.json` with the message `test(evals): run the standalone debug eval in a git repo`
