@@ -1,7 +1,7 @@
 ---
 title: debug standalone route
 date: 2026-10-22
-status: draft
+status: approved
 ---
 
 # debug standalone route: Design
