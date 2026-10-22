@@ -16,20 +16,6 @@ function pluginManifest(config) {
   }
 }
 
-function commandFile(skill) {
-  return [
-    '---',
-    `description: ${JSON.stringify(skill.description)}`,
-    'argument-hint: <intent>',
-    '---',
-    '',
-    `Invoke the \`${skill.name}\` skill and follow it exactly.`,
-    '',
-    '**User intent:** $ARGUMENTS',
-    '',
-  ].join('\n')
-}
-
 export function emit(model) {
   const { config, skills } = model
   const json = value => `${JSON.stringify(value, null, 2)}\n`
@@ -66,9 +52,9 @@ export function emit(model) {
     }),
   }
 
-  for (const skill of skills.filter(s => s.command)) {
-    files[`commands/${skill.name}.md`] = commandFile(skill)
-  }
+  // No commands/<name>.md, even for a command skill: a plugin command named
+  // like a skill is what Skill("vibekit:<name>") returns, so a wrapper hides
+  // the skill's body. Plugin skills are already slash commands here.
 
   return files
 }

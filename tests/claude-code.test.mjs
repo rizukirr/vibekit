@@ -2,7 +2,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { id, emit, regions } from '../runtimes/claude-code.mjs'
-import { parseFrontmatter } from '../lib/frontmatter.mjs'
 import { MODEL } from './helpers.mjs'
 
 test('emits the plugin manifest stamped with the config version', () => {
@@ -29,24 +28,10 @@ test('emits a SessionStart hook that runs through the polyglot wrapper', () => {
   assert.equal(entry.hooks[0].async, false)
 })
 
-test('emits one markdown command per command-enabled skill and no others', () => {
+test('emits no markdown command, because a plugin command hides the skill of the same name', () => {
+  assert.ok(MODEL.skills.some(s => s.command))
   const files = emit(MODEL)
-  assert.ok('commands/alpha.md' in files)
-  assert.ok(!('commands/beta.md' in files))
-})
-
-test('the command file carries the skill description as frontmatter', () => {
-  const command = emit(MODEL)['commands/alpha.md']
-  assert.ok(command.startsWith('---\n'))
-  assert.ok(command.includes('description: "Alpha does A."'))
-  assert.ok(command.includes('$ARGUMENTS'))
-})
-
-test('the command file description survives parseFrontmatter and round-trips to the skill description', () => {
-  const command = emit(MODEL)['commands/alpha.md']
-  const { data } = parseFrontmatter(command)
-  const skill = MODEL.skills.find(s => s.name === 'alpha')
-  assert.equal(data.description, skill.description)
+  assert.deepEqual(Object.keys(files).filter(p => /^commands\/.*\.md$/.test(p)), [])
 })
 
 test('owns the CLAUDE.md trigger-table region', () => {
