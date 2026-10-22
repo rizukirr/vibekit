@@ -157,18 +157,18 @@ The second eval run committed the fix spec in 8 of 10 sessions, and `plan` fired
 **Files:**
 - Modify: `skills/debug/SKILL.md:150-158`
 
-- [ ] Step 1: Replace line 150 of `skills/debug/SKILL.md` with:
+- [x] Step 1: Replace line 150 of `skills/debug/SKILL.md` with:
 
 ```
 The spec is the only file this skill ever writes. It holds no fix and no test. Once it is committed, invoke `plan` with its path, as Handoff says.
 ```
 
-- [ ] Step 2: Replace line 158 (the paragraph under `## Handoff`) with:
+- [x] Step 2: Replace line 158 (the paragraph under `## Handoff`) with:
 
 ```
 One of your own: on a standalone local route, once the fix spec is committed, invoke `plan` with its path. Do not stop to ask: the user approved the report, and `plan`'s own review gate stands between the spec and any code. Every other route has none of your own. `exec`, `plan` or `brainstorm` takes it, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm run check && npm test`
-- [ ] Step 5: Commit `skills/debug/SKILL.md` with the message `fix(debug): invoke plan after committing a standalone fix spec`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm run check && npm test`
+- [x] Step 5: Commit `skills/debug/SKILL.md` with the message `fix(debug): invoke plan after committing a standalone fix spec`
