@@ -107,4 +107,4 @@ Wait. On requested changes, make them and re-run self-review.
 
 ## Handoff
 
-The only next skill is `exec`, which does not exist yet. Say so plainly: the plan is written, committed and approved, and execution waits for the skill that consumes it. Never invoke an implementation skill from here.
+The only next skill is `exec`, once the user has approved the plan. Never invoke an implementation skill from here.
