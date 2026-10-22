@@ -319,6 +319,46 @@
     "model": "sonnet"
   },
   {
+    "id": "retro-fires",
+    "prompt": "Use the vibekit:retro skill. Earlier in this session I added an eval scenario that expects a committed file under docs/specs/, but left out \"repo\": true, so its sessions had no git repo and no shell. The paid run of 10 sessions scored 0.00 before I noticed. The debug report said: Class: mechanical, a scenario expecting a committed file without repo: true, which npm test could catch.",
+    "expect": { "skill": "vibekit:retro" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "retro-proposes-and-waits",
+    "prompt": "Use the vibekit:retro skill. Earlier in this session I added an eval scenario that expects a committed file under docs/specs/, but left out \"repo\": true, so its sessions had no git repo and no shell. The paid run of 10 sessions scored 0.00 before I noticed. The debug report said: Class: mechanical, a scenario expecting a committed file without repo: true, which npm test could catch.",
+    "expect": {
+      "skill": "vibekit:retro",
+      "finalTextMatches": "(^|\\n)\\s*1\\.\\s+`?(check|rule|pointer)\\b",
+      "onlyNewFilesMatching": "^$"
+    },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "retro-does-not-auto-fire",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": { "skill": "vibekit:debug", "skillAbsent": "vibekit:retro" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "debug-reports-class",
+    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
+    },
+    "expect": { "skill": "vibekit:debug", "finalTextMatches": "Class:" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
     "id": "terse-omits-em-dash",
     "prompt": "Invoke the vibekit:terse skill using the Skill tool, then follow it exactly while you answer: in three or four paragraphs, explain to a new contributor why a code review that finds nothing is not evidence that the code is correct.",
     "expect": {
