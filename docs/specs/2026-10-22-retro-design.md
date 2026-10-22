@@ -12,7 +12,7 @@ When a vibekit run goes wrong, `debug` finds the cause in the code and routes a 
 
 ## Goals
 
-1. A new skill `skills/retro/SKILL.md` exists with frontmatter `name: retro`, `gate: none`, `command: true` and the trigger `Invoked explicitly as a slash command, never fires on its own`. Observable: the file exists with those values, and after `npm run generate` the files `commands/retro.md` and a `retro` row in the `CLAUDE.md` trigger table exist.
+1. A new skill `skills/retro/SKILL.md` exists with frontmatter `name: retro`, `gate: none`, `command: true` and the trigger `Invoked explicitly as a slash command, never fires on its own`. Observable: the file exists with those values, and after `npm run generate` the file `commands/retro.toml` and a `retro` row in the `CLAUDE.md` trigger table exist.
 2. `retro`'s procedure is in the skill text. Observable: `skills/retro/SKILL.md` contains the three suggestion types `check`, `rule` and `pointer`, the cap of at most five suggestions, the heading `## Rules` as the destination for rules, and the spec path `docs/specs/YYYY-MM-DD-retro-checks-design.md`.
 3. `debug`'s report carries a `Class:` field. Observable: the report block in `skills/debug/SKILL.md` contains a line starting `Class:` directly after the line starting `Guard:`.
 4. `verify`'s ending points at `retro` on a troubled run. Observable: `## The ending` in `skills/verify/SKILL.md` contains `/vibekit:retro`.
@@ -37,7 +37,7 @@ When a vibekit run goes wrong, `debug` finds the cause in the code and routes a 
 
 Pushback response: the user rejected the smaller framing (`debug` routes the cheap check as a second task, no new skill) and chose the larger one. The smaller version adds the check before `verify` confirms the cause, and misses friction that never failed a check.
 
-Decisions from the clarifying questions: `retro` is a slash command, and `verify` mentions it in one line at the end of a troubled run. It reads only the current session's conversation. It writes accepted rules itself and hands accepted checks to `plan` as an approved spec. Rules go under `## Rules` in the rules file the current runtime loads. The user picked approach A, a standalone skill, over folding the procedure into `verify`.
+Decisions from the clarifying questions: `retro` is a slash command, and `verify` mentions it in one line at the end of a troubled run. It reads only the current session's conversation. It writes accepted rules itself and hands accepted checks to `plan` as an approved spec. Rules go under `## Rules` in the rules file the current runtime loads. The user picked approach A, a standalone skill, over folding the procedure into `verify`. Goal 1 was amended after PR #58 stopped generating Claude Code command wrappers: `commands/retro.md` no longer exists by design, and `commands/retro.toml` remains for codex.
 
 ### Units
 
