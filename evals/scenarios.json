@@ -304,7 +304,7 @@
   },
   {
     "id": "debug-standalone-writes-spec",
-    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong. If your diagnosis holds, I approve it.",
+    "prompt": "`node test/parse.test.mjs` fails. It says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong. If your diagnosis holds, I approve it.",
     "files": {
       "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
       "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
@@ -314,6 +314,7 @@
       "after": ["vibekit:debug"],
       "fileMatching": "^docs/specs/.*fix.*-design\\.md$"
     },
+    "repo": true,
     "n": 10,
     "model": "sonnet"
   },
