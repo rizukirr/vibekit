@@ -76,10 +76,14 @@ You may not do this yourself. You formed the hypothesis, so re-reading confirms 
 
 Diagnosis is the product. Someone else fixes it.
 
-- **Local**: one function or file, no interface change. Routes to `exec` as a new task.
-- **Structural**: crosses a boundary, changes an interface, needs design. Routes to `plan` as the problem statement for a new plan.
-- **`unreproducible`**: routes nothing. The user decides.
-- **Refuted twice**: routes nothing. The user decides.
+Where the failure came from decides where the fix goes. A `not ready` verdict from `verify` or a failed `exec` clause is inside a run: a plan is in flight to take the fix. A failure the user reported is standalone: nothing is in flight, and `exec` and `plan` both refuse to start without an approved spec.
+
+| Route | Inside a run | Standalone |
+|---|---|---|
+| Local: one function or file, no interface change | `exec` as a new task | the fix spec below, then `plan` |
+| Structural: crosses a boundary, changes an interface, needs design | `plan`, as the problem statement for a new plan | `brainstorm`, with the report as its problem statement |
+| `unreproducible` | routes nothing, the user decides | routes nothing, the user decides |
+| Refuted twice | routes nothing, the user decides | routes nothing, the user decides |
 
 Every routed fix carries a **guard test that fails before the fix and passes after**. Without the pre-fix failure it is not a guard, it is a test that happens to be green, and a check that cannot fail is not a check.
 
@@ -87,7 +91,7 @@ Name the guard test in the route. Do not write it.
 
 ## The report
 
-Report in the conversation. Write nothing, commit nothing.
+Report in the conversation. Write nothing and commit nothing, with one exception: the fix spec on a standalone local route.
 
 ```
 Failure:  the command, its exit status, and its output verbatim
@@ -96,8 +100,54 @@ Isolated: the commit, the hunk, or the conditions
 Cause:    one falsifiable claim, with file:line
 Refuted:  what the refuter returned, both times if there were two
 Guard:    the test the fix must add, and what makes it fail today
-Route:    exec | plan | user
+Route:    exec | plan | brainstorm | fix spec | user
 ```
+
+## The fix spec
+
+Only on a standalone local route, and only after the user approves the report. Approving the report as printed is approving the spec, so the spec is written with `status: approved` and gets no draft commit.
+
+Write it to `docs/specs/YYYY-MM-DD-fix-<topic>-design.md` and commit that file alone, on the current branch. Copy every field from the report verbatim. A paraphrased cause is a second cause nobody refuted.
+
+```
+---
+title: fix <topic>
+date: YYYY-MM-DD
+status: approved
+---
+
+# fix <topic>: Design
+
+## Problem
+<the report's Failure, Repro and Isolated lines>
+
+## Goals
+1. The guard test named in the report fails at BASE and passes at HEAD.
+2. The failing command from Failure exits 0 at HEAD.
+3. The full test suite passes at HEAD.
+
+## Non-goals
+No behaviour change other than the one the cause names.
+
+## Constraints
+No interface change.
+
+## Approach
+<the report's Cause and Refuted lines>
+
+## Alternatives considered
+N/A: a diagnosis, not a design. The refuter's result is under Approach.
+
+## Testing
+<the report's Guard line>
+
+## Open questions
+N/A: the report was approved as written.
+```
+
+If writing it shows the constraint cannot hold, the route was wrong: it is structural, and goes to `brainstorm` instead.
+
+The spec is the only file this skill ever writes. It holds no fix and no test. Once it is committed, invoke `plan` with its path, as Handoff says.
 
 ## Repair nothing yourself
 
@@ -105,4 +155,4 @@ Not the fix, not the "obvious" one-liner, not the revert. Fixing what you diagno
 
 ## Handoff
 
-None of your own. `exec` or `plan` takes the route, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
+One of your own: on a standalone local route, once the fix spec is committed, invoke `plan` with its path. Do not stop to ask: the user approved the report, and `plan`'s own review gate stands between the spec and any code. Every other route has none of your own. `exec`, `plan` or `brainstorm` takes it, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
