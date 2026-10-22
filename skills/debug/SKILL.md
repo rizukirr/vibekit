@@ -147,7 +147,7 @@ N/A: the report was approved as written.
 
 If writing it shows the constraint cannot hold, the route was wrong: it is structural, and goes to `brainstorm` instead.
 
-The spec is the only file this skill ever writes. It holds no fix and no test. Hand off to `plan`.
+The spec is the only file this skill ever writes. It holds no fix and no test. Once it is committed, invoke `plan` with its path, as Handoff says.
 
 ## Repair nothing yourself
 
@@ -155,4 +155,4 @@ Not the fix, not the "obvious" one-liner, not the revert. Fixing what you diagno
 
 ## Handoff
 
-None of your own. `exec`, `plan` or `brainstorm` takes the route, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
+One of your own: on a standalone local route, once the fix spec is committed, invoke `plan` with its path. Do not stop to ask: the user approved the report, and `plan`'s own review gate stands between the spec and any code. Every other route has none of your own. `exec`, `plan` or `brainstorm` takes it, and `verify` runs again from the top on whatever they produce, on a change it has not seen.
