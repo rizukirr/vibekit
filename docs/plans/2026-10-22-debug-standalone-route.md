@@ -132,3 +132,20 @@ None of your own. `exec`, `plan` or `brainstorm` takes the route, and `verify` r
 
 - [x] Step 2: Run `npm test`
 - [x] Step 3: Commit `evals/scenarios.json` with the message `test(evals): debug writes a fix spec on a standalone route`
+
+### Task 3: run the standalone eval in a git repo with a shell → verify: `node -e "const s=require('./evals/scenarios.json').find(x=>x.id==='debug-standalone-writes-spec');if(!s||s.repo!==true||!s.prompt.startsWith('\`node test/parse.test.mjs\` fails.'))process.exit(1)" && npm test`
+
+The first eval run of `debug-standalone-writes-spec` seeded plain files with Bash disabled, so no session could reproduce the failure or commit the spec. A `"repo": true` scenario is seeded as a git repo on a `work` branch and allowed `Bash(git:*)` and `Bash(node:*)` (`evals/session.mjs:74-77`), but not `npm`, so the prompt names the failing command as a `node` invocation.
+
+**Files:**
+- Modify: `evals/scenarios.json:306-320`
+
+- [ ] Step 1: In the object whose `id` is `debug-standalone-writes-spec`, replace the `prompt` value with:
+
+```json
+"`node test/parse.test.mjs` fails. It says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong. If your diagnosis holds, I approve it."
+```
+
+- [ ] Step 2: In the same object, add `"repo": true,` on its own line directly before `"n": 10,`, matching the placement in the `verify-dispatches-the-fix` object.
+- [ ] Step 3: Run `npm test`
+- [ ] Step 4: Commit `evals/scenarios.json` with the message `test(evals): run the standalone debug eval in a git repo`
