@@ -9,7 +9,7 @@
     {
       "name": "vibekit",
       "description": "Efficient, Evidence-based, Opinionated vibe-coding pipeline",
-      "version": "0.6.5",
+      "version": "0.7.0",
       "source": "./",
       "author": {
         "name": "rizukirr",
