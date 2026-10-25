@@ -6,6 +6,7 @@
     "brainstorm-precedes-code": { "minFiringRate": 1 },
     "lazy-reachable": { "minFiringRate": 0.5 },
     "terse-reachable": { "minFiringRate": 0.5 },
-    "verify-asks-on-an-undecided-bug": { "minFiringRate": 0.5 }
+    "verify-asks-on-an-undecided-bug": { "minFiringRate": 0.5 },
+    "repl-runs-unattended": { "minFiringRate": 0.6 }
   }
 }
