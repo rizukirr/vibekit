@@ -144,6 +144,16 @@ npm test            # unit tests
 
 Adding a skill is creating one directory under `skills/` with a `SKILL.md`, then running `npm run generate`. Never hand-edit a generated file.
 
+## Credits
+
+I built vibekit from scratch. These projects are my inspiration:
+
+- Matt Pocock's skills: https://github.com/mattpocock/skills
+- Lauren Tan's pstack: https://github.com/cursor/plugins/tree/main/pstack
+- obra's superpowers: https://github.com/obra/superpowers
+- caveman: https://github.com/JuliusBrussee/caveman
+- ponytail: https://github.com/DietrichGebert/ponytail
+
 ## License
 
 MIT. Copyright (c) 2026 Rizki Rakasiwi. See [LICENSE](LICENSE).
