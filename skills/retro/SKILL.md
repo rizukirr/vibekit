@@ -1,7 +1,7 @@
 ---
 name: retro
-description: "Use when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."
-trigger: Invoked explicitly as a slash command, never fires on its own
+description: "Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."
+trigger: "A run ended, and a debug report in it carried a Class: other than none"
 gate: none
 command: true
 ---
@@ -11,6 +11,8 @@ command: true
 Look back over this session and ask what in the repo would have stopped its mistakes. The code is already fixed. This makes the next session start better.
 
 `debug` asks why the code failed and routes a fix with a guard test, which stops that one bug from coming back. `retro` asks why the repo let the mistake happen, and proposes the check or rule that stops the whole class.
+
+This skill fires on its own once a run ends with a `debug` report whose `Class:` is not `none`, and never in the middle of a run. The user can also invoke it at any time.
 
 ## Input
 

@@ -37,12 +37,14 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 |---|---|---|
 | `brainstorm` | Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design. | hard |
 | `debug` | Use when a check fails: a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product. This skill never edits. | hard |
+| `decide` | Loaded by repl: answers every question a skill would put to the user during an unattended run. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged. | none |
 | `exec` | Use when a plan is approved and implementation has not started: dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
 | `lazy` | Use at the start of any coding work: writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
 | `plain` | Use before writing any text, in chat or into a file. Thirteen rules that hold in every string you emit, including code comments, commit messages, PR bodies and docs. No em dash, no semicolon, no hard wrapping inside a paragraph, no curly quotes, no decorative emoji, no title case in headings, no bold label lists, no heading echo, no fragment runs, no padded triads, no rejected straw options, no unraised objections, no writing about the previous version. Stays on after. | none |
 | `plan` | Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
 | `quick` | Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
-| `retro` | Use when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
+| `repl` | Use when the user types /vibekit:repl: runs brainstorm with the user, then carries plan, exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide. | none |
+| `retro` | Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
 | `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
 | `using-vibekit` | Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
 | `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen. | hard |
@@ -141,6 +143,16 @@ npm test            # unit tests
 ```
 
 Adding a skill is creating one directory under `skills/` with a `SKILL.md`, then running `npm run generate`. Never hand-edit a generated file.
+
+## Credits
+
+I built vibekit from scratch. These projects are my inspiration:
+
+- Matt Pocock's skills: https://github.com/mattpocock/skills
+- Lauren Tan's pstack: https://github.com/cursor/plugins/tree/main/pstack
+- obra's superpowers: https://github.com/obra/superpowers
+- caveman: https://github.com/JuliusBrussee/caveman
+- ponytail: https://github.com/DietrichGebert/ponytail
 
 ## License
 

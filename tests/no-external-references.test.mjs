@@ -10,7 +10,13 @@ import { join } from 'node:path'
 // Hand-maintained: external/ is gitignored, so the guard cannot derive this from
 // the directory listing and stay green in CI. Add a name here when a reference is
 // cloned. This list went stale the moment spec-kit landed.
-const BORROWED_FROM = ['caveman', 'ponytail', 'superpowers', 'karpathy', 'prompt-engineering-guide', 'spec-kit', 'speckit']
+const BORROWED_FROM = ['caveman', 'ponytail', 'superpowers', 'karpathy', 'prompt-engineering-guide', 'spec-kit', 'speckit', 'pstack']
+
+// The README's Credits section is the one place a borrowed name belongs.
+// Everything from its heading to the next heading, or the end, is skipped.
+function withoutCredits(text) {
+  return text.replace(/^## credits\n[\s\S]*?(?=^## |(?![\s\S]))/m, '')
+}
 
 function shippedFiles() {
   const skills = readdirSync('skills', { withFileTypes: true })
@@ -21,7 +27,8 @@ function shippedFiles() {
 
 test('no shipped file names a project vibekit only borrows from', () => {
   for (const path of shippedFiles()) {
-    const text = readFileSync(path, 'utf8').toLowerCase()
+    const raw = readFileSync(path, 'utf8').toLowerCase()
+    const text = path === 'README.md' ? withoutCredits(raw) : raw
     for (const name of BORROWED_FROM) {
       assert.ok(
         !text.includes(name),
@@ -48,4 +55,10 @@ test('the guard covers every skill plus all three generated docs', () => {
   }
 
   assert.equal(files.length, skillDirs.length + 3, 'every skill plus exactly three docs')
+})
+
+test('only the credits section may name a borrowed project', () => {
+  assert.ok(!withoutCredits('# x\n\n## credits\n\npstack\n\n## license\n\nmit\n').includes('pstack'))
+  assert.ok(withoutCredits('# x\n\npstack\n\n## credits\n\nnone\n').includes('pstack'))
+  assert.ok(withoutCredits('# x\n\n## credits\n\npstack\n\n## license\n\nmit\n').includes('## license'))
 })

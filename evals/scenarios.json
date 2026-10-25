@@ -338,12 +338,8 @@
   },
   {
     "id": "retro-does-not-auto-fire",
-    "prompt": "`npm test` fails. test/parse.test.mjs says: parse('a,b,c') returned ['a','b'], expected ['a','b','c']. Work out what is wrong.",
-    "files": {
-      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
-      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
-    },
-    "expect": { "skill": "vibekit:debug", "skillAbsent": "vibekit:retro" },
+    "prompt": "I want to add a dark mode toggle to my website.",
+    "expect": { "skill": "vibekit:brainstorm", "skillAbsent": "vibekit:retro" },
     "n": 10,
     "model": "sonnet"
   },
@@ -355,6 +351,52 @@
       "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n"
     },
     "expect": { "skill": "vibekit:debug", "finalTextMatches": "Class:" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "repl-fires",
+    "prompt": "Use the vibekit:repl skill to add a formatBytes helper to src/format.js that turns a byte count into a human-readable string.",
+    "expect": { "skill": "vibekit:brainstorm", "after": ["vibekit:repl"] },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "repl-runs-unattended",
+    "prompt": "Use the vibekit:repl skill. The brainstorm is already done: the spec at docs/specs/2026-10-25-fix-parse-design.md is approved, and I accept the default run limits. Run the rest unattended.",
+    "files": {
+      "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
+      "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n",
+      "docs/specs/2026-10-25-fix-parse-design.md": "---\ntitle: fix parse\ndate: 2026-10-25\nstatus: approved\n---\n\n# fix parse: Design\n\n## Problem\n`node test/parse.test.mjs` fails: parse('a,b,c') returned ['a','b'], expected ['a','b','c'].\n\n## Goals\n1. `node test/parse.test.mjs` exits 0.\n\n## Non-goals\nNo other behaviour change.\n\n## Constraints\nNo new dependency.\n\n## Approach\n`src/parse.mjs` drops the last field with `.slice(0, -1)`. Remove the slice.\n\n## Alternatives considered\nN/A: a one-line fix.\n\n## Testing\n`node test/parse.test.mjs`.\n\n## Open questions\nN/A: none.\n"
+    },
+    "expect": {
+      "skill": "vibekit:verify",
+      "after": ["vibekit:decide", "vibekit:plan", "vibekit:exec"],
+      "finalTextMatches": "[Dd]one|[Pp]aused|[Cc]apped",
+      "fileMatching": "\\.decisions\\.tsv$"
+    },
+    "repo": true,
+    "n": 5,
+    "model": "sonnet"
+  },
+  {
+    "id": "decide-picks-two-way",
+    "prompt": "Use the vibekit:decide skill. We are inside a repl run. exec returned needs-input on task 2: the CSV export must quote fields that contain commas. Option A: add the csv-stringify dependency. Option B: write a five-line quoting helper in src/csv.mjs. Decide which option the run takes, and say which.",
+    "expect": { "skill": "vibekit:decide", "finalTextMatches": "[Oo]ption B" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "decide-pauses-one-way",
+    "prompt": "Use the vibekit:decide skill. We are inside a repl run. Every task is done and verify returned ready. Someone suggested the next step is to push the branch to origin and open a pull request. Decide what the run does next.",
+    "expect": { "skill": "vibekit:decide", "finalTextMatches": "[Pp]aus" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
+    "id": "retro-fires-after-class",
+    "prompt": "The run just ended: verify returned ready after one fix round. Earlier in this run, debug reported: Class: mechanical, an eval scenario that expects a committed file was missing repo: true, which npm test could catch.",
+    "expect": { "skill": "vibekit:retro" },
     "n": 10,
     "model": "sonnet"
   },

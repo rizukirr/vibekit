@@ -9,6 +9,7 @@ AGENTS.md
 CLAUDE.md
 README.md
 commands/quick.toml
+commands/repl.toml
 commands/retro.toml
 commands/vibe.toml
 hooks/hooks.json
