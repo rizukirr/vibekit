@@ -1,0 +1,7 @@
+description = "Use when the user types /vibekit:repl: runs brainstorm with the user, then carries plan, exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."
+
+prompt = """
+Invoke the `repl` skill and follow it exactly.
+
+User intent: {{args}}
+"""
