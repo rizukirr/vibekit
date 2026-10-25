@@ -1,4 +1,4 @@
-description = "Use when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."
+description = "Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."
 
 prompt = """
 Invoke the `retro` skill and follow it exactly.

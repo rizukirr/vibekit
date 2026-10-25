@@ -44,7 +44,7 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 | `plan` | Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
 | `quick` | Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
 | `repl` | Use when the user types /vibekit:repl: runs brainstorm with the user, then carries plan, exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide. | none |
-| `retro` | Use when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
+| `retro` | Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
 | `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
 | `using-vibekit` | Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
 | `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen. | hard |

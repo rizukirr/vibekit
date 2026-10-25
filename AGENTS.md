@@ -17,7 +17,7 @@ invoked by following the named workflow.
 | Spec approved, implementation not yet started | `plan` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `quick` | none |
 | Invoked explicitly as a slash command, never fires on its own | `repl` | none |
-| Invoked explicitly as a slash command, never fires on its own | `retro` | none |
+| A run ended, and a debug report in it carried a Class: other than none | `retro` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
 | Implementation complete, before any claim that work is done | `verify` | hard |
