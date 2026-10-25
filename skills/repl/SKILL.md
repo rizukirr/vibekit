@@ -36,7 +36,7 @@ A goal whose only criterion is a paid run, with no budget left for it, cannot be
 
 ## 4. The pipeline
 
-Run `plan`, `exec`, `verify` and `debug` exactly as written. Where a skill would wait for the user, you answer:
+Run `plan`, `exec`, `verify` and `debug` exactly as written, every one of them, however small the change looks. Making a change yourself instead of through `exec` is never yours to decide. Where a skill would wait for the user, you answer:
 
 | The skill asks | You answer |
 |---|---|
@@ -68,7 +68,7 @@ The log sits beside the worktree, not in it, so `verify`'s clean-tree and scope 
 
 ## 8. Endings
 
-- `done`: `verify` returns `ready`, no blocker is open, and every warn or nit still open at the cap carries a ruling.
+- `done`: `verify`, invoked in this run, returns `ready`, no blocker is open, and every warn or nit still open at the cap carries a ruling.
 - `paused`: the run reached something only the user can decide.
 - `capped`: the round cap was reached with a blocker still open.
 

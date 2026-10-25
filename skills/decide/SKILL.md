@@ -33,6 +33,7 @@ Pause on any of these. They belong to the user, whatever the run limits say:
 - Auth, secrets, permissions, or a trust boundary.
 - Spending beyond the run's budget.
 - A new runtime dependency, or a change to a public interface or stored data that the spec does not name.
+- Skipping, merging or reordering a pipeline step. `plan`, `exec`, `verify` and `debug` run as written in every `repl` run, however small the change looks.
 - Weakening a check: editing a test's assertions, special-casing an input, disabling or loosening a check, or weakening a spec goal or its criterion. A check that cannot pass honestly is a finding, never a thing to edit.
 - Choosing correct behaviour where no settled reference exists and extending the spec would pick a product direction.
 - A dead end, where every path forward is a guess.
