@@ -110,7 +110,7 @@ Fill `Class:` when the cause belongs to a class of mistakes rather than being a 
 
 Only on a standalone local route, and only after the user approves the report. Approving the report as printed is approving the spec, so the spec is written with `status: approved` and gets no draft commit.
 
-Write it to `docs/specs/YYYY-MM-DD-fix-<topic>-design.md` and commit that file alone, on the current branch. Copy every field from the report verbatim. A paraphrased cause is a second cause nobody refuted.
+Write it to `docs/specs/YYYY-MM-DD-fix-<topic>-design.md` and commit that file alone, on the current branch. Copy every field the template names from the report verbatim. A paraphrased cause is a second cause nobody refuted.
 
 ```
 ---
