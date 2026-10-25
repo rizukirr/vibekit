@@ -159,6 +159,8 @@ Both exits end with the user. Present, then wait.
 
 **On `not ready`**: every blocker with its evidence, then the routing choice. A failing test or build belongs to `debug`. A goal this plan cannot satisfy belongs to `plan`. A ladder violation belongs to `exec` as a new task. The user picks, and may override with the gap named and on the record. A demonstrated bug gets three choices of its own: fixing it belongs to `debug`, amending the spec belongs to `brainstorm`, where the behaviour becomes a goal or a non-goal, and keeping it as is is the override.
 
+On either exit, if this run contained a `not ready` verdict, a failed `exec` clause or a `debug` report, add one line: how many failures there were, every `Class:` line verbatim, and that `/vibekit:retro` proposes checks and rules that catch them next time. A clean run adds nothing.
+
 ## 7. Integration
 
 Reachable only after approval, and only the one option the user picks. Never two in one run: a second one is a second decision, made again.

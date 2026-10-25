@@ -1,0 +1,7 @@
+description = "Use when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."
+
+prompt = """
+Invoke the `retro` skill and follow it exactly.
+
+User intent: {{args}}
+"""

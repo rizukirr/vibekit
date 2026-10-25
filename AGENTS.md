@@ -15,6 +15,7 @@ invoked by following the named workflow.
 | Before the first text of the session is written, whether prose or a file, invoke once, then it stays on | `plain` | none |
 | Spec approved, implementation not yet started | `plan` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `quick` | none |
+| Invoked explicitly as a slash command, never fires on its own | `retro` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |
 | Session start | `using-vibekit` | none |
 | Implementation complete, before any claim that work is done | `verify` | hard |

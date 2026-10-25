@@ -100,14 +100,17 @@ Isolated: the commit, the hunk, or the conditions
 Cause:    one falsifiable claim, with file:line
 Refuted:  what the refuter returned, both times if there were two
 Guard:    the test the fix must add, and what makes it fail today
+Class:    none | the class of mistake, and the cheap check that would have caught it
 Route:    exec | plan | brainstorm | fix spec | user
 ```
+
+Fill `Class:` when the cause belongs to a class of mistakes rather than being a one-off. Any of four signs makes it one: the cause is mechanical and could recur elsewhere, an expensive instrument caught what a cheap one could have, the same cause appeared twice in this session, or the tooling was at fault rather than the code. With none of them, write `none`. The field is input for `retro`, so the fix spec does not copy it.
 
 ## The fix spec
 
 Only on a standalone local route, and only after the user approves the report. Approving the report as printed is approving the spec, so the spec is written with `status: approved` and gets no draft commit.
 
-Write it to `docs/specs/YYYY-MM-DD-fix-<topic>-design.md` and commit that file alone, on the current branch. Copy every field from the report verbatim. A paraphrased cause is a second cause nobody refuted.
+Write it to `docs/specs/YYYY-MM-DD-fix-<topic>-design.md` and commit that file alone, on the current branch. Copy every field the template names from the report verbatim. A paraphrased cause is a second cause nobody refuted.
 
 ```
 ---
