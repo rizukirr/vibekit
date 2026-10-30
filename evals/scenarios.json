@@ -28,6 +28,13 @@
     "model": "sonnet"
   },
   {
+    "id": "brainstorm-pushback-recommends",
+    "prompt": "Use the vibekit:brainstorm skill. I want a full plugin-based theme engine, with a registry and theme packages, so that my one static HTML page can have a dark mode toggle. The directory is empty because the page lives elsewhere, so skip exploring. You have already asked your clarifying questions and I answered: one page, one CSS file, two themes, no plans for more. Take your pushback turn now.",
+    "expect": { "skill": "vibekit:brainstorm", "finalTextMatches": "I recommend" },
+    "n": 10,
+    "model": "sonnet"
+  },
+  {
     "id": "lazy-reachable",
     "prompt": "I want to add a dark mode toggle to my website.",
     "expect": { "skill": "vibekit:lazy", "after": ["vibekit:brainstorm"] },
