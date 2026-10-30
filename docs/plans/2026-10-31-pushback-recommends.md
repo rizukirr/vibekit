@@ -14,13 +14,13 @@
 - Modify: `skills/brainstorm/SKILL.md:61`
 - Modify: `evals/scenarios.json:29`
 
-- [ ] Step 1: In `skills/brainstorm/SKILL.md`, replace the line starting `> **Pushback:** Before I sketch approaches` with exactly:
+- [x] Step 1: In `skills/brainstorm/SKILL.md`, replace the line starting `> **Pushback:** Before I sketch approaches` with exactly:
 
 ```
 > **Pushback:** Before I sketch approaches, one challenge. `<one-sentence simpler framing or hidden assumption>`. I recommend `<smaller | larger>`, because `<one-sentence reason>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
 ```
 
-- [ ] Step 2: In `evals/scenarios.json`, directly after the object whose `id` is `brainstorm-precedes-code`, insert this object, followed by a comma:
+- [x] Step 2: In `evals/scenarios.json`, directly after the object whose `id` is `brainstorm-precedes-code`, insert this object, followed by a comma:
 
 ```json
   {
@@ -32,6 +32,6 @@
   },
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm run check && npm test`
-- [ ] Step 5: Commit `skills/brainstorm/SKILL.md` and `evals/scenarios.json` with the message `feat(brainstorm): the pushback turn recommends a side`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm run check && npm test`
+- [x] Step 5: Commit `skills/brainstorm/SKILL.md` and `evals/scenarios.json` with the message `feat(brainstorm): the pushback turn recommends a side`
