@@ -58,7 +58,7 @@ Exactly one, before approaches. Required. Challenge the framing if a simpler pat
 
 Output verbatim, in this shape:
 
-> **Pushback:** Before I sketch approaches, one challenge. `<one-sentence simpler framing or hidden assumption>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
+> **Pushback:** Before I sketch approaches, one challenge. `<one-sentence simpler framing or hidden assumption>`. I recommend `<smaller | larger>`, because `<one-sentence reason>`. Is the smaller version what you want, or do you need the larger framing? (If the larger framing is correct, say so and I'll proceed.)
 
 If no simpler framing exists, say so explicitly:
 
