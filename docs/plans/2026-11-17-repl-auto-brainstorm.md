@@ -17,13 +17,13 @@
 - Modify: `skills/repl/SKILL.md` headings `## 4. The pipeline` through `## 8. Endings`, renumbered
 - Regenerated: `README.md`, `commands/repl.toml`, `.opencode/plugins/vibekit.js`, and anything else `npm run generate` writes
 
-- [ ] Step 1: Replace line 3 with:
+- [x] Step 1: Replace line 3 with:
 
 ```
 description: "Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."
 ```
 
-- [ ] Step 2: Replace lines 11 to 35 (from `The user designs. You run the rest.` through the `5. Start the decision log` line) with:
+- [x] Step 2: Replace lines 11 to 35 (from `The user designs. You run the rest.` through the `5. Start the decision log` line) with:
 
 ````
 You design, plan and build. The user reviews one thing: a plain summary of the plan, before any code is written.
@@ -77,11 +77,11 @@ A go accepts the plan and the limits. Log it, and from `exec` on nothing waits f
 A correction is a settled answer. New run limits in it go into the spec first. Amend the spec in its own commit, `spec: amend <topic>: <one line>`, have `plan` rewrite the plan, and print the summary again.
 ````
 
-- [ ] Step 3: Renumber the remaining headings: `## 4. The pipeline` to `## 5. The pipeline`, `## 5. Rounds` to `## 6. Rounds`, `## 6. Amending the spec` to `## 7. Amending the spec`, `## 7. The decision log` to `## 8. The decision log`, `## 8. Endings` to `## 9. Endings`. Change no other text in them.
-- [ ] Step 4: Run `npm run generate`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Commit `skills/repl/SKILL.md` and every file `npm run generate` changed, message `feat(repl): brainstorm and plan without the user, summary before build`
+- [x] Step 3: Renumber the remaining headings: `## 4. The pipeline` to `## 5. The pipeline`, `## 5. Rounds` to `## 6. Rounds`, `## 6. Amending the spec` to `## 7. Amending the spec`, `## 7. The decision log` to `## 8. The decision log`, `## 8. Endings` to `## 9. Endings`. Change no other text in them.
+- [x] Step 4: Run `npm run generate`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Commit `skills/repl/SKILL.md` and every file `npm run generate` changed, message `feat(repl): brainstorm and plan without the user, summary before build`
 
 ### Task 2: decide never pauses a brainstorm question → verify: `npm test` exits 0, and `grep -c 'does not apply to brainstorm questions\|In a brainstorm, every question is a two-way door' skills/decide/SKILL.md` prints at least 2
 
