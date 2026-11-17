@@ -89,21 +89,21 @@ A correction is a settled answer. New run limits in it go into the spec first. A
 - Modify: `skills/decide/SKILL.md:38`
 - Modify: `skills/decide/SKILL.md:55`
 
-- [ ] Step 1: Replace line 38 with:
+- [x] Step 1: Replace line 38 with:
 
 ```
 - Choosing correct behaviour where no settled reference exists and extending the spec would pick a product direction. This does not apply to brainstorm questions, which section 4 covers.
 ```
 
-- [ ] Step 2: After line 55 (`Pick one and continue. Do not stall and do not ask: ...`), add a blank line and then:
+- [x] Step 2: After line 55 (`Pick one and continue. Do not stall and do not ask: ...`), add a blank line and then:
 
 ```
 In a brainstorm, every question is a two-way door. Take the recommendation `brainstorm` gives, or the one formed for it. The summary before `exec` is the user's review of these answers.
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `skills/decide/SKILL.md` and every file `npm run generate` changed, message `feat(decide): brainstorm questions are two-way doors`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `skills/decide/SKILL.md` and every file `npm run generate` changed, message `feat(decide): brainstorm questions are two-way doors`
 
 ### Task 3: evals for the summary stop → verify: `node -e` script in Step 3 exits 0, and `npm test` exits 0
 
