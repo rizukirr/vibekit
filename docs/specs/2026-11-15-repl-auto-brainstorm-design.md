@@ -1,7 +1,7 @@
 ---
 title: repl auto brainstorm
 date: 2026-11-15
-status: draft
+status: approved
 ---
 
 # repl auto brainstorm: Design
