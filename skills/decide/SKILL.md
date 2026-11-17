@@ -35,7 +35,7 @@ Pause on any of these. They belong to the user, whatever the run limits say:
 - A new runtime dependency, or a change to a public interface or stored data that the spec does not name.
 - Skipping, merging or reordering a pipeline step. `plan`, `exec`, `verify` and `debug` run as written in every `repl` run, however small the change looks.
 - Weakening a check: editing a test's assertions, special-casing an input, disabling or loosening a check, or weakening a spec goal or its criterion. A check that cannot pass honestly is a finding, never a thing to edit.
-- Choosing correct behaviour where no settled reference exists and extending the spec would pick a product direction.
+- Choosing correct behaviour where no settled reference exists and extending the spec would pick a product direction. This does not apply to brainstorm questions, which section 4 covers.
 - A dead end, where every path forward is a guess.
 
 Pausing is an honest outcome, not a failure to try harder.
@@ -53,6 +53,8 @@ Everything else is in the repo, under version control, and inside the task's sco
 3. Between options of the same size, take the one correct on edge cases.
 
 Pick one and continue. Do not stall and do not ask: a wrong two-way call costs less than a blocked run, and the log shows the user every one.
+
+In a brainstorm, every question is a two-way door. Take the recommendation `brainstorm` gives, or the one formed for it. The summary before `exec` is the user's review of these answers.
 
 ## 5. Limits
 

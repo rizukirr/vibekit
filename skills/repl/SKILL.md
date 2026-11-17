@@ -1,6 +1,6 @@
 ---
 name: repl
-description: "Use when the user types /vibekit:repl: runs brainstorm with the user, then carries plan, exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."
+description: "Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."
 trigger: Invoked explicitly as a slash command, never fires on its own
 gate: none
 command: true
@@ -8,33 +8,57 @@ command: true
 
 # repl
 
-The user designs. You run the rest.
+You design, plan and build. The user reviews one thing: a plain summary of the plan, before any code is written.
 
-After the spec is approved, nothing waits for the user until the run ends. You sit in the user's seat for every question the pipeline would ask, answer it by `decide`, and log the answer.
+You sit in the user's seat for every question the pipeline would ask, answer it by `decide`, and log the answer. The summary is the only point that waits for the user, unless `decide` pauses.
 
-## 1. Brainstorm with the user
+## 1. Start
 
-Invoke `brainstorm` with the intent. It runs exactly as it always does: questions, pushback, approaches, design sections, the spec, and the user's approval. Nothing is automated here.
+1. Invoke `decide`. It stays on for the rest of the run.
+2. Add `.vibe-worktrees/` to `.git/info/exclude` if it is not there. Never edit `.gitignore`.
+3. Start the decision log at `.vibe-worktrees/<topic>.decisions.tsv`, the topic taken from the intent, with the header row `ts	phase	decision	why	evidence	result`.
 
-## 2. Run limits
+## 2. Brainstorm without the user
 
-Right after the user approves the spec, ask once:
+Invoke `brainstorm` with the intent. It runs unchanged, except that wherever it would wait for the user (each clarifying question, the pushback, the choice of approach, each design section, the spec review), you answer through `decide` and carry on. Brainstorm never waits for the user.
 
-> Run limits: at most 3 verify rounds, at most $0 on paid runs. Reply with other numbers, or accept these.
+If the request or the repo settles the question, follow it. Otherwise take the recommendation: `brainstorm` gives one for the pushback and the approaches, and you form one for a clarifying question. Print each answer as one line and log it:
 
-Write the answer under the spec's `## Constraints` as `Run limits: at most N verify rounds, at most $M on paid runs`, and commit it with the approval. This is the last point that waits for the user.
+`Asked: <question>. Picked: <answer>, because <reason>.`
+
+Then approve the spec yourself: set `status: approved` and write `Run limits: at most 3 verify rounds, at most $0 on paid runs` under the spec's `## Constraints`.
 
 A goal whose only criterion is a paid run, with no budget left for it, cannot be measured. The run pauses on it rather than spending.
 
 ## 3. Set up
 
-1. Invoke `decide`. It stays on for the rest of the run.
-2. Create branch `repl/<topic>` in a worktree at `.vibe-worktrees/<topic>`, off the current branch. `exec` refuses to run without one.
-3. Add `.vibe-worktrees/` to `.git/info/exclude` if it is not there. Never edit `.gitignore`.
-4. Commit the spec on the run branch. If its path is gitignored, force-add it there: the branch is local, so this is a two-way door.
-5. Start the decision log at `.vibe-worktrees/<topic>.decisions.tsv` with the header row `ts	phase	decision	why	evidence	result`.
+1. Create branch `repl-run/<topic>` in a worktree at `.vibe-worktrees/<topic>`, off the current branch. `exec` refuses to run without one.
+2. Commit the approved spec on the run branch. If its path is gitignored, force-add it there: the branch is local, so this is a two-way door.
 
-## 4. The pipeline
+## 4. Plan and the summary
+
+Run `plan`. Its self-review stands in for the user's review of the plan. Then print the summary and wait for the user's reply before `exec`:
+
+```
+Summary
+Build <the feature, in one plain sentence>. These are the choices we made:
+
+1. <a decision from brainstorm, in plain words>
+2. <the next one>
+
+How we'll know it works: <the spec's goals, in one plain sentence>
+Limits: up to N review rounds, $M on paid checks.
+
+Reply "go" to start building, or tell me what to change.
+```
+
+List only decisions that change what gets built: the approach, the pushback outcome, and answers that shaped the design. Use plain words a 12-year-old would follow, with no file paths, function names or jargon unless the user used them.
+
+A go accepts the plan and the limits. Log it, and from `exec` on nothing waits for the user until the run ends.
+
+A correction is a settled answer. New run limits in it go into the spec first. Amend the spec in its own commit, `spec: amend <topic>: <one line>`, have `plan` rewrite the plan, and print the summary again.
+
+## 5. The pipeline
 
 Run `plan`, `exec`, `verify` and `debug` exactly as written, every one of them, however small the change looks. Making a change yourself instead of through `exec` is never yours to decide. Where a skill would wait for the user, you answer:
 
@@ -48,25 +72,25 @@ Run `plan`, `exec`, `verify` and `debug` exactly as written, every one of them, 
 | `debug`: approve the report | approve once its refuter has run and its guard test is named |
 | a one-way door, `unreproducible`, or refuted twice | pause |
 
-## 5. Rounds
+## 6. Rounds
 
 A round is one `verify` pass plus the fixes it routes. Count rounds against the cap and money against the budget, and log both as they change.
 
 A round that ends with the same or more findings than it started with did not help. Undo its fix commits with `git revert`, never a reset, log it, and change approach in the next round.
 
-## 6. Amending the spec
+## 7. Amending the spec
 
 You may add a goal or a non-goal for behaviour the spec does not cover, or record one reading of an ambiguous requirement. Each amendment is its own commit, `spec: amend <topic>: <one line>`, with a log row.
 
 Never delete a goal, weaken a goal or its criterion, or move a goal into the non-goals. If weakening is the only way forward, pause.
 
-## 7. The decision log
+## 8. The decision log
 
 One row per decision, with the columns `ts`, `phase`, `decision`, `why`, `evidence` and `result`. Evidence is a pointer, such as a commit, a `file:line` or a command, never prose. The log is append-only: a wrong call gets a new row that supersedes it.
 
 The log sits beside the worktree, not in it, so `verify`'s clean-tree and scope checks never see it.
 
-## 8. Endings
+## 9. Endings
 
 - `done`: `verify`, invoked in this run, returns `ready`, no blocker is open, and every warn or nit still open at the cap carries a ruling.
 - `paused`: the run reached something only the user can decide.

@@ -370,7 +370,7 @@
   },
   {
     "id": "repl-runs-unattended",
-    "prompt": "Use the vibekit:repl skill. The brainstorm is already done: the spec at docs/specs/2026-10-25-fix-parse-design.md is approved, and I accept the default run limits. Run the rest unattended.",
+    "prompt": "Use the vibekit:repl skill. The brainstorm is already done: the spec at docs/specs/2026-10-25-fix-parse-design.md is approved, and I accept the default run limits. Run the rest unattended. Treat this message as my go when you print the plan summary.",
     "files": {
       "src/parse.mjs": "export const parse = line => line.split(',').slice(0, -1)\n",
       "test/parse.test.mjs": "import assert from 'node:assert'\nimport { parse } from '../src/parse.mjs'\nassert.deepEqual(parse('a,b,c'), ['a', 'b', 'c'])\n",
@@ -381,6 +381,22 @@
       "after": ["vibekit:decide", "vibekit:plan", "vibekit:exec"],
       "finalTextMatches": "[Dd]one|[Pp]aused|[Cc]apped",
       "fileMatching": "\\.decisions\\.tsv$"
+    },
+    "repo": true,
+    "n": 5,
+    "model": "sonnet"
+  },
+  {
+    "id": "repl-stops-at-summary",
+    "prompt": "Use the vibekit:repl skill to add a formatBytes helper to src/format.js that turns a byte count into a human-readable string.",
+    "files": {
+      "src/format.js": "export {}\n"
+    },
+    "expect": {
+      "skill": "vibekit:plan",
+      "after": ["vibekit:repl", "vibekit:brainstorm"],
+      "skillAbsent": "vibekit:exec",
+      "finalTextMatches": "How we'll know it works"
     },
     "repo": true,
     "n": 5,
