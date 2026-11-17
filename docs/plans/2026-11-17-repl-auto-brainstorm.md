@@ -110,8 +110,8 @@ In a brainstorm, every question is a two-way door. Take the recommendation `brai
 **Files:**
 - Modify: `evals/scenarios.json` (the `repl-runs-unattended` entry, and a new entry after it)
 
-- [ ] Step 1: In the `repl-runs-unattended` entry, append ` Treat this message as my go when you print the plan summary.` to the end of its `prompt` string, inside the closing quote.
-- [ ] Step 2: Insert this entry directly after the `repl-runs-unattended` entry:
+- [x] Step 1: In the `repl-runs-unattended` entry, append ` Treat this message as my go when you print the plan summary.` to the end of its `prompt` string, inside the closing quote.
+- [x] Step 2: Insert this entry directly after the `repl-runs-unattended` entry:
 
 ```json
   {
@@ -132,8 +132,8 @@ In a brainstorm, every question is a two-way door. Take the recommendation `brai
   },
 ```
 
-- [ ] Step 3: Run `node -e "const s=JSON.parse(require('fs').readFileSync('evals/scenarios.json','utf8'));const a=s.find(x=>x.id==='repl-stops-at-summary');const b=s.find(x=>x.id==='repl-runs-unattended');if(!a||a.n!==5||a.expect.skillAbsent!=='vibekit:exec'||!a.repo)process.exit(1);if(!b.prompt.endsWith('Treat this message as my go when you print the plan summary.'))process.exit(1)"`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `evals/scenarios.json`, message `evals: repl stops at the plan summary`
+- [x] Step 3: Run `node -e "const s=JSON.parse(require('fs').readFileSync('evals/scenarios.json','utf8'));const a=s.find(x=>x.id==='repl-stops-at-summary');const b=s.find(x=>x.id==='repl-runs-unattended');if(!a||a.n!==5||a.expect.skillAbsent!=='vibekit:exec'||!a.repo)process.exit(1);if(!b.prompt.endsWith('Treat this message as my go when you print the plan summary.'))process.exit(1)"`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `evals/scenarios.json`, message `evals: repl stops at the plan summary`
 
 The paid eval runs for `repl-stops-at-summary`, `repl-runs-unattended` and `repl-fires` (spec Goal 8) are a manual gate. They are not part of any task, and `verify` reports them as unobserved if they did not run.
