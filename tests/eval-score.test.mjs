@@ -453,6 +453,22 @@ test('skillAbsent paired with skill: a session that did nothing fails the positi
   assert.equal(scoreScenario(s, [fired()]).rate, 1)
 })
 
+test('toolAbsent is unsatisfied when the named tool ran', () => {
+  const s = { id: 's', expect: { toolAbsent: 'Skill' } }
+  assert.equal(scoreScenario(s, [fired()]).rate, 0)
+})
+
+test('toolAbsent is satisfied when the named tool did not run', () => {
+  const s = { id: 's', expect: { toolAbsent: 'Write' } }
+  assert.equal(scoreScenario(s, [fired()]).rate, 1)
+})
+
+test('toolAbsent accepts an array and is unsatisfied by any member running', () => {
+  const s = { id: 's', expect: { toolAbsent: ['Write', 'Skill'] } }
+  assert.equal(scoreScenario(s, [fired()]).rate, 0)
+  assert.equal(scoreScenario(s, [ok()]).rate, 1)
+})
+
 test('producedFilesOmit is satisfied when no written file matches', () => {
   const s = { id: 's', expect: { producedFilesOmit: 'TODO' } }
   const files = { 'a.md': 'clean prose' }
