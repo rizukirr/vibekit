@@ -17,8 +17,8 @@
 - Modify: `evals/score.mjs:121-129` (after the `skillAbsent` loop)
 - Modify: `tests/eval-score.test.mjs:454` (insert after the last `skillAbsent` test)
 
-- [ ] Step 1: In `evals/score.mjs`, change the line `'skill', 'before', 'after', 'skillAbsent',` to `'skill', 'before', 'after', 'skillAbsent', 'toolAbsent',`.
-- [ ] Step 2: In `evals/score.mjs`, directly after the closing `}` of the `for (const name of [].concat(expect.skillAbsent ?? []))` loop, insert:
+- [x] Step 1: In `evals/score.mjs`, change the line `'skill', 'before', 'after', 'skillAbsent',` to `'skill', 'before', 'after', 'skillAbsent', 'toolAbsent',`.
+- [x] Step 2: In `evals/score.mjs`, directly after the closing `}` of the `for (const name of [].concat(expect.skillAbsent ?? []))` loop, insert:
 
 ```js
   // skillAbsent's mirror over tools: none of the named tools ran. A gate that
@@ -28,7 +28,7 @@
   }
 ```
 
-- [ ] Step 3: In `tests/eval-score.test.mjs`, after the test `skillAbsent paired with skill: a session that did nothing fails the positive half`, insert:
+- [x] Step 3: In `tests/eval-score.test.mjs`, after the test `skillAbsent paired with skill: a session that did nothing fails the positive half`, insert:
 
 ```js
 test('toolAbsent is unsatisfied when the named tool ran', () => {
@@ -48,8 +48,8 @@ test('toolAbsent accepts an array and is unsatisfied by any member running', () 
 })
 ```
 
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `feat(evals): toolAbsent expectation`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `feat(evals): toolAbsent expectation`
 
 ### Task 2: rewrite quick → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c "Skipped:" skills/quick/SKILL.md` prints 0, and `grep -c "Ran: <check>" skills/quick/SKILL.md` prints at least 1
 
