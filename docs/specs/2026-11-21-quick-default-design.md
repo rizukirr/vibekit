@@ -29,6 +29,7 @@ The user wants `quick` to be the default: think through the design silently the 
 13. `using-vibekit` matches the new default. Observable: `skills/using-vibekit/SKILL.md` says `quick`'s gate is the check every implementation request gets and `brainstorm` is where a request lands when that gate trips, and it keeps the 1% rule.
 14. Evals match. Observable: in `evals/scenarios.json`, `brainstorm-precedes-code` expects `vibekit:quick` before Write, Edit and NotebookEdit, `quick-does-not-auto-fire` is replaced by `quick-auto-fires`, `quick-skips-brainstorm` is removed, `quick-bails-out` expects no Write or Edit and a final text naming both the normal flow and `repl`, `quick-discloses` matches `Ran:.*Evidence:`, and a new `quick-gates-big` scenario asks for 5 features and expects no Write or Edit and a final text naming `repl`.
 15. `npm run check` exits 0 and `npm test` exits 0.
+16. The eval scorer can assert a tool never ran. Observable: `evals/score.mjs` accepts a `toolAbsent` key taking one tool name or several, a run that used any named tool fails it, and `tests/eval-score.test.mjs` covers both outcomes. The gate scenarios in goal 14 express "no Write or Edit" with it.
 
 ## Non-goals
 
