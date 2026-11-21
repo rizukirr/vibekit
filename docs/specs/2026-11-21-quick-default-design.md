@@ -1,7 +1,7 @@
 ---
 title: quick default
 date: 2026-11-21
-status: draft
+status: approved
 ---
 
 # quick default: Design
