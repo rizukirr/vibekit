@@ -57,7 +57,7 @@ test('toolAbsent accepts an array and is unsatisfied by any member running', () 
 - Modify: `skills/quick/SKILL.md` (whole file)
 - Regenerate: `CLAUDE.md`, `AGENTS.md`, `rules/AGENTS.md`, `README.md`, `commands/quick.toml` and any other file `npm run generate` writes
 
-- [ ] Step 1: Replace the whole of `skills/quick/SKILL.md` with:
+- [x] Step 1: Replace the whole of `skills/quick/SKILL.md` with:
 
 ````markdown
 ---
@@ -138,10 +138,10 @@ End with one line, picking the one evidence value that applies:
 > Ran: <check> (<result>). Evidence: ran it | reproduced in app | could not run.
 ````
 
-- [ ] Step 2: Run `npm run generate`
-- [ ] Step 3: Run `npm run check`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `feat(quick): default path with size gate`
+- [x] Step 2: Run `npm run generate`
+- [x] Step 3: Run `npm run check`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `feat(quick): default path with size gate`
 
 ### Task 3: brainstorm, decide and using-vibekit follow the new default → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c "repl. or .quick" skills/decide/SKILL.md` prints at least 1, and `grep -c "1% chance" skills/using-vibekit/SKILL.md` prints at least 1
 
