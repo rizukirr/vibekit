@@ -12,6 +12,19 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" edit-gate brainstorm,debug,exec,plan,quick,repl,retro,verify,vibe",
+            "shell": "bash",
+            "async": false
+          }
+        ]
+      }
     ]
   }
 }
