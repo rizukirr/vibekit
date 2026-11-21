@@ -57,14 +57,12 @@ function runGate(input, env = {}) {
   const command = process.platform === 'win32'
     ? { file: 'hooks\\run-hook.cmd', args: ['edit-gate', GATE_LIST], shell: true }
     : { file: 'bash', args: ['hooks/run-hook.cmd', 'edit-gate', GATE_LIST], shell: false }
-  const result = spawnSync(command.file, command.args, {
+  return spawnSync(command.file, command.args, {
     input: JSON.stringify(input),
-    encoding: "utf8",
+    encoding: 'utf8',
     shell: command.shell,
-    env: { ...process.env, VIBEKIT_GATE: "", ...env },
+    env: { ...process.env, VIBEKIT_GATE: '', ...env },
   })
-  console.log("DIAG-TEST", JSON.stringify({ status: result.status, stderr: result.stderr }))
-  return result
 }
 
 function record(...lines) {

@@ -9,7 +9,6 @@ if [ "${VIBEKIT_GATE:-}" = "off" ]; then
 fi
 
 input=$(cat)
-echo "DIAG argc=$# arg1=[${1:-}] inputlen=${#input}" >&2
 
 # A subagent's call carries agent_id, and vibekit's subagents are dispatched
 # by a stage that already passed the gate. Inside a JSON string the quotes
@@ -24,15 +23,12 @@ path=$(printf '%s' "$input" \
     | sed 's/\\\\/\\/g')
 
 # Fail open: a missing or unreadable record must never block every edit.
-echo "DIAG path=[$path]" >&2
 if [ -z "$path" ] || [ ! -r "$path" ]; then
-    echo "DIAG fail-open: path empty or unreadable" >&2
     exit 0
 fi
 
 names=$(printf '%s' "${1:-}" | tr ',' '|')
 if [ -z "$names" ]; then
-    echo "DIAG fail-open: empty names" >&2
     exit 0
 fi
 
