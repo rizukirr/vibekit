@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# PreToolUse hook: blocks Write, Edit and NotebookEdit in the main session
+# until a working vibekit skill has run. $1 is the comma-joined skill list.
+
+set -uo pipefail
+
+if [ "${VIBEKIT_GATE:-}" = "off" ]; then
+    exit 0
+fi
+
+input=$(cat)
+
+# A subagent's call carries agent_id, and vibekit's subagents are dispatched
+# by a stage that already passed the gate. Inside a JSON string the quotes
+# are escaped, so an unescaped "agent_id" can only be the key itself.
+case "$input" in
+    *'"agent_id"'*) exit 0 ;;
+esac
+
+path=$(printf '%s' "$input" \
+    | sed -n 's/.*"transcript_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+    | head -n 1 \
+    | sed 's/\\\\/\\/g')
+
+# Fail open: a missing or unreadable record must never block every edit.
+if [ -z "$path" ] || [ ! -r "$path" ]; then
+    exit 0
+fi
+
+names=$(printf '%s' "${1:-}" | tr ',' '|')
+if [ -z "$names" ]; then
+    exit 0
+fi
+
+# Only the two exact record forms count. The bare text /vibekit:<name>
+# also appears in skill descriptions, which every session carries.
+if grep -qE "\"name\":\"Skill\",\"input\":\\{\"skill\":\"vibekit:($names)\"|<command-name>/vibekit:($names)</command-name>" "$path"; then
+    exit 0
+fi
+
+echo "No vibekit gate has run in this session. Invoke vibekit:quick first, then retry. To turn this check off, set VIBEKIT_GATE=off." >&2
+exit 2

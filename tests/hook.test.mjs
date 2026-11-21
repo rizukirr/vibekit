@@ -1,8 +1,10 @@
 // tests/hook.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 const config = JSON.parse(readFileSync('vibekit.config.json', 'utf8'))
 
@@ -46,4 +48,65 @@ test('emits parseable JSON for a bootstrap body containing quotes, backslashes a
   } finally {
     writeFileSync(path, original)
   }
+})
+
+// edit-gate: run the real script through the wrapper, the way Claude Code does.
+const GATE_LIST = 'brainstorm,quick'
+
+function runGate(input, env = {}) {
+  const command = process.platform === 'win32'
+    ? { file: 'hooks\\run-hook.cmd', args: ['edit-gate', GATE_LIST], shell: true }
+    : { file: 'bash', args: ['hooks/run-hook.cmd', 'edit-gate', GATE_LIST], shell: false }
+  return spawnSync(command.file, command.args, {
+    input: JSON.stringify(input),
+    encoding: 'utf8',
+    shell: command.shell,
+    env: { ...process.env, VIBEKIT_GATE: '', ...env },
+  })
+}
+
+function record(...lines) {
+  const path = join(mkdtempSync(join(tmpdir(), 'vibekit-gate-')), 'session.jsonl')
+  writeFileSync(path, `${lines.map(line => JSON.stringify(line)).join('\n')}\n`)
+  return path
+}
+
+const skillCall = skill => ({ message: { content: [{ type: 'tool_use', name: 'Skill', input: { skill } }] } })
+const plainText = text => ({ message: { content: text } })
+
+test('edit-gate blocks an edit when no working skill has run', () => {
+  const result = runGate({ transcript_path: record(plainText('hello')) })
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /invoke vibekit:quick/i)
+  assert.match(result.stderr, /VIBEKIT_GATE=off/)
+})
+
+test('edit-gate allows an edit after a Skill call to a working skill', () => {
+  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:quick')) }).status, 0)
+})
+
+test('edit-gate allows an edit after a typed slash command for a working skill', () => {
+  const path = record(plainText('<command-name>/vibekit:quick</command-name>'))
+  assert.equal(runGate({ transcript_path: path }).status, 0)
+})
+
+test('edit-gate does not count a modifier skill', () => {
+  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:lazy')) }).status, 2)
+})
+
+test('edit-gate does not count a prose mention of a command', () => {
+  assert.equal(runGate({ transcript_path: record(plainText('try /vibekit:quick next')) }).status, 2)
+})
+
+test('edit-gate lets a subagent edit through', () => {
+  assert.equal(runGate({ transcript_path: record(plainText('hello')), agent_id: 'sub-1' }).status, 0)
+})
+
+test('edit-gate is off when VIBEKIT_GATE=off', () => {
+  assert.equal(runGate({ transcript_path: record(plainText('hello')) }, { VIBEKIT_GATE: 'off' }).status, 0)
+})
+
+test('edit-gate fails open when the record is missing', () => {
+  assert.equal(runGate({}).status, 0)
+  assert.equal(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') }).status, 0)
 })
