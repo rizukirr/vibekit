@@ -6,7 +6,9 @@ The problem it solves is not bad code. It is the claim of being done. vibekit pu
 
 ## How it works
 
-Five skills are gates. Every stage hands to the next, and no stage can skip the one before it.
+Most requests never need the full pipeline. `quick` is the default: it checks the size of the request first, thinks the design through on its own, builds in one go, and ends with the check it ran and what it showed. When a request is too big for one go, such as more than 3 separate features, a new dependency, or a change to auth or stored data, `quick` stops and asks whether you want the full pipeline below or `repl`, which plans on its own and builds after one go-ahead.
+
+Six skills are gates. In the full pipeline, every stage hands to the next, and no stage can skip the one before it.
 
 ```
 /vibekit:vibe "add a dark mode toggle"
