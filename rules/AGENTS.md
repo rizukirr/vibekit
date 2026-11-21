@@ -7,14 +7,14 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points. I
 <!-- vibekit:generated:trigger-table -->
 | Trigger condition | Skill | Gate |
 |---|---|---|
-| About to start creative or implementation work, before code is written | `brainstorm` | hard |
+| Escalated by quick, or invoked by vibe or repl | `brainstorm` | hard |
 | A check failed: verify returned not ready on a failed check, an exec clause failed, or a failure was reported | `debug` | hard |
-| Loaded by repl at the start of its run, never fires on its own | `decide` | none |
+| Loaded by repl or quick at the start of its run, never fires on its own | `decide` | none |
 | Plan approved, implementation not yet started | `exec` | hard |
 | First moment of any coding work, invoke once, then it stays on | `lazy` | none |
 | Before the first text of the session is written, whether prose or a file, invoke once, then it stays on | `plain` | none |
 | Spec approved, implementation not yet started | `plan` | hard |
-| Invoked explicitly as a slash command, never fires on its own | `quick` | none |
+| About to start creative or implementation work, before code is written | `quick` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `repl` | none |
 | A run ended, and a debug report in it carried a Class: other than none | `retro` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |

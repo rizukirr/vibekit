@@ -1,16 +1,16 @@
 ---
 name: decide
-description: "Loaded by repl: answers every question a skill would put to the user during an unattended run. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged."
-trigger: Loaded by repl at the start of its run, never fires on its own
+description: "Loaded by repl or quick: answers every question a skill would put to the user during a run without the user. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged."
+trigger: Loaded by repl or quick at the start of its run, never fires on its own
 gate: none
 command: false
 ---
 
 # decide
 
-In a `repl` run, nobody is there to ask. Every question a skill would put to the user comes here instead, and gets one of three answers: follow what is settled, pause for the user, or decide and continue.
+In a `repl` or `quick` run, nobody is there to ask. Every question a skill would put to the user comes here instead, and gets one of three answers: follow what is settled, pause for the user, or decide and continue.
 
-This skill applies only inside a `repl` run. Outside one, the user decides, as every other skill says.
+This skill applies only inside a `repl` or `quick` run. Outside one, the user decides, as every other skill says. In `quick`, a pause means stop and ask the user.
 
 ## 1. Settled
 
@@ -33,7 +33,7 @@ Pause on any of these. They belong to the user, whatever the run limits say:
 - Auth, secrets, permissions, or a trust boundary.
 - Spending beyond the run's budget.
 - A new runtime dependency, or a change to a public interface or stored data that the spec does not name.
-- Skipping, merging or reordering a pipeline step. `plan`, `exec`, `verify` and `debug` run as written in every `repl` run, however small the change looks.
+- Skipping, merging or reordering a pipeline step. `plan`, `exec`, `verify` and `debug` run as written in every `repl` run, however small the change looks. This door applies to `repl` only. `quick` skips spec, plan, exec and verify by design.
 - Weakening a check: editing a test's assertions, special-casing an input, disabling or loosening a check, or weakening a spec goal or its criterion. A check that cannot pass honestly is a finding, never a thing to edit.
 - Choosing correct behaviour where no settled reference exists and extending the spec would pick a product direction. This does not apply to brainstorm questions, which section 4 covers.
 - A dead end, where every path forward is a guess.
@@ -54,7 +54,7 @@ Everything else is in the repo, under version control, and inside the task's sco
 
 Pick one and continue. Do not stall and do not ask: a wrong two-way call costs less than a blocked run, and the log shows the user every one.
 
-In a brainstorm, every question is a two-way door. Take the recommendation `brainstorm` gives, or the one formed for it. The summary before `exec` is the user's review of these answers.
+In a brainstorm, every question is a two-way door. Take the recommendation `brainstorm` gives, or the one formed for it. The summary before `exec` is the user's review of these answers. In `quick`, the `Reading:` line is that review.
 
 ## 5. Limits
 
@@ -64,4 +64,4 @@ In a brainstorm, every question is a two-way door. Take the recommendation `brai
 
 ## The ruling
 
-Every answer, settled or decided, is one row in `repl`'s decision log: what was decided, why, the evidence as a pointer, and the result. A paused question gets a row too, naming the door.
+Every answer, settled or decided, is one row in `repl`'s decision log: what was decided, why, the evidence as a pointer, and the result. A paused question gets a row too, naming the door. `quick` keeps no log.

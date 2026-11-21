@@ -73,7 +73,7 @@ export function isPredicate(clause) {
 // expectation nobody built, and either way the scenario would score 1.00 while
 // asserting nothing. Throwing is correct: a silent pass is the worse failure.
 const KNOWN_EXPECTATIONS = new Set([
-  'skill', 'before', 'after', 'skillAbsent',
+  'skill', 'before', 'after', 'skillAbsent', 'toolAbsent',
   'transcriptContains', 'transcriptMatches', 'finalTextMatches', 'finalTextOmits',
   'fileMatching', 'onlyNewFilesMatching', 'producedFilesOmit',
   'verifyClauses', 'tasksHaveVerify',
@@ -126,6 +126,11 @@ function unsatisfiedReason(scenario, run) {
   // a session that did nothing at all.
   for (const name of [].concat(expect.skillAbsent ?? [])) {
     if (run.skills.some(s => s.name === name)) return `skill ${name} fired`
+  }
+  // skillAbsent's mirror over tools: none of the named tools ran. A gate that
+  // must stop and ask is only proven when no edit tool ran at all.
+  for (const name of [].concat(expect.toolAbsent ?? [])) {
+    if (run.tools.some(t => t.name === name)) return `tool ${name} used`
   }
   if (expect.transcriptContains !== undefined && !run.contains?.(expect.transcriptContains)) {
     return `transcript missing ${JSON.stringify(expect.transcriptContains)}`

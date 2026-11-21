@@ -6,7 +6,9 @@ The problem it solves is not bad code. It is the claim of being done. vibekit pu
 
 ## How it works
 
-Five skills are gates. Every stage hands to the next, and no stage can skip the one before it.
+Most requests never need the full pipeline. `quick` is the default: it checks the size of the request first, thinks the design through on its own, builds in one go, and ends with the check it ran and what it showed. When a request is too big for one go, such as more than 3 separate features, a new dependency, or a change to auth or stored data, `quick` stops and asks whether you want the full pipeline below or `repl`, which plans on its own and builds after one go-ahead.
+
+Six skills are gates. In the full pipeline, every stage hands to the next, and no stage can skip the one before it.
 
 ```
 /vibekit:vibe "add a dark mode toggle"
@@ -33,14 +35,14 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 <!-- vibekit:generated:skill-list -->
 | Skill | What it does | Gate |
 |---|---|---|
-| `brainstorm` | Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design. | hard |
+| `brainstorm` | Use when quick's gate trips and the user picks the normal flow, or when vibe or repl hands off an intent. Hard gate, no code before an approved design. | hard |
 | `debug` | Use when a check fails: a red test, a broken build, a failed clause, or a bug you can point at. Finds a root cause and gets it refuted before anything is fixed. Diagnosis is the product. This skill never edits. | hard |
-| `decide` | Loaded by repl: answers every question a skill would put to the user during an unattended run. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged. | none |
+| `decide` | Loaded by repl or quick: answers every question a skill would put to the user during a run without the user. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged. | none |
 | `exec` | Use when a plan is approved and implementation has not started: dispatches one fresh subagent per task, runs each task's verify clause, and routes failures back instead of repairing them. One task, one commit. | hard |
 | `lazy` | Use at the start of any coding work: writing, adding, refactoring, fixing, designing. The laziness ladder, stdlib and native features before new code, one line before fifty. Stays on after. | none |
 | `plain` | Use before writing any text, in chat or into a file. Thirteen rules that hold in every string you emit, including code comments, commit messages, PR bodies and docs. No em dash, no semicolon, no hard wrapping inside a paragraph, no curly quotes, no decorative emoji, no title case in headings, no bold label lists, no heading echo, no fragment runs, no padded triads, no rejected straw options, no unraised objections, no writing about the previous version. Stays on after. | none |
 | `plan` | Use when a spec is approved and implementation has not started: turns it into a task-by-task plan with exact paths and checkable verification. No code here. | hard |
-| `quick` | Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped. | none |
+| `quick` | Use before any implementation work: features, fixes, behavior changes. Checks the size first, then thinks the design through silently, builds in one go and proves it works by running it. Asks the user to move big work to the normal flow or repl. | hard |
 | `repl` | Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide. | none |
 | `retro` | Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
 | `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |

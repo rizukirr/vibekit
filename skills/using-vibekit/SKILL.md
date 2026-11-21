@@ -27,7 +27,7 @@ If you were dispatched to execute a specific task, skip this and follow your bri
 
 Every skill declares its own trigger, and the auto-trigger table in `CLAUDE.md` is generated from those declarations, so it is never out of date. Read the table, not a copy of it.
 
-A skill whose row says `hard` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most.
+A skill whose row says `hard` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most. Every implementation request goes through `quick`'s gate, and `brainstorm` is where a request lands when that gate trips.
 
 ## Always on
 

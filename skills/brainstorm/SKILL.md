@@ -1,7 +1,7 @@
 ---
 name: brainstorm
-description: "Use before any creative or implementation work: features, components, behavior changes. Hard gate, no code before an approved design."
-trigger: About to start creative or implementation work, before code is written
+description: "Use when quick's gate trips and the user picks the normal flow, or when vibe or repl hands off an intent. Hard gate, no code before an approved design."
+trigger: Escalated by quick, or invoked by vibe or repl
 gate: hard
 ---
 
