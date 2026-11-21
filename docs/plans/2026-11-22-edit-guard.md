@@ -18,7 +18,7 @@
 - Create: `hooks/edit-gate` (mode 755)
 - Modify: `tests/hook.test.mjs:4-5` (imports) and the end of the file (new tests)
 
-- [ ] Step 1: Create `hooks/edit-gate` with exactly this content, then run `chmod +x hooks/edit-gate`:
+- [x] Step 1: Create `hooks/edit-gate` with exactly this content, then run `chmod +x hooks/edit-gate`:
 
 ```bash
 #!/usr/bin/env bash
@@ -65,7 +65,7 @@ echo "No vibekit gate has run in this session. Invoke vibekit:quick first, then 
 exit 2
 ```
 
-- [ ] Step 2: In `tests/hook.test.mjs`, replace the two lines
+- [x] Step 2: In `tests/hook.test.mjs`, replace the two lines
 
 ```js
 import { execFileSync } from 'node:child_process'
@@ -81,7 +81,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 ```
 
-- [ ] Step 3: Append to the end of `tests/hook.test.mjs`:
+- [x] Step 3: Append to the end of `tests/hook.test.mjs`:
 
 ```js
 // edit-gate: run the real script through the wrapper, the way Claude Code does.
@@ -146,9 +146,9 @@ test('edit-gate fails open when the record is missing', () => {
 })
 ```
 
-- [ ] Step 4: Run `test -x hooks/edit-gate`
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Commit `feat(hooks): edit-gate script`
+- [x] Step 4: Run `test -x hooks/edit-gate`
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Commit `feat(hooks): edit-gate script`
 
 ### Task 2: register the hook in the generated hooks.json → verify: `npm run check` exits 0, `npm test` exits 0, and `grep -c '"PreToolUse"' hooks/hooks.json` prints at least 1
 
