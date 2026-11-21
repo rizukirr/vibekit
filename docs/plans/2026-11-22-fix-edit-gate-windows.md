@@ -32,10 +32,10 @@ Note: the spec's Cause cites run-hook.cmd lines 14, 18 and 23. Read at HEAD 2afc
 - Modify: `tests/claude-code.test.mjs:36`
 - Regenerate: `hooks/hooks.json` and any other file `npm run generate` writes
 
-- [ ] Step 1: In `hooks/run-hook.cmd`, replace each of the three lines `    exit /b %ERRORLEVEL%` (at lines 15, 19 and 25) with `    exit /b`. A bare `exit /b` returns the errorlevel of the command that just ran, which is read at run time, while `%ERRORLEVEL%` inside a parenthesised block is read when cmd.exe parses the block.
-- [ ] Step 2: In `hooks/edit-gate`, change line 3 from `# until a working vibekit skill has run. $1 is the comma-joined skill list.` to `# until a working vibekit skill has run. $1 is the skill list, joined with +.`
-- [ ] Step 3: In `hooks/edit-gate`, change `names=$(printf '%s' "${1:-}" | tr ',' '|')` to `names=$(printf '%s' "${1:-}" | tr '+' '|')`
-- [ ] Step 4: In `runtimes/claude-code.mjs`, replace the comment lines
+- [x] Step 1: In `hooks/run-hook.cmd`, replace each of the three lines `    exit /b %ERRORLEVEL%` (at lines 15, 19 and 25) with `    exit /b`. A bare `exit /b` returns the errorlevel of the command that just ran, which is read at run time, while `%ERRORLEVEL%` inside a parenthesised block is read when cmd.exe parses the block.
+- [x] Step 2: In `hooks/edit-gate`, change line 3 from `# until a working vibekit skill has run. $1 is the comma-joined skill list.` to `# until a working vibekit skill has run. $1 is the skill list, joined with +.`
+- [x] Step 3: In `hooks/edit-gate`, change `names=$(printf '%s' "${1:-}" | tr ',' '|')` to `names=$(printf '%s' "${1:-}" | tr '+' '|')`
+- [x] Step 4: In `runtimes/claude-code.mjs`, replace the comment lines
 
 ```js
         // The edit gate. Its list is every skill that counts as entering the
@@ -54,10 +54,10 @@ with
         // cmd.exe splits an argument at a comma.
 ```
 
-- [ ] Step 5: In `runtimes/claude-code.mjs`, in the `edit-gate` command template, change `.sort().join(',')` to `.sort().join('+')`.
-- [ ] Step 6: In `tests/hook.test.mjs`, change `const GATE_LIST = 'brainstorm,quick'` to `const GATE_LIST = 'brainstorm+quick'`. Keep `quick` second: the test "edit-gate allows an edit after a Skill call to a working skill" only passes on Windows when the whole list reaches the script.
-- [ ] Step 7: In `tests/claude-code.test.mjs`, change `.split(' edit-gate ')[1].split(',')` to `.split(' edit-gate ')[1].split('+')`.
-- [ ] Step 8: Run `npm run generate`
-- [ ] Step 9: Run `npm run check`
-- [ ] Step 10: Run `npm test`
-- [ ] Step 11: Commit `fix(hooks): edit-gate exit status and skill list survive cmd.exe`
+- [x] Step 5: In `runtimes/claude-code.mjs`, in the `edit-gate` command template, change `.sort().join(',')` to `.sort().join('+')`.
+- [x] Step 6: In `tests/hook.test.mjs`, change `const GATE_LIST = 'brainstorm,quick'` to `const GATE_LIST = 'brainstorm+quick'`. Keep `quick` second: the test "edit-gate allows an edit after a Skill call to a working skill" only passes on Windows when the whole list reaches the script.
+- [x] Step 7: In `tests/claude-code.test.mjs`, change `.split(' edit-gate ')[1].split(',')` to `.split(' edit-gate ')[1].split('+')`.
+- [x] Step 8: Run `npm run generate`
+- [x] Step 9: Run `npm run check`
+- [x] Step 10: Run `npm test`
+- [x] Step 11: Commit `fix(hooks): edit-gate exit status and skill list survive cmd.exe`
