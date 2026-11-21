@@ -12,17 +12,17 @@ set "HOOK_DIR=%~dp0"
 
 if exist "C:\Program Files\Git\bin\bash.exe" (
     "C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    exit /b
 )
 if exist "C:\Program Files (x86)\Git\bin\bash.exe" (
     "C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    exit /b
 )
 
 where bash >nul 2>nul
 if %ERRORLEVEL% equ 0 (
     bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    exit /b
 )
 
 REM No bash found - exit silently rather than error.

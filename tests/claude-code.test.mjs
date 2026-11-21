@@ -33,7 +33,7 @@ test('emits a SessionStart hook that runs through the polyglot wrapper', () => {
 test('emits a PreToolUse edit gate listing every hard-gate or command skill on disk', () => {
   const model = buildModel(JSON.parse(readFileSync('vibekit.config.json', 'utf8')), 'skills')
   const entry = JSON.parse(emit(model)['hooks/hooks.json']).hooks.PreToolUse[0]
-  const list = entry.hooks[0].command.split(' edit-gate ')[1].split(',')
+  const list = entry.hooks[0].command.split(' edit-gate ')[1].split('+')
   assert.equal(entry.matcher, 'Write|Edit|NotebookEdit')
   assert.match(entry.hooks[0].command, /run-hook\.cmd" edit-gate /)
   for (const skill of model.skills) {

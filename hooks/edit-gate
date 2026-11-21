@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # PreToolUse hook: blocks Write, Edit and NotebookEdit in the main session
-# until a working vibekit skill has run. $1 is the comma-joined skill list.
+# until a working vibekit skill has run. $1 is the skill list, joined with +.
 
 set -uo pipefail
 
@@ -27,7 +27,7 @@ if [ -z "$path" ] || [ ! -r "$path" ]; then
     exit 0
 fi
 
-names=$(printf '%s' "${1:-}" | tr ',' '|')
+names=$(printf '%s' "${1:-}" | tr '+' '|')
 if [ -z "$names" ]; then
     exit 0
 fi

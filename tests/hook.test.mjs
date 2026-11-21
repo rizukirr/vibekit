@@ -51,7 +51,7 @@ test('emits parseable JSON for a bootstrap body containing quotes, backslashes a
 })
 
 // edit-gate: run the real script through the wrapper, the way Claude Code does.
-const GATE_LIST = 'brainstorm,quick'
+const GATE_LIST = 'brainstorm+quick'
 
 function runGate(input, env = {}) {
   const command = process.platform === 'win32'
