@@ -152,40 +152,40 @@ End with one line, picking the one evidence value that applies:
 - Modify: `skills/using-vibekit/SKILL.md:30`
 - Regenerate: every file `npm run generate` writes
 
-- [ ] Step 1: In `skills/brainstorm/SKILL.md`, replace the `description` and `trigger` lines with:
+- [x] Step 1: In `skills/brainstorm/SKILL.md`, replace the `description` and `trigger` lines with:
 
 ```
 description: "Use when quick's gate trips and the user picks the normal flow, or when vibe or repl hands off an intent. Hard gate, no code before an approved design."
 trigger: Escalated by quick, or invoked by vibe or repl
 ```
 
-- [ ] Step 2: In `skills/decide/SKILL.md`, replace the `description` and `trigger` lines with:
+- [x] Step 2: In `skills/decide/SKILL.md`, replace the `description` and `trigger` lines with:
 
 ```
 description: "Loaded by repl or quick: answers every question a skill would put to the user during a run without the user. Settled answers are followed, one-way doors pause, experiments settle what they can, and two-way doors are decided and logged."
 trigger: Loaded by repl or quick at the start of its run, never fires on its own
 ```
 
-- [ ] Step 3: In `skills/decide/SKILL.md`, replace `In a \`repl\` run, nobody is there to ask.` with `In a \`repl\` or \`quick\` run, nobody is there to ask.`
-- [ ] Step 4: In `skills/decide/SKILL.md`, replace the line `This skill applies only inside a \`repl\` run. Outside one, the user decides, as every other skill says.` with:
+- [x] Step 3: In `skills/decide/SKILL.md`, replace `In a \`repl\` run, nobody is there to ask.` with `In a \`repl\` or \`quick\` run, nobody is there to ask.`
+- [x] Step 4: In `skills/decide/SKILL.md`, replace the line `This skill applies only inside a \`repl\` run. Outside one, the user decides, as every other skill says.` with:
 
 ```
 This skill applies only inside a `repl` or `quick` run. Outside one, the user decides, as every other skill says. In `quick`, a pause means stop and ask the user.
 ```
 
-- [ ] Step 5: In `skills/decide/SKILL.md`, append to the bullet that starts `- Skipping, merging or reordering a pipeline step.` the sentence ` This door applies to \`repl\` only. \`quick\` skips spec, plan, exec and verify by design.`
-- [ ] Step 6: In `skills/decide/SKILL.md`, append to the line that starts `In a brainstorm, every question is a two-way door.` the sentence ` In \`quick\`, the \`Reading:\` line is that review.`
-- [ ] Step 7: In `skills/decide/SKILL.md`, append to the line that starts `Every answer, settled or decided, is one row` the sentence ` \`quick\` keeps no log.`
-- [ ] Step 8: In `skills/using-vibekit/SKILL.md`, replace the line `A skill whose row says \`hard\` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most.` with:
+- [x] Step 5: In `skills/decide/SKILL.md`, append to the bullet that starts `- Skipping, merging or reordering a pipeline step.` the sentence ` This door applies to \`repl\` only. \`quick\` skips spec, plan, exec and verify by design.`
+- [x] Step 6: In `skills/decide/SKILL.md`, append to the line that starts `In a brainstorm, every question is a two-way door.` the sentence ` In \`quick\`, the \`Reading:\` line is that review.`
+- [x] Step 7: In `skills/decide/SKILL.md`, append to the line that starts `Every answer, settled or decided, is one row` the sentence ` \`quick\` keeps no log.`
+- [x] Step 8: In `skills/using-vibekit/SKILL.md`, replace the line `A skill whose row says \`hard\` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most.` with:
 
 ```
 A skill whose row says `hard` is a gate. Respect it regardless of how simple the task looks. Simple tasks are where unexamined assumptions cost the most. Every implementation request goes through `quick`'s gate, and `brainstorm` is where a request lands when that gate trips.
 ```
 
-- [ ] Step 9: Run `npm run generate`
-- [ ] Step 10: Run `npm run check`
-- [ ] Step 11: Run `npm test`
-- [ ] Step 12: Commit `feat: brainstorm on escalation, decide inside quick`
+- [x] Step 9: Run `npm run generate`
+- [x] Step 10: Run `npm run check`
+- [x] Step 11: Run `npm test`
+- [x] Step 12: Commit `feat: brainstorm on escalation, decide inside quick`
 
 ### Task 4: evals match the new default → verify: the scenario check command in Step 6 exits 0, `npm test` exits 0, and `grep -c "quick-skips-brainstorm\|quick-does-not-auto-fire" evals/scenarios.json` prints 0
 
