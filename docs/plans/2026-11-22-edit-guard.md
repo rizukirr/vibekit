@@ -157,7 +157,7 @@ test('edit-gate fails open when the record is missing', () => {
 - Modify: `tests/claude-code.test.mjs:1-4` (imports) and after the SessionStart test (new test)
 - Regenerate: `hooks/hooks.json` and any other file `npm run generate` writes
 
-- [ ] Step 1: In `runtimes/claude-code.mjs`, inside the object passed to `json(...)` for `'hooks/hooks.json'`, add a `PreToolUse` key after the `SessionStart` array, so the `hooks` object reads:
+- [x] Step 1: In `runtimes/claude-code.mjs`, inside the object passed to `json(...)` for `'hooks/hooks.json'`, add a `PreToolUse` key after the `SessionStart` array, so the `hooks` object reads:
 
 ```js
       hooks: {
@@ -186,14 +186,14 @@ test('edit-gate fails open when the record is missing', () => {
       },
 ```
 
-- [ ] Step 2: In `tests/claude-code.test.mjs`, after the line `import { MODEL } from './helpers.mjs'`, add:
+- [x] Step 2: In `tests/claude-code.test.mjs`, after the line `import { MODEL } from './helpers.mjs'`, add:
 
 ```js
 import { readFileSync } from 'node:fs'
 import { buildModel } from '../lib/model.mjs'
 ```
 
-- [ ] Step 3: In `tests/claude-code.test.mjs`, after the test `emits a SessionStart hook that runs through the polyglot wrapper`, add:
+- [x] Step 3: In `tests/claude-code.test.mjs`, after the test `emits a SessionStart hook that runs through the polyglot wrapper`, add:
 
 ```js
 test('emits a PreToolUse edit gate listing every hard-gate or command skill on disk', () => {
@@ -209,10 +209,10 @@ test('emits a PreToolUse edit gate listing every hard-gate or command skill on d
 })
 ```
 
-- [ ] Step 4: Run `npm run generate`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Commit `feat(hooks): register the edit gate`
+- [x] Step 4: Run `npm run generate`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Commit `feat(hooks): register the edit gate`
 
 ### Task 3: README names the guard → verify: `grep -c 'VIBEKIT_GATE=off' README.md` prints at least 1, `npm run check` exits 0, and `npm test` exits 0
 
