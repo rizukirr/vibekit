@@ -24,7 +24,7 @@ Before proposing anything, trace the whole thing first: every file the change to
 ## Procedure
 
 1. **Invoke `lazy`, `terse` and `plain` before anything else.** `lazy` governs what you build, `terse` how you talk, `plain` how text is typed. All three stay on for the rest of the session. Their description lines are not their content. You have not read a skill until you have invoked it.
-2. Explore context: **look before you ask**. List the directory, read what matters, check recent commits. "New project, nothing to explore" is a conclusion you may only reach *after* a tool call, never instead of one. Asking your first question before you have looked is skipping this step.
+2. Explore context: **look before you ask**. List the directory, read what matters, check recent commits. "New project, nothing to explore" is a conclusion you may only reach *after* a tool call, never instead of one. Asking your first question before you have looked is skipping this step. If the project has an `.out-of-scope/` folder, read it: each file there is an idea the user already turned down, with the reason. Do not propose one again unless the user raises it.
 3. Clarifying questions, one at a time.
 4. Scope check.
 5. Pushback turn.

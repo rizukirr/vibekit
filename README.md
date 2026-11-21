@@ -21,7 +21,7 @@ Six skills are gates. In the full pipeline, every stage hands to the next, and n
               (a check failed)
 ```
 
-- **`brainstorm`** asks questions one at a time, pushes back on your framing once, offers alternatives, and writes a spec with observable success criteria. No code before you approve it.
+- **`brainstorm`** asks questions one at a time, pushes back on your framing once, offers alternatives, and writes a spec with observable success criteria. No code before you approve it. If your project has an `.out-of-scope/` folder, one file per idea you turned down and why, it reads that first and does not propose those ideas again.
 - **`plan`** turns the approved spec into numbered tasks. Every task carries a `→ verify:` clause that is checkable before anything runs, and a plan may not state a value nobody has observed.
 - **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent.
 - **`verify`** runs the checks no single task could: the whole suite, the scope of the diff, every goal against its evidence. It returns `ready` or `not ready`, and unmeasured counts as not satisfied.
