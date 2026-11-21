@@ -1,47 +1,76 @@
 ---
 name: quick
-description: "Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped."
-trigger: Invoked explicitly as a slash command, never fires on its own
-gate: none
+description: "Use before any implementation work: features, fixes, behavior changes. Checks the size first, then thinks the design through silently, builds in one go and proves it works by running it. Asks the user to move big work to the normal flow or repl."
+trigger: About to start creative or implementation work, before code is written
+gate: hard
 command: true
 ---
 
 # quick
 
-The fast path. One intent in, the change written now.
+The default path. One intent in, the change designed, built and proven in one go, with no documents in between.
 
-## The waiver
+## 0. Modifiers
 
-`brainstorm`, `plan`, `exec` and `verify` do not apply here. No spec doc, no plan doc, no subagent dispatch, no verification report. That is the whole point of typing this instead of `/vibekit:vibe`.
+Invoke `lazy`, `terse` and `plain`, any that are not already on. They stay on for the rest of the session, and every line `quick` prints follows them.
 
-Invoke `lazy` and write under its ladder. Do not restate its rungs: one copy of the ladder exists, and it lives in `lazy`.
+## 1. Gate
 
-## Bail out first
-
-Check before writing. Each of these is a fact about the change, not a judgement about its size:
+Check these facts about the request before any edit:
 
 - It needs a dependency that is not already installed.
 - It touches a schema, a migration, or the shape of stored data.
 - It touches auth, payments, permissions, or any other trust boundary.
 - It spans more files than you can hold in one reading.
 - The intent reads two ways.
+- It asks for more than 3 separate things a user could see or use.
 
-Any one of them: stop, name the criterion that tripped, and say the request wants `brainstorm`. Do not start a spec yourself, and do not negotiate: the user asked for speed, and the honest answer is that this is not the path for it.
+An item you cannot decide counts as tripped. A wasted question costs less than a wrong run.
 
-None of them: write the change now.
+None tripped: go to step 2.
 
-## The floor still holds
+Any tripped: stop before any edit and ask the user, in this shape:
 
-Nothing runs behind you, so `lazy`'s never-simplify-away list is not optional here: validation at trust boundaries, error handling that prevents data loss, security, accessibility, and anything the user explicitly asked for.
+> This needs a full run: <the item, in plain words>. Done in one go, <what could go wrong, in plain words, for example: nobody checks the design between the parts, so the result may not be what you meant>. Pick one: the normal flow (I ask you a few questions, write a spec and a plan, then build), or `repl` (I plan alone, show you a summary, then build without stopping). Or say "quick anyway" to keep going here.
 
-Non-trivial logic leaves one runnable check, and **you run it**. `verify` is not coming. A change you did not execute is a change you are guessing about, and "evidence or it did not happen" is not waived by speed.
+Write it in words a 12-year-old would follow, with no file paths, function names or jargon unless the user used them first.
 
-## debug is not waived
+On the normal flow, invoke `brainstorm` with the intent. On `repl`, invoke `repl` with the intent. On "quick anyway", go to step 2. "Quick anyway" never waives `lazy`'s never-simplify-away list or `decide`'s one-way doors.
 
-A failed check routes to `debug` exactly as it always does. `quick` skips the gates before implementation. It does not skip the one after a failure.
+## 2. Think it through silently
 
-## Say what you skipped
+Invoke `decide`. Then do brainstorm's thinking without the user and without files: trace every file the change touches, form the one challenge to the framing, and pick the laziest approach on `lazy`'s ladder that meets the request. Every question brainstorm would ask, you answer by `decide`.
 
-Close with one line naming the skipped stages and the check you ran, so a fast path never reads like a verified one:
+No spec file, no plan file, no subagents, no decision log.
 
-> Skipped: brainstorm, plan, exec, verify. Ran: <the check, and its result>.
+Print one line and keep going without waiting:
+
+> Reading: <goal>. Smallest change: <change>.
+
+## 3. Build in units
+
+Build one thing a user could see or use at a time, at most 3. After each one, run its check before starting the next. A failed check stops the build at that unit.
+
+## 4. Prove it
+
+Find the one fact the change relies on, and prove it by running something: a test, a script that calls the real code, or the app itself. "It compiles" and "I read it" do not count.
+
+Non-trivial logic leaves one runnable check behind, and you run it.
+
+If nothing can run, say so, and do not claim the work is done.
+
+## 5. Failures
+
+A failed check goes to `debug`, as it always does. Approve its report once its refuter has run, then fix.
+
+After two failed fixes that share an assumption, stop. Name the assumption, say what is done and what was checked, and offer the normal flow.
+
+A `decide` one-way door met mid-build stops the run the same way, naming the door.
+
+A stopped run leaves its unfinished edits in the working tree. Never revert them.
+
+## The close
+
+End with one line, picking the one evidence value that applies:
+
+> Ran: <check> (<result>). Evidence: ran it | reproduced in app | could not run.

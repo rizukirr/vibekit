@@ -14,7 +14,7 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points. I
 | First moment of any coding work, invoke once, then it stays on | `lazy` | none |
 | Before the first text of the session is written, whether prose or a file, invoke once, then it stays on | `plain` | none |
 | Spec approved, implementation not yet started | `plan` | hard |
-| Invoked explicitly as a slash command, never fires on its own | `quick` | none |
+| About to start creative or implementation work, before code is written | `quick` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `repl` | none |
 | A run ended, and a debug report in it carried a Class: other than none | `retro` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |

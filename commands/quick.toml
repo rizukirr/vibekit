@@ -1,4 +1,4 @@
-description = "Use when the user types /vibekit:quick: writes the change immediately under lazy's ladder, no spec, no plan, no subagents. Reports what it skipped."
+description = "Use before any implementation work: features, fixes, behavior changes. Checks the size first, then thinks the design through silently, builds in one go and proves it works by running it. Asks the user to move big work to the normal flow or repl."
 
 prompt = """
 Invoke the `quick` skill and follow it exactly.
