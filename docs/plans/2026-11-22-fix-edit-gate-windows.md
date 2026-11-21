@@ -18,9 +18,9 @@ Note: the spec's Cause cites run-hook.cmd lines 14, 18 and 23. Read at HEAD 2afc
 - Modify: `hooks/edit-gate` (revert of commit 9b22e98)
 - Modify: `tests/hook.test.mjs` (revert of commit 9b22e98)
 
-- [ ] Step 1: Run `git revert --no-edit 9b22e98`
-- [ ] Step 2: Run `git grep -q DIAG -- hooks/edit-gate tests/hook.test.mjs`
-- [ ] Step 3: Run `npm test`
+- [x] Step 1: Run `git revert --no-edit 9b22e98`
+- [x] Step 2: Run `git grep -q DIAG -- hooks/edit-gate tests/hook.test.mjs`
+- [x] Step 3: Run `npm test`
 
 ### Task 2: exit status and skill list survive cmd.exe → verify: `npm run check` exits 0, `npm test` exits 0, `grep -c 'exit /b %ERRORLEVEL%' hooks/run-hook.cmd` prints 0, and `grep -c 'edit-gate brainstorm+' hooks/hooks.json` prints at least 1
 
