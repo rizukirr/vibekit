@@ -219,12 +219,12 @@ test('emits a PreToolUse edit gate listing every hard-gate or command skill on d
 **Files:**
 - Modify: `README.md:11`
 
-- [ ] Step 1: In `README.md`, after the line that starts `Six skills are gates.`, add a blank line and this paragraph:
+- [x] Step 1: In `README.md`, after the line that starts `Six skills are gates.`, add a blank line and this paragraph:
 
 ```
 In Claude Code, a hook backs this up. The agent cannot write or edit a file until it has run one of vibekit's working skills, usually `quick`, and the block message tells it so. Helper agents that vibekit dispatches are let through. To turn the check off for a session, set `VIBEKIT_GATE=off` in its environment.
 ```
 
-- [ ] Step 2: Run `npm run check`
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit `docs(readme): the edit guard`
+- [x] Step 2: Run `npm run check`
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Commit `docs(readme): the edit guard`
