@@ -192,15 +192,15 @@ A skill whose row says `hard` is a gate. Respect it regardless of how simple the
 **Files:**
 - Modify: `evals/scenarios.json` (scenarios `brainstorm-precedes-code`, `quick-skips-brainstorm`, `quick-bails-out`, `quick-does-not-auto-fire`, `quick-discloses`)
 
-- [ ] Step 1: In the `brainstorm-precedes-code` scenario, change `"skill": "vibekit:brainstorm"` to `"skill": "vibekit:quick"`. Keep its id, so its threshold in `evals/thresholds.json` still applies.
-- [ ] Step 2: Delete the whole `quick-skips-brainstorm` scenario object.
-- [ ] Step 3: Replace the `expect` of `quick-bails-out` with:
+- [x] Step 1: In the `brainstorm-precedes-code` scenario, change `"skill": "vibekit:brainstorm"` to `"skill": "vibekit:quick"`. Keep its id, so its threshold in `evals/thresholds.json` still applies.
+- [x] Step 2: Delete the whole `quick-skips-brainstorm` scenario object.
+- [x] Step 3: Replace the `expect` of `quick-bails-out` with:
 
 ```json
 { "skill": "vibekit:quick", "skillAbsent": ["vibekit:brainstorm", "vibekit:repl"], "toolAbsent": ["Write", "Edit", "NotebookEdit"], "finalTextMatches": "normal flow[\\s\\S]*repl" }
 ```
 
-- [ ] Step 4: Replace the whole `quick-does-not-auto-fire` scenario object with:
+- [x] Step 4: Replace the whole `quick-does-not-auto-fire` scenario object with:
 
 ```json
   {
@@ -219,8 +219,8 @@ A skill whose row says `hard` is a gate. Respect it regardless of how simple the
   },
 ```
 
-- [ ] Step 5: In `quick-discloses`, change `"finalTextMatches": "Skipped:.*brainstorm.*plan.*exec.*verify"` to `"finalTextMatches": "Ran:.*Evidence:"`.
-- [ ] Step 6: Run this scenario check, which throws on invalid JSON or an unknown expectation key:
+- [x] Step 5: In `quick-discloses`, change `"finalTextMatches": "Skipped:.*brainstorm.*plan.*exec.*verify"` to `"finalTextMatches": "Ran:.*Evidence:"`.
+- [x] Step 6: Run this scenario check, which throws on invalid JSON or an unknown expectation key:
 
 ```sh
 node --input-type=module -e "
@@ -233,5 +233,5 @@ console.log('scored', d.length)
 "
 ```
 
-- [ ] Step 7: Run `npm test`
-- [ ] Step 8: Commit `feat(evals): quick default scenarios`
+- [x] Step 7: Run `npm test`
+- [x] Step 8: Commit `feat(evals): quick default scenarios`
