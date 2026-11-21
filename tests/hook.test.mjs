@@ -110,3 +110,23 @@ test('edit-gate fails open when the record is missing', () => {
   assert.equal(runGate({}).status, 0)
   assert.equal(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') }).status, 0)
 })
+
+// DIAG: temporary, Windows only. Measures where a non-zero exit code is lost.
+test('DIAG windows exit code paths', { skip: process.platform !== 'win32' }, () => {
+  const dir = mkdtempSync(join(tmpdir(), 'vibekit-diag-'))
+  const bash = '"C:\\Program Files\\Git\\bin\\bash.exe"'
+  const cases = {
+    'block-bare.cmd': `@echo off\r\nif exist "C:\\Program Files\\Git\\bin\\bash.exe" (\r\n    ${bash} -c "exit 2"\r\n    exit /b\r\n)\r\n`,
+    'block-percent.cmd': `@echo off\r\nif exist "C:\\Program Files\\Git\\bin\\bash.exe" (\r\n    ${bash} -c "exit 2"\r\n    exit /b %ERRORLEVEL%\r\n)\r\n`,
+    'goto.cmd': `@echo off\r\nif exist "C:\\Program Files\\Git\\bin\\bash.exe" goto run\r\nexit /b 0\r\n:run\r\n${bash} -c "exit 2"\r\nexit /b %ERRORLEVEL%\r\n`,
+    'echo-after.cmd': `@echo off\r\n${bash} -c "exit 2"\r\necho errorlevel-after-bash=%ERRORLEVEL%\r\nexit /b %ERRORLEVEL%\r\n`,
+    'usr-bash.cmd': `@echo off\r\n"C:\\Program Files\\Git\\usr\\bin\\bash.exe" -c "exit 2"\r\nexit /b %ERRORLEVEL%\r\n`,
+  }
+  for (const [name, body] of Object.entries(cases)) {
+    writeFileSync(join(dir, name), body)
+    const r = spawnSync(join(dir, name), [], { encoding: 'utf8', shell: true })
+    console.log('DIAG-WIN', name, JSON.stringify({ status: r.status, stdout: r.stdout, stderr: r.stderr }))
+  }
+  const direct = spawnSync('C:\\Program Files\\Git\\bin\\bash.exe', ['-c', 'exit 2'], { encoding: 'utf8' })
+  console.log('DIAG-WIN direct-bin-bash', JSON.stringify({ status: direct.status }))
+})
