@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # PreToolUse hook: blocks Write, Edit and NotebookEdit in the main session
-# until a working vibekit skill has run. $1 is the skill list, joined with +.
+# until a working vibekit skill has run, then until every modifier has run.
+# $1 is the working skill list and $2 the modifier list, each joined with +.
 
 set -uo pipefail
 
@@ -34,9 +35,20 @@ fi
 
 # Only the two exact record forms count. The bare text /vibekit:<name>
 # also appears in skill descriptions, which every session carries.
-if grep -qE "\"name\":\"Skill\",\"input\":\\{\"skill\":\"vibekit:($names)\"|<command-name>/vibekit:($names)</command-name>" "$path"; then
-    exit 0
+if ! grep -qE "\"name\":\"Skill\",\"input\":\\{\"skill\":\"vibekit:($names)\"|<command-name>/vibekit:($names)</command-name>" "$path"; then
+    echo "No vibekit gate has run in this session. Invoke vibekit:quick first, then retry. To turn this check off, set VIBEKIT_GATE=off." >&2
+    exit 2
 fi
 
-echo "No vibekit gate has run in this session. Invoke vibekit:quick first, then retry. To turn this check off, set VIBEKIT_GATE=off." >&2
-exit 2
+# A modifier is never typed as a command, so only the Skill call counts.
+missing=""
+for name in $(printf '%s' "${2:-}" | tr '+' ' '); do
+    if ! grep -qF "\"name\":\"Skill\",\"input\":{\"skill\":\"vibekit:$name\"" "$path"; then
+        missing="$missing vibekit:$name"
+    fi
+done
+if [ -n "$missing" ]; then
+    echo "These vibekit skills are not loaded yet:$missing. Invoke each with the Skill tool, then retry. To turn this check off, set VIBEKIT_GATE=off." >&2
+    exit 2
+fi
+exit 0

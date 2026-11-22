@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" edit-gate brainstorm+debug+exec+plan+quick+repl+retro+verify+vibe",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" edit-gate brainstorm+debug+exec+plan+quick+repl+retro+verify+vibe lazy+plain+terse",
             "shell": "bash",
             "async": false
           }

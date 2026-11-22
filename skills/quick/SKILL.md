@@ -12,7 +12,7 @@ The default path. One intent in, the change designed, built and proven in one go
 
 ## 0. Modifiers
 
-Invoke `lazy`, `terse` and `plain`, any that are not already on. They stay on for the rest of the session, and every line `quick` prints follows them.
+**Invoke `lazy`, `terse` and `plain` with the Skill tool before anything else**, each one this session has not invoked yet. Their description lines are not their content: you have not read a skill until you have invoked it. They stay on for the rest of the session, and every line `quick` prints follows them. On Claude Code, the first edit is blocked until all three have run.
 
 ## 1. Gate
 
