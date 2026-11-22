@@ -17,6 +17,7 @@ status: approved
 3. A failure in a wave stops the next wave. Tasks already running finish, the ones that passed land, then `exec` halts and routes as it does today. Observable: `skills/exec/SKILL.md` states this.
 4. A runtime that cannot run agents at once still works. `skills/exec/SKILL.md` says to run a wave's tasks one at a time in plan order when the runtime cannot dispatch subagents concurrently. Observable: the file states this.
 5. `npm test` and `npm run check` exit 0.
+6. A `repl` run does not pause when `exec` cleans up. `skills/decide/SKILL.md` exempts the worktrees and branches `exec` creates and removes within its own run from the branch-deletion door. Observable: `grep -c 'within its own run' skills/decide/SKILL.md` prints at least 1.
 
 ## Non-goals
 
