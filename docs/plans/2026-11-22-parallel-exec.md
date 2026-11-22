@@ -50,13 +50,13 @@
 - Modify: `skills/exec/SKILL.md:25,32-34,73`
 - Modify: `README.md:28`
 
-- [ ] Step 1: In `skills/exec/SKILL.md`, in the whole-plan gate list, after the line `- The run is on a dedicated branch or worktree, never the base branch.`, add:
+- [x] Step 1: In `skills/exec/SKILL.md`, in the whole-plan gate list, after the line `- The run is on a dedicated branch or worktree, never the base branch.`, add:
 
 ```
 - Every `**Blocked by:**` line names only tasks numbered before its own.
 ```
 
-- [ ] Step 2: In `skills/exec/SKILL.md`, replace the two lines `## The task loop`, the blank line, and `For each task in order:` with:
+- [x] Step 2: In `skills/exec/SKILL.md`, replace the two lines `## The task loop`, the blank line, and `For each task in order:` with:
 
 ```
 ## Waves
@@ -84,21 +84,21 @@ A task in a wave that returns anything but `done`, fails its clause or breaks it
 For each task in a wave of one:
 ```
 
-- [ ] Step 3: In `skills/exec/SKILL.md`, replace the line `- Never dispatch two implementers at once. They conflict.` with:
+- [x] Step 3: In `skills/exec/SKILL.md`, replace the line `- Never dispatch two implementers at once. They conflict.` with:
 
 ```
 - Never put two tasks that share a file in one wave. They conflict.
 ```
 
-- [ ] Step 4: In `README.md`, replace the line that starts `` - **`exec`** dispatches one fresh agent per task. `` with:
+- [x] Step 4: In `README.md`, replace the line that starts `` - **`exec`** dispatches one fresh agent per task. `` with:
 
 ```
 - **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent. Tasks the plan marks as independent run at the same time, up to 3, each in its own git worktree.
 ```
 
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Commit `feat(exec): run independent tasks in waves`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Commit `feat(exec): run independent tasks in waves`
 
 ### Task 3: decide lets exec clean up its own branches → verify: `grep -q 'within its own run' skills/decide/SKILL.md` exits 0 and `npm test` exits 0
 
