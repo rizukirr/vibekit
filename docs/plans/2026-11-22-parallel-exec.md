@@ -125,12 +125,12 @@ Added after verify round 1: a branch a halted wave leaves for `debug` blocks the
 **Files:**
 - Modify: `skills/exec/SKILL.md:43-47`
 
-- [ ] Step 1: In `skills/exec/SKILL.md`, replace every occurrence of `exec/task-<N>` with `exec/<BASE>-task-<N>`. Run `grep -c 'exec/task-<N>' skills/exec/SKILL.md` and confirm it prints 0.
-- [ ] Step 2: In `skills/exec/SKILL.md`, replace the line that starts `1. Record BASE as the run branch's HEAD.` with:
+- [x] Step 1: In `skills/exec/SKILL.md`, replace every occurrence of `exec/task-<N>` with `exec/<BASE>-task-<N>`. Run `grep -c 'exec/task-<N>' skills/exec/SKILL.md` and confirm it prints 0.
+- [x] Step 2: In `skills/exec/SKILL.md`, replace the line that starts `1. Record BASE as the run branch's HEAD.` with:
 
 ```
 1. Record BASE as the run branch's HEAD. For each task, run `git worktree add -b exec/<BASE>-task-<N> <dir> BASE`, with `<BASE>` its first 7 characters and `<dir>` a new temporary directory outside the repository. Naming the branch after BASE keeps it clear of one a halted wave left for `debug`. A fresh worktree has none of the project's installed dependencies, so install them there the way the run branch has them, such as `npm ci`, before dispatch.
 ```
 
-- [ ] Step 3: Run `npm test`
-- [ ] Step 4: Commit `fix(exec): wave worktrees survive a re-run and have dependencies`
+- [x] Step 3: Run `npm test`
+- [x] Step 4: Commit `fix(exec): wave worktrees survive a re-run and have dependencies`
