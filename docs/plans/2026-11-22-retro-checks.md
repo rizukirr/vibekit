@@ -15,7 +15,7 @@
 - Modify: `hooks/run-hook.cmd:6-9` and the line before `CMDBLOCK`
 - Modify: `tests/hook.test.mjs` (append at the end)
 
-- [ ] Step 1: In `hooks/run-hook.cmd`, replace lines 6 to 9, which read
+- [x] Step 1: In `hooks/run-hook.cmd`, replace lines 6 to 9, which read
 
 ```bat
 if "%~1"=="" (
@@ -30,7 +30,7 @@ with the single line
 if "%~1"=="" goto noscript
 ```
 
-- [ ] Step 2: In `hooks/run-hook.cmd`, directly before the line `CMDBLOCK`, insert:
+- [x] Step 2: In `hooks/run-hook.cmd`, directly before the line `CMDBLOCK`, insert:
 
 ```bat
 
@@ -41,7 +41,7 @@ exit /b 1
 
 Keep every other line unchanged and keep LF line endings.
 
-- [ ] Step 3: Append to the end of `tests/hook.test.mjs`:
+- [x] Step 3: Append to the end of `tests/hook.test.mjs`:
 
 ```js
 // A batch file run through cmd /c that exits from inside an if (...) block
@@ -84,6 +84,6 @@ test('the block-exit scan catches the wrapper that lost exit codes on Windows', 
 })
 ```
 
-- [ ] Step 4: Run `npm run check`
-- [ ] Step 5: Run `npm test`
-- [ ] Step 6: Commit `test(hooks): no exit from inside a batch if block`
+- [x] Step 4: Run `npm run check`
+- [x] Step 5: Run `npm test`
+- [x] Step 6: Commit `test(hooks): no exit from inside a batch if block`
