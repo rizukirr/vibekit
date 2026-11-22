@@ -110,3 +110,42 @@ test('edit-gate fails open when the record is missing', () => {
   assert.equal(runGate({}).status, 0)
   assert.equal(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') }).status, 0)
 })
+
+// A batch file run through cmd /c that exits from inside an if (...) block
+// reports 0, whatever the exit code. Windows CI measured it in run 44934455053.
+function exitsInsideBlocks(text) {
+  const lines = text.split(/\r?\n/)
+  const end = lines.indexOf('CMDBLOCK')
+  const found = []
+  let depth = 0
+  for (const [index, raw] of lines.slice(0, end === -1 ? lines.length : end).entries()) {
+    const line = raw.trim()
+    if (depth > 0 && /^exit \/b\b/i.test(line)) found.push(index + 1)
+    if (line.endsWith('(')) depth++
+    else if (line === ')') depth--
+  }
+  return found
+}
+
+// The wrapper's batch half at 3c66c5d, which lost every exit code on Windows.
+const BLOCK_EXIT_WRAPPER = String.raw`: << 'CMDBLOCK'
+@echo off
+if "%~1"=="" (
+    echo run-hook.cmd: missing script name >&2
+    exit /b 1
+)
+set "HOOK_DIR=%~dp0"
+if exist "C:\Program Files\Git\bin\bash.exe" (
+    "C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
+    exit /b
+)
+exit /b 0
+CMDBLOCK`
+
+test('the batch half of run-hook.cmd never exits from inside an if block', () => {
+  assert.deepEqual(exitsInsideBlocks(readFileSync('hooks/run-hook.cmd', 'utf8')), [])
+})
+
+test('the block-exit scan catches the wrapper that lost exit codes on Windows', () => {
+  assert.ok(exitsInsideBlocks(BLOCK_EXIT_WRAPPER).length > 0)
+})

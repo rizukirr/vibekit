@@ -3,10 +3,7 @@
 REM Cross-platform wrapper for hook scripts.
 REM Usage: run-hook.cmd <script-name> [args...]
 
-if "%~1"=="" (
-    echo run-hook.cmd: missing script name >&2
-    exit /b 1
-)
+if "%~1"=="" goto noscript
 
 set "HOOK_DIR=%~dp0"
 
@@ -31,6 +28,10 @@ exit /b %ERRORLEVEL%
 :pathbash
 bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
 exit /b %ERRORLEVEL%
+
+:noscript
+echo run-hook.cmd: missing script name >&2
+exit /b 1
 CMDBLOCK
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
