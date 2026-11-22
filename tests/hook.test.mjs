@@ -149,3 +149,13 @@ test('the batch half of run-hook.cmd never exits from inside an if block', () =>
 test('the block-exit scan catches the wrapper that lost exit codes on Windows', () => {
   assert.ok(exitsInsideBlocks(BLOCK_EXIT_WRAPPER).length > 0)
 })
+
+// Claude Code runs hooks/run-hook.cmd directly, so a script committed
+// without its executable bit fails with Permission denied on install.
+test('every hook script is committed executable', () => {
+  const entries = execFileSync('git', ['ls-files', '-s', 'hooks/'], { encoding: 'utf8' })
+    .trim().split('\n').map(line => line.split(/\s+/))
+    .filter(([, , , path]) => !path.endsWith('.json'))
+  assert.ok(entries.length > 0)
+  for (const [mode, , , path] of entries) assert.equal(mode, '100755', `${path} is ${mode}`)
+})
