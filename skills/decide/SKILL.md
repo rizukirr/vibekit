@@ -29,7 +29,7 @@ Follow it, log it as settled, and reopen nothing. A settled answer you dislike i
 Pause on any of these. They belong to the user, whatever the run limits say:
 
 - An action visible outside the machine: a push, a pull request, a merge, a deploy, or sending data anywhere.
-- Deleting a file that is not on the run's branch, rewriting history, or deleting a branch.
+- Deleting a file that is not on the run's branch, rewriting history, or deleting a branch. The worktrees and branches `exec` creates and removes within its own run are not this door.
 - Auth, secrets, permissions, or a trust boundary.
 - Spending beyond the run's budget.
 - A new runtime dependency, or a change to a public interface or stored data that the spec does not name.

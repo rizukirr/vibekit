@@ -46,6 +46,8 @@ Global constraints are the spec's project-wide requirements: version floors, dep
 ```
 ### Task N: <name> → verify: <predicate>
 
+**Blocked by:** none | Task 1, Task 3
+
 **Files:**
 - Create: `exact/path`
 - Modify: `exact/path:12-40`
@@ -57,6 +59,8 @@ Global constraints are the spec's project-wide requirements: version floors, dep
 ```
 
 A task is the smallest unit worth a fresh reviewer's gate. Fold setup, config and documentation into the task whose deliverable needs them. Split only where a reviewer could reject one task while approving its neighbour. Each task ends with an independently testable deliverable and one commit.
+
+`**Blocked by:**` names the tasks this one waits for: `none`, or earlier tasks such as `Task 1, Task 3`. A task without the line waits for the task before it, and Task 1 without it waits for nothing. Name only tasks numbered before this one, so a cycle cannot be written. Write `none` only when the task needs nothing an earlier task produces, such as an interface, a file or a passing check: `exec` runs tasks with no path between them at the same time.
 
 Steps that change code carry the actual code. A step that runs a command names the command and stops there.
 
@@ -94,6 +98,7 @@ A clause must be satisfiable by the task it belongs to. If you cannot say what w
 2. **Placeholders.** Scan for the patterns above. Fix them.
 3. **Clauses.** Scan every `→ verify:` for a quoted string, or a number outside the three permitted forms. Both are predicted output. Fix them.
 4. **Provenance.** For every number, path, count and cross-reference in the plan, name where it came from. "I ran it" and "I read it" pass. "I knew it" is a guess: derive it, or state a property instead.
+5. **Edges.** Every `Blocked by` names only earlier tasks. Two tasks that share a file need a `Blocked by` path between them: `exec` runs them one after the other anyway, and the plan should say so.
 
 Fix inline. No re-review.
 

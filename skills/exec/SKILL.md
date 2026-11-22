@@ -23,15 +23,36 @@ Before dispatching anything, refuse unless all of these hold:
 - The spec it names carries `status: approved`.
 - The working tree is clean.
 - The run is on a dedicated branch or worktree, never the base branch.
+- Every `**Blocked by:**` line names only tasks numbered before its own.
 - **Every task header carries a `→ verify:` clause.**
 
 A plan missing even one clause is rejected whole, naming the task. Do not dispatch the tasks that do have clauses and deal with the rest later. The alternative is discovering task six is unverifiable after paying for five dispatches.
 
 `exec` does not create the workspace. If there is no dedicated branch, stop and say so.
 
+## Waves
+
+A task's `**Blocked by:**` line names the tasks it waits for. A task without the line waits for the task before it, and Task 1 without it waits for nothing.
+
+Run the plan in waves. A wave is every task not yet done whose blockers are all done, in plan order, up to 3 tasks. A task that shares a file with an earlier task in the wave waits for a later wave.
+
+A wave of one runs the task loop below on the run branch, exactly as a plan with no `Blocked by` lines always has.
+
+A wave of more than one gives each task its own worktree:
+
+1. Record BASE as the run branch's HEAD. For each task, run `git worktree add -b exec/<BASE>-task-<N> <dir> BASE`, with `<BASE>` its first 7 characters and `<dir>` a new temporary directory outside the repository. Naming the branch after BASE keeps it clear of one a halted wave left for `debug`. A fresh worktree has none of the project's installed dependencies, so install them there the way the run branch has them, such as `npm ci`, before dispatch.
+2. Write each brief as in the task loop, and dispatch every agent in the background at once, each told its worktree path and to work and commit only there.
+3. When every agent has returned, run each task's clause inside its worktree, and its scope check as `git diff --name-only BASE..exec/<BASE>-task-<N>`.
+4. In plan order, for each task that passed: `git cherry-pick BASE..exec/<BASE>-task-<N>` onto the run branch, run the clause again on the run branch, then tick the task and commit the tick on its own.
+5. Remove each landed task's worktree with `git worktree remove <dir>` and its branch with `git branch -D exec/<BASE>-task-<N>`. These are the only worktrees and branches `exec` deletes, and only ones it created in this run.
+
+If the runtime cannot dispatch subagents concurrently, run the wave's tasks one at a time in plan order through the task loop on the run branch, with no worktrees.
+
+A task in a wave that returns anything but `done`, fails its clause or breaks its scope stops the next wave. Land the tasks that passed as in step 4, leave the failed task's worktree in place for `debug`, and halt as **Repair nothing** says. A clause that passes in the worktree and fails on the run branch halts the same way.
+
 ## The task loop
 
-For each task in order:
+For each task in a wave of one:
 
 **1. Record BASE.** `git rev-parse HEAD`, before dispatch. Every later check measures against it. Never `HEAD~1`: a task making three commits would have two escape the scope check silently.
 
@@ -70,7 +91,7 @@ A halt leaves the branch as it was at the last completed task.
 
 ## Never
 
-- Never dispatch two implementers at once. They conflict.
+- Never put two tasks that share a file in one wave. They conflict.
 - Never fix a finding yourself. Your context is for coordination, and a fix you make skips the gate.
 - Never re-dispatch an unchanged brief after a halt. If it stopped, something has to change first.
 - Never batch commits across tasks.
