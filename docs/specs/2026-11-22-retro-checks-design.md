@@ -25,6 +25,7 @@ PR #69 went red on windows-latest three times. The batch half of `hooks/run-hook
 - No new dependency.
 - Every edited string obeys `plain`'s rules.
 - The missing-script-name branch keeps its message and its exit status of 1.
+- Run limits: at most 3 verify rounds, at most $0 on paid runs
 
 ## Approach
 
