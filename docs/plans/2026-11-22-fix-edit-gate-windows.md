@@ -70,8 +70,8 @@ Amended after Task 2: Windows CI run 44934455053 measured that a batch file exit
 - Modify: `tests/hook.test.mjs` (revert of commit c7ec5f6)
 - Modify: `hooks/run-hook.cmd:13-28`
 
-- [ ] Step 1: Run `git revert --no-edit c7ec5f6`
-- [ ] Step 2: In `hooks/run-hook.cmd`, replace lines 13 to 28, which run from the line `if exist "C:\Program Files\Git\bin\bash.exe" (` through the line `exit /b 0`, with exactly:
+- [x] Step 1: Run `git revert --no-edit c7ec5f6`
+- [x] Step 2: In `hooks/run-hook.cmd`, replace lines 13 to 28, which run from the line `if exist "C:\Program Files\Git\bin\bash.exe" (` through the line `exit /b 0`, with exactly:
 
 ```bat
 if exist "C:\Program Files\Git\bin\bash.exe" goto git64
@@ -98,6 +98,6 @@ exit /b %ERRORLEVEL%
 ```
 
 Keep lines 1 to 12 and the lines from `CMDBLOCK` on unchanged, and keep LF line endings.
-- [ ] Step 3: Run `npm run check`
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `fix(hooks): run-hook.cmd exits outside its if blocks`
+- [x] Step 3: Run `npm run check`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `fix(hooks): run-hook.cmd exits outside its if blocks`
