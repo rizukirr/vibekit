@@ -52,11 +52,12 @@ test('emits parseable JSON for a bootstrap body containing quotes, backslashes a
 
 // edit-gate: run the real script through the wrapper, the way Claude Code does.
 const GATE_LIST = 'brainstorm+quick'
+const MODIFIERS = 'lazy+plain+terse'
 
 function runGate(input, env = {}) {
   const command = process.platform === 'win32'
-    ? { file: 'hooks\\run-hook.cmd', args: ['edit-gate', GATE_LIST], shell: true }
-    : { file: 'bash', args: ['hooks/run-hook.cmd', 'edit-gate', GATE_LIST], shell: false }
+    ? { file: 'hooks\\run-hook.cmd', args: ['edit-gate', GATE_LIST, MODIFIERS], shell: true }
+    : { file: 'bash', args: ['hooks/run-hook.cmd', 'edit-gate', GATE_LIST, MODIFIERS], shell: false }
   return spawnSync(command.file, command.args, {
     input: JSON.stringify(input),
     encoding: 'utf8',
@@ -73,6 +74,7 @@ function record(...lines) {
 
 const skillCall = skill => ({ message: { content: [{ type: 'tool_use', name: 'Skill', input: { skill } }] } })
 const plainText = text => ({ message: { content: text } })
+const modifiers = ['lazy', 'plain', 'terse'].map(name => skillCall(`vibekit:${name}`))
 
 test('edit-gate blocks an edit when no working skill has run', () => {
   const result = runGate({ transcript_path: record(plainText('hello')) })
@@ -82,16 +84,23 @@ test('edit-gate blocks an edit when no working skill has run', () => {
 })
 
 test('edit-gate allows an edit after a Skill call to a working skill', () => {
-  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:quick')) }).status, 0)
+  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:quick'), ...modifiers) }).status, 0)
 })
 
 test('edit-gate allows an edit after a typed slash command for a working skill', () => {
-  const path = record(plainText('<command-name>/vibekit:quick</command-name>'))
+  const path = record(plainText('<command-name>/vibekit:quick</command-name>'), ...modifiers)
   assert.equal(runGate({ transcript_path: path }).status, 0)
 })
 
 test('edit-gate does not count a modifier skill', () => {
   assert.equal(runGate({ transcript_path: record(skillCall('vibekit:lazy')) }).status, 2)
+})
+
+test('edit-gate blocks an edit until every modifier has run, naming the missing ones', () => {
+  const result = runGate({ transcript_path: record(skillCall('vibekit:quick'), skillCall('vibekit:lazy')) })
+  assert.equal(result.status, 2)
+  assert.match(result.stderr, /vibekit:plain vibekit:terse/)
+  assert.doesNotMatch(result.stderr, /vibekit:lazy/)
 })
 
 test('edit-gate does not count a prose mention of a command', () => {

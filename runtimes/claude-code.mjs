@@ -52,12 +52,14 @@ export function emit(model) {
         // pipeline: each hard gate and each command, so a new skill joins or
         // stays out by its own frontmatter. One argument joined with +,
         // because run-hook.cmd forwards at most 8 arguments on Windows and
-        // cmd.exe splits an argument at a comma.
+        // cmd.exe splits an argument at a comma. The second argument lists the
+        // modifiers, the skills whose description ends "Stays on after.", which
+        // must all have run before the first edit.
         PreToolUse: [{
           matcher: 'Write|Edit|NotebookEdit',
           hooks: [{
             type: 'command',
-            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${skills.filter(s => s.gate === 'hard' || s.command).map(s => s.name).sort().join('+')}`,
+            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${skills.filter(s => s.gate === 'hard' || s.command).map(s => s.name).sort().join('+')} ${skills.filter(s => s.description.trim().endsWith('Stays on after.')).map(s => s.name).sort().join('+')}`,
             shell: 'bash',
             async: false,
           }],
