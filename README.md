@@ -25,7 +25,7 @@ In Claude Code, a hook backs this up. The agent cannot write or edit a file unti
 
 - **`brainstorm`** asks questions one at a time, pushes back on your framing once, offers alternatives, and writes a spec with observable success criteria. No code before you approve it. If your project has an `.out-of-scope/` folder, one file per idea you turned down and why, it reads that first and does not propose those ideas again.
 - **`plan`** turns the approved spec into numbered tasks. Every task carries a `→ verify:` clause that is checkable before anything runs, and a plan may not state a value nobody has observed.
-- **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent.
+- **`exec`** dispatches one fresh agent per task. The author of a plan reads past its own contradictions. A fresh context reads it literally and stops. Every plan defect this project has found was found by a dispatched agent. Tasks the plan marks as independent run at the same time, up to 3, each in its own git worktree.
 - **`verify`** runs the checks no single task could: the whole suite, the scope of the diff, every goal against its evidence. It returns `ready` or `not ready`, and unmeasured counts as not satisfied.
 - **`debug`** takes over on a failed check. It finds one falsifiable cause, sends a read-only agent to refute it, and stops after two refutations rather than guessing a third time. It never edits.
 - **`lazy`**, **`terse`** and **`plain`** stay on once invoked. One governs how much you build, one how much you say, and one how text is typed.
