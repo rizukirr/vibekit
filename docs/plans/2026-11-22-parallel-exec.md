@@ -107,11 +107,11 @@ For each task in a wave of one:
 **Files:**
 - Modify: `skills/decide/SKILL.md:32`
 
-- [ ] Step 1: In `skills/decide/SKILL.md`, replace the line `- Deleting a file that is not on the run's branch, rewriting history, or deleting a branch.` with:
+- [x] Step 1: In `skills/decide/SKILL.md`, replace the line `- Deleting a file that is not on the run's branch, rewriting history, or deleting a branch.` with:
 
 ```
 - Deleting a file that is not on the run's branch, rewriting history, or deleting a branch. The worktrees and branches `exec` creates and removes within its own run are not this door.
 ```
 
-- [ ] Step 2: Run `npm test`
-- [ ] Step 3: Commit `feat(decide): exec's own branches are not a one-way door`
+- [x] Step 2: Run `npm test`
+- [x] Step 3: Commit `feat(decide): exec's own branches are not a one-way door`
