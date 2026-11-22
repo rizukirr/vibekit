@@ -61,3 +61,43 @@ with
 - [x] Step 9: Run `npm run check`
 - [x] Step 10: Run `npm test`
 - [x] Step 11: Commit `fix(hooks): edit-gate exit status and skill list survive cmd.exe`
+
+### Task 3: exit outside any parenthesised block → verify: `git grep -q DIAG -- tests/hook.test.mjs` exits 1, `grep -c '^:git64$' hooks/run-hook.cmd` prints at least 1, `npm run check` exits 0, and `npm test` exits 0
+
+Amended after Task 2: Windows CI run 44934455053 measured that a batch file exiting from inside an `if (...)` block returns 0 under cmd /c with either bare `exit /b` or `exit /b %ERRORLEVEL%`, while `goto` to a label followed by `exit /b %ERRORLEVEL%` outside any block returns the real code.
+
+**Files:**
+- Modify: `tests/hook.test.mjs` (revert of commit c7ec5f6)
+- Modify: `hooks/run-hook.cmd:13-28`
+
+- [ ] Step 1: Run `git revert --no-edit c7ec5f6`
+- [ ] Step 2: In `hooks/run-hook.cmd`, replace lines 13 to 28, which run from the line `if exist "C:\Program Files\Git\bin\bash.exe" (` through the line `exit /b 0`, with exactly:
+
+```bat
+if exist "C:\Program Files\Git\bin\bash.exe" goto git64
+if exist "C:\Program Files (x86)\Git\bin\bash.exe" goto git32
+where bash >nul 2>nul
+if %ERRORLEVEL% equ 0 goto pathbash
+
+REM No bash found - exit silently rather than error.
+exit /b 0
+
+REM Each call exits outside any parenthesised block. A batch file that exits
+REM from inside an if (...) block returns 0 under cmd /c, whatever bash returned.
+:git64
+"C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
+exit /b %ERRORLEVEL%
+
+:git32
+"C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
+exit /b %ERRORLEVEL%
+
+:pathbash
+bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
+exit /b %ERRORLEVEL%
+```
+
+Keep lines 1 to 12 and the lines from `CMDBLOCK` on unchanged, and keep LF line endings.
+- [ ] Step 3: Run `npm run check`
+- [ ] Step 4: Run `npm test`
+- [ ] Step 5: Commit `fix(hooks): run-hook.cmd exits outside its if blocks`
