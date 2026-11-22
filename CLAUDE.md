@@ -27,3 +27,10 @@ Guardrailed vibe-coding pipeline. Skills auto-trigger at their trigger points.
 
 Adding a skill is creating one directory under `skills/`. Run `npm run generate`
 afterwards; never hand-edit a generated file.
+
+## Rules
+
+- For cmd.exe batch behaviour, measure the construct in Windows CI before building a fix on it. This Linux box cannot run batch.
+- Skills invoked in this repo load from the installed plugin cache (`~/.claude/plugins/cache/.../vibekit/<version>`), not from `skills/` here. After changing a skill, the session keeps running the old text until the plugin is updated.
+- `docs/` is gitignored. Specs and plans are committed with `git add -f`, and a fresh worktree has no `docs/specs/` until you create it.
+- A change under `hooks/` is not done until the `hook (windows-latest)` CI job passes. Push and read it before `verify` returns ready.
