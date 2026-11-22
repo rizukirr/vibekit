@@ -18,7 +18,7 @@
 **Files:**
 - Modify: `skills/plan/SKILL.md:47-59,96`
 
-- [ ] Step 1: In `skills/plan/SKILL.md`, in the task shape block, replace the line `### Task N: <name> → verify: <predicate>` and the blank line after it with:
+- [x] Step 1: In `skills/plan/SKILL.md`, in the task shape block, replace the line `### Task N: <name> → verify: <predicate>` and the blank line after it with:
 
 ```
 ### Task N: <name> → verify: <predicate>
@@ -27,20 +27,20 @@
 
 ```
 
-- [ ] Step 2: In `skills/plan/SKILL.md`, after the paragraph that starts `A task is the smallest unit worth a fresh reviewer's gate.`, insert a blank line and this paragraph:
+- [x] Step 2: In `skills/plan/SKILL.md`, after the paragraph that starts `A task is the smallest unit worth a fresh reviewer's gate.`, insert a blank line and this paragraph:
 
 ```
 `**Blocked by:**` names the tasks this one waits for: `none`, or earlier tasks such as `Task 1, Task 3`. A task without the line waits for the task before it, and Task 1 without it waits for nothing. Name only tasks numbered before this one, so a cycle cannot be written. Write `none` only when the task needs nothing an earlier task produces, such as an interface, a file or a passing check: `exec` runs tasks with no path between them at the same time.
 ```
 
-- [ ] Step 3: In `skills/plan/SKILL.md`, after the self-review item that starts `4. **Provenance.**`, add:
+- [x] Step 3: In `skills/plan/SKILL.md`, after the self-review item that starts `4. **Provenance.**`, add:
 
 ```
 5. **Edges.** Every `Blocked by` names only earlier tasks. Two tasks that share a file need a `Blocked by` path between them: `exec` runs them one after the other anyway, and the plan should say so.
 ```
 
-- [ ] Step 4: Run `npm test`
-- [ ] Step 5: Commit `feat(plan): tasks say what they wait for`
+- [x] Step 4: Run `npm test`
+- [x] Step 5: Commit `feat(plan): tasks say what they wait for`
 
 ### Task 2: exec runs independent tasks in waves → verify: `grep -q 'Never dispatch two implementers at once' skills/exec/SKILL.md` exits 1, `grep -q 'git worktree add' skills/exec/SKILL.md` exits 0, `npm run check` exits 0 and `npm test` exits 0
 
