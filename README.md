@@ -10,7 +10,7 @@ Most requests never need the full pipeline. `quick` is the default: it checks th
 
 Six skills are gates. In the full pipeline, every stage hands to the next, and no stage can skip the one before it.
 
-In Claude Code, a hook backs this up. The agent cannot write or edit a file until it has run one of vibekit's working skills, usually `quick`, and has loaded `lazy`, `terse` and `plain`. The block message names what is missing. Helper agents that vibekit dispatches are let through. To turn the check off for a session, set `VIBEKIT_GATE=off` in its environment.
+In Claude Code, a hook backs this up. The agent cannot write or edit a file until it has run one of vibekit's working skills, usually `quick`, and has loaded `lazy`, `terse` and `plain`. The denial tells it which skills are missing. Helper agents that vibekit dispatches are let through. To turn the check off for a session, set `VIBEKIT_GATE=off` in its environment.
 
 ```
 /vibekit:vibe "add a dark mode toggle"

@@ -76,48 +76,57 @@ const skillCall = skill => ({ message: { content: [{ type: 'tool_use', name: 'Sk
 const plainText = text => ({ message: { content: text } })
 const modifiers = ['lazy', 'plain', 'terse'].map(name => skillCall(`vibekit:${name}`))
 
-test('edit-gate blocks an edit when no working skill has run', () => {
-  const result = runGate({ transcript_path: record(plainText('hello')) })
-  assert.equal(result.status, 2)
-  assert.match(result.stderr, /invoke vibekit:quick/i)
-  assert.match(result.stderr, /VIBEKIT_GATE=off/)
+// The gate denies through a PreToolUse decision on stdout and always exits 0.
+function denial(result) {
+  assert.equal(result.status, 0, result.stderr)
+  if (!result.stdout.trim()) return null
+  const output = JSON.parse(result.stdout).hookSpecificOutput
+  assert.equal(output.hookEventName, 'PreToolUse')
+  assert.equal(output.permissionDecision, 'deny')
+  return output.permissionDecisionReason
+}
+
+test('edit-gate denies an edit when no working skill has run, naming everything missing', () => {
+  const reason = denial(runGate({ transcript_path: record(plainText('hello')) }))
+  assert.match(reason, /vibekit:quick vibekit:lazy vibekit:plain vibekit:terse/)
+  assert.match(reason, /file was not changed/)
+  assert.match(reason, /VIBEKIT_GATE=off/)
 })
 
 test('edit-gate allows an edit after a Skill call to a working skill', () => {
-  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:quick'), ...modifiers) }).status, 0)
+  assert.equal(denial(runGate({ transcript_path: record(skillCall('vibekit:quick'), ...modifiers) })), null)
 })
 
 test('edit-gate allows an edit after a typed slash command for a working skill', () => {
   const path = record(plainText('<command-name>/vibekit:quick</command-name>'), ...modifiers)
-  assert.equal(runGate({ transcript_path: path }).status, 0)
+  assert.equal(denial(runGate({ transcript_path: path })), null)
 })
 
 test('edit-gate does not count a modifier skill', () => {
-  assert.equal(runGate({ transcript_path: record(skillCall('vibekit:lazy')) }).status, 2)
+  assert.match(denial(runGate({ transcript_path: record(...modifiers) })), /vibekit:quick/)
 })
 
-test('edit-gate blocks an edit until every modifier has run, naming the missing ones', () => {
-  const result = runGate({ transcript_path: record(skillCall('vibekit:quick'), skillCall('vibekit:lazy')) })
-  assert.equal(result.status, 2)
-  assert.match(result.stderr, /vibekit:plain vibekit:terse/)
-  assert.doesNotMatch(result.stderr, /vibekit:lazy/)
+test('edit-gate denies an edit until every modifier has run, naming only the missing ones', () => {
+  const reason = denial(runGate({ transcript_path: record(skillCall('vibekit:quick'), skillCall('vibekit:lazy')) }))
+  assert.match(reason, /vibekit:plain vibekit:terse/)
+  assert.doesNotMatch(reason, /vibekit:(quick|lazy)/)
 })
 
 test('edit-gate does not count a prose mention of a command', () => {
-  assert.equal(runGate({ transcript_path: record(plainText('try /vibekit:quick next')) }).status, 2)
+  assert.match(denial(runGate({ transcript_path: record(plainText('try /vibekit:quick next'), ...modifiers) })), /vibekit:quick/)
 })
 
 test('edit-gate lets a subagent edit through', () => {
-  assert.equal(runGate({ transcript_path: record(plainText('hello')), agent_id: 'sub-1' }).status, 0)
+  assert.equal(denial(runGate({ transcript_path: record(plainText('hello')), agent_id: 'sub-1' })), null)
 })
 
 test('edit-gate is off when VIBEKIT_GATE=off', () => {
-  assert.equal(runGate({ transcript_path: record(plainText('hello')) }, { VIBEKIT_GATE: 'off' }).status, 0)
+  assert.equal(denial(runGate({ transcript_path: record(plainText('hello')) }, { VIBEKIT_GATE: 'off' })), null)
 })
 
 test('edit-gate fails open when the record is missing', () => {
-  assert.equal(runGate({}).status, 0)
-  assert.equal(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') }).status, 0)
+  assert.equal(denial(runGate({})), null)
+  assert.equal(denial(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') })), null)
 })
 
 // A batch file run through cmd /c that exits from inside an if (...) block
