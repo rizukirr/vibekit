@@ -40,11 +40,11 @@ A wave of one runs the task loop below on the run branch, exactly as a plan with
 
 A wave of more than one gives each task its own worktree:
 
-1. Record BASE as the run branch's HEAD. For each task, run `git worktree add -b exec/task-<N> <dir> BASE`, with `<dir>` a new temporary directory outside the repository.
+1. Record BASE as the run branch's HEAD. For each task, run `git worktree add -b exec/<BASE>-task-<N> <dir> BASE`, with `<BASE>` its first 7 characters and `<dir>` a new temporary directory outside the repository. Naming the branch after BASE keeps it clear of one a halted wave left for `debug`. A fresh worktree has none of the project's installed dependencies, so install them there the way the run branch has them, such as `npm ci`, before dispatch.
 2. Write each brief as in the task loop, and dispatch every agent in the background at once, each told its worktree path and to work and commit only there.
-3. When every agent has returned, run each task's clause inside its worktree, and its scope check as `git diff --name-only BASE..exec/task-<N>`.
-4. In plan order, for each task that passed: `git cherry-pick BASE..exec/task-<N>` onto the run branch, run the clause again on the run branch, then tick the task and commit the tick on its own.
-5. Remove each landed task's worktree with `git worktree remove <dir>` and its branch with `git branch -D exec/task-<N>`. These are the only worktrees and branches `exec` deletes, and only ones it created in this run.
+3. When every agent has returned, run each task's clause inside its worktree, and its scope check as `git diff --name-only BASE..exec/<BASE>-task-<N>`.
+4. In plan order, for each task that passed: `git cherry-pick BASE..exec/<BASE>-task-<N>` onto the run branch, run the clause again on the run branch, then tick the task and commit the tick on its own.
+5. Remove each landed task's worktree with `git worktree remove <dir>` and its branch with `git branch -D exec/<BASE>-task-<N>`. These are the only worktrees and branches `exec` deletes, and only ones it created in this run.
 
 If the runtime cannot dispatch subagents concurrently, run the wave's tasks one at a time in plan order through the task loop on the run branch, with no worktrees.
 
