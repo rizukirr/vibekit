@@ -48,6 +48,20 @@ export function emit(model) {
             async: false,
           }],
         }],
+        // The edit gate. Its list is every skill that counts as entering the
+        // pipeline: each hard gate and each command, so a new skill joins or
+        // stays out by its own frontmatter. One argument joined with +,
+        // because run-hook.cmd forwards at most 8 arguments on Windows and
+        // cmd.exe splits an argument at a comma.
+        PreToolUse: [{
+          matcher: 'Write|Edit|NotebookEdit',
+          hooks: [{
+            type: 'command',
+            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${skills.filter(s => s.gate === 'hard' || s.command).map(s => s.name).sort().join('+')}`,
+            shell: 'bash',
+            async: false,
+          }],
+        }],
       },
     }),
   }
