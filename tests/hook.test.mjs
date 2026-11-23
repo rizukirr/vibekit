@@ -1,7 +1,7 @@
 // tests/hook.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { buildModel } from '../lib/model.mjs'
 import { startSkills } from '../lib/start.mjs'
@@ -65,6 +65,25 @@ test('emits parseable JSON for a body containing quotes, backslashes and tabs', 
 test('session-start emits the Antigravity injectSteps shape when asked', () => {
   const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }, 'antigravity', skills[0]))
   assert.ok(parsed.injectSteps[0].systemMessage.systemMessage.includes(`# ${skills[0]}\n`))
+})
+
+// agy runs a hook command through cmd.exe on Windows, with or without /s, and
+// through sh elsewhere. Each command in the generated root hooks.json must
+// work under every one of those.
+test('the Antigravity hook commands run the way agy launches them', () => {
+  const env = { ...process.env, CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }
+  for (const { command } of JSON.parse(readFileSync('hooks.json', 'utf8')).vibekit.SessionStart) {
+    const launches = process.platform === 'win32'
+      ? [
+          spawnSync(process.env.ComSpec ?? 'cmd.exe', ['/c', command], { windowsVerbatimArguments: true, encoding: 'utf8', input: '', env }),
+          spawnSync(command, { shell: true, encoding: 'utf8', input: '', env }),
+        ]
+      : [spawnSync('sh', ['-c', command], { encoding: 'utf8', input: '', env })]
+    for (const result of launches) {
+      assert.equal(result.status, 0, `${command}: ${result.stderr}`)
+      assert.ok(JSON.parse(result.stdout).injectSteps[0].systemMessage.systemMessage.includes('<EXTREMELY_IMPORTANT>'), command)
+    }
+  }
 })
 
 // A batch file run through cmd /c that exits from inside an if (...) block
