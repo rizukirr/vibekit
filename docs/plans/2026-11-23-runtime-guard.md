@@ -583,7 +583,7 @@ test('pushes the bootstrap skill into the system prompt', async t => {
 - Modify: `tests/pi.test.mjs` (whole file)
 - Regenerate: `.pi/vibekit.js`, `package.json`
 
-- [ ] Step 1: Replace the whole of `runtimes/pi.mjs` with exactly:
+- [x] Step 1: Replace the whole of `runtimes/pi.mjs` with exactly:
 
 ```js
 // runtimes/pi.mjs
@@ -668,7 +668,7 @@ export function ships() {
 }
 ```
 
-- [ ] Step 2: Replace the whole of `tests/pi.test.mjs` with exactly:
+- [x] Step 2: Replace the whole of `tests/pi.test.mjs` with exactly:
 
 ```js
 // tests/pi.test.mjs
@@ -755,8 +755,8 @@ test('lets every call through when VIBEKIT_GATE is off or a handler fails', asyn
 })
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `node --test tests/pi.test.mjs`
-- [ ] Step 5: Run `npm run check`
-- [ ] Step 6: Run `npm test`
-- [ ] Step 7: Commit `feat(pi): load vibekit and guard edits`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `node --test tests/pi.test.mjs`
+- [x] Step 5: Run `npm run check`
+- [x] Step 6: Run `npm test`
+- [x] Step 7: Commit `feat(pi): load vibekit and guard edits`
