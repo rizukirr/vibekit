@@ -1,9 +1,10 @@
 // tests/build.test.mjs
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { writeFileSync, mkdirSync, cpSync } from 'node:fs'
-import { join } from 'node:path'
-import { build, mergeEmitters, applyRegions, planChanges, mergeContributions, MANIFEST } from '../lib/build.mjs'
+import { writeFileSync, mkdirSync, cpSync, mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { build, mergeEmitters, applyRegions, planChanges, mergeContributions, fsReader, MANIFEST } from '../lib/build.mjs'
 import { makeSkillsDir, skillFile, MODEL } from './helpers.mjs'
 
 const alpha = { id: 'alpha', emit: () => ({ 'a.json': '1\n' }) }
@@ -121,4 +122,23 @@ test('an emitter exporting neither contributes nothing', () => {
   const { pkg, ships } = mergeContributions([alpha, beta], MODEL)
   assert.deepEqual(pkg, {})
   assert.deepEqual(ships, [])
+})
+
+// A Windows clone made before .gitattributes keeps CRLF files on disk. The
+// generator reported every one of them stale and every manifest entry as an
+// orphan, because it read disk text raw.
+test('a checkout with CRLF line endings reports no drift', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'vibekit-crlf-'))
+  try {
+    const { files } = await build(process.cwd())
+    for (const [path, text] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, path)), { recursive: true })
+      writeFileSync(join(root, path), text.replace(/\n/g, '\r\n'))
+    }
+    const { write, remove } = await build(process.cwd(), fsReader(root))
+    assert.deepEqual(write, [], 'a CRLF copy of generated output must not be stale')
+    assert.deepEqual(remove, [], 'a CRLF manifest must not turn its entries into orphans')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
 })
