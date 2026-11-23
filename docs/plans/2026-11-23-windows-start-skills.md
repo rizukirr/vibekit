@@ -356,7 +356,7 @@ test('emits no PreToolUse hook', () => {
 - Modify: `tests/hook.test.mjs` (append one test)
 - Regenerate: `hooks.json`
 
-- [ ] Step 1: In `runtimes/antigravity.mjs`, replace the import line `import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'` with `import { startSkills } from '../lib/start.mjs'`, and replace the comment block and `emit` function (lines 7-30) with:
+- [x] Step 1: In `runtimes/antigravity.mjs`, replace the import line `import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'` with `import { startSkills } from '../lib/start.mjs'`, and replace the comment block and `emit` function (lines 7-30) with:
 
 ```js
 // agy reads a plugin's rules from `rules/` and its hooks from `hooks.json` at
@@ -385,7 +385,7 @@ export function emit(model) {
 }
 ```
 
-- [ ] Step 2: In `tests/antigravity.test.mjs`, add `import { startSkills } from '../lib/start.mjs'` after the `helpers.mjs` import, and replace the test `emits a root hooks file that loads vibekit and guards agy edit tools` (lines 28-33) with:
+- [x] Step 2: In `tests/antigravity.test.mjs`, add `import { startSkills } from '../lib/start.mjs'` after the `helpers.mjs` import, and replace the test `emits a root hooks file that loads vibekit and guards agy edit tools` (lines 28-33) with:
 
 ```js
 test('emits one SessionStart hook per start skill that cmd.exe and sh both run, and no edit guard', () => {
@@ -398,7 +398,7 @@ test('emits one SessionStart hook per start skill that cmd.exe and sh both run, 
 })
 ```
 
-- [ ] Step 3: In `tests/hook.test.mjs`, change the import line `import { execFileSync } from 'node:child_process'` to `import { execFileSync, spawnSync } from 'node:child_process'`, and add after the test `session-start emits the Antigravity injectSteps shape when asked`:
+- [x] Step 3: In `tests/hook.test.mjs`, change the import line `import { execFileSync } from 'node:child_process'` to `import { execFileSync, spawnSync } from 'node:child_process'`, and add after the test `session-start emits the Antigravity injectSteps shape when asked`:
 
 ```js
 // agy runs a hook command through cmd.exe on Windows, with or without /s, and
@@ -421,9 +421,9 @@ test('the Antigravity hook commands run the way agy launches them', () => {
 })
 ```
 
-- [ ] Step 4: Run `npm run generate`
-- [ ] Step 5: Run `node --test tests/antigravity.test.mjs tests/hook.test.mjs` and `npm run check`
-- [ ] Step 6: Commit: `fix: Antigravity start hooks that run under cmd.exe and sh, no edit guard`
+- [x] Step 4: Run `npm run generate`
+- [x] Step 5: Run `node --test tests/antigravity.test.mjs tests/hook.test.mjs` and `npm run check`
+- [x] Step 6: Commit: `fix: Antigravity start hooks that run under cmd.exe and sh, no edit guard`
 
 ### Task 5: OpenCode plugin and install doc → verify: `node --test tests/opencode.test.mjs` exits 0, and `npm run check` exits 0
 
