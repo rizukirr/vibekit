@@ -35,6 +35,7 @@
     ".claude-plugin/",
     ".codex-plugin/",
     ".opencode/",
+    ".pi/",
     "AGENTS.md",
     "CLAUDE.md",
     "LICENSE",
@@ -53,6 +54,9 @@
   "pi": {
     "skills": [
       "./skills"
+    ],
+    "extensions": [
+      "./.pi/vibekit.js"
     ]
   }
 }

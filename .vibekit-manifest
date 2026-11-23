@@ -4,6 +4,7 @@
 .codex-plugin/plugin.json
 .opencode/INSTALL.md
 .opencode/plugins/vibekit.js
+.pi/vibekit.js
 .vibekit-manifest
 AGENTS.md
 CLAUDE.md
