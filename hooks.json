@@ -1,0 +1,21 @@
+{
+  "vibekit": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "./hooks/run-hook.cmd session-start antigravity"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/run-hook.cmd edit-gate brainstorm+debug+exec+plan+quick+repl+retro+verify+vibe lazy+plain+terse"
+          }
+        ]
+      }
+    ]
+  }
+}

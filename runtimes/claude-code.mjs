@@ -1,5 +1,6 @@
 // runtimes/claude-code.mjs
 import { triggerTable } from '../lib/table.mjs'
+import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'
 
 export const id = 'claude-code'
 
@@ -59,7 +60,7 @@ export function emit(model) {
           matcher: 'Write|Edit|NotebookEdit',
           hooks: [{
             type: 'command',
-            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${skills.filter(s => s.gate === 'hard' || s.command).map(s => s.name).sort().join('+')} ${skills.filter(s => s.description.trim().endsWith('Stays on after.')).map(s => s.name).sort().join('+')}`,
+            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${pipelineSkills(skills).join('+')} ${modifierSkills(skills).join('+')}`,
             shell: 'bash',
             async: false,
           }],
