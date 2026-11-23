@@ -128,7 +128,7 @@ A guard backs this up in Claude Code, Codex, OpenCode, pi and Antigravity. The a
 - Modify: `hooks/session-start:37`
 - Modify: `tests/hook.test.mjs`
 
-- [ ] Step 1: Replace the whole of `hooks/edit-gate` with exactly the following, and keep the file executable:
+- [x] Step 1: Replace the whole of `hooks/edit-gate` with exactly the following, and keep the file executable:
 
 ```bash
 #!/usr/bin/env bash
@@ -217,7 +217,7 @@ esac
 exit 0
 ```
 
-- [ ] Step 2: In `hooks/session-start`, replace the line `if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then` with these lines:
+- [x] Step 2: In `hooks/session-start`, replace the line `if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then` with these lines:
 
 ```bash
 # $1 names the runtime when its hook config passes one. Antigravity reads
@@ -227,8 +227,8 @@ if [ "${1:-}" = "antigravity" ]; then
 elif [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
 ```
 
-- [ ] Step 3: In `tests/hook.test.mjs`, add `import { denyReason } from '../lib/gate.mjs'` after the line `import { join } from 'node:path'`.
-- [ ] Step 4: In `tests/hook.test.mjs`, replace the function `runHook(env)` with this version, which takes an optional runtime argument:
+- [x] Step 3: In `tests/hook.test.mjs`, add `import { denyReason } from '../lib/gate.mjs'` after the line `import { join } from 'node:path'`.
+- [x] Step 4: In `tests/hook.test.mjs`, replace the function `runHook(env)` with this version, which takes an optional runtime argument:
 
 ```js
 function runHook(env, runtime) {
@@ -244,8 +244,8 @@ function runHook(env, runtime) {
 }
 ```
 
-- [ ] Step 5: In `tests/hook.test.mjs`, in the test `edit-gate denies an edit when no working skill has run, naming everything missing`, replace the line `  assert.match(reason, /vibekit:quick vibekit:lazy vibekit:plain vibekit:terse/)` with `  assert.equal(reason, denyReason(['quick', 'lazy', 'plain', 'terse']))`.
-- [ ] Step 6: In `tests/hook.test.mjs`, insert these tests immediately before the line `// A batch file run through cmd /c that exits from inside an if (...) block`:
+- [x] Step 5: In `tests/hook.test.mjs`, in the test `edit-gate denies an edit when no working skill has run, naming everything missing`, replace the line `  assert.match(reason, /vibekit:quick vibekit:lazy vibekit:plain vibekit:terse/)` with `  assert.equal(reason, denyReason(['quick', 'lazy', 'plain', 'terse']))`.
+- [x] Step 6: In `tests/hook.test.mjs`, insert these tests immediately before the line `// A batch file run through cmd /c that exits from inside an if (...) block`:
 
 ```js
 test('session-start emits the Antigravity injectSteps shape when asked', () => {
@@ -304,9 +304,9 @@ test('edit-gate lets an Antigravity subagent through', () => {
 })
 ```
 
-- [ ] Step 7: Run `node --test tests/hook.test.mjs`
-- [ ] Step 8: Run `npm test`
-- [ ] Step 9: Commit `feat(hooks): the edit gate reads Codex and Antigravity records`
+- [x] Step 7: Run `node --test tests/hook.test.mjs`
+- [x] Step 8: Run `npm test`
+- [x] Step 9: Commit `feat(hooks): the edit gate reads Codex and Antigravity records`
 
 ### Task 3: Antigravity loads vibekit and runs the guard → verify: `node --test tests/antigravity.test.mjs` exits 0, `npm run check` exits 0, `npm test` exits 0 and `agy plugin validate . --json` exits 0
 
