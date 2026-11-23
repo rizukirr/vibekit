@@ -7,6 +7,7 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { id, emit, pkg, ships } from '../runtimes/opencode.mjs'
 import { MODEL, skillFile } from './helpers.mjs'
+import { denyReason } from '../lib/gate.mjs'
 
 // The plugin finds its skills at ../../skills relative to itself, so it is
 // imported from a throwaway tree shaped like the shipped package.
@@ -103,4 +104,70 @@ test('install document names only commands opencode v2 has', () => {
   assert.match(doc, /Requires opencode v2/)
   assert.match(doc, /"skills": \["\/path\/to\/local\/vibekit\/skills"\]/)
   assert.match(doc, /opencode api skill\.list -H "x-opencode-directory:\$PWD" \| grep -c '"id":"using-vibekit"'/)
+})
+// Stands in for the v2 hooks the guard uses, keeping each registered handler
+// so a test can call it the way opencode would.
+async function hooked(plugin, sessions = {}) {
+  const handlers = {}
+  const hook = kind => async (name, fn) => { handlers[`${kind}.${name}`] = fn }
+  await plugin.setup({
+    skill: { transform: async fn => fn({ add: () => {} }) },
+    session: { hook: hook('session'), get: async ({ sessionID }) => sessions[sessionID] ?? { id: sessionID } },
+    tool: { hook: hook('tool') },
+    permission: { hook: hook('permission') },
+  })
+  return handlers
+}
+
+const guarded = { ...MODEL, skills: [...MODEL.skills, { name: 'lazy', description: 'Lazy. Stays on after.', trigger: 'always', command: false, gate: 'none', dir: 'lazy' }] }
+
+async function evaluate(handlers, sessionID, action = 'edit') {
+  const event = { action, sessionID }
+  await handlers['permission.evaluate'](event)
+  return event
+}
+
+test('denies an edit until a pipeline skill and every modifier are loaded', async t => {
+  const { plugin } = await load(guarded, t)
+  const handlers = await hooked(plugin)
+  const first = await evaluate(handlers, 's1')
+  assert.equal(first.effect, 'deny')
+  assert.equal(first.message, denyReason(['quick', 'lazy']))
+  await handlers['tool.execute.after']({ tool: 'skill', status: 'completed', sessionID: 's1', input: { id: 'alpha' } })
+  await handlers['tool.execute.after']({ tool: 'skill', status: 'completed', sessionID: 's1', input: { id: 'lazy' } })
+  assert.equal((await evaluate(handlers, 's1')).effect, undefined)
+})
+
+test('keeps each session separate and ignores actions other than edit', async t => {
+  const { plugin } = await load(guarded, t)
+  const handlers = await hooked(plugin)
+  await handlers['tool.execute.after']({ tool: 'skill', status: 'completed', sessionID: 's1', input: { id: 'alpha' } })
+  await handlers['tool.execute.after']({ tool: 'skill', status: 'completed', sessionID: 's1', input: { id: 'lazy' } })
+  assert.equal((await evaluate(handlers, 's2')).effect, 'deny')
+  assert.equal((await evaluate(handlers, 's2', 'skill')).effect, undefined)
+})
+
+test('lets a subagent session through', async t => {
+  const { plugin } = await load(guarded, t)
+  const handlers = await hooked(plugin, { child: { id: 'child', parentID: 's1' } })
+  assert.equal((await evaluate(handlers, 'child')).effect, undefined)
+})
+
+test('allows every edit when VIBEKIT_GATE is off', async t => {
+  const { plugin } = await load(guarded, t)
+  const handlers = await hooked(plugin)
+  process.env.VIBEKIT_GATE = 'off'
+  t.after(() => { delete process.env.VIBEKIT_GATE })
+  assert.equal((await evaluate(handlers, 's1')).effect, undefined)
+})
+
+test('pushes the bootstrap skill into the system prompt', async t => {
+  const model = { ...guarded, skills: [...guarded.skills, { name: 'using-vibekit', description: 'Boot.', trigger: 'start', command: false, gate: 'none', dir: 'using-vibekit' }] }
+  const { plugin } = await load(model, t)
+  const handlers = await hooked(plugin)
+  const context = { system: [] }
+  await handlers['session.context'](context)
+  assert.equal(context.system.length, 1)
+  assert.equal(context.system[0].type, 'text')
+  assert.match(context.system[0].text, /using-vibekit/)
 })

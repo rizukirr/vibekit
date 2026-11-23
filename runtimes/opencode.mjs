@@ -1,10 +1,15 @@
 // runtimes/opencode.mjs
+import { pipelineSkills, modifierSkills, missingSkills, denyReason, startText } from '../lib/gate.mjs'
+
 export const id = 'opencode'
 
 // opencode v2 takes skills one at a time through skill.transform, each with
 // its name and description as separate fields. Both are baked in from the
 // model, so the only frontmatter parser stays the generator's and the plugin
-// reads each file for its content alone.
+// reads each file for its content alone. The plugin also pushes the bootstrap
+// skill into the system prompt and runs the edit guard. Each of those parts
+// is skipped on an opencode without the hook it needs, and any error inside
+// the guard allows the edit.
 function plugin(model) {
   const list = model.skills
     .map(skill => `  ${JSON.stringify({ name: skill.name, description: skill.description })},`)
@@ -18,16 +23,73 @@ const SKILLS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..
 const LIST = [
 ${list}
 ]
+const BOOTSTRAP = ${JSON.stringify(model.config.bootstrap)}
+const PIPELINE = ${JSON.stringify(pipelineSkills(model.skills))}
+const MODIFIERS = ${JSON.stringify(modifierSkills(model.skills))}
+const missingSkills = ${missingSkills.toString()}
+const denyReason = ${denyReason.toString()}
+const startText = ${startText.toString()}
+
+function body(name) {
+  return readFileSync(path.join(SKILLS, name, 'SKILL.md'), 'utf8').replace(/^---\\r?\\n[\\s\\S]*?\\r?\\n---(?:\\r?\\n)?/, '')
+}
 
 export default {
   id: ${JSON.stringify(model.config.name)},
   setup: async ctx => {
     await ctx.skill.transform(draft => {
       for (const { name, description } of LIST) {
-        const file = path.join(SKILLS, name, 'SKILL.md')
-        const content = readFileSync(file, 'utf8').replace(/^---\\r?\\n[\\s\\S]*?\\r?\\n---(?:\\r?\\n)?/, '')
-        draft.add({ id: name, name, description, path: file, content })
+        draft.add({ id: name, name, description, path: path.join(SKILLS, name, 'SKILL.md'), content: body(name) })
       }
+    })
+
+    const loaded = new Map()
+    const mark = (sessionID, name) => {
+      if (!loaded.has(sessionID)) loaded.set(sessionID, new Set())
+      loaded.get(sessionID).add(name)
+    }
+
+    let start = ''
+    try {
+      start = startText(BOOTSTRAP, body(BOOTSTRAP))
+    } catch {}
+    if (start) {
+      await ctx.session?.hook?.('context', async context => {
+        context.system.push({ type: 'text', text: start })
+      })
+    }
+
+    // The model loads a skill through the skill tool. A skill the user
+    // starts directly arrives as a session.skill.activated event instead.
+    await ctx.tool?.hook?.('execute.after', async event => {
+      if (event.tool === 'skill' && event.status === 'completed' && event.input?.id) mark(event.sessionID, event.input.id)
+    })
+    const events = ctx.event?.subscribe?.()
+    if (events) {
+      ;(async () => {
+        try {
+          for await (const event of events) {
+            if (event?.type !== 'session.skill.activated') continue
+            const data = event.properties ?? event
+            if (data.sessionID && data.id) mark(data.sessionID, data.id)
+          }
+        } catch {}
+      })()
+    }
+
+    // A session with a parentID is a subagent, dispatched by a stage that
+    // already passed the guard.
+    await ctx.permission?.hook?.('evaluate', async event => {
+      if (event.action !== 'edit' || process.env.VIBEKIT_GATE === 'off') return
+      try {
+        const session = await ctx.session.get({ sessionID: event.sessionID })
+        if (session?.parentID) return
+        const missing = missingSkills(loaded.get(event.sessionID) ?? new Set(), PIPELINE, MODIFIERS)
+        if (missing.length) {
+          event.effect = 'deny'
+          event.message = denyReason(missing)
+        }
+      } catch {}
     })
   },
 }
