@@ -22,7 +22,7 @@
 - Modify: `runtimes/claude-code.mjs:2,62`
 - Modify: `README.md:13`
 
-- [ ] Step 1: Create `lib/gate.mjs` with exactly:
+- [x] Step 1: Create `lib/gate.mjs` with exactly:
 
 ```js
 // lib/gate.mjs
@@ -49,7 +49,7 @@ export const denyReason = missing => 'vibekit denied this edit, so the file was 
 export const startText = (name, body) => '<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\nBelow is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
 ```
 
-- [ ] Step 2: Create `tests/gate.test.mjs` with exactly:
+- [x] Step 2: Create `tests/gate.test.mjs` with exactly:
 
 ```js
 // tests/gate.test.mjs
@@ -95,29 +95,29 @@ test('the start text carries the skill name and body', () => {
 })
 ```
 
-- [ ] Step 3: In `runtimes/claude-code.mjs`, after the line `import { triggerTable } from '../lib/table.mjs'`, add the line:
+- [x] Step 3: In `runtimes/claude-code.mjs`, after the line `import { triggerTable } from '../lib/table.mjs'`, add the line:
 
 ```js
 import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'
 ```
 
-- [ ] Step 4: In `runtimes/claude-code.mjs`, replace the line that starts `            command: \`"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ` with:
+- [x] Step 4: In `runtimes/claude-code.mjs`, replace the line that starts `            command: \`"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ` with:
 
 ```js
             command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${pipelineSkills(skills).join('+')} ${modifierSkills(skills).join('+')}`,
 ```
 
-- [ ] Step 5: In `README.md`, replace the line that starts `In Claude Code, a hook backs this up.` with:
+- [x] Step 5: In `README.md`, replace the line that starts `In Claude Code, a hook backs this up.` with:
 
 ```
 A guard backs this up in Claude Code, Codex, OpenCode, pi and Antigravity. The agent cannot write or edit a file until it has run one of vibekit's working skills, usually `quick`, and has loaded `lazy`, `terse` and `plain`. The denial tells it which skills are missing. Helper agents that vibekit dispatches are let through, except in pi. Commands run in a shell are not checked. To turn the check off for a session, set `VIBEKIT_GATE=off` in its environment.
 ```
 
-- [ ] Step 6: Run `npm run generate`
-- [ ] Step 7: Run `node --test tests/gate.test.mjs`
-- [ ] Step 8: Run `npm run check`
-- [ ] Step 9: Run `npm test`
-- [ ] Step 10: Commit `feat(gate): the edit guard rule in one place`
+- [x] Step 6: Run `npm run generate`
+- [x] Step 7: Run `node --test tests/gate.test.mjs`
+- [x] Step 8: Run `npm run check`
+- [x] Step 9: Run `npm test`
+- [x] Step 10: Commit `feat(gate): the edit guard rule in one place`
 
 ### Task 2: the shared hook reads Codex and Antigravity records → verify: `node --test tests/hook.test.mjs` exits 0 and `npm test` exits 0
 
