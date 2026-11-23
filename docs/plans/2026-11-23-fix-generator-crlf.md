@@ -18,7 +18,7 @@
 - Modify: `lib/build.mjs:79-87`
 - Modify: `tests/build.test.mjs:4-7` (imports), and append one test
 
-- [ ] Step 1: In `tests/build.test.mjs`, replace lines 4-7
+- [x] Step 1: In `tests/build.test.mjs`, replace lines 4-7
 
 ```js
 import { writeFileSync, mkdirSync, cpSync } from 'node:fs'
@@ -37,7 +37,7 @@ import { build, mergeEmitters, applyRegions, planChanges, mergeContributions, fs
 import { makeSkillsDir, skillFile, MODEL } from './helpers.mjs'
 ```
 
-- [ ] Step 2: Append to `tests/build.test.mjs`:
+- [x] Step 2: Append to `tests/build.test.mjs`:
 
 ```js
 
@@ -61,8 +61,8 @@ test('a checkout with CRLF line endings reports no drift', async () => {
 })
 ```
 
-- [ ] Step 3: Run `node --test tests/build.test.mjs` and record that the new test fails (the guard fails before the fix). Do not change `lib/build.mjs` before this run.
-- [ ] Step 4: In `lib/build.mjs`, replace lines 79-87
+- [x] Step 3: Run `node --test tests/build.test.mjs` and record that the new test fails (the guard fails before the fix). Do not change `lib/build.mjs` before this run.
+- [x] Step 4: In `lib/build.mjs`, replace lines 79-87
 
 ```js
 // Default filesystem reader. Returns null for a missing file rather than
@@ -92,9 +92,9 @@ export function fsReader(root) {
 }
 ```
 
-- [ ] Step 5: Run `node --test tests/build.test.mjs` and `npm run check` from the run worktree.
-- [ ] Step 6: Run `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` (in PowerShell: `node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)`).
-- [ ] Step 7: Commit `lib/build.mjs` and `tests/build.test.mjs`: `fix(build): read CRLF files as LF so an old Windows clone reports no drift`
+- [x] Step 5: Run `node --test tests/build.test.mjs` and `npm run check` from the run worktree.
+- [x] Step 6: Run `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` (in PowerShell: `node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)`).
+- [x] Step 7: Commit `lib/build.mjs` and `tests/build.test.mjs`: `fix(build): read CRLF files as LF so an old Windows clone reports no drift`
 
 ### Task 2: the failing command in the CRLF checkout → verify: `npm run check` exits 0 in `C:\Users\rizki\Projects\vibekit` while that checkout is detached at the run branch's HEAD, and `git ls-files --eol` there still lists at least 1 entry with `w/crlf`
 
