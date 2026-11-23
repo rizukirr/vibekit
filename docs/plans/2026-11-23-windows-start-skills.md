@@ -564,7 +564,7 @@ test('registers no edit guard', async t => {
 - Modify: `tests/pi.test.mjs:1-82`
 - Regenerate: `.pi/vibekit.js`
 
-- [ ] Step 1: Replace lines 1-68 of `runtimes/pi.mjs` (everything before `export function emit(model) {`) with:
+- [x] Step 1: Replace lines 1-68 of `runtimes/pi.mjs` (everything before `export function emit(model) {`) with:
 
 ```js
 // runtimes/pi.mjs
@@ -609,7 +609,7 @@ export default function (pi) {
 
 ```
 
-- [ ] Step 2: Replace lines 1-82 of `tests/pi.test.mjs` (the whole file) with:
+- [x] Step 2: Replace lines 1-82 of `tests/pi.test.mjs` (the whole file) with:
 
 ```js
 // tests/pi.test.mjs
@@ -679,9 +679,9 @@ test('registers no tool_call guard', async t => {
 })
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `node --test tests/pi.test.mjs` and `npm run check`
-- [ ] Step 5: Commit: `feat: pi appends every start skill, no edit guard`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `node --test tests/pi.test.mjs` and `npm run check`
+- [x] Step 5: Commit: `feat: pi appends every start skill, no edit guard`
 
 ### Task 7: quick becomes the bootstrap, using-vibekit and the guard leave → verify: `npm run check` exits 0; `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` exits 0; `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` finds no match; `git grep -n using-vibekit -- . ":!docs"` finds no match
 
