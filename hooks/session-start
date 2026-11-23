@@ -34,7 +34,11 @@ context="<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\n**Below is the full content
 
 # Each platform reads a different field, and Claude Code reads more than one
 # without deduplicating, so exactly one shape is emitted per platform.
-if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+# $1 names the runtime when its hook config passes one. Antigravity reads
+# injected steps rather than additional context.
+if [ "${1:-}" = "antigravity" ]; then
+    printf '{\n  "injectSteps": [{"systemMessage": {"systemMessage": "%s"}}]\n}\n' "$context"
+elif [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
     printf '{\n  "additional_context": "%s"\n}\n' "$context"
 elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
     printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$context"

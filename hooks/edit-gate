@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# PreToolUse hook: denies Write, Edit and NotebookEdit in the main session
-# until a working vibekit skill has run, then until every modifier has run.
-# $1 is the working skill list and $2 the modifier list, each joined with +.
+# PreToolUse hook for Claude Code, Codex and Antigravity: denies a file edit
+# in the main session until a pipeline skill has loaded, then until every
+# modifier has. $1 is the pipeline skill list and $2 the modifier list, each
+# joined with +. The reason must match denyReason in lib/gate.mjs, which a
+# test checks.
 
 set -uo pipefail
 
@@ -11,17 +13,26 @@ fi
 
 input=$(cat)
 
-# A subagent's call carries agent_id, and vibekit's subagents are dispatched
-# by a stage that already passed the gate. Inside a JSON string the quotes
-# are escaped, so an unescaped "agent_id" can only be the key itself.
+# A subagent's call carries agent_id on Claude Code and Codex, and
+# parentConversationId on Antigravity. vibekit's subagents are dispatched by
+# a stage that already passed the gate. Inside a JSON string the quotes are
+# escaped, so an unescaped key name can only be the key itself.
 case "$input" in
-    *'"agent_id"'*) exit 0 ;;
+    *'"agent_id"'*|*'"parentConversationId"'*) exit 0 ;;
 esac
 
-path=$(printf '%s' "$input" \
-    | sed -n 's/.*"transcript_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
-    | head -n 1 \
-    | sed 's/\\\\/\\/g')
+# Claude Code and Codex name the record transcript_path, Antigravity names it
+# transcriptPath.
+record_path() {
+    printf '%s' "$input" \
+        | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\\([^\"]*\\)\".*/\\1/p" \
+        | head -n 1 \
+        | sed 's/\\\\/\\/g'
+}
+path=$(record_path transcript_path)
+if [ -z "$path" ]; then
+    path=$(record_path transcriptPath)
+fi
 
 # Fail open: a missing or unreadable record must never block every edit.
 if [ -z "$path" ] || [ ! -r "$path" ]; then
@@ -33,16 +44,25 @@ if [ -z "$names" ]; then
     exit 0
 fi
 
-# Only the two exact record forms count. The bare text /vibekit:<name>
-# also appears in skill descriptions, which every session carries.
+# A skill counts as loaded when the record shows a Skill call or a typed
+# /vibekit:<name> command (Claude Code), or a tool call that reads
+# <name>/SKILL.md (Codex runs cat inside exec, Antigravity calls read_file).
+# Only tool-call lines count there, because Codex and Antigravity also list
+# skill paths in their prompts. $1 is one name or an alternation of names.
+loaded() {
+    if grep -qE "\"name\":\"Skill\",\"input\":\\{\"skill\":\"vibekit:($1)\"|<command-name>/vibekit:($1)</command-name>" "$path"; then
+        return 0
+    fi
+    grep -E '"(custom_tool_call|function_call|tool_calls)"' "$path" \
+        | grep -qE "(^|[^A-Za-z0-9_-])($1)/SKILL\\.md"
+}
+
 missing=""
-if ! grep -qE "\"name\":\"Skill\",\"input\":\\{\"skill\":\"vibekit:($names)\"|<command-name>/vibekit:($names)</command-name>" "$path"; then
+if ! loaded "$names"; then
     missing=" vibekit:quick"
 fi
-
-# A modifier is never typed as a command, so only the Skill call counts.
 for name in $(printf '%s' "${2:-}" | tr '+' ' '); do
-    if ! grep -qF "\"name\":\"Skill\",\"input\":{\"skill\":\"vibekit:$name\"" "$path"; then
+    if ! loaded "$name"; then
         missing="$missing vibekit:$name"
     fi
 done
@@ -50,9 +70,15 @@ if [ -z "$missing" ]; then
     exit 0
 fi
 
-# A deny decision reaches the model as a rule with a reason. A plain exit 2
-# is shown as a hook error, which models retry as if the hook were broken.
-# The reason holds no double quote or backslash, so it is valid JSON as is.
-reason="vibekit denied this edit, so the file was not changed. Call the Skill tool for each of these, in order:$missing. Then retry the edit. Retrying first is denied again. To turn this check off, set VIBEKIT_GATE=off."
-printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$reason"
+# A deny decision reaches the model as a rule with a reason. The reason holds
+# no double quote or backslash, so it is valid JSON as is. Antigravity's input
+# carries toolCall and reads its own shape. An allowed edit prints nothing,
+# which leaves each runtime's own permission handling in place.
+reason="vibekit denied this edit, so the file was not changed. Load each of these vibekit skills first, in order:$missing. Then retry the edit. Retrying first is denied again. To turn this check off, set VIBEKIT_GATE=off."
+case "$input" in
+    *'"toolCall"'*)
+        printf '{"decision":"deny","reason":"%s"}\n' "$reason" ;;
+    *)
+        printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"%s"}}\n' "$reason" ;;
+esac
 exit 0

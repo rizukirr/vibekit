@@ -5,13 +5,15 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { denyReason } from '../lib/gate.mjs'
 
 const config = JSON.parse(readFileSync('vibekit.config.json', 'utf8'))
 
-function runHook(env) {
+function runHook(env, runtime) {
+  const extra = runtime ? [runtime] : []
   const command = process.platform === 'win32'
-    ? { file: 'hooks\\run-hook.cmd', args: ['session-start'], shell: true }
-    : { file: 'bash', args: ['hooks/run-hook.cmd', 'session-start'], shell: false }
+    ? { file: 'hooks\\run-hook.cmd', args: ['session-start', ...extra], shell: true }
+    : { file: 'bash', args: ['hooks/run-hook.cmd', 'session-start', ...extra], shell: false }
   return execFileSync(command.file, command.args, {
     encoding: 'utf8',
     shell: command.shell,
@@ -88,7 +90,7 @@ function denial(result) {
 
 test('edit-gate denies an edit when no working skill has run, naming everything missing', () => {
   const reason = denial(runGate({ transcript_path: record(plainText('hello')) }))
-  assert.match(reason, /vibekit:quick vibekit:lazy vibekit:plain vibekit:terse/)
+  assert.equal(reason, denyReason(['quick', 'lazy', 'plain', 'terse']))
   assert.match(reason, /file was not changed/)
   assert.match(reason, /VIBEKIT_GATE=off/)
 })
@@ -127,6 +129,61 @@ test('edit-gate is off when VIBEKIT_GATE=off', () => {
 test('edit-gate fails open when the record is missing', () => {
   assert.equal(denial(runGate({})), null)
   assert.equal(denial(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') })), null)
+})
+
+test('session-start emits the Antigravity injectSteps shape when asked', () => {
+  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }, 'antigravity'))
+  const text = parsed.injectSteps[0].systemMessage.systemMessage
+  assert.ok(text.includes(config.bootstrap))
+  assert.ok(text.includes('auto-trigger discipline'))
+})
+
+// Codex has no Skill tool. Its model reads SKILL.md with cat inside an exec
+// call, which the session record keeps as a custom_tool_call line.
+const codexRead = file => ({ type: 'response_item', payload: { type: 'custom_tool_call', name: 'exec', input: `text(await tools.exec_command({cmd:"cat ${file}"}));` } })
+
+test('edit-gate counts Codex reads of SKILL.md in tool calls', () => {
+  const path = record(...['quick', 'lazy', 'plain', 'terse'].map(name => codexRead(`/home/u/.codex/plugins/cache/vibekit/vibekit/0.10.3/skills/${name}/SKILL.md`)))
+  assert.equal(denial(runGate({ transcript_path: path, tool_name: 'apply_patch' })), null)
+})
+
+test('edit-gate counts a Codex read through a skill root alias', () => {
+  const path = record(codexRead('r4/quick/SKILL.md r4/lazy/SKILL.md r4/plain/SKILL.md r4/terse/SKILL.md'))
+  assert.equal(denial(runGate({ transcript_path: path })), null)
+})
+
+test('edit-gate ignores skill paths outside a tool call', () => {
+  const listing = plainText('skills: /x/skills/quick/SKILL.md /x/skills/lazy/SKILL.md /x/skills/plain/SKILL.md /x/skills/terse/SKILL.md')
+  assert.match(denial(runGate({ transcript_path: record(listing) })), /vibekit:quick/)
+})
+
+test('edit-gate does not count a skill whose name only ends like a listed one', () => {
+  const path = record(codexRead('/x/notquick/SKILL.md'), ...modifiers)
+  assert.match(denial(runGate({ transcript_path: path })), /vibekit:quick/)
+})
+
+// Antigravity's model loads a skill with read_file, and its transcript keeps
+// the call under tool_calls. Its hook input is camelCase and carries toolCall.
+const agyRead = name => ({ step_index: 1, source: 'MODEL', tool_calls: [{ name: 'read_file', args: { Path: `/p/skills/${name}/SKILL.md` } }] })
+const agyInput = (transcriptPath, extra = {}) => ({ transcriptPath, toolCall: { id: 't1', name: 'write_file', args: { Path: 'x.txt' } }, hookEventName: 'PreToolUse', ...extra })
+
+test('edit-gate denies an Antigravity edit in its own shape', () => {
+  const result = runGate(agyInput(record(agyRead('quick'))))
+  assert.equal(result.status, 0, result.stderr)
+  const output = JSON.parse(result.stdout)
+  assert.equal(output.decision, 'deny')
+  assert.equal(output.reason, denyReason(['lazy', 'plain', 'terse']))
+})
+
+test('edit-gate allows an Antigravity edit once every skill is read', () => {
+  const result = runGate(agyInput(record(...['quick', 'lazy', 'plain', 'terse'].map(agyRead))))
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(result.stdout.trim(), '')
+})
+
+test('edit-gate lets an Antigravity subagent through', () => {
+  const result = runGate(agyInput(record(plainText('hello')), { parentConversationId: 'c-1' }))
+  assert.equal(result.stdout.trim(), '')
 })
 
 // A batch file run through cmd /c that exits from inside an if (...) block
