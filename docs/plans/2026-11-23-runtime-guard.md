@@ -394,7 +394,7 @@ test('emits a root hooks file that loads vibekit and guards agy edit tools', () 
 - Modify: `tests/opencode.test.mjs`
 - Regenerate: `.opencode/plugins/vibekit.js`
 
-- [ ] Step 1: In `runtimes/opencode.mjs`, replace everything from the first line through the closing line of the `plugin(model)` function (the line `}` after the template's closing `\``) with exactly:
+- [x] Step 1: In `runtimes/opencode.mjs`, replace everything from the first line through the closing line of the `plugin(model)` function (the line `}` after the template's closing `\``) with exactly:
 
 ```js
 // runtimes/opencode.mjs
@@ -496,8 +496,8 @@ export default {
 }
 ```
 
-- [ ] Step 2: In `tests/opencode.test.mjs`, add `import { denyReason } from '../lib/gate.mjs'` after the line `import { MODEL, skillFile } from './helpers.mjs'`.
-- [ ] Step 3: In `tests/opencode.test.mjs`, append these tests at the end of the file:
+- [x] Step 2: In `tests/opencode.test.mjs`, add `import { denyReason } from '../lib/gate.mjs'` after the line `import { MODEL, skillFile } from './helpers.mjs'`.
+- [x] Step 3: In `tests/opencode.test.mjs`, append these tests at the end of the file:
 
 ```js
 // Stands in for the v2 hooks the guard uses, keeping each registered handler
@@ -568,11 +568,11 @@ test('pushes the bootstrap skill into the system prompt', async t => {
 })
 ```
 
-- [ ] Step 4: Run `npm run generate`
-- [ ] Step 5: Run `node --test tests/opencode.test.mjs`
-- [ ] Step 6: Run `npm run check`
-- [ ] Step 7: Run `npm test`
-- [ ] Step 8: Commit `feat(opencode): load vibekit and guard edits`
+- [x] Step 4: Run `npm run generate`
+- [x] Step 5: Run `node --test tests/opencode.test.mjs`
+- [x] Step 6: Run `npm run check`
+- [x] Step 7: Run `npm test`
+- [x] Step 8: Commit `feat(opencode): load vibekit and guard edits`
 
 ### Task 5: pi loads vibekit and runs the guard → verify: `node --test tests/pi.test.mjs` exits 0, `npm run check` exits 0 and `npm test` exits 0
 
