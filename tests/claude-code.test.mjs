@@ -5,6 +5,7 @@ import { id, emit, regions } from '../runtimes/claude-code.mjs'
 import { MODEL } from './helpers.mjs'
 import { readFileSync } from 'node:fs'
 import { buildModel } from '../lib/model.mjs'
+import { startSkills } from '../lib/start.mjs'
 
 test('emits the plugin manifest stamped with the config version', () => {
   const plugin = JSON.parse(emit(MODEL)['.claude-plugin/plugin.json'])
@@ -22,26 +23,21 @@ test('emits a marketplace manifest whose version matches the plugin manifest', (
   assert.equal(market.plugins[0].source, './')
 })
 
-test('emits a SessionStart hook that runs through the polyglot wrapper', () => {
-  const hooks = JSON.parse(emit(MODEL)['hooks/hooks.json'])
-  const entry = hooks.hooks.SessionStart[0]
+test('emits one SessionStart hook per start skill, each through the polyglot wrapper', () => {
+  const model = buildModel(JSON.parse(readFileSync('vibekit.config.json', 'utf8')), 'skills')
+  const entry = JSON.parse(emit(model)['hooks/hooks.json']).hooks.SessionStart[0]
   assert.equal(entry.matcher, 'startup|clear|compact')
-  assert.match(entry.hooks[0].command, /run-hook\.cmd" session-start$/)
-  assert.equal(entry.hooks[0].async, false)
+  assert.deepEqual(entry.hooks.map(hook => hook.command.split(' session-start ')[1]), startSkills(model))
+  for (const hook of entry.hooks) {
+    assert.match(hook.command, /^"\$\{CLAUDE_PLUGIN_ROOT\}\/hooks\/run-hook\.cmd" session-start [a-z-]+$/)
+    assert.match(hook.commandWindows, /^& "\$env:PLUGIN_ROOT\/hooks\/run-hook\.cmd" session-start [a-z-]+$/)
+    assert.equal(hook.shell, 'bash')
+    assert.equal(hook.async, false)
+  }
 })
 
-test('emits a PreToolUse edit gate listing every hard-gate or command skill on disk', () => {
-  const model = buildModel(JSON.parse(readFileSync('vibekit.config.json', 'utf8')), 'skills')
-  const entry = JSON.parse(emit(model)['hooks/hooks.json']).hooks.PreToolUse[0]
-  const [gates, modifiers] = entry.hooks[0].command.split(' edit-gate ')[1].split(' ')
-  const list = gates.split('+')
-  assert.deepEqual(modifiers.split('+'), ['lazy', 'plain', 'terse'])
-  assert.equal(entry.matcher, 'Write|Edit|NotebookEdit')
-  assert.match(entry.hooks[0].command, /run-hook\.cmd" edit-gate /)
-  for (const skill of model.skills) {
-    assert.equal(list.includes(skill.name), skill.gate === 'hard' || skill.command, skill.name)
-  }
-  assert.deepEqual(list, [...list].sort())
+test('emits no PreToolUse hook', () => {
+  assert.equal(JSON.parse(emit(MODEL)['hooks/hooks.json']).hooks.PreToolUse, undefined)
 })
 
 test('emits no markdown command, because a plugin command hides the skill of the same name', () => {

@@ -1,6 +1,6 @@
 // runtimes/claude-code.mjs
 import { triggerTable } from '../lib/table.mjs'
-import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'
+import { startSkills } from '../lib/start.mjs'
 
 export const id = 'claude-code'
 
@@ -18,7 +18,7 @@ function pluginManifest(config) {
 }
 
 export function emit(model) {
-  const { config, skills } = model
+  const { config } = model
   const json = value => `${JSON.stringify(value, null, 2)}\n`
 
   const files = {
@@ -37,33 +37,22 @@ export function emit(model) {
     }),
     // The polyglot wrapper is what makes the hook run on Windows; invoking
     // session-start directly works on Unix and silently does nothing on Windows,
-    // which leaves every skill inert with no error.
+    // which leaves every skill inert with no error. One hook per start skill,
+    // because Claude Code turns one hook's context over about 10,000 characters
+    // into a file reference. Codex reads this file too: on Windows it runs
+    // commandWindows in PowerShell, where ${CLAUDE_PLUGIN_ROOT} is no variable,
+    // and Claude Code ignores that field.
     'hooks/hooks.json': json({
       hooks: {
         SessionStart: [{
           matcher: 'startup|clear|compact',
-          hooks: [{
+          hooks: startSkills(model).map(name => ({
             type: 'command',
-            command: '"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" session-start',
+            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" session-start ${name}`,
+            commandWindows: `& "$env:PLUGIN_ROOT/hooks/run-hook.cmd" session-start ${name}`,
             shell: 'bash',
             async: false,
-          }],
-        }],
-        // The edit gate. Its list is every skill that counts as entering the
-        // pipeline: each hard gate and each command, so a new skill joins or
-        // stays out by its own frontmatter. One argument joined with +,
-        // because run-hook.cmd forwards at most 8 arguments on Windows and
-        // cmd.exe splits an argument at a comma. The second argument lists the
-        // modifiers, the skills whose description ends "Stays on after.", which
-        // must all have run before the first edit.
-        PreToolUse: [{
-          matcher: 'Write|Edit|NotebookEdit',
-          hooks: [{
-            type: 'command',
-            command: `"\${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd" edit-gate ${pipelineSkills(skills).join('+')} ${modifierSkills(skills).join('+')}`,
-            shell: 'bash',
-            async: false,
-          }],
+          })),
         }],
       },
     }),
