@@ -317,7 +317,7 @@ test('edit-gate lets an Antigravity subagent through', () => {
 - Modify: `tests/antigravity.test.mjs`
 - Regenerate: `hooks.json`, `package.json` and any other file `npm run generate` writes
 
-- [ ] Step 1: Replace the whole of `runtimes/antigravity.mjs` with exactly:
+- [x] Step 1: Replace the whole of `runtimes/antigravity.mjs` with exactly:
 
 ```js
 // runtimes/antigravity.mjs
@@ -360,7 +360,7 @@ export function regions(model) {
 }
 ```
 
-- [ ] Step 2: In `tests/antigravity.test.mjs`, replace the test `ships both the manifest and the rules file` with:
+- [x] Step 2: In `tests/antigravity.test.mjs`, replace the test `ships both the manifest and the rules file` with:
 
 ```js
 test('ships the manifest, the hooks file and the rules file', () => {
@@ -378,12 +378,12 @@ test('emits a root hooks file that loads vibekit and guards agy edit tools', () 
 })
 ```
 
-- [ ] Step 3: Run `npm run generate`
-- [ ] Step 4: Run `node --test tests/antigravity.test.mjs`
-- [ ] Step 5: Run `agy plugin validate . --json`, then confirm in its output that `hooks.json` is no longer reported as never loaded and that at least 1 hook is listed.
-- [ ] Step 6: Run `npm run check`
-- [ ] Step 7: Run `npm test`
-- [ ] Step 8: Commit `feat(antigravity): load vibekit and guard edits`
+- [x] Step 3: Run `npm run generate`
+- [x] Step 4: Run `node --test tests/antigravity.test.mjs`
+- [x] Step 5: Run `agy plugin validate . --json`, then confirm in its output that `hooks.json` is no longer reported as never loaded and that at least 1 hook is listed.
+- [x] Step 6: Run `npm run check`
+- [x] Step 7: Run `npm test`
+- [x] Step 8: Commit `feat(antigravity): load vibekit and guard edits`
 
 ### Task 4: OpenCode loads vibekit and runs the guard → verify: `node --test tests/opencode.test.mjs` exits 0, `npm run check` exits 0 and `npm test` exits 0
 
