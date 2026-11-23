@@ -683,9 +683,28 @@ test('registers no tool_call guard', async t => {
 - [x] Step 4: Run `node --test tests/pi.test.mjs` and `npm run check`
 - [x] Step 5: Commit: `feat: pi appends every start skill, no edit guard`
 
-### Task 7: quick becomes the bootstrap, using-vibekit and the guard leave → verify: `npm run check` exits 0; `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` exits 0; `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` finds no match; `git grep -n using-vibekit -- . ":!docs"` finds no match
+### Task 7: Windows path separators in the reference guard test → verify: `node --test tests/no-external-references.test.mjs` exits 0
 
-**Blocked by:** Task 6
+**Blocked by:** none
+
+Added after Task 8 halted on this test: on win32 `join` builds `skills\brainstorm\SKILL.md`, and the assertion at `tests/no-external-references.test.mjs:51` looks for `skills/brainstorm/SKILL.md`. It fails the same way at 3f800da. That assertion is the guard: it fails today on Windows and passes after this task.
+
+**Files:**
+- Modify: `tests/no-external-references.test.mjs:5`, `tests/no-external-references.test.mjs:24`
+
+- [ ] Step 1: In `tests/no-external-references.test.mjs`, delete line 5 `import { join } from 'node:path'`, and replace line 24 `    .map(entry => join('skills', entry.name, 'SKILL.md'))` with:
+
+```js
+    // Forward slashes on every platform, so the paths compare equal to the literals below.
+    .map(entry => `skills/${entry.name}/SKILL.md`)
+```
+
+- [ ] Step 2: Run `node --test tests/no-external-references.test.mjs`
+- [ ] Step 3: Commit: `test: build shipped skill paths with forward slashes on every platform`
+
+### Task 8: quick becomes the bootstrap, using-vibekit and the guard leave → verify: `npm run check` exits 0; `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` exits 0; `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` finds no match; `git grep -n using-vibekit -- . ":!docs"` finds no match
+
+**Blocked by:** Task 6, Task 7
 
 **Files:**
 - Modify: `vibekit.config.json:9`
@@ -783,9 +802,9 @@ Write the results to `windows-test-results.md` in the repo root (do not commit i
 - [ ] Step 14: Run `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` and `git grep -n using-vibekit -- . ":!docs"`
 - [ ] Step 15: Commit: `feat: quick, lazy, plain and terse load at session start; remove the edit guard and using-vibekit`
 
-### Task 8: live checks on this Windows machine → verify: `windows-test-results.md` in the main checkout has a round-two table with a row per runtime for the start-up question and the write, and every row reads pass
+### Task 9: live checks on this Windows machine → verify: `windows-test-results.md` in the main checkout has a round-two table with a row per runtime for the start-up question and the write, and every row reads pass
 
-**Blocked by:** Task 7
+**Blocked by:** Task 8
 
 **Files:**
 - Modify: `C:\Users\rizki\Projects\vibekit\windows-test-results.md` (untracked, never committed)
@@ -800,9 +819,9 @@ In every step, `<worktree>` is `C:\Users\rizki\Projects\vibekit\.vibe-worktrees\
 - [ ] Step 6: Cleanup. Run `codex plugin remove vkprobe@vkprobe` and `codex plugin marketplace remove vkprobe`, and record both.
 - [ ] Step 7: Append the round-two table to `windows-test-results.md`. No commit: the file stays untracked.
 
-### Task 9: Windows CI → verify: the `hook (windows-latest)` job of the CI run for the pushed branch concludes `success`
+### Task 10: Windows CI → verify: the `hook (windows-latest)` job of the CI run for the pushed branch concludes `success`
 
-**Blocked by:** Task 7
+**Blocked by:** Task 8
 
 **Files:** none changed
 
