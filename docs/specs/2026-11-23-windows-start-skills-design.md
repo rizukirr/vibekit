@@ -41,9 +41,7 @@ The user decided to remove the edit guard entirely and instead load `quick`, `la
 
 ## Constraints
 
-- Run limits: at most 3 verify rounds, at most ## Constraints
-
- on paid runs
+- Run limits: at most 3 verify rounds, at most $0 on paid runs
 - Generated files are never hand-edited. Every change to `hooks/hooks.json`, the root `hooks.json`, `.opencode/`, `.pi/`, `CLAUDE.md`, `AGENTS.md`, `rules/AGENTS.md` and `.opencode/INSTALL.md` goes through `runtimes/*.mjs` and `npm run generate`.
 - `run-hook.cmd` forwards at most 8 arguments on Windows, and cmd.exe splits an argument at a comma.
 - cmd.exe behaviour is measured before a fix is built on it (CLAUDE.md rule). This machine is Windows, so local measurement counts, and the CI job confirms it.
