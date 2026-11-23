@@ -28,6 +28,7 @@ Both are fixed on `repl-run/windows-start-skills`. Nothing in CI would catch the
 
 ## Constraints
 
+- Run limits: at most 3 verify rounds, at most $0 on paid runs
 - No new dependency, in the package or on the CI runner.
 - The step lives in the existing `hook` job's matrix, on the Windows leg only, so the ubuntu leg and `validate` are unchanged.
 - The command is one any contributor can run on Windows from the repo root.
