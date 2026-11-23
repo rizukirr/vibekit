@@ -77,7 +77,7 @@ test('parses a file with CRLF line endings', () => {
 - Create: `lib/start.mjs`
 - Create: `tests/start.test.mjs`
 
-- [ ] Step 1: Create `lib/start.mjs`:
+- [x] Step 1: Create `lib/start.mjs`:
 
 ```js
 // lib/start.mjs
@@ -95,7 +95,7 @@ export const startSkills = model => [model.config.bootstrap, ...modifierSkills(m
 export const startText = (name, body, first) => '<EXTREMELY_IMPORTANT>\n' + (first ? 'You have vibekit.\n\n' : '') + 'Below is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
 ```
 
-- [ ] Step 2: Create `tests/start.test.mjs`:
+- [x] Step 2: Create `tests/start.test.mjs`:
 
 ```js
 // tests/start.test.mjs
@@ -134,8 +134,8 @@ test('only the first start block says vibekit is present', () => {
 })
 ```
 
-- [ ] Step 3: Run `node --test tests/start.test.mjs`
-- [ ] Step 4: Commit: `feat: derive the start skills in lib/start.mjs`
+- [x] Step 3: Run `node --test tests/start.test.mjs`
+- [x] Step 4: Commit: `feat: derive the start skills in lib/start.mjs`
 
 ### Task 3: Claude Code and Codex start hooks, no edit gate → verify: `node --test tests/hook.test.mjs tests/claude-code.test.mjs tests/codex.test.mjs` exits 0, and `npm run check` exits 0
 
