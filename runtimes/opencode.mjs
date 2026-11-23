@@ -1,15 +1,14 @@
 // runtimes/opencode.mjs
-import { pipelineSkills, modifierSkills, missingSkills, denyReason, startText } from '../lib/gate.mjs'
+import { startSkills, startText } from '../lib/start.mjs'
 
 export const id = 'opencode'
 
 // opencode v2 takes skills one at a time through skill.transform, each with
 // its name and description as separate fields. Both are baked in from the
 // model, so the only frontmatter parser stays the generator's and the plugin
-// reads each file for its content alone. The plugin also pushes the bootstrap
-// skill into the system prompt and runs the edit guard. Each of those parts
-// is skipped on an opencode without the hook it needs, and any error inside
-// the guard allows the edit.
+// reads each file for its content alone. The plugin also pushes each start
+// skill into the system prompt, skipping a skill it cannot read, and skips
+// that part on an opencode without the context hook.
 function plugin(model) {
   const list = model.skills
     .map(skill => `  ${JSON.stringify({ name: skill.name, description: skill.description })},`)
@@ -23,11 +22,7 @@ const SKILLS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..
 const LIST = [
 ${list}
 ]
-const BOOTSTRAP = ${JSON.stringify(model.config.bootstrap)}
-const PIPELINE = ${JSON.stringify(pipelineSkills(model.skills))}
-const MODIFIERS = ${JSON.stringify(modifierSkills(model.skills))}
-const missingSkills = ${missingSkills.toString()}
-const denyReason = ${denyReason.toString()}
+const START = ${JSON.stringify(startSkills(model))}
 const startText = ${startText.toString()}
 
 function body(name) {
@@ -43,54 +38,17 @@ export default {
       }
     })
 
-    const loaded = new Map()
-    const mark = (sessionID, name) => {
-      if (!loaded.has(sessionID)) loaded.set(sessionID, new Set())
-      loaded.get(sessionID).add(name)
+    const start = []
+    for (const [index, name] of START.entries()) {
+      try {
+        start.push(startText(name, body(name), index === 0))
+      } catch {}
     }
-
-    let start = ''
-    try {
-      start = startText(BOOTSTRAP, body(BOOTSTRAP))
-    } catch {}
-    if (start) {
+    if (start.length) {
       await ctx.session?.hook?.('context', async context => {
-        context.system.push({ type: 'text', text: start })
+        for (const text of start) context.system.push({ type: 'text', text })
       })
     }
-
-    // The model loads a skill through the skill tool. A skill the user
-    // starts directly arrives as a session.skill.activated event instead.
-    await ctx.tool?.hook?.('execute.after', async event => {
-      if (event.tool === 'skill' && event.status === 'completed' && event.input?.id) mark(event.sessionID, event.input.id)
-    })
-    const events = ctx.event?.subscribe?.()
-    if (events) {
-      ;(async () => {
-        try {
-          for await (const event of events) {
-            if (event?.type !== 'session.skill.activated') continue
-            const data = event.properties ?? event
-            if (data.sessionID && data.id) mark(data.sessionID, data.id)
-          }
-        } catch {}
-      })()
-    }
-
-    // A session with a parentID is a subagent, dispatched by a stage that
-    // already passed the guard.
-    await ctx.permission?.hook?.('evaluate', async event => {
-      if (event.action !== 'edit' || process.env.VIBEKIT_GATE === 'off') return
-      try {
-        const session = await ctx.session.get({ sessionID: event.sessionID })
-        if (session?.parentID) return
-        const missing = missingSkills(loaded.get(event.sessionID) ?? new Set(), PIPELINE, MODIFIERS)
-        if (missing.length) {
-          event.effect = 'deny'
-          event.message = denyReason(missing)
-        }
-      } catch {}
-    })
   },
 }
 `
@@ -104,15 +62,13 @@ function installDoc(config) {
     '',
     '## Local checkout',
     '',
-    'opencode v2 reads the skills directory of a local checkout directly. Add it to the `skills` array in your `opencode.json`:',
+    `opencode loads a plugin file placed in a \`.opencode/plugins/\` folder: your project's, or \`~/.config/opencode/plugins/\` for every project. Create \`${config.name}.js\` there with this one line, so the plugin still finds its skills in your checkout:`,
     '',
-    '```json',
-    '{',
-    `  "skills": ["/path/to/local/${config.name}/skills"]`,
-    '}',
+    '```js',
+    `export { default } from 'file:///path/to/local/${config.name}/.opencode/plugins/${config.name}.js'`,
     '```',
     '',
-    `Replace \`/path/to/local/${config.name}\` with the absolute path to your checkout. With this route the skills are listed by \`opencode api skill.list\`, and \`opencode plugin list\` has no ${config.name} row.`,
+    `Replace \`/path/to/local/${config.name}\` with the absolute path to your checkout, with forward slashes on Windows too, such as \`file:///C:/Users/you/${config.name}\`. The \`plugin\` array of \`opencode.json\` does not load a local checkout: opencode 2.3.2 rejects a file path there and ignores a folder path.`,
     '',
     '## Git repository',
     '',
@@ -126,21 +82,13 @@ function installDoc(config) {
     '',
     '## Verify',
     '',
-    'Run `opencode reload`, then:',
-    '',
-    '```',
-    'opencode plugin list',
-    '```',
-    '',
-    `The list has a row whose ID is \`${config.name}\`.`,
-    '',
-    'That row shows opencode found the plugin. It stays when the plugin then failed to register its skills, so check those too. From your project directory:',
+    'Run `opencode reload`, then check that the skills are registered. From your project directory:',
     '',
     '```',
     `opencode api skill.list -H "x-opencode-directory:$PWD" | grep -c '"id":"${config.bootstrap}"'`,
     '```',
     '',
-    'It prints `1` when the skills are registered and `0` when they are not. This check also works for a local checkout added through the `skills` array.',
+    'It prints `1` when the skills are registered and `0` when they are not. `opencode plugin list` is no check here: it can print `No plugins found` while the plugin is loaded.',
     '',
     `If you already have a skill with the same name as a ${config.name} skill, opencode uses yours and drops the ${config.name} one without a warning. The ${config.name} skill names are common words such as \`plan\`, \`debug\` and \`verify\`, so check for a clash.`,
     '',
