@@ -692,15 +692,15 @@ Added after Task 8 halted on this test: on win32 `join` builds `skills\brainstor
 **Files:**
 - Modify: `tests/no-external-references.test.mjs:5`, `tests/no-external-references.test.mjs:24`
 
-- [ ] Step 1: In `tests/no-external-references.test.mjs`, delete line 5 `import { join } from 'node:path'`, and replace line 24 `    .map(entry => join('skills', entry.name, 'SKILL.md'))` with:
+- [x] Step 1: In `tests/no-external-references.test.mjs`, delete line 5 `import { join } from 'node:path'`, and replace line 24 `    .map(entry => join('skills', entry.name, 'SKILL.md'))` with:
 
 ```js
     // Forward slashes on every platform, so the paths compare equal to the literals below.
     .map(entry => `skills/${entry.name}/SKILL.md`)
 ```
 
-- [ ] Step 2: Run `node --test tests/no-external-references.test.mjs`
-- [ ] Step 3: Commit: `test: build shipped skill paths with forward slashes on every platform`
+- [x] Step 2: Run `node --test tests/no-external-references.test.mjs`
+- [x] Step 3: Commit: `test: build shipped skill paths with forward slashes on every platform`
 
 ### Task 8: quick becomes the bootstrap, using-vibekit and the guard leave → verify: `npm run check` exits 0; `node --test` over every `tests/*.test.mjs` except `tests/submission.test.mjs` exits 0; `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` finds no match; `git grep -n using-vibekit -- . ":!docs"` finds no match
 
@@ -719,9 +719,9 @@ Added after Task 8 halted on this test: on win32 `join` builds `skills\brainstor
 - Modify: `HANDOFF.md` (whole file)
 - Regenerate: every generated file
 
-- [ ] Step 1: In `vibekit.config.json`, change `"bootstrap": "using-vibekit",` to `"bootstrap": "quick",`.
-- [ ] Step 2: Run `git rm -r -q skills/using-vibekit lib/gate.mjs tests/gate.test.mjs`
-- [ ] Step 3: In `lib/submission.mjs`, replace the whole `adaptStartup` function (lines 103-113) with:
+- [x] Step 1: In `vibekit.config.json`, change `"bootstrap": "using-vibekit",` to `"bootstrap": "quick",`.
+- [x] Step 2: Run `git rm -r -q skills/using-vibekit lib/gate.mjs tests/gate.test.mjs`
+- [x] Step 3: In `lib/submission.mjs`, replace the whole `adaptStartup` function (lines 103-113) with:
 
 ```js
 // The submission has no start-up hooks, so its onboarding skill tells the user
@@ -733,18 +733,18 @@ function adaptStartup(text, name) {
 
 and change line 177 from `if (path === \`skills/${config.bootstrap}/SKILL.md\`) data = adaptStartup(data.toString('utf8'))` to `if (path === \`skills/${config.bootstrap}/SKILL.md\`) data = adaptStartup(data.toString('utf8'), config.bootstrap)`.
 
-- [ ] Step 4: In `tests/submission.test.mjs`: on line 43 change `'skills/using-vibekit/SKILL.md'` to `'skills/quick/SKILL.md'`. On line 72 change `'skills/using-vibekit/SKILL.md'` to `'skills/quick/SKILL.md'`. Delete line 73 (`assert.match(staged, /\[auto-trigger table\]...`), line 74 (`assert.match(staged, /If no dedicated invocation tool is available/)`) and line 76 (`assert.match(staged, /System and developer instructions take precedence/)`), and after line 75 (`assert.match(staged, /Activate Vibekit explicitly/)`) add `assert.match(staged, /use the quick skill/)`. Delete the whole test `source adaptation mismatch fails without replacing an existing artifact` (lines 205-213 including its closing `})` and the blank line after it).
-- [ ] Step 5: In `submission/README.md`, on line 28 change `"Use Vibekit and invoke the using-vibekit skill for this conversation."` to `"Use Vibekit and invoke the quick skill for this conversation."`. On line 39 change ``activate `using-vibekit`, and ask for the trigger row for `brainstorm`.`` to ``activate `quick`, and ask for the trigger row for `brainstorm`.``
-- [ ] Step 6: In `tests/helpers.mjs` line 31 change `bootstrap: 'using-vibekit',` to `bootstrap: 'quick',`. In `tests/model.test.mjs` replace every `using-vibekit` with `quick`. In `tests/build.test.mjs` lines 91-97 replace every `using-vibekit` with `quick`. In `tests/skeleton.test.mjs` line 17 change `['using-vibekit', 'vibe']` to `['quick', 'vibe']`.
-- [ ] Step 7: In `tests/eval-score.test.mjs` line 499, `evals/fixtures/skill-fired.jsonl` line 1 and `evals/fixtures/skill-unavailable.jsonl` line 1, replace `vibekit:using-vibekit` with `vibekit:quick`.
-- [ ] Step 8: In `skills/vibe/SKILL.md` line 11, replace ``every skill's `Handoff` section names its successor, and `using-vibekit` carries the trigger map.`` with ``every skill's `Handoff` section names its successor, and every skill's frontmatter declares its trigger.``
-- [ ] Step 9: In `README.md`, replace the whole of line 13 with:
+- [x] Step 4: In `tests/submission.test.mjs`: on line 43 change `'skills/using-vibekit/SKILL.md'` to `'skills/quick/SKILL.md'`. On line 72 change `'skills/using-vibekit/SKILL.md'` to `'skills/quick/SKILL.md'`. Delete line 73 (`assert.match(staged, /\[auto-trigger table\]...`), line 74 (`assert.match(staged, /If no dedicated invocation tool is available/)`) and line 76 (`assert.match(staged, /System and developer instructions take precedence/)`), and after line 75 (`assert.match(staged, /Activate Vibekit explicitly/)`) add `assert.match(staged, /use the quick skill/)`. Delete the whole test `source adaptation mismatch fails without replacing an existing artifact` (lines 205-213 including its closing `})` and the blank line after it).
+- [x] Step 5: In `submission/README.md`, on line 28 change `"Use Vibekit and invoke the using-vibekit skill for this conversation."` to `"Use Vibekit and invoke the quick skill for this conversation."`. On line 39 change ``activate `using-vibekit`, and ask for the trigger row for `brainstorm`.`` to ``activate `quick`, and ask for the trigger row for `brainstorm`.``
+- [x] Step 6: In `tests/helpers.mjs` line 31 change `bootstrap: 'using-vibekit',` to `bootstrap: 'quick',`. In `tests/model.test.mjs` replace every `using-vibekit` with `quick`. In `tests/build.test.mjs` lines 91-97 replace every `using-vibekit` with `quick`. In `tests/skeleton.test.mjs` line 17 change `['using-vibekit', 'vibe']` to `['quick', 'vibe']`.
+- [x] Step 7: In `tests/eval-score.test.mjs` line 499, `evals/fixtures/skill-fired.jsonl` line 1 and `evals/fixtures/skill-unavailable.jsonl` line 1, replace `vibekit:using-vibekit` with `vibekit:quick`.
+- [x] Step 8: In `skills/vibe/SKILL.md` line 11, replace ``every skill's `Handoff` section names its successor, and `using-vibekit` carries the trigger map.`` with ``every skill's `Handoff` section names its successor, and every skill's frontmatter declares its trigger.``
+- [x] Step 9: In `README.md`, replace the whole of line 13 with:
 
 ```
 Every session starts with `quick`, `lazy`, `plain` and `terse` already loaded. A start-up hook injects their full text in Claude Code, Codex and Antigravity, and the plugin does it in OpenCode and pi. On Windows the hooks need Git for Windows.
 ```
 
-- [ ] Step 10: Replace `HANDOFF.md` with:
+- [x] Step 10: Replace `HANDOFF.md` with:
 
 ```markdown
 # Handoff: test vibekit on Windows
@@ -796,11 +796,11 @@ For each installed runtime, record the version, then ask `do you have vibekit? q
 Write the results to `windows-test-results.md` in the repo root (do not commit it), one table row per check with the command and its output as evidence. End with every failure, its most likely cause and the file a fix would touch, and say which checks you could not run and why.
 ```
 
-- [ ] Step 11: Run `npm run generate`
-- [ ] Step 12: Run `npm run check`
-- [ ] Step 13: Run `node --test` with every file matched by `tests/*.test.mjs` except `tests/submission.test.mjs` as arguments (in PowerShell: `node --test (Get-ChildItem tests\*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)`)
-- [ ] Step 14: Run `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` and `git grep -n using-vibekit -- . ":!docs"`
-- [ ] Step 15: Commit: `feat: quick, lazy, plain and terse load at session start; remove the edit guard and using-vibekit`
+- [x] Step 11: Run `npm run generate`
+- [x] Step 12: Run `npm run check`
+- [x] Step 13: Run `node --test` with every file matched by `tests/*.test.mjs` except `tests/submission.test.mjs` as arguments (in PowerShell: `node --test (Get-ChildItem tests\*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)`)
+- [x] Step 14: Run `git grep -n -i -E "edit-gate|denyReason|missingSkills|VIBEKIT_GATE|PreToolUse" -- . ":!docs" ":!tests"` and `git grep -n using-vibekit -- . ":!docs"`
+- [x] Step 15: Commit: `feat: quick, lazy, plain and terse load at session start; remove the edit guard and using-vibekit`
 
 ### Task 9: live checks on this Windows machine → verify: `windows-test-results.md` in the main checkout has a round-two table with a row per runtime for the start-up question and the write, and every row reads pass
 
