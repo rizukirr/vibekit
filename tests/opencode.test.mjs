@@ -136,6 +136,14 @@ test('pushes each start skill into the system prompt, saying vibekit is present 
   assert.doesNotMatch(context.system[1].text, /You have vibekit/)
 })
 
+test('start blocks carry no carriage return from CRLF skill files', async t => {
+  const { plugin } = await load(started, t, [], '\r\n')
+  const context = { system: [] }
+  await (await hooked(plugin))['session.context'](context)
+  assert.equal(context.system.length, 2)
+  assert.equal(context.system.filter(part => part.text.includes('\r')).length, 0)
+})
+
 test('registers no edit guard', async t => {
   const { plugin } = await load(started, t)
   assert.deepEqual(Object.keys(await hooked(plugin)), ['session.context'])

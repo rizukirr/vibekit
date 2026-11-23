@@ -41,7 +41,7 @@ export default {
     const start = []
     for (const [index, name] of START.entries()) {
       try {
-        start.push(startText(name, body(name), index === 0))
+        start.push(startText(name, body(name).replace(/\\r/g, ''), index === 0))
       } catch {}
     }
     if (start.length) {

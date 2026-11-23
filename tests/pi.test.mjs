@@ -17,14 +17,14 @@ const started = {
 // The extension finds its skills at ../skills relative to itself, so it is
 // imported from a throwaway tree shaped like the shipped package, then handed
 // a stand-in for pi that keeps each registered handler.
-async function load(t, missing = []) {
+async function load(t, missing = [], eol = '\n') {
   const root = realpathSync(mkdtempSync(join(tmpdir(), 'vibekit-pi-')))
   t.after(() => rmSync(root, { recursive: true, force: true }))
   writeFileSync(join(root, 'package.json'), '{"type":"module"}')
   for (const { name } of started.skills) {
     if (missing.includes(name)) continue
     mkdirSync(join(root, 'skills', name), { recursive: true })
-    writeFileSync(join(root, 'skills', name, 'SKILL.md'), skillFile({ name }))
+    writeFileSync(join(root, 'skills', name, 'SKILL.md'), skillFile({ name }).replace(/\n/g, eol))
   }
   mkdirSync(join(root, '.pi'))
   const file = join(root, '.pi/vibekit.js')
@@ -58,6 +58,13 @@ test('skips a start skill whose file is missing and keeps the rest', async t => 
   const { systemPrompt } = await handlers.before_agent_start({ prompt: 'hi', systemPrompt: 'base' })
   assert.match(systemPrompt, /full content of the alpha skill/)
   assert.doesNotMatch(systemPrompt, /full content of the lazy skill/)
+})
+
+test('the system prompt carries no carriage return from CRLF skill files', async t => {
+  const handlers = await load(t, [], '\r\n')
+  const { systemPrompt } = await handlers.before_agent_start({ prompt: 'hi', systemPrompt: 'base' })
+  assert.match(systemPrompt, /full content of the lazy skill/)
+  assert.ok(!systemPrompt.includes('\r'))
 })
 
 test('registers no tool_call guard', async t => {

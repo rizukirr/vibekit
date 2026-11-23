@@ -34,3 +34,9 @@ test('emits one SessionStart hook per start skill that cmd.exe and sh both run, 
   )
   assert.equal(hooks.PreToolUse, undefined)
 })
+
+test('a new skill whose description ends Stays on after. gets its own start hook', () => {
+  const zeta = { name: 'zeta', description: 'Zeta. Stays on after.', trigger: 't', command: false, gate: 'none', dir: 'zeta' }
+  const hooks = JSON.parse(emit({ ...MODEL, skills: [...MODEL.skills, zeta] })['hooks.json']).vibekit.SessionStart
+  assert.ok(hooks.some(entry => entry.command.endsWith(' session-start antigravity zeta')))
+})

@@ -40,6 +40,12 @@ test('emits no PreToolUse hook', () => {
   assert.equal(JSON.parse(emit(MODEL)['hooks/hooks.json']).hooks.PreToolUse, undefined)
 })
 
+test('a new skill whose description ends Stays on after. gets its own start hook', () => {
+  const zeta = { name: 'zeta', description: 'Zeta. Stays on after.', trigger: 't', command: false, gate: 'none', dir: 'zeta' }
+  const hooks = JSON.parse(emit({ ...MODEL, skills: [...MODEL.skills, zeta] })['hooks/hooks.json']).hooks.SessionStart[0].hooks
+  assert.ok(hooks.some(hook => hook.command.endsWith(' session-start zeta')))
+})
+
 test('emits no markdown command, because a plugin command hides the skill of the same name', () => {
   assert.ok(MODEL.skills.some(s => s.command))
   const files = emit(MODEL)
