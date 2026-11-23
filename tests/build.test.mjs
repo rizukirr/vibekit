@@ -88,13 +88,13 @@ test('applyRegions mutates in place and returns nothing', () => {
 })
 
 test('throws when the config names an emitter that does not exist', async () => {
-  const { root, cleanup } = makeSkillsDir({ 'using-vibekit': skillFile({ name: 'using-vibekit' }) })
+  const { root, cleanup } = makeSkillsDir({ 'quick': skillFile({ name: 'quick' }) })
   try {
     writeFileSync(join(root, 'vibekit.config.json'), JSON.stringify({
       ...MODEL.config, runtimes: ['no-such-runtime'],
     }))
     mkdirSync(join(root, 'skills'), { recursive: true })
-    cpSync(join(root, 'using-vibekit'), join(root, 'skills', 'using-vibekit'), { recursive: true })
+    cpSync(join(root, 'quick'), join(root, 'skills', 'quick'), { recursive: true })
     await assert.rejects(() => build(root), /runtimes\/no-such-runtime\.mjs could not be loaded/)
   } finally { cleanup() }
 })

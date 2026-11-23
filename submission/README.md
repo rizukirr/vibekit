@@ -25,7 +25,7 @@ The builder checks identity, listing text, declared icons, local Markdown resour
 
 ## Activate in Codex
 
-After installing the package in a compatible Codex environment, explicitly ask: "Use Vibekit and invoke the using-vibekit skill for this conversation." Start each new conversation with explicit activation when needed. The submission has no session startup hook. The onboarding skill links to the packaged trigger reference. A plugin-root `AGENTS.md` is a referenced resource, and is not assumed to load automatically.
+After installing the package in a compatible Codex environment, explicitly ask: "Use Vibekit and invoke the quick skill for this conversation." Start each new conversation with explicit activation when needed. The submission has no session startup hook. The onboarding skill links to the packaged trigger reference. A plugin-root `AGENTS.md` is a referenced resource, and is not assumed to load automatically.
 
 Use Codex's skill invocation mechanism when available. When the host has no dedicated invocation tool, read the matching bundled `skills/<name>/SKILL.md` and follow it. System and developer instructions retain priority over skill guidance.
 
@@ -36,7 +36,7 @@ The staged startup skill adapts invocation, resource lookup, activation, and ins
 Status: not run for this submission archive. Local ZIP tests and existing runtime installation evidence do not prove a clean Codex session can execute this package's workflow.
 
 1. Use a fresh Codex profile and an empty disposable project, without the repository's existing hooks or project instructions. Install the extracted package through the current supported development installation flow described in the [testing guide](https://developers.openai.com/plugins/deploy/connect-chatgpt).
-2. Confirm all packaged skills are discoverable. Start a new conversation, activate `using-vibekit`, and ask for the trigger row for `brainstorm`. Confirm the host reads the packaged resource and does not request `CLAUDE.md` or a mandatory `Skill` tool.
+2. Confirm all packaged skills are discoverable. Start a new conversation, activate `quick`, and ask for the trigger row for `brainstorm`. Confirm the host reads the packaged resource and does not request `CLAUDE.md` or a mandatory `Skill` tool.
 3. Ask Vibekit to plan a small coding change. Confirm the approval gate runs before any implementation. If the host supports fresh subagents and tool restrictions, continue through an approved plan, execution and verification in the disposable project. Otherwise record that limitation.
 4. Start another clean conversation and confirm explicit activation works without startup hooks. Record the Codex version, profile setup, prompts, observed tool calls and results before claiming runtime support.
 

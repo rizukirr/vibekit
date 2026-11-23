@@ -27,7 +27,7 @@ This form is available once vibekit is published to the repository's default bra
 Run `opencode reload`, then check that the skills are registered. From your project directory:
 
 ```
-opencode api skill.list -H "x-opencode-directory:$PWD" | grep -c '"id":"using-vibekit"'
+opencode api skill.list -H "x-opencode-directory:$PWD" | grep -c '"id":"quick"'
 ```
 
 It prints `1` when the skills are registered and `0` when they are not. `opencode plugin list` is no check here: it can print `No plugins found` while the plugin is loaded.

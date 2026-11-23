@@ -3,7 +3,7 @@
     "SessionStart": [
       {
         "type": "command",
-        "command": "hooks\\run-hook.cmd session-start antigravity using-vibekit || ./hooks/run-hook.cmd session-start antigravity using-vibekit"
+        "command": "hooks\\run-hook.cmd session-start antigravity quick || ./hooks/run-hook.cmd session-start antigravity quick"
       },
       {
         "type": "command",

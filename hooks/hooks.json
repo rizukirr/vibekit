@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start using-vibekit",
-            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start using-vibekit",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start quick",
+            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start quick",
             "shell": "bash",
             "async": false
           },

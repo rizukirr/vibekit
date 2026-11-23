@@ -16,11 +16,10 @@ const LIST = [
   {"name":"repl","description":"Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."},
   {"name":"retro","description":"Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."},
   {"name":"terse","description":"Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after."},
-  {"name":"using-vibekit","description":"Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped."},
   {"name":"verify","description":"Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen."},
   {"name":"vibe","description":"Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else."},
 ]
-const START = ["using-vibekit","lazy","plain","terse"]
+const START = ["quick","lazy","plain","terse"]
 const startText = (name, body, first) => '<EXTREMELY_IMPORTANT>\n' + (first ? 'You have vibekit.\n\n' : '') + 'Below is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
 
 function body(name) {

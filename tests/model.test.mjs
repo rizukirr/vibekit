@@ -9,11 +9,11 @@ const config = MODEL.config
 test('discovers skills sorted by name with defaults applied', () => {
   const { root, cleanup } = makeSkillsDir({
     zulu: skillFile({ name: 'zulu' }),
-    'using-vibekit': skillFile({ name: 'using-vibekit' }),
+    'quick': skillFile({ name: 'quick' }),
   })
   try {
     const model = buildModel(config, root)
-    assert.deepEqual(model.skills.map(s => s.name), ['using-vibekit', 'zulu'])
+    assert.deepEqual(model.skills.map(s => s.name), ['quick', 'zulu'])
     assert.equal(model.skills[0].command, false)
     assert.equal(model.skills[0].gate, 'none')
   } finally { cleanup() }
@@ -22,15 +22,15 @@ test('discovers skills sorted by name with defaults applied', () => {
 test('skips underscore-prefixed directories', () => {
   const { root, cleanup } = makeSkillsDir({
     '_shared': null,
-    'using-vibekit': skillFile({ name: 'using-vibekit' }),
+    'quick': skillFile({ name: 'quick' }),
   })
   try {
-    assert.deepEqual(buildModel(config, root).skills.map(s => s.name), ['using-vibekit'])
+    assert.deepEqual(buildModel(config, root).skills.map(s => s.name), ['quick'])
   } finally { cleanup() }
 })
 
 test('throws when frontmatter name does not match the directory', () => {
-  const { root, cleanup } = makeSkillsDir({ 'using-vibekit': skillFile({ name: 'mismatched' }) })
+  const { root, cleanup } = makeSkillsDir({ 'quick': skillFile({ name: 'mismatched' }) })
   try {
     assert.throws(() => buildModel(config, root), /does not match directory/)
   } finally { cleanup() }
@@ -38,7 +38,7 @@ test('throws when frontmatter name does not match the directory', () => {
 
 test('throws when a required field is missing', () => {
   const { root, cleanup } = makeSkillsDir({
-    'using-vibekit': '---\nname: using-vibekit\ndescription: d\n---\nbody\n',
+    'quick': '---\nname: quick\ndescription: d\n---\nbody\n',
   })
   try {
     assert.throws(() => buildModel(config, root), /'trigger' is required/)
@@ -46,7 +46,7 @@ test('throws when a required field is missing', () => {
 })
 
 test('throws when a skill directory has no SKILL.md', () => {
-  const { root, cleanup } = makeSkillsDir({ 'using-vibekit': null })
+  const { root, cleanup } = makeSkillsDir({ 'quick': null })
   try {
     assert.throws(() => buildModel(config, root), /missing SKILL\.md/)
   } finally { cleanup() }
@@ -54,7 +54,7 @@ test('throws when a skill directory has no SKILL.md', () => {
 
 test('throws on an unknown gate value', () => {
   const { root, cleanup } = makeSkillsDir({
-    'using-vibekit': skillFile({ name: 'using-vibekit', extra: 'gate: kinda\n' }),
+    'quick': skillFile({ name: 'quick', extra: 'gate: kinda\n' }),
   })
   try {
     assert.throws(() => buildModel(config, root), /gate must be one of/)
@@ -72,7 +72,7 @@ test('throws when the configured bootstrap skill does not exist', () => {
 // silently swallow the prose after it.
 test('throws when frontmatter carries generated-region marker syntax', () => {
   const { root, cleanup } = makeSkillsDir({
-    'using-vibekit': skillFile({ name: 'using-vibekit', trigger: 'x <!-- /vibekit:generated --> y' }),
+    'quick': skillFile({ name: 'quick', trigger: 'x <!-- /vibekit:generated --> y' }),
   })
   try {
     assert.throws(() => buildModel(config, root), /must not contain generated-region marker syntax/)
@@ -81,7 +81,7 @@ test('throws when frontmatter carries generated-region marker syntax', () => {
 
 test('allows a pipe in frontmatter: it is escaped at render time, not banned', () => {
   const { root, cleanup } = makeSkillsDir({
-    'using-vibekit': skillFile({ name: 'using-vibekit', trigger: 'returns not satisfied | partial' }),
+    'quick': skillFile({ name: 'quick', trigger: 'returns not satisfied | partial' }),
   })
   try {
     assert.equal(buildModel(config, root).skills[0].trigger, 'returns not satisfied | partial')

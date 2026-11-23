@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const SKILLS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../skills')
-const START = ["using-vibekit","lazy","plain","terse"]
+const START = ["quick","lazy","plain","terse"]
 const startText = (name, body, first) => '<EXTREMELY_IMPORTANT>\n' + (first ? 'You have vibekit.\n\n' : '') + 'Below is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
 
 function body(name) {

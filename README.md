@@ -10,7 +10,7 @@ Most requests never need the full pipeline. `quick` is the default: it checks th
 
 Six skills are gates. In the full pipeline, every stage hands to the next, and no stage can skip the one before it.
 
-A guard backs this up in Claude Code, Codex, OpenCode, pi and Antigravity. The agent cannot write or edit a file until it has run one of vibekit's working skills, usually `quick`, and has loaded `lazy`, `terse` and `plain`. The denial tells it which skills are missing. Helper agents that vibekit dispatches are let through, except in pi. Commands run in a shell are not checked. To turn the check off for a session, set `VIBEKIT_GATE=off` in its environment.
+Every session starts with `quick`, `lazy`, `plain` and `terse` already loaded. A start-up hook injects their full text in Claude Code, Codex and Antigravity, and the plugin does it in OpenCode and pi. On Windows the hooks need Git for Windows.
 
 ```
 /vibekit:vibe "add a dark mode toggle"
@@ -48,7 +48,6 @@ Two rules run through all of it. **Evidence or it did not happen**, because a ch
 | `repl` | Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide. | none |
 | `retro` | Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks. | none |
 | `terse` | Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after. | none |
-| `using-vibekit` | Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped. | none |
 | `verify` | Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen. | hard |
 | `vibe` | Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else. | none |
 <!-- /vibekit:generated -->
@@ -97,7 +96,7 @@ agy plugin install https://github.com/rizukirr/vibekit
 
 Verify with `agy plugin list`. Re-run the install command to update.
 
-The install reports `hooks: skipped (not found)`, which is expected. vibekit's hook is Claude Code's `SessionStart`, and Antigravity has no session-start event: its five events are `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation` and `Stop`. The auto-trigger map reaches the model through `rules/AGENTS.md` instead, which Antigravity loads as always-on rules.
+The root `hooks.json` runs `hooks/run-hook.cmd` at session start, once per start skill. The auto-trigger map also reaches the model through `rules/AGENTS.md`, which Antigravity loads as always-on rules.
 
 **Pi**
 
