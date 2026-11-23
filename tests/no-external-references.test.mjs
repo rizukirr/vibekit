@@ -2,7 +2,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
 
 // vibekit absorbs ideas from the projects in external/; it never depends on them.
 // Naming one in a shipped file implies a dependency the user does not have, and
@@ -21,7 +20,8 @@ function withoutCredits(text) {
 function shippedFiles() {
   const skills = readdirSync('skills', { withFileTypes: true })
     .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
-    .map(entry => join('skills', entry.name, 'SKILL.md'))
+    // Forward slashes on every platform, so the paths compare equal to the literals below.
+    .map(entry => `skills/${entry.name}/SKILL.md`)
   return [...skills, 'README.md', 'CLAUDE.md', 'AGENTS.md']
 }
 
