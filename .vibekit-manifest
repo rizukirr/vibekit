@@ -12,6 +12,7 @@ commands/quick.toml
 commands/repl.toml
 commands/retro.toml
 commands/vibe.toml
+hooks.json
 hooks/hooks.json
 package.json
 plugin.json

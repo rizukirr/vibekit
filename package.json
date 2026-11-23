@@ -40,6 +40,7 @@
     "LICENSE",
     "README.md",
     "commands/",
+    "hooks.json",
     "hooks/",
     "plugin.json",
     "rules/AGENTS.md",
