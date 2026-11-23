@@ -19,7 +19,7 @@
 - Modify: `.github/workflows/ci.yml` (append after line 51)
 - Modify: `tests/ci.test.mjs` (append one test)
 
-- [ ] Step 1: Append to `.github/workflows/ci.yml`, after line 51 (`        run: npm run check:hook`), keeping the file's two-space indentation:
+- [x] Step 1: Append to `.github/workflows/ci.yml`, after line 51 (`        run: npm run check:hook`), keeping the file's two-space indentation:
 
 ```yaml
 
@@ -32,7 +32,7 @@
         run: node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)
 ```
 
-- [ ] Step 2: Append to `tests/ci.test.mjs`:
+- [x] Step 2: Append to `tests/ci.test.mjs`:
 
 ```js
 
@@ -42,10 +42,10 @@ test('the hook job runs the unit tests on windows, without the submission tests'
 })
 ```
 
-- [ ] Step 3: Run `node --test tests/ci.test.mjs`
-- [ ] Step 4: From the worktree root in PowerShell, run `node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)` and record its exit status.
-- [ ] Step 5: Run `git worktree add --detach C:\Users\rizki\AppData\Local\Temp\claude\9c6dcc25bed50afc\6372b2f8-fbb4-486d-bb8b-88c065b1de4b\scratchpad\wt-retro-base 3f800da`, run the same command from that folder in PowerShell, record its exit status and whether its output names the test `the guard covers every skill plus all three generated docs` as failing (spec goal 2), then run `git worktree remove --force C:\Users\rizki\AppData\Local\Temp\claude\9c6dcc25bed50afc\6372b2f8-fbb4-486d-bb8b-88c065b1de4b\scratchpad\wt-retro-base`.
-- [ ] Step 6: Commit `.github/workflows/ci.yml` and `tests/ci.test.mjs`: `ci: run the unit tests on the windows-latest hook job`
+- [x] Step 3: Run `node --test tests/ci.test.mjs`
+- [x] Step 4: From the worktree root in PowerShell, run `node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)` and record its exit status.
+- [x] Step 5: Run `git worktree add --detach C:\Users\rizki\AppData\Local\Temp\claude\9c6dcc25bed50afc\6372b2f8-fbb4-486d-bb8b-88c065b1de4b\scratchpad\wt-retro-base 3f800da`, run the same command from that folder in PowerShell, record its exit status and whether its output names the test `the guard covers every skill plus all three generated docs` as failing (spec goal 2), then run `git worktree remove --force C:\Users\rizki\AppData\Local\Temp\claude\9c6dcc25bed50afc\6372b2f8-fbb4-486d-bb8b-88c065b1de4b\scratchpad\wt-retro-base`.
+- [x] Step 6: Commit `.github/workflows/ci.yml` and `tests/ci.test.mjs`: `ci: run the unit tests on the windows-latest hook job`
 
 ### Task 2: the step runs green in CI → verify: in the newest CI run for pull request #74, the `hook (windows-latest)` job log contains the step name written in Task 1 Step 1, and the job concludes `success`
 
