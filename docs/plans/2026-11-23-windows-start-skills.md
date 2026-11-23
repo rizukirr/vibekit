@@ -806,6 +806,9 @@ In every step, `<worktree>` is `C:\Users\rizki\Projects\vibekit\.vibe-worktrees\
 
 **Files:** none changed
 
-- [ ] Step 1: After the user's approval, push `repl-run/windows-start-skills` to `origin`.
-- [ ] Step 2: Run `gh run list --branch repl-run/windows-start-skills --workflow CI --limit 1` and wait for that run to finish.
-- [ ] Step 3: Run `gh run view <run id> --json jobs` and read the conclusion of the `hook (windows-latest)` job.
+CI runs on pushes to `main` and `v2` and on pull requests only (`.github/workflows/ci.yml:3-6`), so the job needs a draft pull request.
+
+- [ ] Step 1: Run `git rm -r -q --cached --ignore-unmatch docs` and commit `chore: keep specs and plans out of the PR`, so specs and plans never reach `main`. The files stay on disk.
+- [ ] Step 2: After the user's approval, push `repl-run/windows-start-skills` to `origin` and open a draft pull request against `main` with `gh pr create --draft`.
+- [ ] Step 3: Run `gh run list --branch repl-run/windows-start-skills --workflow CI --limit 1` and wait for that run to finish.
+- [ ] Step 4: Run `gh run view <the run id from Step 3> --json jobs` and read the conclusion of the `hook (windows-latest)` job.
