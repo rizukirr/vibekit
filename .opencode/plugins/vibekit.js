@@ -16,19 +16,11 @@ const LIST = [
   {"name":"repl","description":"Use when the user types /vibekit:repl: brainstorms and plans without the user, shows a plain summary and waits for a go, then carries exec, verify and debug to the end with no human input, deciding by decide's rules and stopping only for what the user alone can decide."},
   {"name":"retro","description":"Use when a run ended and a debug report in it carried a Class: other than none, or when the user types /vibekit:retro: looks back over this session's failures and friction, proposes checks and rules that would catch them next time, and writes only what the user picks."},
   {"name":"terse","description":"Use at the start of every session. Compress narration, never artifacts. Questions, evidence, specs, plans and warnings stay verbatim. Stays on after."},
-  {"name":"using-vibekit","description":"Use when starting any conversation: establishes the auto-trigger discipline so guardrail skills fire instead of being silently skipped."},
   {"name":"verify","description":"Use before claiming a change is done, fixed or passing: checks the whole change against its spec, runs the checks no single task could, hunts for the bugs the change produced, and returns ready or not ready. Evidence or it did not happen."},
   {"name":"vibe","description":"Run a short intent through the pipeline. Invoked as /vibekit:vibe. Hands off to brainstorm and does nothing else."},
 ]
-const BOOTSTRAP = "using-vibekit"
-const PIPELINE = ["brainstorm","debug","exec","plan","quick","repl","retro","verify","vibe"]
-const MODIFIERS = ["lazy","plain","terse"]
-const missingSkills = (loaded, pipeline, modifiers) => [
-  ...(pipeline.some(name => loaded.has(name)) ? [] : ['quick']),
-  ...modifiers.filter(name => !loaded.has(name)),
-]
-const denyReason = missing => 'vibekit denied this edit, so the file was not changed. Load each of these vibekit skills first, in order:' + missing.map(name => ' vibekit:' + name).join('') + '. Then retry the edit. Retrying first is denied again. To turn this check off, set VIBEKIT_GATE=off.'
-const startText = (name, body) => '<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\nBelow is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
+const START = ["quick","lazy","plain","terse"]
+const startText = (name, body, first) => '<EXTREMELY_IMPORTANT>\n' + (first ? 'You have vibekit.\n\n' : '') + 'Below is the full content of the ' + name + ' skill. Load every other vibekit skill the way this tool loads skills.\n\n' + body + '\n</EXTREMELY_IMPORTANT>'
 
 function body(name) {
   return readFileSync(path.join(SKILLS, name, 'SKILL.md'), 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/, '')
@@ -43,53 +35,16 @@ export default {
       }
     })
 
-    const loaded = new Map()
-    const mark = (sessionID, name) => {
-      if (!loaded.has(sessionID)) loaded.set(sessionID, new Set())
-      loaded.get(sessionID).add(name)
+    const start = []
+    for (const [index, name] of START.entries()) {
+      try {
+        start.push(startText(name, body(name).replace(/\r/g, ''), index === 0))
+      } catch {}
     }
-
-    let start = ''
-    try {
-      start = startText(BOOTSTRAP, body(BOOTSTRAP))
-    } catch {}
-    if (start) {
+    if (start.length) {
       await ctx.session?.hook?.('context', async context => {
-        context.system.push({ type: 'text', text: start })
+        for (const text of start) context.system.push({ type: 'text', text })
       })
     }
-
-    // The model loads a skill through the skill tool. A skill the user
-    // starts directly arrives as a session.skill.activated event instead.
-    await ctx.tool?.hook?.('execute.after', async event => {
-      if (event.tool === 'skill' && event.status === 'completed' && event.input?.id) mark(event.sessionID, event.input.id)
-    })
-    const events = ctx.event?.subscribe?.()
-    if (events) {
-      ;(async () => {
-        try {
-          for await (const event of events) {
-            if (event?.type !== 'session.skill.activated') continue
-            const data = event.properties ?? event
-            if (data.sessionID && data.id) mark(data.sessionID, data.id)
-          }
-        } catch {}
-      })()
-    }
-
-    // A session with a parentID is a subagent, dispatched by a stage that
-    // already passed the guard.
-    await ctx.permission?.hook?.('evaluate', async event => {
-      if (event.action !== 'edit' || process.env.VIBEKIT_GATE === 'off') return
-      try {
-        const session = await ctx.session.get({ sessionID: event.sessionID })
-        if (session?.parentID) return
-        const missing = missingSkills(loaded.get(event.sessionID) ?? new Set(), PIPELINE, MODIFIERS)
-        if (missing.length) {
-          event.effect = 'deny'
-          event.message = denyReason(missing)
-        }
-      } catch {}
-    })
   },
 }

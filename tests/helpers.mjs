@@ -28,7 +28,7 @@ export const MODEL = {
     license: 'MIT',
     homepage: 'https://github.com/rizukirr/vibekit',
     repository: 'https://github.com/rizukirr/vibekit',
-    bootstrap: 'using-vibekit',
+    bootstrap: 'quick',
     runtimes: ['claude-code', 'codex'],
     keywords: ['vibekit', 'skills'],
     npm: {

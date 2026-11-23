@@ -54,3 +54,10 @@ test('does not throw when a quoted value contains colon-space', () => {
   const { data } = parseFrontmatter('---\ntrigger: "run and then: do more"\n---\nbody\n')
   assert.equal(data.trigger, 'run and then: do more')
 })
+
+test('parses a file with CRLF line endings', () => {
+  const { data, body } = parseFrontmatter('---\r\nname: foo\r\ndescription: does a thing\r\n---\r\n# Foo\r\n')
+  assert.equal(data.name, 'foo')
+  assert.equal(data.description, 'does a thing')
+  assert.equal(body, '# Foo\r\n')
+})

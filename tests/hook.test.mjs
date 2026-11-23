@@ -2,18 +2,17 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { denyReason } from '../lib/gate.mjs'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { buildModel } from '../lib/model.mjs'
+import { startSkills } from '../lib/start.mjs'
 
 const config = JSON.parse(readFileSync('vibekit.config.json', 'utf8'))
+const skills = startSkills(buildModel(config, 'skills'))
 
-function runHook(env, runtime) {
-  const extra = runtime ? [runtime] : []
+function runHook(env, ...args) {
   const command = process.platform === 'win32'
-    ? { file: 'hooks\\run-hook.cmd', args: ['session-start', ...extra], shell: true }
-    : { file: 'bash', args: ['hooks/run-hook.cmd', 'session-start', ...extra], shell: false }
+    ? { file: 'hooks\\run-hook.cmd', args: ['session-start', ...args], shell: true }
+    : { file: 'bash', args: ['hooks/run-hook.cmd', 'session-start', ...args], shell: false }
   return execFileSync(command.file, command.args, {
     encoding: 'utf8',
     shell: command.shell,
@@ -21,29 +20,40 @@ function runHook(env, runtime) {
   })
 }
 
-test('emits Claude Code shaped context containing the bootstrap skill', () => {
-  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: process.cwd(), COPILOT_CLI: '' }))
-  const context = parsed.hookSpecificOutput.additionalContext
-  assert.equal(parsed.hookSpecificOutput.hookEventName, 'SessionStart')
-  assert.ok(context.includes(config.bootstrap), 'context must name the bootstrap skill')
-  assert.ok(context.includes('auto-trigger discipline'), 'context must carry the skill body')
+const claude = { CLAUDE_PLUGIN_ROOT: process.cwd(), COPILOT_CLI: '' }
+
+test('emits Claude Code shaped context for every start skill, each under the inline limit', () => {
+  for (const name of skills) {
+    const parsed = JSON.parse(runHook(claude, name))
+    const context = parsed.hookSpecificOutput.additionalContext
+    assert.equal(parsed.hookSpecificOutput.hookEventName, 'SessionStart')
+    assert.ok(context.includes(`full content of the ${name} skill`), name)
+    assert.ok(context.includes(`# ${name}\n`), `${name} body`)
+    assert.ok(!context.includes('\r'), `${name} carries a carriage return`)
+    assert.ok(!context.includes(`\nname: ${name}\n`), `${name} carries its frontmatter`)
+    assert.equal(context.includes('You have vibekit.'), name === config.bootstrap, name)
+    assert.ok(context.length < 10000, `${name} context is ${context.length} characters`)
+  }
 })
 
 test('emits the SDK-standard shape when no platform variable is set', () => {
-  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }))
+  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }, skills[0]))
   assert.ok('additionalContext' in parsed)
   assert.ok(!('hookSpecificOutput' in parsed))
 })
 
-// W4: the hook exits 0 unconditionally, so malformed JSON disables every skill
+test('emits nothing for a skill that does not exist', () => {
+  assert.equal(runHook(claude, 'no-such-skill'), '')
+})
+
+// The hook exits 0 unconditionally, so malformed JSON disables every skill
 // with no error. Escaping must survive a body containing quotes and backslashes.
-test('emits parseable JSON for a bootstrap body containing quotes, backslashes and tabs', () => {
+test('emits parseable JSON for a body containing quotes, backslashes and tabs', () => {
   const path = `skills/${config.bootstrap}/SKILL.md`
   const original = readFileSync(path, 'utf8')
   try {
     writeFileSync(path, `${original}\nHostile: "quoted" \\backslash\\ \ttab\n`)
-    const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: process.cwd(), COPILOT_CLI: '' }))
-    const context = parsed.hookSpecificOutput.additionalContext
+    const context = JSON.parse(runHook(claude, config.bootstrap)).hookSpecificOutput.additionalContext
     assert.ok(context.includes('Hostile:'), 'hostile line must survive escaping')
     assert.ok(context.includes('"quoted"'), 'quotes must survive escaping')
     assert.ok(context.includes('\\backslash\\'), 'backslashes must survive escaping')
@@ -52,138 +62,28 @@ test('emits parseable JSON for a bootstrap body containing quotes, backslashes a
   }
 })
 
-// edit-gate: run the real script through the wrapper, the way Claude Code does.
-const GATE_LIST = 'brainstorm+quick'
-const MODIFIERS = 'lazy+plain+terse'
-
-function runGate(input, env = {}) {
-  const command = process.platform === 'win32'
-    ? { file: 'hooks\\run-hook.cmd', args: ['edit-gate', GATE_LIST, MODIFIERS], shell: true }
-    : { file: 'bash', args: ['hooks/run-hook.cmd', 'edit-gate', GATE_LIST, MODIFIERS], shell: false }
-  return spawnSync(command.file, command.args, {
-    input: JSON.stringify(input),
-    encoding: 'utf8',
-    shell: command.shell,
-    env: { ...process.env, VIBEKIT_GATE: '', ...env },
-  })
-}
-
-function record(...lines) {
-  const path = join(mkdtempSync(join(tmpdir(), 'vibekit-gate-')), 'session.jsonl')
-  writeFileSync(path, `${lines.map(line => JSON.stringify(line)).join('\n')}\n`)
-  return path
-}
-
-const skillCall = skill => ({ message: { content: [{ type: 'tool_use', name: 'Skill', input: { skill } }] } })
-const plainText = text => ({ message: { content: text } })
-const modifiers = ['lazy', 'plain', 'terse'].map(name => skillCall(`vibekit:${name}`))
-
-// The gate denies through a PreToolUse decision on stdout and always exits 0.
-function denial(result) {
-  assert.equal(result.status, 0, result.stderr)
-  if (!result.stdout.trim()) return null
-  const output = JSON.parse(result.stdout).hookSpecificOutput
-  assert.equal(output.hookEventName, 'PreToolUse')
-  assert.equal(output.permissionDecision, 'deny')
-  return output.permissionDecisionReason
-}
-
-test('edit-gate denies an edit when no working skill has run, naming everything missing', () => {
-  const reason = denial(runGate({ transcript_path: record(plainText('hello')) }))
-  assert.equal(reason, denyReason(['quick', 'lazy', 'plain', 'terse']))
-  assert.match(reason, /file was not changed/)
-  assert.match(reason, /VIBEKIT_GATE=off/)
-})
-
-test('edit-gate allows an edit after a Skill call to a working skill', () => {
-  assert.equal(denial(runGate({ transcript_path: record(skillCall('vibekit:quick'), ...modifiers) })), null)
-})
-
-test('edit-gate allows an edit after a typed slash command for a working skill', () => {
-  const path = record(plainText('<command-name>/vibekit:quick</command-name>'), ...modifiers)
-  assert.equal(denial(runGate({ transcript_path: path })), null)
-})
-
-test('edit-gate does not count a modifier skill', () => {
-  assert.match(denial(runGate({ transcript_path: record(...modifiers) })), /vibekit:quick/)
-})
-
-test('edit-gate denies an edit until every modifier has run, naming only the missing ones', () => {
-  const reason = denial(runGate({ transcript_path: record(skillCall('vibekit:quick'), skillCall('vibekit:lazy')) }))
-  assert.match(reason, /vibekit:plain vibekit:terse/)
-  assert.doesNotMatch(reason, /vibekit:(quick|lazy)/)
-})
-
-test('edit-gate does not count a prose mention of a command', () => {
-  assert.match(denial(runGate({ transcript_path: record(plainText('try /vibekit:quick next'), ...modifiers) })), /vibekit:quick/)
-})
-
-test('edit-gate lets a subagent edit through', () => {
-  assert.equal(denial(runGate({ transcript_path: record(plainText('hello')), agent_id: 'sub-1' })), null)
-})
-
-test('edit-gate is off when VIBEKIT_GATE=off', () => {
-  assert.equal(denial(runGate({ transcript_path: record(plainText('hello')) }, { VIBEKIT_GATE: 'off' })), null)
-})
-
-test('edit-gate fails open when the record is missing', () => {
-  assert.equal(denial(runGate({})), null)
-  assert.equal(denial(runGate({ transcript_path: join(tmpdir(), 'vibekit-no-such-record.jsonl') })), null)
-})
-
 test('session-start emits the Antigravity injectSteps shape when asked', () => {
-  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }, 'antigravity'))
-  const text = parsed.injectSteps[0].systemMessage.systemMessage
-  assert.ok(text.includes(config.bootstrap))
-  assert.ok(text.includes('auto-trigger discipline'))
+  const parsed = JSON.parse(runHook({ CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }, 'antigravity', skills[0]))
+  assert.ok(parsed.injectSteps[0].systemMessage.systemMessage.includes(`# ${skills[0]}\n`))
 })
 
-// Codex has no Skill tool. Its model reads SKILL.md with cat inside an exec
-// call, which the session record keeps as a custom_tool_call line.
-const codexRead = file => ({ type: 'response_item', payload: { type: 'custom_tool_call', name: 'exec', input: `text(await tools.exec_command({cmd:"cat ${file}"}));` } })
-
-test('edit-gate counts Codex reads of SKILL.md in tool calls', () => {
-  const path = record(...['quick', 'lazy', 'plain', 'terse'].map(name => codexRead(`/home/u/.codex/plugins/cache/vibekit/vibekit/0.10.3/skills/${name}/SKILL.md`)))
-  assert.equal(denial(runGate({ transcript_path: path, tool_name: 'apply_patch' })), null)
-})
-
-test('edit-gate counts a Codex read through a skill root alias', () => {
-  const path = record(codexRead('r4/quick/SKILL.md r4/lazy/SKILL.md r4/plain/SKILL.md r4/terse/SKILL.md'))
-  assert.equal(denial(runGate({ transcript_path: path })), null)
-})
-
-test('edit-gate ignores skill paths outside a tool call', () => {
-  const listing = plainText('skills: /x/skills/quick/SKILL.md /x/skills/lazy/SKILL.md /x/skills/plain/SKILL.md /x/skills/terse/SKILL.md')
-  assert.match(denial(runGate({ transcript_path: record(listing) })), /vibekit:quick/)
-})
-
-test('edit-gate does not count a skill whose name only ends like a listed one', () => {
-  const path = record(codexRead('/x/notquick/SKILL.md'), ...modifiers)
-  assert.match(denial(runGate({ transcript_path: path })), /vibekit:quick/)
-})
-
-// Antigravity's model loads a skill with read_file, and its transcript keeps
-// the call under tool_calls. Its hook input is camelCase and carries toolCall.
-const agyRead = name => ({ step_index: 1, source: 'MODEL', tool_calls: [{ name: 'read_file', args: { Path: `/p/skills/${name}/SKILL.md` } }] })
-const agyInput = (transcriptPath, extra = {}) => ({ transcriptPath, toolCall: { id: 't1', name: 'write_file', args: { Path: 'x.txt' } }, hookEventName: 'PreToolUse', ...extra })
-
-test('edit-gate denies an Antigravity edit in its own shape', () => {
-  const result = runGate(agyInput(record(agyRead('quick'))))
-  assert.equal(result.status, 0, result.stderr)
-  const output = JSON.parse(result.stdout)
-  assert.equal(output.decision, 'deny')
-  assert.equal(output.reason, denyReason(['lazy', 'plain', 'terse']))
-})
-
-test('edit-gate allows an Antigravity edit once every skill is read', () => {
-  const result = runGate(agyInput(record(...['quick', 'lazy', 'plain', 'terse'].map(agyRead))))
-  assert.equal(result.status, 0, result.stderr)
-  assert.equal(result.stdout.trim(), '')
-})
-
-test('edit-gate lets an Antigravity subagent through', () => {
-  const result = runGate(agyInput(record(plainText('hello')), { parentConversationId: 'c-1' }))
-  assert.equal(result.stdout.trim(), '')
+// agy runs a hook command through cmd.exe on Windows, with or without /s, and
+// through sh elsewhere. Each command in the generated root hooks.json must
+// work under every one of those.
+test('the Antigravity hook commands run the way agy launches them', () => {
+  const env = { ...process.env, CLAUDE_PLUGIN_ROOT: '', CURSOR_PLUGIN_ROOT: '' }
+  for (const { command } of JSON.parse(readFileSync('hooks.json', 'utf8')).vibekit.SessionStart) {
+    const launches = process.platform === 'win32'
+      ? [
+          spawnSync(process.env.ComSpec ?? 'cmd.exe', ['/c', command], { windowsVerbatimArguments: true, encoding: 'utf8', input: '', env }),
+          spawnSync(command, { shell: true, encoding: 'utf8', input: '', env }),
+        ]
+      : [spawnSync('sh', ['-c', command], { encoding: 'utf8', input: '', env })]
+    for (const result of launches) {
+      assert.equal(result.status, 0, `${command}: ${result.stderr}`)
+      assert.ok(JSON.parse(result.stdout).injectSteps[0].systemMessage.systemMessage.includes('<EXTREMELY_IMPORTANT>'), command)
+    }
+  }
 })
 
 // A batch file run through cmd /c that exits from inside an if (...) block

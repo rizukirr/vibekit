@@ -6,20 +6,29 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start quick",
+            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start quick",
             "shell": "bash",
             "async": false
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit|NotebookEdit",
-        "hooks": [
+          },
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" edit-gate brainstorm+debug+exec+plan+quick+repl+retro+verify+vibe lazy+plain+terse",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start lazy",
+            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start lazy",
+            "shell": "bash",
+            "async": false
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start plain",
+            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start plain",
+            "shell": "bash",
+            "async": false
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start terse",
+            "commandWindows": "& \"$env:PLUGIN_ROOT/hooks/run-hook.cmd\" session-start terse",
             "shell": "bash",
             "async": false
           }

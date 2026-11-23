@@ -3,6 +3,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { id, emit, ships, regions } from '../runtimes/antigravity.mjs'
 import { MODEL } from './helpers.mjs'
+import { startSkills } from '../lib/start.mjs'
 
 test('is identified as antigravity', () => {
   assert.equal(id, 'antigravity')
@@ -25,9 +26,17 @@ test('ships the manifest, the hooks file and the rules file', () => {
   assert.ok(paths.includes('rules/AGENTS.md'))
 })
 
-test('emits a root hooks file that loads vibekit and guards agy edit tools', () => {
+test('emits one SessionStart hook per start skill that cmd.exe and sh both run, and no edit guard', () => {
   const hooks = JSON.parse(emit(MODEL)['hooks.json']).vibekit
-  assert.equal(hooks.SessionStart[0].command, './hooks/run-hook.cmd session-start antigravity')
-  assert.equal(hooks.PreToolUse[0].matcher, 'write_file|edit_file')
-  assert.equal(hooks.PreToolUse[0].hooks[0].command, './hooks/run-hook.cmd edit-gate alpha ')
+  assert.deepEqual(
+    hooks.SessionStart.map(entry => entry.command),
+    startSkills(MODEL).map(name => `hooks\\run-hook.cmd session-start antigravity ${name} || ./hooks/run-hook.cmd session-start antigravity ${name}`),
+  )
+  assert.equal(hooks.PreToolUse, undefined)
+})
+
+test('a new skill whose description ends Stays on after. gets its own start hook', () => {
+  const zeta = { name: 'zeta', description: 'Zeta. Stays on after.', trigger: 't', command: false, gate: 'none', dir: 'zeta' }
+  const hooks = JSON.parse(emit({ ...MODEL, skills: [...MODEL.skills, zeta] })['hooks.json']).vibekit.SessionStart
+  assert.ok(hooks.some(entry => entry.command.endsWith(' session-start antigravity zeta')))
 })

@@ -19,7 +19,6 @@ invoked by following the named workflow.
 | Invoked explicitly as a slash command, never fires on its own | `repl` | none |
 | A run ended, and a debug report in it carried a Class: other than none | `retro` | none |
 | First response of the session, invoke once, then it stays on | `terse` | none |
-| Session start | `using-vibekit` | none |
 | Implementation complete, before any claim that work is done | `verify` | hard |
 | Invoked explicitly as a slash command, never fires on its own | `vibe` | none |
 <!-- /vibekit:generated -->

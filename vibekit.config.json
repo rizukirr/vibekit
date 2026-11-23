@@ -6,7 +6,7 @@
   "license": "MIT",
   "homepage": "https://github.com/rizukirr/vibekit",
   "repository": "https://github.com/rizukirr/vibekit",
-  "bootstrap": "using-vibekit",
+  "bootstrap": "quick",
   "runtimes": ["claude-code", "codex", "opencode", "antigravity", "pi"],
   "keywords": ["vibekit", "ai-coding", "vibe-coding", "claude-code", "codex", "agent-skills", "skills"],
   "npm": {

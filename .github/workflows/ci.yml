@@ -49,3 +49,11 @@ jobs:
       # nothing on a Unix dev box can verify it.
       - name: Smoke-test the SessionStart hook
         run: npm run check:hook
+
+      # The unit tests once ran only on ubuntu, so Windows-only failures (CRLF
+      # frontmatter, backslash paths) reached main. The submission tests need
+      # zip and unzip, which this runner lacks, and they run on ubuntu in validate.
+      - name: Unit tests on Windows, without the zip-dependent submission tests
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: node --test (Get-ChildItem tests/*.test.mjs | Where-Object Name -ne 'submission.test.mjs' | ForEach-Object FullName)

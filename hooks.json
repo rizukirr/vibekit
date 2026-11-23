@@ -3,18 +3,19 @@
     "SessionStart": [
       {
         "type": "command",
-        "command": "./hooks/run-hook.cmd session-start antigravity"
-      }
-    ],
-    "PreToolUse": [
+        "command": "hooks\\run-hook.cmd session-start antigravity quick || ./hooks/run-hook.cmd session-start antigravity quick"
+      },
       {
-        "matcher": "write_file|edit_file",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./hooks/run-hook.cmd edit-gate brainstorm+debug+exec+plan+quick+repl+retro+verify+vibe lazy+plain+terse"
-          }
-        ]
+        "type": "command",
+        "command": "hooks\\run-hook.cmd session-start antigravity lazy || ./hooks/run-hook.cmd session-start antigravity lazy"
+      },
+      {
+        "type": "command",
+        "command": "hooks\\run-hook.cmd session-start antigravity plain || ./hooks/run-hook.cmd session-start antigravity plain"
+      },
+      {
+        "type": "command",
+        "command": "hooks\\run-hook.cmd session-start antigravity terse || ./hooks/run-hook.cmd session-start antigravity terse"
       }
     ]
   }

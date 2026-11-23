@@ -29,3 +29,8 @@ test('no dependency install step is needed', () => {
   assert.ok(!workflow.includes('npm ci'), 'the repo ships no dependencies')
   assert.ok(!workflow.includes('npm install'), 'the repo ships no dependencies')
 })
+
+test('the hook job runs the unit tests on windows, without the submission tests', () => {
+  assert.match(workflow, /if: runner\.os == 'Windows'/)
+  assert.match(workflow, /node --test \(Get-ChildItem tests\/\*\.test\.mjs \| Where-Object Name -ne 'submission\.test\.mjs' \| ForEach-Object FullName\)/)
+})

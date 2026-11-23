@@ -40,7 +40,7 @@ test('builds and independently extracts a versioned skills-only archive without 
     writeFileSync(join(root, path, 'unrelated.txt'), 'do not package')
   }
   writeFileSync(join(root, '.env'), 'do not package')
-  const startup = join(root, 'skills/using-vibekit/SKILL.md')
+  const startup = join(root, 'skills/quick/SKILL.md')
   const original = readFileSync(startup, 'utf8')
   const skill = join(root, 'skills/lazy/SKILL.md')
   const originalSkill = readFileSync(skill, 'utf8')
@@ -69,11 +69,9 @@ test('builds and independently extracts a versioned skills-only archive without 
   assert.deepEqual(Object.keys(manifest.extensions['com.openai']), ['onboardingSkill'])
   for (const resource of [manifest.skills, manifest.interface.logo, manifest.interface.composerIcon, manifest.extensions['com.openai'].onboardingSkill]) assert.ok(existsSync(resolve(extracted, resource)), resource)
   for (const name of skills) assert.ok(existsSync(join(extracted, 'skills', name, 'SKILL.md')))
-  const staged = readFileSync(join(extracted, 'skills/using-vibekit/SKILL.md'), 'utf8')
-  assert.match(staged, /\[auto-trigger table\]\(\.\.\/\.\.\/AGENTS\.md\)/)
-  assert.match(staged, /If no dedicated invocation tool is available/)
+  const staged = readFileSync(join(extracted, 'skills/quick/SKILL.md'), 'utf8')
   assert.match(staged, /Activate Vibekit explicitly/)
-  assert.match(staged, /System and developer instructions take precedence/)
+  assert.match(staged, /use the quick skill/)
   assert.doesNotMatch(staged, /CLAUDE\.md|Use the `Skill` tool/)
   assert.match(readFileSync(join(extracted, 'AGENTS.md'), 'utf8'), /\| `brainstorm` \| hard \|/)
   assert.equal(readFileSync(join(extracted, 'README.md'), 'utf8'), readFileSync(join(root, 'submission/README.md'), 'utf8'))
@@ -201,16 +199,6 @@ for (const svg of ['<svg viewBox="0 0 32 32"></svg>', '<svg viewBox="0 0 128 64"
     assert.throws(() => buildSubmission({ sourceRoot: root }), /icon must/)
   })
 }
-
-test('source adaptation mismatch fails without replacing an existing artifact', t => {
-  const root = fixture(t)
-  const destination = join(root, 'keep.zip')
-  writeFileSync(destination, 'previous archive')
-  const path = join(root, 'skills/using-vibekit/SKILL.md')
-  writeFileSync(path, readFileSync(path, 'utf8').replace('Use the `Skill` tool.', 'Invoke skills differently.'))
-  assert.throws(() => buildSubmission({ sourceRoot: root, destination }), /startup adaptation mismatch/)
-  assert.equal(readFileSync(destination, 'utf8'), 'previous archive')
-})
 
 test('missing native tools produce a prerequisite error and preserve the destination', t => {
   const root = fixture(t)

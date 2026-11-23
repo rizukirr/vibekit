@@ -496,7 +496,7 @@ test('producedFilesOmit ignores seeded fixtures', () => {
 
 test('a skill the session was never offered reports unavailability', () => {
   const scenario = { id: 's', expect: { skill: 'vibekit:example-plain' } }
-  const run = { ...ok(), initSkills: ['vibekit:using-vibekit'] }
+  const run = { ...ok(), initSkills: ['vibekit:quick'] }
   assert.match(scoreScenario(scenario, [run]).failures[0], /was not available/)
 })
 

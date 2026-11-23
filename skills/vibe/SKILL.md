@@ -8,7 +8,7 @@ command: true
 
 # vibe
 
-An entry point, not a stage. The pipeline is already wired: every skill's `Handoff` section names its successor, and `using-vibekit` carries the trigger map. This exists because a slash command cannot exist without a skill to invoke.
+An entry point, not a stage. The pipeline is already wired: every skill's `Handoff` section names its successor, and every skill's frontmatter declares its trigger. This exists because a slash command cannot exist without a skill to invoke.
 
 ## What to do
 

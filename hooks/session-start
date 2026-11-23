@@ -1,21 +1,39 @@
 #!/usr/bin/env bash
-# SessionStart hook: injects the bootstrap skill as session context.
+# SessionStart hook: injects one vibekit skill as session context. Each
+# runtime runs it once per start skill, because Claude Code turns one hook's
+# context over about 10,000 characters into a file reference.
+# Usage: session-start [antigravity] <skill-name>
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Read the bootstrap skill name out of the config without a JSON parser.
-bootstrap=$(sed -n 's/.*"bootstrap"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
-    "${PLUGIN_ROOT}/vibekit.config.json" | head -n 1)
-if [ -z "$bootstrap" ]; then
+runtime=""
+if [ "${1:-}" = "antigravity" ]; then
+    runtime="antigravity"
+    shift
+fi
+name="${1:-}"
+if [ -z "$name" ]; then
     exit 0
 fi
 
-content=$(cat "${PLUGIN_ROOT}/skills/${bootstrap}/SKILL.md" 2>/dev/null || echo "")
+content=$(cat "${PLUGIN_ROOT}/skills/${name}/SKILL.md" 2>/dev/null || echo "")
 if [ -z "$content" ]; then
     exit 0
+fi
+# A CRLF checkout must not leak carriage returns into the context. The
+# frontmatter block is metadata for the generator, not text for the model.
+content="${content//$'\r'/}"
+content=$(printf '%s\n' "$content" | awk 'NR == 1 && $0 == "---" { skip = 1; next } skip && $0 == "---" { skip = 0; next } !skip')
+
+# The bootstrap skill's block is the one that says vibekit is present.
+bootstrap=$(sed -n 's/.*"bootstrap"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+    "${PLUGIN_ROOT}/vibekit.config.json" | head -n 1)
+header=""
+if [ "$name" = "$bootstrap" ]; then
+    header="You have vibekit.\n\n"
 fi
 
 # Escape for JSON embedding. Each substitution is a single C-level pass.
@@ -24,19 +42,17 @@ escape_for_json() {
     s="${s//\\/\\\\}"
     s="${s//\"/\\\"}"
     s="${s//$'\n'/\\n}"
-    s="${s//$'\r'/\\r}"
     s="${s//$'\t'/\\t}"
     printf '%s' "$s"
 }
 
 escaped=$(escape_for_json "$content")
-context="<EXTREMELY_IMPORTANT>\nYou have vibekit.\n\n**Below is the full content of the '${bootstrap}' skill. For all other skills, use the 'Skill' tool:**\n\n${escaped}\n</EXTREMELY_IMPORTANT>"
+context="<EXTREMELY_IMPORTANT>\n${header}Below is the full content of the ${name} skill. Load every other vibekit skill the way this tool loads skills.\n\n${escaped}\n</EXTREMELY_IMPORTANT>"
 
 # Each platform reads a different field, and Claude Code reads more than one
 # without deduplicating, so exactly one shape is emitted per platform.
-# $1 names the runtime when its hook config passes one. Antigravity reads
-# injected steps rather than additional context.
-if [ "${1:-}" = "antigravity" ]; then
+# Antigravity reads injected steps rather than additional context.
+if [ "$runtime" = "antigravity" ]; then
     printf '{\n  "injectSteps": [{"systemMessage": {"systemMessage": "%s"}}]\n}\n' "$context"
 elif [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
     printf '{\n  "additional_context": "%s"\n}\n' "$context"
