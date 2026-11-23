@@ -31,7 +31,7 @@ On Claude Code, vibekit loads `using-vibekit` at session start and its edit guar
 - No new dependency.
 - Generated files change only through `npm run generate`.
 - Every edited string obeys `plain`'s rules, which `npm test` checks.
-- Claude Code behaviour stays as it is on branch `fix/gate-deny-reason`: the same deny shape, matcher and reason text.
+- Claude Code keeps the deny shape and matcher it has on branch `fix/gate-deny-reason`. The reason text becomes runtime-neutral: it asks the model to load each missing skill, since only Claude Code has a Skill tool.
 - An adapter that hits an error while checking allows the edit. pi blocks a tool when its handler throws, so the pi handler catches every error itself.
 - A change under `hooks/` is not done until the `hook (windows-latest)` CI job passes.
 - Run limits: at most 3 verify rounds, at most $0 on paid runs
