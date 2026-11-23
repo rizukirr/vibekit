@@ -22,13 +22,13 @@
 - Modify: `lib/frontmatter.mjs:8-12`
 - Modify: `tests/frontmatter.test.mjs` (append one test)
 
-- [ ] Step 1: Create `.gitattributes` with exactly this content:
+- [x] Step 1: Create `.gitattributes` with exactly this content:
 
 ```
 * text=auto eol=lf
 ```
 
-- [ ] Step 2: In `lib/frontmatter.mjs`, replace
+- [x] Step 2: In `lib/frontmatter.mjs`, replace
 
 ```js
   const match = /^---\n([\s\S]*?)\n---\n?/.exec(text)
@@ -53,7 +53,7 @@ with
   for (const raw of match[1].split(/\r?\n/)) {
 ```
 
-- [ ] Step 3: Append to `tests/frontmatter.test.mjs`:
+- [x] Step 3: Append to `tests/frontmatter.test.mjs`:
 
 ```js
 test('parses a file with CRLF line endings', () => {
@@ -64,10 +64,10 @@ test('parses a file with CRLF line endings', () => {
 })
 ```
 
-- [ ] Step 4: Run `git add --renormalize .` and `git add .gitattributes lib/frontmatter.mjs tests/frontmatter.test.mjs`
-- [ ] Step 5: Commit: `fix: check out LF everywhere and parse CRLF frontmatter`
-- [ ] Step 6: Refresh the working tree so every file is rewritten with LF: run `git rm -r -q --cached .` then `git reset -q --hard HEAD`
-- [ ] Step 7: Run `git ls-files --eol` and `node --test tests/frontmatter.test.mjs`
+- [x] Step 4: Run `git add --renormalize .` and `git add .gitattributes lib/frontmatter.mjs tests/frontmatter.test.mjs`
+- [x] Step 5: Commit: `fix: check out LF everywhere and parse CRLF frontmatter`
+- [x] Step 6: Refresh the working tree so every file is rewritten with LF: run `git rm -r -q --cached .` then `git reset -q --hard HEAD`
+- [x] Step 7: Run `git ls-files --eol` and `node --test tests/frontmatter.test.mjs`
 
 ### Task 2: the start list → verify: `node --test tests/start.test.mjs` exits 0
 
