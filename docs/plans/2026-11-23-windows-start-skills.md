@@ -149,7 +149,7 @@ test('only the first start block says vibekit is present', () => {
 - Modify: `tests/claude-code.test.mjs:1-45`
 - Regenerate: `hooks/hooks.json`
 
-- [ ] Step 1: Replace `hooks/session-start` with:
+- [x] Step 1: Replace `hooks/session-start` with:
 
 ```bash
 #!/usr/bin/env bash
@@ -219,8 +219,8 @@ fi
 exit 0
 ```
 
-- [ ] Step 2: Run `git rm -q hooks/edit-gate`
-- [ ] Step 3: In `runtimes/claude-code.mjs`, replace the import line `import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'` with `import { startSkills } from '../lib/start.mjs'`, and replace the whole `'hooks/hooks.json': json({ ... }),` entry (from the comment `// The polyglot wrapper is what makes the hook run on Windows;` through the closing `}),` before `}` of `files`) with:
+- [x] Step 2: Run `git rm -q hooks/edit-gate`
+- [x] Step 3: In `runtimes/claude-code.mjs`, replace the import line `import { pipelineSkills, modifierSkills } from '../lib/gate.mjs'` with `import { startSkills } from '../lib/start.mjs'`, and replace the whole `'hooks/hooks.json': json({ ... }),` entry (from the comment `// The polyglot wrapper is what makes the hook run on Windows;` through the closing `}),` before `}` of `files`) with:
 
 ```js
     // The polyglot wrapper is what makes the hook run on Windows; invoking
@@ -246,8 +246,8 @@ exit 0
     }),
 ```
 
-- [ ] Step 4: In `runtimes/claude-code.mjs`, change `const { config, skills } = model` to `const { config } = model`.
-- [ ] Step 5: Replace lines 1-187 of `tests/hook.test.mjs` (everything before the comment `// A batch file run through cmd /c that exits from inside an if (...) block`) with:
+- [x] Step 4: In `runtimes/claude-code.mjs`, change `const { config, skills } = model` to `const { config } = model`.
+- [x] Step 5: Replace lines 1-187 of `tests/hook.test.mjs` (everything before the comment `// A batch file run through cmd /c that exits from inside an if (...) block`) with:
 
 ```js
 // tests/hook.test.mjs
@@ -321,7 +321,7 @@ test('session-start emits the Antigravity injectSteps shape when asked', () => {
 
 ```
 
-- [ ] Step 6: In `tests/claude-code.test.mjs`, add `import { startSkills } from '../lib/start.mjs'` after the `buildModel` import, and replace the two tests `emits a SessionStart hook that runs through the polyglot wrapper` and `emits a PreToolUse edit gate listing every hard-gate or command skill on disk` (lines 25-45) with:
+- [x] Step 6: In `tests/claude-code.test.mjs`, add `import { startSkills } from '../lib/start.mjs'` after the `buildModel` import, and replace the two tests `emits a SessionStart hook that runs through the polyglot wrapper` and `emits a PreToolUse edit gate listing every hard-gate or command skill on disk` (lines 25-45) with:
 
 ```js
 test('emits one SessionStart hook per start skill, each through the polyglot wrapper', () => {
@@ -342,9 +342,9 @@ test('emits no PreToolUse hook', () => {
 })
 ```
 
-- [ ] Step 7: Run `npm run generate`
-- [ ] Step 8: Run `node --test tests/hook.test.mjs tests/claude-code.test.mjs tests/codex.test.mjs` and `npm run check`
-- [ ] Step 9: Commit: `feat: one start hook per start skill for Claude Code and Codex, no edit gate`
+- [x] Step 7: Run `npm run generate`
+- [x] Step 8: Run `node --test tests/hook.test.mjs tests/claude-code.test.mjs tests/codex.test.mjs` and `npm run check`
+- [x] Step 9: Commit: `feat: one start hook per start skill for Claude Code and Codex, no edit gate`
 
 ### Task 4: Antigravity start hooks → verify: `node --test tests/antigravity.test.mjs tests/hook.test.mjs` exits 0, and `npm run check` exits 0
 
