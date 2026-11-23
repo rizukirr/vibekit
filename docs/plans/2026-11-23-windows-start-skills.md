@@ -434,8 +434,8 @@ test('the Antigravity hook commands run the way agy launches them', () => {
 - Modify: `tests/opencode.test.mjs:1-173`
 - Regenerate: `.opencode/plugins/vibekit.js`, `.opencode/INSTALL.md`
 
-- [ ] Step 1: In `runtimes/opencode.mjs`, replace line 2 `import { pipelineSkills, modifierSkills, missingSkills, denyReason, startText } from '../lib/gate.mjs'` with `import { startSkills, startText } from '../lib/start.mjs'`.
-- [ ] Step 2: Replace the comment above `function plugin(model)` (lines 6-12) with:
+- [x] Step 1: In `runtimes/opencode.mjs`, replace line 2 `import { pipelineSkills, modifierSkills, missingSkills, denyReason, startText } from '../lib/gate.mjs'` with `import { startSkills, startText } from '../lib/start.mjs'`.
+- [x] Step 2: Replace the comment above `function plugin(model)` (lines 6-12) with:
 
 ```js
 // opencode v2 takes skills one at a time through skill.transform, each with
@@ -446,7 +446,7 @@ test('the Antigravity hook commands run the way agy launches them', () => {
 // that part on an opencode without the context hook.
 ```
 
-- [ ] Step 3: In the template string of `plugin(model)`, replace the lines from `const BOOTSTRAP = ${JSON.stringify(model.config.bootstrap)}` through `const startText = ${startText.toString()}` with:
+- [x] Step 3: In the template string of `plugin(model)`, replace the lines from `const BOOTSTRAP = ${JSON.stringify(model.config.bootstrap)}` through `const startText = ${startText.toString()}` with:
 
 ```js
 const START = ${JSON.stringify(startSkills(model))}
@@ -469,7 +469,7 @@ and replace everything in the template from `    const loaded = new Map()` throu
     }
 ```
 
-- [ ] Step 4: In `installDoc(config)`, replace the lines from `'## Local checkout',` through the line `'## Git repository',` (exclusive) with:
+- [x] Step 4: In `installDoc(config)`, replace the lines from `'## Local checkout',` through the line `'## Git repository',` (exclusive) with:
 
 ```js
     '## Local checkout',
@@ -498,7 +498,7 @@ and replace the lines from `'## Verify',` through the line `'It prints \`1\` whe
     'It prints `1` when the skills are registered and `0` when they are not. `opencode plugin list` is no check here: it can print `No plugins found` while the plugin is loaded.',
 ```
 
-- [ ] Step 5: In `tests/opencode.test.mjs`, delete line 10 `import { denyReason } from '../lib/gate.mjs'`. Replace the test `install document names only commands opencode v2 has` (lines 100-107) with:
+- [x] Step 5: In `tests/opencode.test.mjs`, delete line 10 `import { denyReason } from '../lib/gate.mjs'`. Replace the test `install document names only commands opencode v2 has` (lines 100-107) with:
 
 ```js
 test('install document gives a local-checkout form that loads the plugin, and the skill.list check', () => {
@@ -551,9 +551,9 @@ test('registers no edit guard', async t => {
 })
 ```
 
-- [ ] Step 6: Run `npm run generate`
-- [ ] Step 7: Run `node --test tests/opencode.test.mjs` and `npm run check`
-- [ ] Step 8: Commit: `feat: OpenCode pushes every start skill and documents a working local install`
+- [x] Step 6: Run `npm run generate`
+- [x] Step 7: Run `node --test tests/opencode.test.mjs` and `npm run check`
+- [x] Step 8: Commit: `feat: OpenCode pushes every start skill and documents a working local install`
 
 ### Task 6: pi extension → verify: `node --test tests/pi.test.mjs` exits 0, and `npm run check` exits 0
 
