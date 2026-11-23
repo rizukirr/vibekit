@@ -45,7 +45,8 @@ No behaviour change other than the one the cause names.
 
 ## Constraints
 
-No interface change.
+- Run limits: at most 3 verify rounds, at most $0 on paid runs
+- No interface change.
 
 ## Approach
 
