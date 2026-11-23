@@ -5,6 +5,7 @@
 **Architecture:** One step added to the existing `hook` job in `.github/workflows/ci.yml`, guarded to the Windows leg, running `node --test` over the test files in PowerShell. `tests/ci.test.mjs` pins the step so it cannot be dropped silently.
 
 ## Global constraints
+- Run limits: at most 3 verify rounds, at most $0 on paid runs.
 - No new dependency, in the package or on the CI runner.
 - The step lives in the existing `hook` job's matrix, on the Windows leg only, so the ubuntu leg and `validate` are unchanged.
 - The command is one any contributor can run on Windows from the repo root.
@@ -53,6 +54,6 @@ test('the hook job runs the unit tests on windows, without the submission tests'
 **Files:** none changed except the index entries under `docs/`
 
 - [ ] Step 1: Run `git rm -r -q --cached --ignore-unmatch docs` and commit `chore: keep specs and plans out of the PR`. The files stay on disk.
-- [ ] Step 2: After the user's approval, run `git push origin repl-run/windows-start-skills`, which updates draft pull request #74.
+- [ ] Step 2: After the user's approval, run `git push origin repl-run/retro-checks:repl-run/windows-start-skills`. This run branch was cut from `repl-run/windows-start-skills`, so the push is a fast-forward of draft pull request #74's head branch. Never force it.
 - [ ] Step 3: Run `gh run list --branch repl-run/windows-start-skills --workflow CI --limit 1` and wait for that run to finish.
 - [ ] Step 4: Run `gh run view <the run id from Step 3> --json jobs` and read the `hook (windows-latest)` conclusion, then `gh run view <the run id> --log` and confirm the step name appears in that job's log.
