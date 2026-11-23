@@ -102,10 +102,10 @@ export function fsReader(root) {
 
 **Files:** none changed. This task only measures, in the main checkout, which still has CRLF files from before `.gitattributes`.
 
-- [ ] Step 1: In `C:\Users\rizki\Projects\vibekit`, confirm `git status --porcelain --untracked-files=no` prints nothing, and record `git branch --show-current`.
-- [ ] Step 2: Run `git switch --detach repl-run/fix-generator-crlf`. Git rewrites only the files that differ from the current branch, so the CRLF generated files stay CRLF.
-- [ ] Step 3: Run `git ls-files --eol` and count the entries with `w/crlf`, then run `npm run check` and record its exit status and output.
-- [ ] Step 4: Run `git switch fix/generator-crlf` to put the main checkout back on its branch, and confirm `git status --porcelain --untracked-files=no` prints nothing.
+- [x] Step 1: In `C:\Users\rizki\Projects\vibekit`, confirm `git status --porcelain --untracked-files=no` prints nothing, and record `git branch --show-current`.
+- [x] Step 2: Run `git switch --detach repl-run/fix-generator-crlf`. Git rewrites only the files that differ from the current branch, so the CRLF generated files stay CRLF.
+- [x] Step 3: Run `git ls-files --eol` and count the entries with `w/crlf`, then run `npm run check` and record its exit status and output.
+- [x] Step 4: Run `git switch fix/generator-crlf` to put the main checkout back on its branch, and confirm `git status --porcelain --untracked-files=no` prints nothing.
 
 ### Task 3: the full suite in CI → verify: the newest CI run for this branch's pull request concludes `success` on every job
 
