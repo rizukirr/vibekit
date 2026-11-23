@@ -34,3 +34,5 @@ afterwards; never hand-edit a generated file.
 - `docs/` is gitignored. Specs and plans are committed with `git add -f`, and a fresh worktree has no `docs/specs/` until you create it.
 - Before opening or updating a PR, run `git rm -r --cached --ignore-unmatch docs` and commit, so specs and plans never reach `main`. The files stay on disk.
 - A change under `hooks/` is not done until the `hook (windows-latest)` CI job passes. Push and read it before `verify` returns ready.
+- CI runs only on pull requests and on pushes to `main` and `v2` (`.github/workflows/ci.yml`), so a branch needs a draft PR before the `hook (windows-latest)` job runs.
+- `agy -p` auto-denies shell commands, so a headless agy write check fails before `write_file` is reached. Run agy's write check in an interactive session.
